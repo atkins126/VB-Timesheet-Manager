@@ -3,21 +3,23 @@ inherited MainFrm: TMainFrm
   ClientHeight = 752
   ClientWidth = 1258
   OnClose = FormClose
+  OnDestroy = FormDestroy
   ExplicitWidth = 1274
   ExplicitHeight = 791
   PixelsPerInch = 96
   TextHeight = 13
   inherited layMain: TdxLayoutControl
     Top = 35
-    Width = 856
+    Width = 1240
     Height = 576
+    LayoutLookAndFeel = lafCustomSkin
     ExplicitTop = 35
-    ExplicitWidth = 856
+    ExplicitWidth = 1240
     ExplicitHeight = 576
     object docToolbar: TdxBarDockControl [0]
       Left = 11
       Top = 11
-      Width = 600
+      Width = 1218
       Height = 54
       Align = dalNone
       BarManager = barManager
@@ -25,11 +27,12 @@ inherited MainFrm: TMainFrm
     object grdTimesheet: TcxGrid [1]
       Left = 11
       Top = 71
-      Width = 834
+      Width = 1218
       Height = 494
       TabOrder = 1
       object viewTimesheet: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
+        OnCustomDrawCell = viewTimesheetCustomDrawCell
         DataController.DataSource = TSDM.dtsTimesheet
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
@@ -212,7 +215,7 @@ inherited MainFrm: TMainFrm
           Position.RowIndex = 0
         end
         object lucPriceItem: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'PRICE_ITEM_ID'
+          DataBinding.FieldName = 'PRICE_LIST_ITEM_ID'
           PropertiesClassName = 'TcxLookupComboBoxProperties'
           Properties.DropDownListStyle = lsFixedList
           Properties.ImmediatePost = True
@@ -224,14 +227,14 @@ inherited MainFrm: TMainFrm
             end>
           Properties.ListSource = TSDM.dtsPriceList
           Properties.ReadOnly = True
-          MinWidth = 200
+          MinWidth = 300
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
           Options.Grouping = False
           Options.HorzSizing = False
           Options.Moving = False
-          Width = 200
+          Width = 300
           Position.BandIndex = 0
           Position.ColIndex = 6
           Position.RowIndex = 0
@@ -258,7 +261,11 @@ inherited MainFrm: TMainFrm
           PropertiesClassName = 'TcxLookupComboBoxProperties'
           Properties.DropDownListStyle = lsFixedList
           Properties.ImmediatePost = True
-          Properties.ListColumns = <>
+          Properties.KeyFieldNames = 'ID'
+          Properties.ListColumns = <
+            item
+              FieldName = 'NAME'
+            end>
           Properties.ListSource = TSDM.dtsActivityType
           Properties.ReadOnly = True
           MinWidth = 200
@@ -276,6 +283,8 @@ inherited MainFrm: TMainFrm
           PropertiesClassName = 'TcxCheckBoxProperties'
           Properties.Alignment = taCenter
           Properties.ReadOnly = True
+          Properties.ValueChecked = 1
+          Properties.ValueUnchecked = 0
           HeaderAlignmentHorz = taCenter
           HeaderHint = 'Billable status'
           MinWidth = 30
@@ -587,9 +596,6 @@ inherited MainFrm: TMainFrm
         GridView = viewTimesheet
       end
     end
-    inherited layMainGroup_Root: TdxLayoutGroup
-      ItemIndex = 1
-    end
     object grpToolbar: TdxLayoutGroup
       Parent = layMainGroup_Root
       CaptionOptions.Text = 'New Group'
@@ -600,6 +606,7 @@ inherited MainFrm: TMainFrm
     end
     object litToolbar: TdxLayoutItem
       Parent = grpToolbar
+      AlignHorz = ahClient
       CaptionOptions.Visible = False
       Control = docToolbar
       ControlOptions.AutoColor = True
@@ -642,10 +649,14 @@ inherited MainFrm: TMainFrm
     Font.Style = []
   end
   inherited styRepository: TcxStyleRepository
+    Left = 610
+    Top = 185
     PixelsPerInch = 96
   end
   inherited actList: TActionList
     Images = img32
+    Left = 525
+    Top = 185
     object actExit: TAction
       Caption = 'Exit'
       ImageIndex = 0
@@ -671,17 +682,27 @@ inherited MainFrm: TMainFrm
       ImageIndex = 17
       OnExecute = DoRefresh
     end
+    object actGetTimesheetData: TAction
+      Caption = 'Get Data'
+      ImageIndex = 18
+      OnExecute = DoGetTimesheetData
+    end
   end
   inherited lafLayoutList: TdxLayoutLookAndFeelList
+    Left = 350
+    Top = 230
     inherited lafCustomSkin: TdxLayoutSkinLookAndFeel
       PixelsPerInch = 96
     end
   end
   inherited img16: TcxImageList
     FormatVersion = 1
+    DesignInfo = 15073460
   end
   inherited img32: TcxImageList
+    OnChange = DoGetTimesheetData
     FormatVersion = 1
+    DesignInfo = 15073530
     ImageInfo = <
       item
         ImageClass = 'TBitmap'
@@ -3116,6 +3137,140 @@ inherited MainFrm: TMainFrm
           08286A521F799D792FB2BC9139D4C79A3CDFBF943BD5A27D32B47158237E271E
           0C31000000000000000000000000000000000000000000000000000000000000
           0000000000000000000000000000000000000000000000000000}
+      end
+      item
+        ImageClass = 'TBitmap'
+        Image.Data = {
+          36100000424D3610000000000000360000002800000020000000200000000100
+          2000000000000010000000000000000000000000000000000000000000000101
+          010202020204040404070707070B0909090E0B0B0B120E0E0E16101010191212
+          121C1313131F1515152116161623171717241717172519191927181818261717
+          17241717172415151522141414201212121D1111111B0E0E0E170C0C0C140A0A
+          0A100707070C05050509030303060101010300000001000000001212121D3A3A
+          3A5B5151517E606060956A6A6AA5727272B1787878BB7D7D7DC2808080C88484
+          84CD868686D1888888D4898989D68A8A8AD78B8B8BD88C8C8CDA8B8B8BD98A8A
+          8AD7898989D6898989D5878787D2858585CF828282CB7E7E7EC57A7A7ABE7575
+          75B66E6E6EAB6565659D585858894646466E2626263B030303050E0E0E173030
+          304B5050507A929292CAA4A4A4DDA8A8A8E3ACACACE8AEAEAEEBB1B1B1EEB3B3
+          B3F0B4B4B4F2B5B5B5F3B6B6B6F4B7B7B7F4B7B7B7F4B7B7B7F4B7B7B7F4B7B7
+          B7F4B7B7B7F4B5B5B5F3B4B4B4F2B3B3B3F1B2B2B2EFB0B0B0EDADADADE9A9A9
+          A9E5A6A6A6E0A0A0A0D88C8C8CC14545456A1E1E1E3002020204000000001515
+          151CC0C0C0E4DDDDDDFFD3D3D3FFD2D2D2FFD3D3D3FFD3D3D3FFD4D4D4FFD4D4
+          D4FFD4D4D4FFD5D5D5FFD5D5D5FFD5D5D5FFD5D5D5FFD5D5D5FFD5D5D5FFD5D5
+          D5FFD5D5D5FFD5D5D5FFD5D5D5FFD4D4D4FFD4D4D4FFD4D4D4FFD3D3D3FFD3D3
+          D3FFD2D2D2FFD3D3D3FFDDDDDDFFBDBDBDE01010101600000000000000007070
+          7083DBDBDBFFBCBCBCFFCFCFCFFFD3D3D3FFD3D3D3FFB8B8B8FFD5D5D5FFD5D5
+          D5FFD6D6D6FFBABABAFFD6D6D6FFD7D7D7FFD7D7D7FFC9C9C9FFC9C9C9FFD7D7
+          D7FFD7D7D7FFD6D6D6FFBABABAFFD6D6D6FFD5D5D5FFD5D5D5FFB8B8B8FFD3D3
+          D3FFD2D2D2FFCFCFCFFFBCBCBCFFDBDBDBFF6767677900000000000000008181
+          8197DCDCDCFFC2C2C2FFE3E3E3FFE4E4E4FFE5E5E5FFC5C5C5FFE6E6E6FFE6E6
+          E6FFE7E7E7FFC7C7C7FFE8E8E8FFE8E8E8FFE8E8E8FFD8D8D8FFD8D8D8FFE8E8
+          E8FFE8E8E8FFE8E8E8FFC7C7C7FFE7E7E7FFE6E6E6FFE6E6E6FFC5C5C5FFE4E4
+          E4FFE4E4E4FFE3E3E3FFC1C1C1FFDCDCDCFF7A7A7A8F00000000000000008282
+          8297DDDDDDFFAFAFAFFFC3C3C3FFC4C4C4FFC5C5C5FFADADADFFC6C6C6FFC6C6
+          C6FFC7C7C7FFAEAEAEFFC7C7C7FFC7C7C7FFC8C8C8FFBBBBBBFFBBBBBBFFC7C7
+          C7FFC7C7C7FFC7C7C7FFAEAEAEFFC6C6C6FFC6C6C6FFC6C6C6FFADADADFFC5C5
+          C5FFC4C4C4FFC3C3C3FFAFAFAFFFDDDDDDFF7A7A7A8F00000000000000008282
+          8297DEDEDEFFC0C0C0FFE0E0E0FFE1E1E1FFD2D2DDFF5353AFFF1414A5FF0000
+          9FFF2020A9FF6F6FB0FFE5E5E6FFE6E6E6FFE6E6E6FFD6D6D6FFD6D6D6FFE6E6
+          E6FFE6E6E6FFE6E6E6FFC5C5C5FFE5E5E5FFE4E4E4FFE3E3E3FFC3C3C3FFE2E2
+          E2FFE1E1E1FFE0E0E0FFC0C0C0FFDDDDDDFF7B7B7B8F00000000000000008282
+          8297DFDFDFFFB3B3B3FFC9C9C9FFBCBCC6FF2121A8FF4444A3FFAAAAC0FFC9C9
+          CBFF9797BBFF2828AAFF6161B5FFCCCCCCFFCDCDCDFFC0C0C0FFC0C0C0FFCDCD
+          CDFFCCCCCCFFCCCCCCFFB2B2B2FFCCCCCCFFCBCBCBFFCBCBCBFFB1B1B1FFCACA
+          CAFFCACACAFFC9C9C9FFB3B3B3FFDEDEDEFF7C7C7C8F00000000000000008383
+          8397DFDFDFFFC1C1C1FFE2E2E2FF6464BDFF5656B9FFC4C4C4FFE5E5E5FFE6E6
+          E6FFE7E7E7FFB8B8C5FF1212A5FFC3C3DCFFE8E8E8FFD8D8D8FFD8D8D8FFE8E8
+          E8FFE8E8E8FFE7E7E7FFC6C6C6FFE6E6E6FFE6E6E6FFE5E5E5FFC4C4C4FFE3E3
+          E3FFE2E2E2FFE1E1E1FFC1C1C1FFDFDFDFFF7C7C7C8F00000000000000008484
+          8497E0E0E0FFB4B4B4FFCACACAFF0F0FA4FFAFAFC3FFB2B2B2FFCCCCCCFFCCCC
+          CCFFCDCDCDFFB3B3B3FF5151B0FF7474BAFFCDCDCDFFC0C0C0FFC0C0C0FFCDCD
+          CDFFCDCDCDFFCDCDCDFFB3B3B3FFCCCCCCFFCCCCCCFFCCCCCCFFB2B2B2FFCBCB
+          CBFFCACACAFFCACACAFFB4B4B4FFE0E0E0FF7D7D7D8F00000000000000008484
+          8497E1E1E1FFC2C2C2FFDCDCE1FF3737B0FFE5E5E5FFC5C5C5FFE7E7E7FFE7E7
+          E7FFE8E8E8FFC8C8C8FF5C5CBCFF8686CAFFEAEAEAFFD9D9D9FFD9D9D9FFEAEA
+          EAFFE9E9E9FFE9E9E9FFC8C8C8FFE8E8E8FFE7E7E7FFE6E6E6FFC5C5C5FFE5E5
+          E5FFE4E4E4FFE3E3E3FFC2C2C2FFE0E0E0FF7D7D7D8F00000000000000008484
+          8497E1E1E1FFBBBBBBFFD6D6D6FF7474BCFFC8C8D3FF9393B6FFD9D9D9FFD9D9
+          D9FFDADADAFFACACBEFF1010A3FFB8B8CFFFDBDBDBFFCCCCCCFFCCCCCCFFDBDB
+          DBFFDADADAFFDADADAFFBCBCBCFFDADADAFFD9D9D9FFD9D9D9FFBBBBBBFFD7D7
+          D7FFD7D7D7FFD6D6D6FFBBBBBBFFE1E1E1FF7D7D7D8F00000000000000008484
+          8497E1E1E1FFBCBCBCFFD8D8D8FFC6C6D5FFDADADAFF5F5FB1FF4D4DAFFF9898
+          C7FF7878BDFF1313A1FF7B7BC6FFDEDEDEFFDEDEDEFFCFCFCFFFCFCFCFFFDEDE
+          DEFFDEDEDEFFDEDEDEFFBFBFBFFFDDDDDDFFDCDCDCFFDBDBDBFFBDBDBDFFDADA
+          DAFFD9D9D9FFD8D8D8FFBCBCBCFFE1E1E1FF7D7D7D8F00000000000000008585
+          8597E2E2E2FFC6C6C6FFE8E8E8FFE9E9E9FFEAEAEAFFC8C8C9FF8484CBFF4141
+          B6FF5959BEFF9595BCFFEEEEEEFFEEEEEEFFEFEFEFFFDDDDDDFFDDDDDDFFEFEF
+          EFFFEEEEEEFFEEEEEEFFCBCBCBFFEDEDEDFFECECECFFEBEBEBFFC9C9C9FFEAEA
+          EAFFE9E9E9FFE8E8E8FFC6C6C6FFE1E1E1FF7D7D7D8F00000000000000008585
+          8597E2E2E2FFB7AEA0FFCEBFA8FFCEBFA8FFCEBFA8FFB3A897FFCEBFA8FFCEBF
+          A8FFCEBFA8FFB3A897FFCEBFA8FFCEBFA8FFCEBFA8FFC0B49FFFC0B49FFFCEBF
+          A8FFCEBFA8FFCEBFA8FFB3A897FFCEBFA8FFCEBFA8FFCEBFA8FFB3A897FFCEBF
+          A8FFCEBFA8FFCEBFA8FFB7AEA0FFE2E2E2FF7E7E7E8F00000000000000008585
+          8597E2E2E2FFC8BFB2FFEFD9B5FFEFD9B5FFEFD9B5FFCCBBA1FFEFD9B5FFEFD9
+          B5FFEFD9B5FFCCBCA1FFEFD9B5FFEFD9B5FFEFD9B5FFDDCAABFFDDCAABFFEFD9
+          B5FFEFD9B5FFEFD9B5FFCCBCA1FFEFD9B5FFEFD9B5FFEFD9B5FFCCBBA1FFEFD9
+          B5FFEFD9B5FFEFD9B5FFC8BFB2FFE2E2E2FF7E7E7E8F00000000000000008585
+          8597E2E2E2FFD2D2D1FFCAC9C7FFCCCAC7FFCDCBC8FFC0BFBCFFCECCC8FFCECC
+          C9FFCECCC9FFC2C0BEFFCFCDCAFFCFCDCAFFCFCDCAFFC9C7C4FFC9C7C4FFCFCD
+          CAFFCFCDCAFFCFCDCAFFC2C0BDFFCECCC9FFCECCC9FFCECCC8FFC0BFBCFFCDCB
+          C7FFCCCAC7FFCAC9C7FFD2D2D2FFE2E2E2FF7D7D7D8F00000000000000006464
+          7697B3B3CDFFB4B4CEFFB5B5CFFFB6B6D0FFB6B6D0FFB7B7D1FFB8B8D2FFB9B9
+          D3FFB9B9D3FFBABAD3FFBABAD4FFBABAD4FFBBBBD5FFBBBBD5FFBBBBD5FFBBBB
+          D5FFBABAD4FFBABAD4FFB9B9D3FFB9B9D3FFB8B8D2FFB8B8D2FFB7B7D1FFB6B6
+          D0FFB5B5CFFFB5B5CEFFB4B4CDFFB3B3CDFF5E5E708F00000000000000000F0F
+          51970B0B84FF0B0B84FF0B0B84FF0B0B84FF0B0B84FF0B0B84FF0B0B84FF0B0B
+          84FF0B0B84FF0B0B84FF0B0B84FF0B0B84FF0B0B84FF0B0B84FF0B0B84FF0B0B
+          84FF0B0B84FF0B0B84FF0B0B84FF0B0B84FF0B0B84FF0B0B84FF0B0B84FF0B0B
+          84FF0B0B84FF0B0B84FF0B0B84FF0B0B84FF0E0E4D8F00000000000000000707
+          51970C0C8AFF0C0C8AFF0C0C8AFF0C0C8AFF0C0C8AFF0C0C8AFF0C0C8AFF0C0C
+          8AFF0C0C8AFF0C0C8AFF0C0C8AFF0C0C8AFF0C0C8AFF0C0C8AFF0C0C8AFF0C0C
+          8AFF0C0C8AFF0C0C8AFF0C0C8AFF0C0C8AFF0C0C8AFF0C0C8AFF0C0C8AFF0C0C
+          8AFF0C0C8AFF0C0C8AFF0C0C8AFF0C0C8AFF07074D8F00000000000000000808
+          54970E0E90FF0E0E90FF0E0E90FF0E0E90FF0E0E90FF0E0E90FF0E0E90FF0E0E
+          90FF0E0E90FF0E0E90FF0E0E90FF0E0E90FF0E0E90FF0E0E90FF0E0E90FF0E0E
+          90FF0E0E90FF0E0E90FF0E0E90FF0E0E90FF0E0E90FF0E0E90FF0E0E90FF0E0E
+          90FF0E0E90FF0E0E90FF0E0E90FF0E0E90FF0808508F00000000000000000A0A
+          5897101096FF101096FF101096FF101096FF101096FF101096FF101096FF1010
+          96FF101096FF101096FF101096FF101096FF101096FF101096FF101096FF1010
+          96FF101096FF101096FF101096FF101096FF101096FF101096FF101096FF1010
+          96FF101096FF101096FF101096FF101096FF0909538F00000000000000000A0A
+          5C9711119CFF11119CFF11119CFF11119CFF11119CFF11119CFF11119CFF1111
+          9CFF11119CFF11119CFF11119CFF11119CFF11119CFF11119CFF11119CFF1111
+          9CFF11119CFF11119CFF11119CFF11119CFF11119CFF11119CFF11119CFF1111
+          9CFF11119CFF11119CFF11119CFF11119CFF0A0A578F00000000000000000B0B
+          5F971212A2FF1212A2FF1212A2FF1212A2FF1212A2FF1212A2FF1212A1FF1212
+          A1FF1212A1FF1212A2FF1212A2FF1212A2FF1212A2FF1212A2FF1212A2FF1212
+          A2FF1212A2FF1212A2FF1212A2FF1212A1FF1212A1FF1212A2FF1212A2FF1212
+          A2FF1212A2FF1212A2FF1212A2FF1212A2FF0A0A5A8F00000000000000000C0C
+          63971414A7FF1414A7FF1414A7FF1414A7FF1414A7FF1515A6FF7575BBFF9292
+          C3FF8989C0FF2929A9FF1414A7FF1414A7FF1414A7FF1414A7FF1414A7FF1414
+          A7FF1414A7FF1414A7FF4A4AB1FF9393C5FF9494C5FF5151B2FF1414A7FF1414
+          A7FF1414A7FF1414A7FF1414A7FF1414A7FF0B0B5D8F00000000000000000D0D
+          66971C1CB1FF1616ADFF1616ADFF1616ADFF1616ADFF4949BBFFE9E9E9FFE9E9
+          E9FFE9E9E9FF8D8DCEFF1616ADFF1616ADFF1616ADFF1616ADFF1616ADFF1616
+          ADFF1616ADFF1616ADFFD1D1E4FFECECECFFECECECFFDDDDE7FF1616ADFF1616
+          ADFF1616ADFF1616ADFF1616ADFF1D1DB1FF0D0D618F00000000000000001A1A
+          668E3232C1FF1B1BB5FF1717B3FF1717B3FF1717B3FF5454C5FFF1F1F1FFF1F1
+          F1FFF1F1F1FF9999D8FF1717B3FF1717B3FF1717B3FF1717B3FF1717B3FF1717
+          B3FF1717B3FF1717B3FFDFDFEDFFF3F3F3FFF3F3F3FFECECF1FF1717B3FF1717
+          B3FF1717B3FF1717B3FF1D1DB6FF3131C0FF18185F8500000000000000001313
+          27342727B7F95353D5FF3D3DCAFF3232C5FF3232C5FF6969D3FFF6F6F6FFF6F6
+          F6FFF6F6F6FFA7A7E2FF3232C5FF3232C5FF3232C5FF3232C5FF3232C5FF3232
+          C5FF3232C5FF3232C5FFE4E4F2FFF6F6F6FFF6F6F6FFF0F0F5FF3232C5FF3232
+          C5FF3232C5FF3E3ECAFF5252D5FF2626B6F70E0E212C00000000000000000000
+          000014142D3A2222789D282886A7303089A731318AA76868A8C0F5F5F5FFF5F5
+          F5FFF5F5F5FFA0A0C8DB35358AA730308AA730308AA730308AA730308AA73030
+          8AA730308AA738388BA7E0E0E9F6F4F4F4FFF4F4F4FFEEEEF1FC3B3B8BA73030
+          8AA7303089A7272785A72323779B121229350000000000000000000000000000
+          0000000000000000000000000000000000000000000035353C42F1F1F1FFF1F1
+          F1FFF1F1F1FF8383899300000000000000000000000000000000000000000000
+          00000000000000000000D4D4D4E3EFEFEFFFEFEFEFFFE1E1E1F1000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          000000000000000000000000000000000000000000000505050689898996A7A7
+          A7B79F9F9FAF2424242800000000000000000000000000000000000000000000
+          000000000000000000005252525AA4A4A4B6A5A5A5B75A5A5A63000000000000
+          0000000000000000000000000000000000000000000000000000}
       end>
   end
   object sknController: TdxSkinController
@@ -3189,7 +3344,7 @@ inherited MainFrm: TMainFrm
     PopupMenuLinks = <>
     Style = bmsUseLookAndFeel
     UseSystemFont = False
-    Left = 420
+    Left = 370
     Top = 170
     PixelsPerInch = 96
     object barToolbar: TdxBar
@@ -3228,6 +3383,50 @@ inherited MainFrm: TMainFrm
         item
           Visible = True
           ItemName = 'btnRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'lblUser'
+        end
+        item
+          Visible = True
+          ItemName = 'lucUser'
+        end
+        item
+          Visible = True
+          ItemName = 'lblViewMode'
+        end
+        item
+          Visible = True
+          ItemName = 'lucViewMode'
+        end
+        item
+          Visible = True
+          ItemName = 'lblPeriod'
+        end
+        item
+          Visible = True
+          ItemName = 'lucPeriod'
+        end
+        item
+          Visible = True
+          ItemName = 'lblFromDate'
+        end
+        item
+          Visible = True
+          ItemName = 'dteFromDate'
+        end
+        item
+          Visible = True
+          ItemName = 'lblToDate'
+        end
+        item
+          Visible = True
+          ItemName = 'dteToDate'
+        end
+        item
+          Visible = True
+          ItemName = 'btnGet'
         end>
       OneOnRow = True
       Row = 0
@@ -3261,6 +3460,117 @@ inherited MainFrm: TMainFrm
       Action = actRefresh
       Category = 0
       AutoGrayScale = False
+    end
+    object lblUser: TdxBarStatic
+      Caption = 'Timesheet User'
+      Category = 0
+      Hint = 'Timesheet User'
+      Visible = ivAlways
+    end
+    object lblViewMode: TdxBarStatic
+      Caption = 'View Mode'
+      Category = 0
+      Hint = 'View Mode'
+      Visible = ivAlways
+    end
+    object lblPeriod: TdxBarStatic
+      Caption = 'Period'
+      Category = 0
+      Hint = 'Period'
+      Visible = ivAlways
+    end
+    object lblFromDate: TdxBarStatic
+      Caption = 'From'
+      Category = 0
+      Hint = 'From'
+      Visible = ivAlways
+    end
+    object lblToDate: TdxBarStatic
+      Caption = 'To'
+      Category = 0
+      Hint = 'To'
+      Visible = ivAlways
+    end
+    object btnGet: TdxBarLargeButton
+      Action = actGetTimesheetData
+      Category = 0
+      AutoGrayScale = False
+    end
+    object dteFromDate: TcxBarEditItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Width = 110
+      PropertiesClassName = 'TcxDateEditProperties'
+      Properties.DisplayFormat = 'dd/MM/yyyy'
+      Properties.EditFormat = 'dd/MM/yyyy'
+      Properties.ImmediatePost = True
+      Properties.PostPopupValueOnTab = True
+      Properties.ShowOnlyValidDates = True
+      Properties.ShowTime = False
+    end
+    object dteToDate: TcxBarEditItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Width = 110
+      PropertiesClassName = 'TcxDateEditProperties'
+      Properties.DisplayFormat = 'dd/MM/yyyy'
+      Properties.EditFormat = 'dd/MM/yyyy'
+      Properties.ImmediatePost = True
+      Properties.PostPopupValueOnTab = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+    end
+    object lucPeriod: TcxBarEditItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Width = 110
+      PropertiesClassName = 'TcxLookupComboBoxProperties'
+      Properties.CaseSensitiveSearch = True
+      Properties.DropDownAutoSize = True
+      Properties.DropDownListStyle = lsFixedList
+      Properties.ImmediatePost = True
+      Properties.KeyFieldNames = 'THE_PERIOD'
+      Properties.ListColumns = <
+        item
+          FieldName = 'THE_PERIOD'
+        end>
+      Properties.ListSource = TSDM.dtsTSPeriod
+      Properties.OnEditValueChanged = lucPeriodPropertiesEditValueChanged
+    end
+    object lucUser: TcxBarEditItem
+      Caption = 'Hello'
+      Category = 0
+      Hint = 'Hello'
+      Visible = ivAlways
+      Width = 130
+      PropertiesClassName = 'TcxLookupComboBoxProperties'
+      Properties.DropDownAutoSize = True
+      Properties.DropDownListStyle = lsFixedList
+      Properties.ImmediatePost = True
+      Properties.ListColumns = <>
+      Properties.ListSource = TSDM.dtsSytemUser
+    end
+    object lucViewMode: TcxBarEditItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      PropertiesClassName = 'TcxComboBoxProperties'
+      Properties.DropDownSizeable = True
+      Properties.ImmediatePost = True
+      Properties.ImmediateUpdateText = True
+      Properties.Items.Strings = (
+        'Period'
+        'Date Range')
+      Properties.PostPopupValueOnTab = True
+      Properties.OnEditValueChanged = lucViewModePropertiesEditValueChanged
+      InternalEditValue = ''
     end
   end
   object imgNav32: TcxImageList

@@ -3,9 +3,10 @@ unit TS_DM;
 interface
 
 uses
-  System.SysUtils, System.Classes, Base_DM, Data.DBXDataSnap, Data.DBXCommon,
+  System.SysUtils, System.Classes, WinApi.Windows, Vcl.Forms, Data.DBXDataSnap,
+  Data.DBXCommon,
 
-  VBBase_DM, CommonValues, VBCommonValues,
+  Base_DM, VBBase_DM, CommonValues, VBCommonValues,
 
   IPPeerClient, Data.DB, Data.SqlExpr,
 
@@ -92,6 +93,7 @@ type
     cdsSystemUserEMAIL_ADDRESS: TStringField;
     cdsSystemUserPASSWORD: TStringField;
     cdsSystemUserACCOUNT_ENABLED: TIntegerField;
+    procedure dtsTimesheetStateChange(Sender: TObject);
   private
     { Private declarations }
   public
@@ -105,6 +107,21 @@ implementation
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
+uses RUtils;
+
 {$R *.dfm}
 
+procedure TTSDM.dtsTimesheetStateChange(Sender: TObject);
+var
+  EditMode: String;
+begin
+//  EditMode := 'False';
+//  EditMode :=  cdsTimesheet.State in [dsEdit, dsInsert];
+//    EditMode := 'True';
+
+  EditMode :=  BooleanToString( cdsTimesheet.State in [dsEdit, dsInsert]);
+  SendMessage(Application.MainForm.Handle, WM_STATE_CHANGE, DWORD(PChar(EditMode)), 0);
+end;
+
 end.
+
