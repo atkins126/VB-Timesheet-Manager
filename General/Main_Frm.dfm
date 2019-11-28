@@ -3496,81 +3496,81 @@ inherited MainFrm: TMainFrm
       Category = 0
       AutoGrayScale = False
     end
-    object dteFromDate: TcxBarEditItem
-      Caption = 'New Item'
-      Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
-      Width = 110
-      PropertiesClassName = 'TcxDateEditProperties'
-      Properties.DisplayFormat = 'dd/MM/yyyy'
-      Properties.EditFormat = 'dd/MM/yyyy'
-      Properties.ImmediatePost = True
-      Properties.PostPopupValueOnTab = True
-      Properties.ShowOnlyValidDates = True
-      Properties.ShowTime = False
-    end
-    object dteToDate: TcxBarEditItem
-      Caption = 'New Item'
-      Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
-      Width = 110
-      PropertiesClassName = 'TcxDateEditProperties'
-      Properties.DisplayFormat = 'dd/MM/yyyy'
-      Properties.EditFormat = 'dd/MM/yyyy'
-      Properties.ImmediatePost = True
-      Properties.PostPopupValueOnTab = True
-      Properties.SaveTime = False
-      Properties.ShowTime = False
-    end
     object lucPeriod: TcxBarEditItem
       Caption = 'New Item'
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
-      Width = 110
       PropertiesClassName = 'TcxLookupComboBoxProperties'
-      Properties.CaseSensitiveSearch = True
       Properties.DropDownAutoSize = True
       Properties.DropDownListStyle = lsFixedList
       Properties.ImmediatePost = True
       Properties.KeyFieldNames = 'THE_PERIOD'
       Properties.ListColumns = <
         item
+          Width = 70
           FieldName = 'THE_PERIOD'
         end>
       Properties.ListSource = TSDM.dtsTSPeriod
+      Properties.PostPopupValueOnTab = True
       Properties.OnEditValueChanged = lucPeriodPropertiesEditValueChanged
     end
     object lucUser: TcxBarEditItem
-      Caption = 'Hello'
-      Category = 0
-      Hint = 'Hello'
-      Visible = ivAlways
-      Width = 130
-      PropertiesClassName = 'TcxLookupComboBoxProperties'
-      Properties.DropDownAutoSize = True
-      Properties.DropDownListStyle = lsFixedList
-      Properties.ImmediatePost = True
-      Properties.ListColumns = <>
-      Properties.ListSource = TSDM.dtsSytemUser
-    end
-    object lucViewMode: TcxBarEditItem
       Caption = 'New Item'
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
-      PropertiesClassName = 'TcxComboBoxProperties'
-      Properties.DropDownSizeable = True
-      Properties.ImmediatePost = True
-      Properties.ImmediateUpdateText = True
-      Properties.Items.Strings = (
+      Width = 130
+      PropertiesClassName = 'TcxLookupComboBoxProperties'
+      Properties.KeyFieldNames = 'ID'
+      Properties.ListColumns = <
+        item
+          Width = 130
+          FieldName = 'LOGIN_NAME'
+        end>
+      Properties.ListSource = TSDM.dtsSytemUser
+      Properties.OnEditValueChanged = lucUserPropertiesEditValueChanged
+    end
+    object lucViewMode: TdxBarCombo
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      OnChange = lucViewModeChange
+      Items.Strings = (
         'Period'
         'Date Range')
+      ItemIndex = -1
+    end
+    object dteFromDate: TcxBarEditItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      PropertiesClassName = 'TcxDateEditProperties'
+      Properties.DisplayFormat = 'dd/MM/yyyy'
+      Properties.EditFormat = 'dd/MM/yyyy'
+      Properties.ImmediatePost = True
       Properties.PostPopupValueOnTab = True
-      Properties.OnEditValueChanged = lucViewModePropertiesEditValueChanged
-      InternalEditValue = ''
+      Properties.SaveTime = False
+      Properties.ShowOnlyValidDates = True
+      Properties.ShowTime = False
+      Properties.OnEditValueChanged = dteFromDatePropertiesEditValueChanged
+    end
+    object dteToDate: TcxBarEditItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      PropertiesClassName = 'TcxDateEditProperties'
+      Properties.DisplayFormat = 'dd/MM/yyyy'
+      Properties.EditFormat = 'dd/MM/yyyy'
+      Properties.ImmediatePost = True
+      Properties.PostPopupValueOnTab = True
+      Properties.SaveTime = False
+      Properties.ShowOnlyValidDates = True
+      Properties.ShowTime = False
+      Properties.OnEditValueChanged = dteToDatePropertiesEditValueChanged
     end
   end
   object imgNav32: TcxImageList
