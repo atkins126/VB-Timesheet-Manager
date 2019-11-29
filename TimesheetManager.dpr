@@ -29,7 +29,8 @@ uses
   VBProxyClass in '..\Lib\VBProxyClass.pas',
   Main_Frm in 'General\Main_Frm.pas' {MainFrm},
   TS_DM in 'Data Modules\TS_DM.pas' {TSDM: TDataModule},
-  VBCommonValues in '..\..\Lib\VBCommonValues.pas';
+  VBCommonValues in '..\..\Lib\VBCommonValues.pas',
+  Report_DM in '..\Lib\Report_DM.pas' {ReportDM: TDataModule};
 
 {$R *.res}
 

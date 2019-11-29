@@ -81,13 +81,24 @@ type
     lblPeriod: TdxBarStatic;
     lblFromDate: TdxBarStatic;
     lblToDate: TdxBarStatic;
-    btnGet: TdxBarLargeButton;
+    btnPreview: TdxBarLargeButton;
     actGetTimesheetData: TAction;
     lucPeriod: TcxBarEditItem;
     lucUser: TcxBarEditItem;
     lucViewMode: TdxBarCombo;
     dteFromDate: TcxBarEditItem;
     dteToDate: TcxBarEditItem;
+    actPreview: TAction;
+    actPrint: TAction;
+    actPDF: TAction;
+    actExcel: TAction;
+    actReports: TAction;
+    actPreferences: TAction;
+    btnPrint: TdxBarLargeButton;
+    btnPDF: TdxBarLargeButton;
+    btnExcel: TdxBarLargeButton;
+    btnReports: TdxBarLargeButton;
+    btnPreferences: TdxBarLargeButton;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoInsertEntry(Sender: TObject);
     procedure DoEditEntry(Sender: TObject);
@@ -106,6 +117,11 @@ type
     procedure dteFromDatePropertiesEditValueChanged(Sender: TObject);
     procedure dteToDatePropertiesEditValueChanged(Sender: TObject);
     procedure lucViewModeChange(Sender: TObject);
+    procedure DoPrint(Sender: TObject);
+    procedure DoPDF(Sender: TObject);
+    procedure DoEscel(Sender: TObject);
+    procedure DoReports(Sender: TObject);
+    procedure DoPreferences(Sender: TObject);
   private
     { Private declarations }
     FCurrentUserID: Integer;
@@ -152,7 +168,7 @@ uses
   MsgDialog_Frm,
   RUtils,
   Base_Frm,
-  Progress_Frm;
+  Progress_Frm, CommonValues;
 
 procedure TMainFrm.DrawCellBorder(var Msg: TMessage);
 begin
@@ -276,12 +292,14 @@ begin
 //      dteFromDate.SetFocus;
 //      ADateEdit := TcxBarEditItemControl(dteFromDate.Links[0].Control).Edit as TcxDateEdit;
 //      ADateEdit.Date := RegKey.ReadDate('From Date');
-      dteFromDate.EditValue := RegKey.ReadDate('From Date');
+      FFromDate := RegKey.ReadDate('From Date');
+      dteFromDate.EditValue := FFromDate;
 
 //      dteToDate.SetFocus;
 //      ADateEdit := TcxBarEditItemControl(dteToDate.Links[0].Control).Edit as TcxDateEdit;
 //      ADateEdit.Date := RegKey.ReadDate('To Date');
-      dteToDate.EditValue := RegKey.ReadDate('To Date');
+      FToDate := RegKey.ReadDate('To Date');
+      dteToDate.EditValue := FToDate;
 
 //      lucPeriod.SetFocus;
 //      ALookupComboBox := TcxBarEditItemControl(lucPeriod.Links[0].Control).Edit as TcxLookupComboBox;
@@ -320,6 +338,10 @@ begin
 
     actGetTimesheetData.Execute;
     FIteration := 0;
+    grdTimesheet.SetFocus;
+    viewTimesheet.Focused := True;
+    viewTimesheet.DataController.FocusedRecordIndex := 0;
+    viewTimesheet.Controller.FocusedRecord.Selected := True;
 
     if FCallingFromShell then
       if not SendMessageToApp('VB Shell', 'App Ready') then
@@ -371,18 +393,6 @@ begin
   MainFrm.Close;
 end;
 
-procedure TMainFrm.DoInsertEntry(Sender: TObject);
-begin
-  inherited;
-//
-end;
-
-procedure TMainFrm.DoEditEntry(Sender: TObject);
-begin
-  inherited;
-  TSDM.cdsTimesheet.Edit;
-end;
-
 procedure TMainFrm.DoDeleteEntry(Sender: TObject);
 begin
   inherited;
@@ -397,19 +407,54 @@ begin
   FIteration := 0;
 end;
 
-procedure TMainFrm.DoGetTimesheetData(Sender: TObject);
-var
-  ParamList: string;
+procedure TMainFrm.DoReports(Sender: TObject);
 begin
   inherited;
+//
+end;
+
+procedure TMainFrm.DoGetTimesheetData(Sender: TObject);
+var
+  ParamList, WhereClause: string;
+  AToDateEdit: TcxDateEdit;
+begin
+  inherited;
+  if lucViewMode.ItemIndex = 0 then
+  begin
+    if FTimesheetPeriod < 201901 then
+      raise EValidateException.Create('Invalid period. Please select a valid period and try again.');
+
+    ParamList := ' WHERE T.USER_ID=' + FCurrentUserID.ToString +
+      ' AND T.THE_PERIOD=' + FTimesheetPeriod.ToString + SEMI_COLON +
+      ONE_SPACE + SEMI_COLON + 'ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
+  end
+  else if lucViewMode.ItemIndex = 1 then
+  begin
+    if (FFromDate = 0.00) or (FToDate = 0.00) then
+      raise EValidateException.Create('Ivalide From and/or to date. Please sselect valid dates and try again.');
+
+    if FFromDate > FToDate then
+    begin
+      dteToDate.SetFocus;
+      AToDateEdit := TcxBarEditItemControl(dteToDate.Links[0].Control).Edit as TcxDateEdit;
+      AToDateEdit.Date := FFromDate;
+    end;
+//    raise EValidateException.Create('From date cannot be greater than To date. Please conrrect and try again.');
+
+    ParamList := ' WHERE T.USER_ID =' + FCurrentUserID.ToString +
+      ' AND T.ACTIVITY_DATE >=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FFromDate), '''') +
+      ' AND T.ACTIVITY_DATE <=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FtODate), '''') + SEMI_COLON +
+      ONE_SPACE + SEMI_COLON + 'ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
+  end;
+
   viewTimesheet.DataController.BeginUpdate;
   try
     if FIteration > 0 then
       SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Price List Table' + '|PROGRESS=' + FIteration.ToString)), 0);
 
-    ParamList := ' WHERE T.USER_ID=' + FCurrentUserID.ToString +
-      ' AND T.THE_PERIOD=' + FTimesheetPeriod.ToString + SEMI_COLON +
-      ONE_SPACE + SEMI_COLON + 'ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
+//    ParamList := ' WHERE T.USER_ID=' + FCurrentUserID.ToString +
+//      ' AND T.THE_PERIOD=' + FTimesheetPeriod.ToString + SEMI_COLON +
+//      ONE_SPACE + SEMI_COLON + 'ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
 
     VBBaseDM.GetData(27, TSDM.cdsTimesheet, TSDM.cdsTimesheet.Name, ParamList,
       'C:\Data\Xml\Timesheet.xml', TSDM.cdsTimesheet.UpdateOptions.Generatorname,
@@ -770,118 +815,143 @@ end;
 
 procedure TMainFrm.dteFromDatePropertiesEditValueChanged(Sender: TObject);
 var
-  AFromDateEdit, AToDateEdit: TcxDateEdit;
+  AFromDateEdit {, AToDateEdit}: TcxDateEdit;
   RegKey: TRegistry;
   ATag: integer;
 begin
   inherited;
-  if FShowingForm then
-    Exit;
-
   dteFromDate.SetFocus;
   AFromDateEdit := TcxBarEditItemControl(dteFromDate.Links[0].Control).Edit as TcxDateEdit;
-//  Atag := TcxBarEditItemControl(dteFromDate.Links[0].Control).Edit.Tag;
-  Atag := TcxDateEdit(Sender).Tag;
-  dteToDate.SetFocus;
-  AToDateEdit := TcxBarEditItemControl(dteToDate.Links[0].Control).Edit as TcxDateEdit;
+  FFromDate := AFromDateEdit.Date;
 
-  if AFromDateEdit.CanFocus and AToDateEdit.CanFocus then
-  begin
-    RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
-    try
-      RegKey.RootKey := HKEY_CURRENT_USER;
-      Regkey.OpenKey(KEY_TIME_SHEET, True);
+//  if AFromDateEdit.CanFocus and AToDateEdit.CanFocus then
+//  begin
+  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+  try
+    RegKey.RootKey := HKEY_CURRENT_USER;
+    Regkey.OpenKey(KEY_TIME_SHEET, True);
 
-      case ATag of
-        0:
-          begin
-            FFromDate := AFromDateEdit.EditValue;
-            if VarIsNull(AToDateEdit.EditValue) then
-            begin
-              FToDate := FromDate;
-              AToDateEdit.EditValue := FromDate;
-            end
-            else if AToDateEdit.EditValue < AFromDateEdit.EditValue then
-            begin
-              FToDate := FFromDate;
-              AToDateEdit.EditValue := FToDate;
-            end;
-          end;
+//      case ATag of
+//        0:
+//          begin
+//            FFromDate := AFromDateEdit.EditValue;
+//            if VarIsNull(AToDateEdit.EditValue) then
+//            begin
+//              FToDate := FromDate;
+//              AToDateEdit.EditValue := FromDate;
+//            end
+//            else if AToDateEdit.EditValue < AFromDateEdit.EditValue then
+//            begin
+//              FToDate := FFromDate;
+//              AToDateEdit.EditValue := FToDate;
+//            end;
+//          end;
+//
+//        1:
+//          begin
+//            FToDate := AToDateEdit.EditValue;
+//            if VarIsNull(AFromDateEdit.EditValue) then
+//            begin
+//              FFromDate := AToDateEdit.EditValue;
+//              AFromDateEdit.EditValue := FromDate;
+//            end
+//            else if AFromDateEdit.EditValue < AToDateEdit.EditValue then
+//            begin
+//              FFromDate := FToDate;
+//              AFromDateEdit.EditValue := FFromDate;
+//            end;
+//          end;
+//      end;
 
-        1:
-          begin
-            FToDate := AToDateEdit.EditValue;
-            if VarIsNull(AFromDateEdit.EditValue) then
-            begin
-              FFromDate := AToDateEdit.EditValue;
-              AFromDateEdit.EditValue := FromDate;
-            end
-            else if AFromDateEdit.EditValue < AToDateEdit.EditValue then
-            begin
-              FFromDate := FToDate;
-              AFromDateEdit.EditValue := FFromDate;
-            end;
-          end;
-      end;
+    if not FShowingForm then
+    begin
+      Regkey.WriteDate('From Date', FFromDate);
+
+//        if not VarIsNull(FToDate) then
+//          RegKey.WriteDate('To Date', FToDate);
 
       if not FShowingForm then
-      begin
-        Regkey.WriteDate('From Date', FFromDate);
-
-        if not VarIsNull(FToDate) then
-          RegKey.WriteDate('To Date', FToDate);
-
-//        actGetTimesheetData.Execute;
-      end;
-
-      RegKey.CloseKey;
-    finally
-      RegKey.Free
+        actGetTimesheetData.Execute;
     end;
+
+    RegKey.CloseKey;
+  finally
+    RegKey.Free
   end;
+//  end;
 end;
 
 procedure TMainFrm.dteToDatePropertiesEditValueChanged(Sender: TObject);
 var
-  AToDateEdit: TcxDateEdit;
+  {AFromDateEdit, }AToDateEdit: TcxDateEdit;
   RegKey: TRegistry;
   ATag: integer;
-  FromDate: TDateTime;
 begin
   inherited;
-  if FShowingForm then
-    Exit;
+//  dteFromDate.SetFocus;
+//  AFromDateEdit := TcxBarEditItemControl(dteFromDate.Links[0].Control).Edit as TcxDateEdit;
+////  Atag := TcxBarEditItemControl(dteFromDate.Links[0].Control).Edit.Tag;
+//  Atag := TcxDateEdit(Sender).Tag;
+  dteToDate.SetFocus;
+  AToDateEdit := TcxBarEditItemControl(dteToDate.Links[0].Control).Edit as TcxDateEdit;
 
-//  Atag := TcxBarEditItemControl(dteFromDate.Links[0].Control).Edit.Tag;
+  FToDate := AToDateEdit.Date;
 
-  if AToDateEdit.CanFocus then
-  begin
-    dteFromDate.SetFocus;
-    AToDateEdit := TcxBarEditItemControl(dteFromDate.Links[0].Control).Edit as TcxDateEdit;
-    ATag := AToDateEdit.Tag;
-    RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+//  if AFromDateEdit.CanFocus and AToDateEdit.CanFocus then
+//  begin
+  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+  try
+    RegKey.RootKey := HKEY_CURRENT_USER;
+    Regkey.OpenKey(KEY_TIME_SHEET, True);
 
-    try
-      RegKey.RootKey := HKEY_CURRENT_USER;
-      Regkey.OpenKey(KEY_TIME_SHEET, True);
+//      case ATag of
+//        0:
+//          begin
+//            FToDate := AFromDateEdit.EditValue;
+//            if VarIsNull(AToDateEdit.EditValue) then
+//            begin
+//              FToDate := FromDate;
+//              AToDateEdit.EditValue := FromDate;
+//            end
+//            else if AToDateEdit.EditValue < AFromDateEdit.EditValue then
+//            begin
+//              FToDate := FToDate;
+//              AToDateEdit.EditValue := FToDate;
+//            end;
+//          end;
+//
+//        1:
+//          begin
+//            FToDate := AToDateEdit.EditValue;
+//            if VarIsNull(AFromDateEdit.EditValue) then
+//            begin
+//              FToDate := AToDateEdit.EditValue;
+//              AFromDateEdit.EditValue := FromDate;
+//            end
+//            else if AFromDateEdit.EditValue < AToDateEdit.EditValue then
+//            begin
+//              FToDate := FToDate;
+//              AFromDateEdit.EditValue := FToDate;
+//            end;
+//          end;
+//      end;
 
-      FToDate := AToDateEdit.EditValue;
+    if not FShowingForm then
+    begin
+      Regkey.WriteDate('To Date', FToDate);
+
+//        if not VarIsNull(FToDate) then
+//          RegKey.WriteDate('To Date', FToDate);
 
       if not FShowingForm then
-      begin
-        Regkey.WriteDate('From Date', FFromDate);
-
-        if not VarIsNull(FToDate) then
-          RegKey.WriteDate('To Date', FToDate);
-
-//        actGetTimesheetData.Execute;
-      end;
-
-      RegKey.CloseKey;
-    finally
-      RegKey.Free
+        actGetTimesheetData.Execute;
     end;
+
+    RegKey.CloseKey;
+  finally
+    RegKey.Free
   end;
+//  end;
 end;
 
 procedure TMainFrm.lucViewModeChange(Sender: TObject);
@@ -893,38 +963,38 @@ var
   MonthEndDate: TDateTime;
 begin
   inherited;
-//  barToolbar.Bars.BeginUpdate;
+  barToolbar.Bars.BeginUpdate;
 //  AComboBox := TcxBarEditItemControl(lucViewMode.Links[0].Control).Edit as TcxComboBox;
   lucPeriod.Enabled := lucViewMode.ItemIndex = 0;
   dteFromDate.Enabled := not lucPeriod.Enabled;
   dteToDate.Enabled := not lucPeriod.Enabled;
   MonthEndDate := GetMonthEndDate(FTimesheetPeriod);
 
-//  try
-//    case AComboBox.ItemIndex of
-//      0:
-//        begin
-//          lucPeriod.Visible := ivAlways;
-//          lblPeriod.Visible := ivAlways;
-//          lblFromDate.Visible := ivNever;
-//          dteFromDate.Visible := ivNever;
-//          lblToDate.Visible := ivNever;
-//          dteToDate.Visible := ivNever;
-//        end;
-//
-//      1:
-//        begin
-//          lucPeriod.Visible := ivNever;
-//          lblPeriod.Visible := ivNever;
-//          lblFromDate.Visible := ivAlways;
-//          dteFromDate.Visible := ivAlways;
-//          lblToDate.Visible := ivAlways;
-//          dteToDate.Visible := ivAlways;
-//        end;
-//    end;
-//  finally
-//    barToolbar.Bars.EndUpdate(True);
-//  end;
+  try
+    case lucViewMode.ItemIndex of
+      0:
+        begin
+          lucPeriod.Visible := ivAlways;
+          lblPeriod.Visible := ivAlways;
+          lblFromDate.Visible := ivNever;
+          dteFromDate.Visible := ivNever;
+          lblToDate.Visible := ivNever;
+          dteToDate.Visible := ivNever;
+        end;
+
+      1:
+        begin
+          lucPeriod.Visible := ivNever;
+          lblPeriod.Visible := ivNever;
+          lblFromDate.Visible := ivAlways;
+          dteFromDate.Visible := ivAlways;
+          lblToDate.Visible := ivAlways;
+          dteToDate.Visible := ivAlways;
+        end;
+    end;
+  finally
+    barToolbar.Bars.EndUpdate(True);
+  end;
 
   Regkey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   try
@@ -1001,6 +1071,42 @@ begin
   AMonth := Period mod 100;
   ADay := DaysInAMonth(AYear, AMonth);
   Result := EncodeDate(Ayear, Amonth, Aday);
+end;
+
+procedure TMainFrm.DoInsertEntry(Sender: TObject);
+begin
+  inherited;
+//
+end;
+
+procedure TMainFrm.DoPDF(Sender: TObject);
+begin
+  inherited;
+//
+end;
+
+procedure TMainFrm.DoPreferences(Sender: TObject);
+begin
+  inherited;
+//
+end;
+
+procedure TMainFrm.DoPrint(Sender: TObject);
+begin
+  inherited;
+//
+end;
+
+procedure TMainFrm.DoEditEntry(Sender: TObject);
+begin
+  inherited;
+  TSDM.cdsTimesheet.Edit;
+end;
+
+procedure TMainFrm.DoEscel(Sender: TObject);
+begin
+  inherited;
+//
 end;
 
 end.
