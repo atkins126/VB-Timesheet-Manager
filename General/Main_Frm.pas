@@ -19,7 +19,7 @@ uses
   cxGridBandedTableView, cxGridDBBandedTableView, cxGrid, cxDBLookupComboBox,
   cxTextEdit, cxCheckBox, cxCalendar, CommonMethods, cxContainer, Vcl.ComCtrls,
   dxCore, cxDateUtils, cxDropDownEdit, cxMaskEdit, cxLookupEdit, cxDBLookupEdit,
-  dxBarExtItems, cxBarEditItem;
+  dxBarExtItems, cxBarEditItem, cxMemo, Vcl.Menus;
 
 type
   TMainFrm = class(TBaseLayoutFrm)
@@ -98,7 +98,43 @@ type
     btnPDF: TdxBarLargeButton;
     btnExcel: TdxBarLargeButton;
     btnReports: TdxBarLargeButton;
-    btnPreferences: TdxBarLargeButton;
+    btnOptions: TdxBarLargeButton;
+    grdTimesheetPrint: TcxGrid;
+    viewTimesheetPrint: TcxGridDBBandedTableView;
+    edtTID: TcxGridDBBandedColumn;
+    edtTFirstName: TcxGridDBBandedColumn;
+    edtTLastName: TcxGridDBBandedColumn;
+    edtTThePeriod: TcxGridDBBandedColumn;
+    edtTLoginName: TcxGridDBBandedColumn;
+    edtTActivityDate: TcxGridDBBandedColumn;
+    edtTCustomerType: TcxGridDBBandedColumn;
+    edtTCustomerName: TcxGridDBBandedColumn;
+    edtTActivtyType: TcxGridDBBandedColumn;
+    edtTAActivty: TcxGridDBBandedColumn;
+    edtTPriceItem: TcxGridDBBandedColumn;
+    edtTTimeSpent: TcxGridDBBandedColumn;
+    edtTHours: TcxGridDBBandedColumn;
+    edtTRate: TcxGridDBBandedColumn;
+    edtTStdRate: TcxGridDBBandedColumn;
+    edtTItemValue: TcxGridDBBandedColumn;
+    edtTTotalCFwd: TcxGridDBBandedColumn;
+    edtTWeekEnding: TcxGridDBBandedColumn;
+    edtTBillable: TcxGridDBBandedColumn;
+    edtTBillableStr: TcxGridDBBandedColumn;
+    edtTInvoiceNo: TcxGridDBBandedColumn;
+    edtTInvDate: TcxGridDBBandedColumn;
+    edtTCreditNoteNo: TcxGridDBBandedColumn;
+    edtTLocked: TcxGridDBBandedColumn;
+    edtTLockedStr: TcxGridDBBandedColumn;
+    edtTCFwd: TcxGridDBBandedColumn;
+    edtTCFwdStr: TcxGridDBBandedColumn;
+    edtTAddWork: TcxGridDBBandedColumn;
+    edtTAddWorkStr: TcxGridDBBandedColumn;
+    lvlTimesheetPrint: TcxGridLevel;
+    popTimesheet: TPopupMenu;
+    Insert1: TMenuItem;
+    Edit1: TMenuItem;
+    Delete1: TMenuItem;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoInsertEntry(Sender: TObject);
     procedure DoEditEntry(Sender: TObject);
@@ -119,9 +155,11 @@ type
     procedure lucViewModeChange(Sender: TObject);
     procedure DoPrint(Sender: TObject);
     procedure DoPDF(Sender: TObject);
-    procedure DoEscel(Sender: TObject);
+    procedure DoExcel(Sender: TObject);
     procedure DoReports(Sender: TObject);
     procedure DoPreferences(Sender: TObject);
+    procedure viewTimesheetDblClick(Sender: TObject);
+    procedure viewTimesheetSelectionChanged(Sender: TcxCustomGridTableView);
   private
     { Private declarations }
     FCurrentUserID: Integer;
@@ -168,7 +206,9 @@ uses
   MsgDialog_Frm,
   RUtils,
   Base_Frm,
-  Progress_Frm, CommonValues;
+  Progress_Frm,
+  CommonValues,
+  Report_DM, TimesheetEdit_Frm, TimesheetPrefrrences_Frm;
 
 procedure TMainFrm.DrawCellBorder(var Msg: TMessage);
 begin
@@ -545,6 +585,22 @@ begin
         PostMessage(Handle, CM_DRAWBORDER, Integer(ACanvas), Integer(AViewInfo));
       end;
   end;
+end;
+
+procedure TMainFrm.viewTimesheetDblClick(Sender: TObject);
+begin
+  inherited;
+  actEdit.Execute;
+end;
+
+procedure TMainFrm.viewTimesheetSelectionChanged(Sender: TcxCustomGridTableView);
+var
+  C: TcxCustomGridTableController;
+begin
+  inherited;
+  C := viewTimesheet.Controller;
+  actInsert.Enabled := c.SelectedRecordCount <= 1;
+  actEdit.Enabled := c.SelectedRecordCount <= 1;
 end;
 
 procedure TMainFrm.OpenTables;
@@ -1076,7 +1132,20 @@ end;
 procedure TMainFrm.DoInsertEntry(Sender: TObject);
 begin
   inherited;
-//
+  case TAction(Sender).Tag of
+    0: TSDM.cdsTimesheet.Insert;
+    1: TSDM.cdsTimesheet.Edit;
+  end;
+
+  if TimesheetEditFrm = nil then
+    TimesheetEditFrm := TTimesheetEditFrm.Create(nil);
+
+  if TimesheetEditFrm.ShowModal = mrCancel then
+    if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
+      TSDM.cdsTimesheet.Cancel;
+
+  TimesheetEditFrm.Close;
+  FreeAndNil(TimesheetEditFrm);
 end;
 
 procedure TMainFrm.DoPDF(Sender: TObject);
@@ -1088,7 +1157,11 @@ end;
 procedure TMainFrm.DoPreferences(Sender: TObject);
 begin
   inherited;
-//
+  if TimesheetPrefrrencesFrm = nil then
+    TimesheetPrefrrencesFrm := TTimesheetPrefrrencesFrm.Create(nil);
+  TimesheetPrefrrencesFrm.ShowModal;
+  TimesheetPrefrrencesFrm.Close;
+  FreeAndNil(TimesheetPrefrrencesFrm);
 end;
 
 procedure TMainFrm.DoPrint(Sender: TObject);
@@ -1100,10 +1173,10 @@ end;
 procedure TMainFrm.DoEditEntry(Sender: TObject);
 begin
   inherited;
-  TSDM.cdsTimesheet.Edit;
+  //
 end;
 
-procedure TMainFrm.DoEscel(Sender: TObject);
+procedure TMainFrm.DoExcel(Sender: TObject);
 begin
   inherited;
 //

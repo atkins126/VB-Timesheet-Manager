@@ -93,7 +93,10 @@ type
     cdsSystemUserEMAIL_ADDRESS: TStringField;
     cdsSystemUserPASSWORD: TStringField;
     cdsSystemUserACCOUNT_ENABLED: TIntegerField;
+    cdsCustomerLookupACTIVE_STATUS: TStringField;
     procedure dtsTimesheetStateChange(Sender: TObject);
+    procedure cdsCustomerLookupCalcFields(DataSet: TDataSet);
+    procedure cdsTimesheetNewRecord(DataSet: TDataSet);
   private
     { Private declarations }
   public
@@ -111,15 +114,34 @@ uses RUtils;
 
 {$R *.dfm}
 
+procedure TTSDM.cdsCustomerLookupCalcFields(DataSet: TDataSet);
+begin
+  inherited;
+  case cdsCustomerLookup.FieldByName('IS_ACTIVE').Asinteger of
+    0: cdsCustomerLookup.FieldByName('ACTIVE_STATUS').AsString := 'No';
+    1: cdsCustomerLookup.FieldByName('ACTIVE_STATUS').AsString := 'Yes';
+
+  end;
+end;
+
+procedure TTSDM.cdsTimesheetNewRecord(DataSet: TDataSet);
+begin
+  inherited;
+  cdsTimesheet.FieldByName('BILLABLE').AsInteger := 0;
+  cdsTimesheet.FieldByName('IS_ADDITIONAL_WORK').AsInteger := 0;
+  cdsTimesheet.FieldByName('CARRY_FORWARD').AsInteger := 0;
+  cdsTimesheet.FieldByName('APPROVED').AsInteger := 0;
+end;
+
 procedure TTSDM.dtsTimesheetStateChange(Sender: TObject);
 var
-  EditMode: String;
+  EditMode: string;
 begin
 //  EditMode := 'False';
 //  EditMode :=  cdsTimesheet.State in [dsEdit, dsInsert];
 //    EditMode := 'True';
 
-  EditMode :=  BooleanToString( cdsTimesheet.State in [dsEdit, dsInsert]);
+  EditMode := BooleanToString(cdsTimesheet.State in [dsEdit, dsInsert]);
   SendMessage(Application.MainForm.Handle, WM_STATE_CHANGE, DWORD(PChar(EditMode)), 0);
 end;
 

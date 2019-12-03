@@ -31,8 +31,11 @@ inherited MainFrm: TMainFrm
       Height = 494
       TabOrder = 1
       object viewTimesheet: TcxGridDBBandedTableView
+        PopupMenu = popTimesheet
+        OnDblClick = viewTimesheetDblClick
         Navigator.Buttons.CustomButtons = <>
         OnCustomDrawCell = viewTimesheetCustomDrawCell
+        OnSelectionChanged = viewTimesheetSelectionChanged
         DataController.DataSource = TSDM.dtsTimesheet
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
@@ -41,6 +44,7 @@ inherited MainFrm: TMainFrm
         OptionsBehavior.FocusCellOnTab = True
         OptionsBehavior.NavigatorHints = True
         OptionsBehavior.FocusCellOnCycle = True
+        OptionsSelection.MultiSelect = True
         Bands = <
           item
             Caption = 'General'
@@ -648,6 +652,573 @@ inherited MainFrm: TMainFrm
     Font.Name = 'Tahoma'
     Font.Style = []
   end
+  object grdTimesheetPrint: TcxGrid [2]
+    Left = 1344
+    Top = 203
+    Width = 1181
+    Height = 421
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = 'Calibri'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 2
+    Visible = False
+    object viewTimesheetPrint: TcxGridDBBandedTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = ReportDM.dtsTSBillable
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.SummaryGroups = <>
+      OptionsView.CellAutoHeight = True
+      OptionsView.GroupByBox = False
+      Bands = <
+        item
+          Caption = 'Timesheet Detail'
+        end>
+      object edtTID: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'ID'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.Alignment.Vert = taTopJustify
+        Properties.ReadOnly = True
+        Visible = False
+        MinWidth = 50
+        Options.Editing = False
+        Options.Filtering = False
+        Options.IncSearch = False
+        Options.Grouping = False
+        Options.HorzSizing = False
+        Options.Moving = False
+        Width = 50
+        Position.BandIndex = 0
+        Position.ColIndex = 0
+        Position.RowIndex = 0
+      end
+      object edtTFirstName: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'FIRST_NAME'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Vert = taTopJustify
+        Properties.ReadOnly = True
+        Visible = False
+        MinWidth = 165
+        Options.Editing = False
+        Options.Filtering = False
+        Options.Grouping = False
+        Options.HorzSizing = False
+        Options.Moving = False
+        Width = 165
+        Position.BandIndex = 0
+        Position.ColIndex = 1
+        Position.RowIndex = 0
+      end
+      object edtTLastName: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'LAST_NAME'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Vert = taTopJustify
+        Properties.ReadOnly = True
+        Visible = False
+        MinWidth = 165
+        Options.Editing = False
+        Options.Filtering = False
+        Options.Grouping = False
+        Options.HorzSizing = False
+        Options.Moving = False
+        Width = 165
+        Position.BandIndex = 0
+        Position.ColIndex = 2
+        Position.RowIndex = 0
+      end
+      object edtTThePeriod: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'THE_PERIOD'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.Alignment.Vert = taTopJustify
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '######'
+        Properties.EditFormat = '######'
+        Properties.ReadOnly = True
+        MinWidth = 60
+        Options.Editing = False
+        Options.IncSearch = False
+        Options.HorzSizing = False
+        Width = 60
+        Position.BandIndex = 0
+        Position.ColIndex = 3
+        Position.RowIndex = 0
+      end
+      object edtTLoginName: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'LOGIN_NAME'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Vert = taTopJustify
+        Properties.ReadOnly = True
+        MinWidth = 120
+        Options.Editing = False
+        Options.Filtering = False
+        Options.HorzSizing = False
+        Width = 120
+        Position.BandIndex = 0
+        Position.ColIndex = 5
+        Position.RowIndex = 0
+      end
+      object edtTActivityDate: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'ACTIVITY_DATE'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.Alignment.Vert = taTopJustify
+        Properties.ReadOnly = True
+        MinWidth = 90
+        Options.Editing = False
+        Options.Filtering = False
+        Options.IncSearch = False
+        Options.HorzSizing = False
+        Options.Moving = False
+        Width = 90
+        Position.BandIndex = 0
+        Position.ColIndex = 4
+        Position.RowIndex = 0
+      end
+      object edtTCustomerType: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'CUSTOMER_TYPE'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Vert = taTopJustify
+        Properties.ReadOnly = True
+        MinWidth = 200
+        Options.Editing = False
+        Options.Filtering = False
+        Options.Grouping = False
+        Options.HorzSizing = False
+        Options.Moving = False
+        Width = 200
+        Position.BandIndex = 0
+        Position.ColIndex = 6
+        Position.RowIndex = 0
+      end
+      object edtTCustomerName: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'CUSTOMER_NAME'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Vert = taTopJustify
+        Properties.ReadOnly = True
+        MinWidth = 400
+        Options.Editing = False
+        Options.Filtering = False
+        Options.HorzSizing = False
+        Width = 400
+        Position.BandIndex = 0
+        Position.ColIndex = 7
+        Position.RowIndex = 0
+      end
+      object edtTActivtyType: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'ACTIVITY_TYPE'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Vert = taTopJustify
+        Properties.ReadOnly = True
+        MinWidth = 250
+        Options.Editing = False
+        Options.Filtering = False
+        Options.HorzSizing = False
+        Width = 250
+        Position.BandIndex = 0
+        Position.ColIndex = 8
+        Position.RowIndex = 0
+      end
+      object edtTAActivty: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'ACTIVITY'
+        PropertiesClassName = 'TcxMemoProperties'
+        Properties.ReadOnly = True
+        MinWidth = 500
+        Options.Editing = False
+        Options.Filtering = False
+        Options.Grouping = False
+        Options.HorzSizing = False
+        Options.Moving = False
+        Options.Sorting = False
+        Width = 500
+        Position.BandIndex = 0
+        Position.ColIndex = 9
+        Position.RowIndex = 0
+      end
+      object edtTPriceItem: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'PRICE_LIST_ITEM'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Vert = taTopJustify
+        Properties.ReadOnly = True
+        MinWidth = 400
+        Options.Editing = False
+        Options.Filtering = False
+        Options.Grouping = False
+        Options.HorzSizing = False
+        Options.Moving = False
+        Width = 400
+        Position.BandIndex = 0
+        Position.ColIndex = 10
+        Position.RowIndex = 0
+      end
+      object edtTTimeSpent: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'TIME_SPENT'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.Alignment.Horz = taRightJustify
+        Properties.Alignment.Vert = taTopJustify
+        Properties.DisplayFormat = '###,###,##0.00'
+        Properties.EditFormat = '###,###,##0.00'
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taRightJustify
+        MinWidth = 60
+        Options.Editing = False
+        Options.Filtering = False
+        Options.IncSearch = False
+        Options.Grouping = False
+        Options.HorzSizing = False
+        Options.Moving = False
+        Width = 60
+        Position.BandIndex = 0
+        Position.ColIndex = 11
+        Position.RowIndex = 0
+      end
+      object edtTHours: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'TIME_HOURS'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.Alignment.Horz = taRightJustify
+        Properties.Alignment.Vert = taTopJustify
+        Properties.DisplayFormat = '###,###,##0.00'
+        Properties.EditFormat = '###,###,##0.00'
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taRightJustify
+        MinWidth = 60
+        Options.Editing = False
+        Options.Filtering = False
+        Options.IncSearch = False
+        Options.Grouping = False
+        Options.HorzSizing = False
+        Options.Moving = False
+        Width = 60
+        Position.BandIndex = 0
+        Position.ColIndex = 12
+        Position.RowIndex = 0
+      end
+      object edtTRate: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'ACTUAL_RATE'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.Alignment.Horz = taRightJustify
+        Properties.Alignment.Vert = taTopJustify
+        Properties.DisplayFormat = '###,###,##0.00'
+        Properties.EditFormat = '###,###,##0.00'
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taRightJustify
+        MinWidth = 90
+        Options.Editing = False
+        Options.Filtering = False
+        Options.IncSearch = False
+        Options.Grouping = False
+        Options.HorzSizing = False
+        Options.Moving = False
+        Width = 90
+        Position.BandIndex = 0
+        Position.ColIndex = 13
+        Position.RowIndex = 0
+      end
+      object edtTStdRate: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'STD_RATE'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.Alignment.Horz = taRightJustify
+        Properties.Alignment.Vert = taTopJustify
+        Properties.DisplayFormat = '###,###,##0.00'
+        Properties.EditFormat = '###,###,##0.00'
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taRightJustify
+        MinWidth = 90
+        Options.Editing = False
+        Options.Filtering = False
+        Options.IncSearch = False
+        Options.Grouping = False
+        Options.HorzSizing = False
+        Options.Moving = False
+        Width = 90
+        Position.BandIndex = 0
+        Position.ColIndex = 14
+        Position.RowIndex = 0
+      end
+      object edtTItemValue: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'ITEM_VALUE'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.Alignment.Horz = taRightJustify
+        Properties.Alignment.Vert = taTopJustify
+        Properties.DisplayFormat = '###,###,##0.00'
+        Properties.EditFormat = '###,###,##0.00'
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taRightJustify
+        MinWidth = 90
+        Options.Editing = False
+        Options.Filtering = False
+        Options.IncSearch = False
+        Options.Grouping = False
+        Options.HorzSizing = False
+        Options.Moving = False
+        Width = 90
+        Position.BandIndex = 0
+        Position.ColIndex = 15
+        Position.RowIndex = 0
+      end
+      object edtTTotalCFwd: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'TOTAL_CARRY_FORWARD'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.Alignment.Horz = taRightJustify
+        Properties.Alignment.Vert = taTopJustify
+        Properties.DisplayFormat = '###,##0.00'
+        Properties.EditFormat = '###,##0.00'
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taRightJustify
+        MinWidth = 90
+        Options.Editing = False
+        Options.Filtering = False
+        Options.IncSearch = False
+        Options.Grouping = False
+        Options.HorzSizing = False
+        Options.Moving = False
+        Width = 90
+        Position.BandIndex = 0
+        Position.ColIndex = 16
+        Position.RowIndex = 0
+      end
+      object edtTWeekEnding: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'WEEK_ENDING'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'dd/MM/yyyy'
+        Properties.EditFormat = 'dd/MM/yyyy'
+        Properties.ReadOnly = True
+        Visible = False
+        MinWidth = 90
+        Options.Editing = False
+        Options.Filtering = False
+        Options.IncSearch = False
+        Options.Grouping = False
+        Options.HorzSizing = False
+        Options.Moving = False
+        Width = 90
+        Position.BandIndex = 0
+        Position.ColIndex = 17
+        Position.RowIndex = 0
+      end
+      object edtTBillable: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'BILLABLE'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        Properties.Alignment = taCenter
+        Properties.ReadOnly = True
+        Properties.ValueChecked = 1
+        Properties.ValueUnchecked = 0
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        MinWidth = 25
+        Options.Editing = False
+        Options.Filtering = False
+        Options.IncSearch = False
+        Options.Grouping = False
+        Options.HorzSizing = False
+        Options.Moving = False
+        Width = 25
+        Position.BandIndex = 0
+        Position.ColIndex = 18
+        Position.RowIndex = 0
+      end
+      object edtTBillableStr: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'BILLABLE_STR'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Horz = taCenter
+        Properties.Alignment.Vert = taTopJustify
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        MinWidth = 25
+        Options.Editing = False
+        Options.Filtering = False
+        Options.Grouping = False
+        Options.HorzSizing = False
+        Options.Moving = False
+        Width = 25
+        Position.BandIndex = 0
+        Position.ColIndex = 19
+        Position.RowIndex = 0
+      end
+      object edtTInvoiceNo: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'INVOICE_ID'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.Alignment.Horz = taRightJustify
+        Properties.Alignment.Vert = taTopJustify
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '######'
+        Properties.EditFormat = '######'
+        Properties.ReadOnly = True
+        MinWidth = 74
+        Options.Editing = False
+        Options.Filtering = False
+        Options.IncSearch = False
+        Options.Grouping = False
+        Options.HorzSizing = False
+        Options.Moving = False
+        Position.BandIndex = 0
+        Position.ColIndex = 20
+        Position.RowIndex = 0
+      end
+      object edtTInvDate: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'INVOICE_DATE'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.Alignment.Vert = taTopJustify
+        Properties.ReadOnly = True
+        MinWidth = 90
+        Options.Editing = False
+        Options.Filtering = False
+        Options.IncSearch = False
+        Options.HorzSizing = False
+        Options.Moving = False
+        Width = 90
+        Position.BandIndex = 0
+        Position.ColIndex = 21
+        Position.RowIndex = 0
+      end
+      object edtTCreditNoteNo: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'CN_ID'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.Alignment.Horz = taRightJustify
+        Properties.Alignment.Vert = taTopJustify
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '######'
+        Properties.EditFormat = '######'
+        Properties.ReadOnly = True
+        MinWidth = 74
+        Options.Editing = False
+        Options.Filtering = False
+        Options.IncSearch = False
+        Options.Grouping = False
+        Options.HorzSizing = False
+        Options.Moving = False
+        Position.BandIndex = 0
+        Position.ColIndex = 22
+        Position.RowIndex = 0
+      end
+      object edtTLocked: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'LOCKED'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        Properties.Alignment = taCenter
+        Properties.ReadOnly = True
+        Properties.ValueChecked = 1
+        Properties.ValueUnchecked = 0
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        MinWidth = 40
+        Options.Editing = False
+        Options.Filtering = False
+        Options.IncSearch = False
+        Options.Grouping = False
+        Options.HorzSizing = False
+        Options.Moving = False
+        Width = 40
+        Position.BandIndex = 0
+        Position.ColIndex = 23
+        Position.RowIndex = 0
+      end
+      object edtTLockedStr: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'LOCKED_STR'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Horz = taCenter
+        Properties.Alignment.Vert = taTopJustify
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        MinWidth = 35
+        Options.Editing = False
+        Options.Filtering = False
+        Options.IncSearch = False
+        Options.Grouping = False
+        Options.HorzSizing = False
+        Options.Moving = False
+        Options.Sorting = False
+        Width = 35
+        Position.BandIndex = 0
+        Position.ColIndex = 24
+        Position.RowIndex = 0
+      end
+      object edtTCFwd: TcxGridDBBandedColumn
+        Caption = 'CF'
+        DataBinding.FieldName = 'CARRY_FORWARD'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        Properties.Alignment = taRightJustify
+        Properties.ReadOnly = True
+        Properties.ValueChecked = 1
+        Properties.ValueUnchecked = 0
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        MinWidth = 25
+        Options.Editing = False
+        Options.Filtering = False
+        Options.IncSearch = False
+        Options.Grouping = False
+        Options.HorzSizing = False
+        Options.Moving = False
+        Width = 25
+        Position.BandIndex = 0
+        Position.ColIndex = 25
+        Position.RowIndex = 0
+      end
+      object edtTCFwdStr: TcxGridDBBandedColumn
+        Caption = 'CF'
+        DataBinding.FieldName = 'CARRY_FORWARD_STR'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Horz = taRightJustify
+        Properties.Alignment.Vert = taTopJustify
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        MinWidth = 25
+        Options.Editing = False
+        Options.Filtering = False
+        Options.Grouping = False
+        Options.HorzSizing = False
+        Options.Moving = False
+        Width = 25
+        Position.BandIndex = 0
+        Position.ColIndex = 26
+        Position.RowIndex = 0
+      end
+      object edtTAddWork: TcxGridDBBandedColumn
+        Caption = 'Ad Wk'
+        DataBinding.FieldName = 'IS_ADDITIONAL_WORK'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        Properties.Alignment = taCenter
+        Properties.ReadOnly = True
+        Properties.ValueChecked = 1
+        Properties.ValueUnchecked = 0
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        MinWidth = 40
+        Options.Editing = False
+        Options.Filtering = False
+        Options.IncSearch = False
+        Options.Grouping = False
+        Options.HorzSizing = False
+        Options.Moving = False
+        Width = 40
+        Position.BandIndex = 0
+        Position.ColIndex = 27
+        Position.RowIndex = 0
+      end
+      object edtTAddWorkStr: TcxGridDBBandedColumn
+        Caption = 'Ad Wk'
+        DataBinding.FieldName = 'IS_ADDITIONAL_WORK_STR'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Horz = taCenter
+        Properties.Alignment.Vert = taTopJustify
+        Properties.ReadOnly = True
+        MinWidth = 50
+        Options.Editing = False
+        Options.Filtering = False
+        Options.Grouping = False
+        Options.HorzSizing = False
+        Options.Moving = False
+        Width = 50
+        Position.BandIndex = 0
+        Position.ColIndex = 28
+        Position.RowIndex = 0
+      end
+    end
+    object lvlTimesheetPrint: TcxGridLevel
+      GridView = viewTimesheetPrint
+    end
+  end
   inherited styRepository: TcxStyleRepository
     Left = 610
     Top = 185
@@ -657,12 +1228,6 @@ inherited MainFrm: TMainFrm
     Images = img32
     Left = 525
     Top = 185
-    object actExit: TAction
-      Category = 'System'
-      Caption = 'Exit'
-      ImageIndex = 0
-      OnExecute = DoExitTimesheetManager
-    end
     object actInsert: TAction
       Category = 'System'
       Caption = 'Insert'
@@ -670,25 +1235,35 @@ inherited MainFrm: TMainFrm
       OnExecute = DoInsertEntry
     end
     object actEdit: TAction
+      Tag = 1
       Category = 'System'
       Caption = 'Edit'
       ImageIndex = 13
-      OnExecute = DoEditEntry
+      OnExecute = DoInsertEntry
     end
     object actDelete: TAction
+      Tag = 2
       Category = 'System'
       Caption = 'Delete'
       ImageIndex = 14
       OnExecute = DoDeleteEntry
     end
     object actRefresh: TAction
+      Tag = 3
       Category = 'System'
       Caption = 'Refresh'
       ImageIndex = 17
       OnExecute = DoRefresh
     end
-    object actGetTimesheetData: TAction
+    object actExit: TAction
+      Tag = 4
       Category = 'System'
+      Caption = 'Exit'
+      ImageIndex = 0
+      OnExecute = DoExitTimesheetManager
+    end
+    object actGetTimesheetData: TAction
+      Category = 'General'
       Caption = 'Get Data'
       ImageIndex = 18
       OnExecute = DoGetTimesheetData
@@ -716,7 +1291,7 @@ inherited MainFrm: TMainFrm
       Category = 'Reports'
       Caption = 'Excel'
       ImageIndex = 4
-      OnExecute = DoEscel
+      OnExecute = DoExcel
     end
     object actReports: TAction
       Category = 'Reports'
@@ -741,6 +1316,197 @@ inherited MainFrm: TMainFrm
   inherited img16: TcxImageList
     FormatVersion = 1
     DesignInfo = 15073460
+    ImageInfo = <
+      item
+        ImageClass = 'TBitmap'
+        Image.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000011F144D086C48FF086C48FF086C48FF086C
+          48FF011F144D0000000000000000000000000000000000000000000000000000
+          00000000000000000000000000000124185A0D734EFF0D734EFF0D734EFF0D73
+          4EFF0124185A0000000000000000000000000000000000000000000000000000
+          00000000000000000000000000000124185A137953FF137953FF137953FF1379
+          53FF0124185A0000000000000000000000000000000000000000000000000000
+          00000000000000000000000000000124185A1A8059FF1A8059FF1A8059FF1A80
+          59FF0124185A000000000000000000000000000000000000000000000000011C
+          1246012216550122165501221655023B279121865FFF21865FFF21865FFF2186
+          5FFF023B2791012216550122165501221655011D134900000000000000001C7E
+          58FA288E66FF288E66FF288E66FF288E66FF288E66FF288E66FF288E66FF288E
+          66FF288E66FF288E66FF288E66FF288E66FF1C825BFF00000001000000002183
+          5CFA31956DFF31956DFF31956DFF31956DFF31956DFF31956DFF31956DFF3195
+          6DFF31956DFF31956DFF31956DFF31956DFF22875FFF00000000000000002688
+          61FA399E74FF399E74FF399E74FF399E74FF399E74FF399E74FF399E74FF399E
+          74FF399E74FF399E74FF399E74FF399E74FF278C64FF00000000000000002D93
+          6AFA46B185FF46B185FF46B185FF46AF84FF42A67CFF42A57BFF42A57BFF42A6
+          7CFF46AF84FF46B185FF46B185FF46B185FF2F976DFF0000000000000000011C
+          12460122165501221655012216550239268E4AAE84FF49AD84FF49AD84FF4AAE
+          84FF033C2791012216550122165501221655011D134900000000000000000000
+          00000000000000000000000000000122165550B38AFF50B38AFF50B38AFF50B3
+          8AFF0225185A0000000000000000000000000000000000000000000000000000
+          00000000000000000000000000000122165557BA90FF57BA90FF57BA90FF57BA
+          90FF0225185A0000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000012216555DBF94FF5DBF94FF5DBF94FF5DBF
+          94FF0225185A0000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000011D134947B085FF48B286FF48B286FF47B1
+          85FF0220154D0000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000}
+      end
+      item
+        ImageClass = 'TBitmap'
+        Image.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000000000000000000000000000000000000000000001E1E
+          1E2E3333334F3E3E3E5F4747476F4A4A4A74525252805151517F5151517F5252
+          52804A4A4A74484848703F3F3F62353535531F1F1F2F00000000000000001818
+          18213F3F3F8043434384363636553C3B3B5F4646466B50505074505050744949
+          496B4343436243434361393939532E2E2E421A1A1A2400000000000000000000
+          00000808084B0B0908FF101213B21417191B0000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          00000405052B3F4F56FFB3DDF1FFC5E9F9FF92A6AAAA0F111214000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          00000405060BB0E9FFFFAEDBF2FFBFE2F3FFBCE3F4FF4ABBEAF3000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          000000000000A0D8F9FFB0D9F0FF83CEF0FF4EBDF1FF4DBEEFFF2182A9AC0000
+          0000000000000000000000000000000000000000000000000000000000000000
+          00000000000085BEE1E330B4E9FF6BC7F4FF36B7EBFF59C0F1FF39B8ECFF0B3E
+          5252000000000000000000000000000000000000000000000000000000000000
+          0000000000002B53626237B6ECFF2FB4EAFF54BFEFFF2AB3E9FF4FBEEFFF25B3
+          EBFE01070A0C0000000000000000000000000000000000000000000000000000
+          00000000000000000000529ABCBC2AB4E9FF45BAEDFF2BB3E8FF32B6EBFF39B8
+          EBFF108CBAC50000000000000000000000000000000000000000000000000000
+          000000000000000000000205060761C3F2F926B1E9FF40B9ECFF0CABE3FF3FB9
+          EDFF23B1E8FF05506C6D00000000000000000000000000000000000000000000
+          0000000000000000000000000000253D474754C0F0FF2AB3E8FF22B1E8FF11AC
+          E4FF30B6EBFF05AAE6FF1A202127000000000000000000000000000000000000
+          000000000000000000000000000000000000558BA2A247BBEEFF26B1E8FF00A5
+          E4FF44BBE5FFEBE7DAFF645F9FE0000000000000000000000000000000000000
+          000000000000000000000000000000000000000000006EC0EAEB32B7F0FF9ADA
+          E8FFE9D9DCFF211F99FF030393FF0909567B0000000000000000000000000000
+          00000000000000000000000000000000000000000000202F3738DADED2FF857B
+          B3FF00008CFF0A0A99FF1919ADFF0A0A3C4A0000000000000000000000000000
+          00000000000000000000000000000000000000000000000000002D2C6C940000
+          90FF10109EFF1C1C9DD303031015000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000001818
+          83B112125D790000000000000000000000000000000000000000}
+      end
+      item
+        ImageClass = 'TBitmap'
+        Image.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000710
+          344608143F5508143F5508143F5508143F5508143F5508143F5508143F550814
+          3F5508143F5508143F5508143F5508143F550711364900000000000000000C33
+          BDFA062FC2FF062FC2FF062FC2FF062FC2FF062FC2FF062FC2FF062FC2FF062F
+          C2FF062FC2FF062FC2FF062FC2FF062FC2FF0C34C1FF00000001000000001343
+          C5FA1148CFFF1148CFFF1148CFFF1148CFFF1148CFFF1148CFFF1148CFFF1148
+          CFFF1148CFFF1148CFFF1148CFFF1148CFFF1344C9FF00000000000000001C55
+          CEFA1E65DDFF1E65DDFF1E65DDFF1E65DDFF1E65DDFF1E65DDFF1E65DDFF1E65
+          DDFF1E65DDFF1E65DDFF1E65DDFF1E65DDFF1C58D3FF0000000000000000266C
+          D9FA2E8DF0FF2E8DF0FF2E8DF0FF2E8DF0FF2E8DF0FF2E8DF0FF2E8DF0FF2E8D
+          F0FF2E8DF0FF2E8DF0FF2E8DF0FF2E8DF0FF266FDFFF00000000000000000710
+          344608143F5508143F5508143F5508143F5508143F5508143F5508143F550814
+          3F5508143F5508143F5508143F5508143F550711364900000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000}
+      end
+      item
+        ImageClass = 'TBitmap'
+        Image.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          00000000000000000000000000000233227D054E33BB0005030D000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          00000000000000000000033624820E734EFF0E744EFF065437C40005030D0000
+          0000000000000000000000000000000000000000000000000000000000000000
+          00000000000004382584147953FF157B55FF157B55FF157B54FF09563AC40005
+          030D000000000000000000000000000000000000000000000000000000000000
+          0000063A26851B815AFF1E845CFF1E845CFF1E845CFF1E845CFF1D835CFF0B58
+          3CC40005030D000000000000000000000000000000000000000000000000073C
+          2886248961FF278C64FF278C64FF278C64FF278C64FF278C64FF278C64FF268B
+          63FF0E5B3FC50005030D00000000000000000000000000000000062F20692D92
+          6AFF30956CFF30956CFF30956DFF2D966CFF21855EF031966EFF30956CFF3095
+          6CFF30946CFF115D41C50005030D00000000000000000000000000130C302385
+          5EEC3BA176FF3A9F75FF359F73FF0737257A01150D33268861EE3BA076FF3A9E
+          75FF3A9E75FF399E74FF146043C50005030D0000000000000000000000000013
+          0C2E298963EB3EA97DFF07362578000000000000000001150E342C8F67EF44A9
+          80FF44A77DFF44A77DFF43A77DFF176446C50005030E00000000000000000000
+          000000100A2804261A560000000000000000000000000000000001160E353394
+          6DEF4DB188FF4DB086FF4DB086FF4CAF85FF1A6749C50005030E000000000000
+          0000000000000000000000000000000000000000000000000000000000000116
+          0E35389A72EF56B98FFF55B78EFF55B78EFF4BB187FF021E1449000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          000001160F363DA077F05DC095FF55BC90FF0939287900000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          00000000000001170F373C9F76F00C3E2B7E0000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000030208000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000}
+      end
+      item
+        ImageClass = 'TBitmap'
+        Image.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          00000000000000000000061034460103090D0000000000000000000000000000
+          00000103090D0610344700000000000000000000000000000000000000000000
+          0000000000000919526F062BBFFF0D2892C50103090D00000000000000000103
+          090D0D2892C5062BBFFF091A5471000000000000000000000000000000000000
+          0000091A526F0830C1FF042DC2FF052DC2FF0D2B93C50103090D0103090D0D2B
+          93C5052DC2FF042DC2FF0830C1FF091A526F0000000000000000000000000611
+          34470C37C6FF0935C5FF0935C5FF0935C5FF0935C5FF0F2D95C50F2D95C50935
+          C5FF0935C5FF0935C5FF0935C5FF0C37C6FF0610344600000000000000000103
+          0B0F1032A0C70D40D1FF0C3ECAFF0C3ECAFF0C3ECAFF0C3EC9FF0C3EC9FF0C3E
+          CAFF0C3ECAFF0C3ECAFF0D40D2FF1032A0C701030A0E00000000000000000000
+          000001030B0F1136A3C7124AD6FF1147CEFF1147CEFF1147CEFF1147CEFF1147
+          CEFF1147CEFF124AD7FF1135A2C701030A0E0000000000000000000000000000
+          00000000000001030B0F133AA4C71653D8FF1551D3FF1551D3FF1551D3FF1551
+          D3FF1653D8FF1339A4C701030A0E000000000000000000000000000000000000
+          0000000000000103090D14389BC51A5BD8FF1A5CD9FF1A5CD9FF1A5CD9FF1A5C
+          D9FF1A5BD8FF133899C40103090D000000000000000000000000000000000000
+          00000103090D153C9CC51E65DDFF1E66DDFF1E66DDFF1E66DDFF1E66DDFF1E66
+          DDFF1E66DDFF1E65DDFF153B9BC40103090D0000000000000000000000000103
+          090D173F9DC5236FE2FF2370E3FF2370E3FF2370E3FF2473E8FF2473E8FF2370
+          E3FF2370E3FF2370E3FF236FE2FF163E9CC40103090D00000000000000000710
+          33452673E8FF2779E8FF2779E7FF2779E7FF287DEEFF1946A6C51946A6C5287D
+          EEFF2779E7FF2779E7FF2779E7FF2675E9FF0712374A00000000000000000000
+          00000C1F566F2B7EEEFF2B82EBFF2C86F1FF1A49A6C501030A0E01030A0E1A49
+          A6C52C86F1FF2B82EBFF2B81F0FF0E235E780000000000000000000000000000
+          0000000000000C2057702E89F0FF1B4CA6C501030A0E00000000000000000103
+          0A0E1B4CA6C52F8BF2FF0E245E78000000000000000000000000000000000000
+          000000000000000000000712354701030A0E0000000000000000000000000000
+          000001030A0E0713374A00000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000}
+      end>
   end
   inherited img32: TcxImageList
     OnChange = DoGetTimesheetData
@@ -4027,7 +4793,7 @@ inherited MainFrm: TMainFrm
         item
           BeginGroup = True
           Visible = True
-          ItemName = 'btnPreferences'
+          ItemName = 'btnOptions'
         end>
       OneOnRow = True
       Row = 0
@@ -4193,7 +4959,7 @@ inherited MainFrm: TMainFrm
       Category = 0
       AutoGrayScale = False
     end
-    object btnPreferences: TdxBarLargeButton
+    object btnOptions: TdxBarLargeButton
       Action = actPreferences
       Category = 0
       AutoGrayScale = False
@@ -5836,5 +6602,25 @@ inherited MainFrm: TMainFrm
           0F16000006090000010100000000000000000000000000000000000000000000
           0000000000000000000000000000000000000000000000000000}
       end>
+  end
+  object popTimesheet: TPopupMenu
+    Images = img16
+    Left = 500
+    Top = 280
+    object Insert1: TMenuItem
+      Action = actInsert
+      ImageIndex = 0
+      ShortCut = 45
+    end
+    object Edit1: TMenuItem
+      Action = actEdit
+      ImageIndex = 1
+      ShortCut = 13
+    end
+    object Delete1: TMenuItem
+      Action = actDelete
+      ImageIndex = 2
+      ShortCut = 46
+    end
   end
 end

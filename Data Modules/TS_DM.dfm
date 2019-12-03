@@ -2,6 +2,7 @@ inherited TSDM: TTSDM
   Width = 864
   object cdsTimesheet: TFDMemTable
     ActiveStoredUsage = [auDesignTime]
+    OnNewRecord = cdsTimesheetNewRecord
     FilterOptions = [foCaseInsensitive]
     FieldDefs = <>
     CachedUpdates = True
@@ -146,6 +147,7 @@ inherited TSDM: TTSDM
       Required = True
     end
     object cdsTimesheetBILLABLE: TIntegerField
+      Alignment = taLeftJustify
       DisplayLabel = 'Bill'
       FieldName = 'BILLABLE'
       Origin = 'BILLABLE'
@@ -170,21 +172,21 @@ inherited TSDM: TTSDM
       Origin = 'INVOICE_DATE'
     end
     object cdsTimesheetCARRY_FORWARD: TIntegerField
-      Alignment = taCenter
+      Alignment = taLeftJustify
       DisplayLabel = 'CF'
       FieldName = 'CARRY_FORWARD'
       Origin = 'CARRY_FORWARD'
       Required = True
     end
     object cdsTimesheetAPPROVED: TIntegerField
-      Alignment = taCenter
+      Alignment = taLeftJustify
       DisplayLabel = 'Appr'
       FieldName = 'APPROVED'
       Origin = 'APPROVED'
       Required = True
     end
     object cdsTimesheetIS_ADDITIONAL_WORK: TIntegerField
-      Alignment = taCenter
+      Alignment = taLeftJustify
       DisplayLabel = 'Add Wk'
       FieldName = 'IS_ADDITIONAL_WORK'
       Origin = 'IS_ADDITIONAL_WORK'
@@ -193,6 +195,7 @@ inherited TSDM: TTSDM
   end
   object cdsCustomerLookup: TFDMemTable
     ActiveStoredUsage = [auDesignTime]
+    OnCalcFields = cdsCustomerLookupCalcFields
     FilterOptions = [foCaseInsensitive]
     FieldDefs = <>
     CachedUpdates = True
@@ -222,47 +225,64 @@ inherited TSDM: TTSDM
       Required = True
     end
     object cdsCustomerLookupCUSTOMER_TYPE_ID: TIntegerField
+      DisplayLabel = 'C ID'
       FieldName = 'CUSTOMER_TYPE_ID'
       Origin = 'CUSTOMER_TYPE_ID'
       Required = True
     end
     object cdsCustomerLookupSTATUS_ID: TIntegerField
+      DisplayLabel = 'ST ID'
       FieldName = 'STATUS_ID'
     end
     object cdsCustomerLookupCUSTOMER_GROUP_ID: TIntegerField
+      DisplayLabel = 'CG ID'
       FieldName = 'CUSTOMER_GROUP_ID'
       Origin = 'CUSTOMER_GROUP_ID'
     end
     object cdsCustomerLookupNAME: TStringField
+      DisplayLabel = 'Name'
       FieldName = 'NAME'
       Origin = 'NAME'
       Required = True
       Size = 100
     end
     object cdsCustomerLookupTRADING_AS: TStringField
+      DisplayLabel = 'Trading As'
       FieldName = 'TRADING_AS'
       Origin = 'TRADING_AS'
       Size = 100
     end
     object cdsCustomerLookupCO_NO: TStringField
+      DisplayLabel = 'Co No'
       FieldName = 'CO_NO'
       Origin = 'CO_NO'
     end
     object cdsCustomerLookupTAX_NO: TStringField
+      DisplayLabel = 'Tax No'
       FieldName = 'TAX_NO'
       Origin = 'TAX_NO'
     end
     object cdsCustomerLookupIS_ACTIVE: TIntegerField
+      DisplayLabel = 'Active'
       FieldName = 'IS_ACTIVE'
       Origin = 'IS_ACTIVE'
       Required = True
     end
     object cdsCustomerLookupCUSTOMER_TYPE: TStringField
+      DisplayLabel = 'Type'
       FieldName = 'CUSTOMER_TYPE'
       Size = 30
     end
     object cdsCustomerLookupCUSTOMER_STATUS: TStringField
+      DisplayLabel = 'Status'
       FieldName = 'CUSTOMER_STATUS'
+    end
+    object cdsCustomerLookupACTIVE_STATUS: TStringField
+      DisplayLabel = 'Active'
+      FieldKind = fkCalculated
+      FieldName = 'ACTIVE_STATUS'
+      Size = 5
+      Calculated = True
     end
   end
   object cdsPriceList: TFDMemTable
@@ -296,27 +316,33 @@ inherited TSDM: TTSDM
       Required = True
     end
     object cdsPriceListRATE_UNIT_ID: TIntegerField
+      DisplayLabel = 'RU ID'
       FieldName = 'RATE_UNIT_ID'
       Origin = 'RATE_UNIT_ID'
       Required = True
     end
     object cdsPriceListNAME: TStringField
+      DisplayLabel = 'Name'
       FieldName = 'NAME'
       Origin = 'NAME'
       Required = True
       Size = 200
     end
     object cdsPriceListRATE: TFloatField
+      DisplayLabel = 'Rate'
       FieldName = 'RATE'
       Origin = 'RATE'
       Required = True
+      DisplayFormat = '#,##0.00'
     end
     object cdsPriceListINVOICE_DESCRIPTION: TStringField
+      DisplayLabel = 'invoice Description'
       FieldName = 'INVOICE_DESCRIPTION'
       Origin = 'INVOICE_DESCRIPTION'
       Size = 200
     end
     object cdsPriceListDESCRIPTION: TStringField
+      DisplayLabel = 'Description'
       FieldName = 'DESCRIPTION'
       Origin = 'DESCRIPTION'
       Size = 500
