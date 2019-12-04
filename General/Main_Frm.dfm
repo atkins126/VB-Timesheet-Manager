@@ -2,6 +2,8 @@ inherited MainFrm: TMainFrm
   Caption = 'MainFrm'
   ClientHeight = 752
   ClientWidth = 1415
+  Constraints.MinHeight = 600
+  Constraints.MinWidth = 800
   OnClose = FormClose
   OnDestroy = FormDestroy
   ExplicitWidth = 1431
@@ -4650,14 +4652,49 @@ inherited MainFrm: TMainFrm
       Header.Text = 'Exit'
       Description.Text = 'Exit master table manager'
     end
-    object tipCloseScreen: TdxScreenTip
-      Header.Text = 'Close'
-      Description.Text = 'Close Bank Account Type screen'#13#10
+    object tipInsert: TdxScreenTip
+      Header.Text = 'Insert'
+      Description.Text = 'Insert a new timesheet line item'
+      Width = 230
+    end
+    object tipEdit: TdxScreenTip
+      Header.Text = 'Edit'
+      Description.Text = 'Edit the selected timesheet line item'
       Width = 250
     end
-    object tipLaunchMasterTableManager: TdxScreenTip
-      Header.Text = 'Master Tables'
-      Description.Text = 'Launch Master Table manager'
+    object tipDelete: TdxScreenTip
+      Header.Text = 'Delete'
+      Description.Text = 'Delete the selected timesheet line items'
+      Width = 280
+    end
+    object tipRefresh: TdxScreenTip
+      Header.Text = 'Refresh'
+      Description.Text = 'Refresh the timesheet'
+    end
+    object tipPreview: TdxScreenTip
+      Header.Text = 'Preview'
+      Description.Text = 'Preview timesheet'
+    end
+    object tipPrint: TdxScreenTip
+      Header.Text = 'Print'
+      Description.Text = 'Print timesheet'
+    end
+    object tipPDF: TdxScreenTip
+      Header.Text = 'PDF'
+      Description.Text = 'Export timesheet to PDF'
+    end
+    object tipExcel: TdxScreenTip
+      Header.Text = 'Excel'
+      Description.Text = 'Export timesheet to Excel'
+    end
+    object tipReports: TdxScreenTip
+      Header.Text = 'Reports'
+      Description.Text = 'Launch detail reports'
+    end
+    object tipTimesheetPreferences: TdxScreenTip
+      Header.Text = 'Timesheet Preferences'
+      Description.Text = 'View/Edit timesheet preferences'
+      Width = 240
     end
   end
   object styHintController: TcxHintStyleController
@@ -4806,26 +4843,31 @@ inherited MainFrm: TMainFrm
     object btnExit: TdxBarLargeButton
       Action = actExit
       Category = 0
+      ScreenTip = tipExit
       AutoGrayScale = False
     end
     object btnInsert: TdxBarLargeButton
       Action = actInsert
       Category = 0
+      ScreenTip = tipInsert
       AutoGrayScale = False
     end
     object btnDelete: TdxBarLargeButton
       Action = actDelete
       Category = 0
+      ScreenTip = tipDelete
       AutoGrayScale = False
     end
     object btnEdit: TdxBarLargeButton
       Action = actEdit
       Category = 0
+      ScreenTip = tipEdit
       AutoGrayScale = False
     end
     object btnRefresh: TdxBarLargeButton
       Action = actRefresh
       Category = 0
+      ScreenTip = tipRefresh
       AutoGrayScale = False
     end
     object lblUser: TdxBarStatic
@@ -4861,6 +4903,7 @@ inherited MainFrm: TMainFrm
     object btnPreview: TdxBarLargeButton
       Action = actPreview
       Category = 0
+      ScreenTip = tipPreview
       AutoGrayScale = False
     end
     object lucPeriod: TcxBarEditItem
@@ -4889,6 +4932,7 @@ inherited MainFrm: TMainFrm
       Visible = ivAlways
       Width = 130
       PropertiesClassName = 'TcxLookupComboBoxProperties'
+      Properties.ImmediatePost = True
       Properties.KeyFieldNames = 'ID'
       Properties.ListColumns = <
         item
@@ -4942,26 +4986,31 @@ inherited MainFrm: TMainFrm
     object btnPrint: TdxBarLargeButton
       Action = actPrint
       Category = 0
+      ScreenTip = tipPrint
       AutoGrayScale = False
     end
     object btnPDF: TdxBarLargeButton
       Action = actPDF
       Category = 0
+      ScreenTip = tipPDF
       AutoGrayScale = False
     end
     object btnExcel: TdxBarLargeButton
       Action = actExcel
       Category = 0
+      ScreenTip = tipExcel
       AutoGrayScale = False
     end
     object btnReports: TdxBarLargeButton
       Action = actReports
       Category = 0
+      ScreenTip = tipReports
       AutoGrayScale = False
     end
     object btnOptions: TdxBarLargeButton
       Action = actPreferences
       Category = 0
+      ScreenTip = tipTimesheetPreferences
       AutoGrayScale = False
     end
   end

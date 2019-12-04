@@ -26,8 +26,8 @@ type
     sknController: TdxSkinController;
     repScreenTip: TdxScreenTipRepository;
     tipExit: TdxScreenTip;
-    tipCloseScreen: TdxScreenTip;
-    tipLaunchMasterTableManager: TdxScreenTip;
+    tipInsert: TdxScreenTip;
+    tipEdit: TdxScreenTip;
     styHintController: TcxHintStyleController;
     barManager: TdxBarManager;
     barToolbar: TdxBar;
@@ -135,6 +135,14 @@ type
     Insert1: TMenuItem;
     Edit1: TMenuItem;
     Delete1: TMenuItem;
+    tipDelete: TdxScreenTip;
+    tipRefresh: TdxScreenTip;
+    tipPreview: TdxScreenTip;
+    tipPrint: TdxScreenTip;
+    tipPDF: TdxScreenTip;
+    tipExcel: TdxScreenTip;
+    tipReports: TdxScreenTip;
+    tipTimesheetPreferences: TdxScreenTip;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoInsertEntry(Sender: TObject);
     procedure DoEditEntry(Sender: TObject);
@@ -163,6 +171,7 @@ type
   private
     { Private declarations }
     FCurrentUserID: Integer;
+    FTSUserID: Integer;
     FTimesheetPeriod: Integer;
     FTimeshetMonth: Integer;
     FIteration: Extended;
@@ -171,6 +180,7 @@ type
     FToDate: TDateTime;
 
     property CurrentUserID: Integer read FCurrentUserID write FCurrentUserID;
+    property TSUserID: Integer read FTSUserID write FTSUserID;
     property TimesheetPeriod: Integer read FTimesheetPeriod write FTimesheetPeriod;
     property TimesheetMonth: Integer read FTimeshetMonth write FTimeshetMonth;
     property Iteration: Extended read FIteration write FIteration;
@@ -222,7 +232,8 @@ begin
   inherited;
   Caption := Application.Title;
   layMain.LayoutLookAndFeel := lafCustomSkin;
-//  cntShowMasterList.Control := cbxShowMasterList;
+  Application.HintPause := 0;
+  Application.HintShortPause := 0;
   styHintController.HintHidePause := 15000;
 end;
 
@@ -316,6 +327,7 @@ begin
         TSDM.cdsSystemUser.First;
         FCurrentUserID := TSDM.cdsSystemUser.FieldByName('ID').AsInteger;
       end;
+      FTSUserID := FCurrentUserID;
 
 //      lucUser.SetFocus;
 //      ALookupComboBox := TcxBarEditItemControl(lucUser.Links[0].Control).Edit as TcxLookupComboBox;
@@ -380,8 +392,12 @@ begin
     FIteration := 0;
     grdTimesheet.SetFocus;
     viewTimesheet.Focused := True;
-    viewTimesheet.DataController.FocusedRecordIndex := 0;
-    viewTimesheet.Controller.FocusedRecord.Selected := True;
+    if not TSDM.cdsTimesheet.IsEmpty then
+    begin
+      viewTimesheet.DataController.FocusedRecordIndex := 0;
+      viewTimesheet.Controller.FocusedRecord.Selected := True;
+      viewTimesheet.Controller.MakeFocusedItemVisible;
+    end;
 
     if FCallingFromShell then
       if not SendMessageToApp('VB Shell', 'App Ready') then
@@ -434,17 +450,57 @@ begin
 end;
 
 procedure TMainFrm.DoDeleteEntry(Sender: TObject);
+var
+  C: TcxCustomGridTableController;
 begin
   inherited;
   if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
     TSDM.cdsTimesheet.Cancel;
+
+  C := viewTimesheet.Controller;
+  Beep;
+  if
+    DisplayMsg(
+    Application.Title,
+    'Delete Confirmaiton',
+    'Are you sure you want to delete the ' + C.SelectedRecordCount.ToString + ' selected timesheet item(s)?' + CRLF + CRLF +
+    'This action cannot be undone!',
+    mtConfirmation,
+    [mbYes, mbNo]
+    ) = mrNo then
+    Exit;
 end;
 
 procedure TMainFrm.DoRefresh(Sender: TObject);
+var
+  ID, RecordIndex: Integer;
+  DC: TcxDBDataController;
 begin
   inherited;
-  OpenTables;
-  FIteration := 0;
+  Screen.Cursor := crHourglass;
+  DC :=  viewTimesheet.DataController;
+  RecordIndex :=  DC.FocusedRecordIndex;
+
+  try
+    if not TSDM.cdsTimesheet.IsEmpty then
+    begin
+      ID := TSDM.cdsTimesheet.FieldByName('ID').AsInteger;
+      actGetTimesheetData.Execute;
+      if not TSDM.cdsTimesheet.Locate('ID', ID, []) then
+        TSDM.cdsTimesheet.First;
+
+      grdTimesheet.SetFocus;
+      viewTimesheet.Focused := True;
+      if not TSDM.cdsTimesheet.IsEmpty then
+      begin
+        viewTimesheet.DataController.FocusedRecordIndex := RecordIndex;
+        viewTimesheet.Controller.FocusedRecord.Selected := True;
+        viewTimesheet.Controller.MakeFocusedItemVisible;
+      end;
+    end;
+  finally
+    Screen.Cursor := crDefault;
+  end;
 end;
 
 procedure TMainFrm.DoReports(Sender: TObject);
@@ -464,7 +520,7 @@ begin
     if FTimesheetPeriod < 201901 then
       raise EValidateException.Create('Invalid period. Please select a valid period and try again.');
 
-    ParamList := ' WHERE T.USER_ID=' + FCurrentUserID.ToString +
+    ParamList := ' WHERE T.USER_ID=' + FTSUserID.ToString +
       ' AND T.THE_PERIOD=' + FTimesheetPeriod.ToString + SEMI_COLON +
       ONE_SPACE + SEMI_COLON + 'ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
   end
@@ -481,7 +537,7 @@ begin
     end;
 //    raise EValidateException.Create('From date cannot be greater than To date. Please conrrect and try again.');
 
-    ParamList := ' WHERE T.USER_ID =' + FCurrentUserID.ToString +
+    ParamList := ' WHERE T.USER_ID =' + FTSUserID.ToString +
       ' AND T.ACTIVITY_DATE >=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FFromDate), '''') +
       ' AND T.ACTIVITY_DATE <=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FtODate), '''') + SEMI_COLON +
       ONE_SPACE + SEMI_COLON + 'ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
@@ -492,7 +548,7 @@ begin
     if FIteration > 0 then
       SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Price List Table' + '|PROGRESS=' + FIteration.ToString)), 0);
 
-//    ParamList := ' WHERE T.USER_ID=' + FCurrentUserID.ToString +
+//    ParamList := ' WHERE T.USER_ID=' + FTSUserID.ToString +
 //      ' AND T.THE_PERIOD=' + FTimesheetPeriod.ToString + SEMI_COLON +
 //      ONE_SPACE + SEMI_COLON + 'ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
 
@@ -809,8 +865,8 @@ procedure TMainFrm.SetButtonStatus(EditMode: Boolean);
 begin
   actInsert.Enabled := not EditMode;
   actEdit.Enabled := not EditMode;
-  actDelete.Enabled := EditMode;
-  actRefresh.Enabled := EditMode;
+  actDelete.Enabled := not EditMode;
+  actRefresh.Enabled := not EditMode;
 end;
 
 procedure TMainFrm.HandleStateChange(var MyMsg: TMessage);
@@ -849,29 +905,16 @@ begin
 end;
 
 procedure TMainFrm.lucUserPropertiesEditValueChanged(Sender: TObject);
-var
-  RegKey: TRegistry;
 begin
   inherited;
-  FCurrentUserID := lucUser.EditValue;
-  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
-  try
-    RegKey.RootKey := HKEY_CURRENT_USER;
-    Regkey.OpenKey(KEY_USER_DATA, True);
-    Regkey.WriteInteger('User ID', FCurrentUserID);
-    RegKey.WriteString('User Name', TSDM.cdsSystemUser.FieldByName('LOGIN_NAME').AsString);
-    RegKey.CloseKey;
-
-    if not FShowingForm then
-      actGetTimesheetData.Execute;
-  finally
-    RegKey.Free
-  end;
+  FTSUserID := lucUser.EditValue;
+  if not FShowingForm then
+    actGetTimesheetData.Execute;
 end;
 
 procedure TMainFrm.dteFromDatePropertiesEditValueChanged(Sender: TObject);
 var
-  AFromDateEdit {, AToDateEdit}: TcxDateEdit;
+  AFromDateEdit: TcxDateEdit;
   RegKey: TRegistry;
   ATag: integer;
 begin
@@ -879,135 +922,48 @@ begin
   dteFromDate.SetFocus;
   AFromDateEdit := TcxBarEditItemControl(dteFromDate.Links[0].Control).Edit as TcxDateEdit;
   FFromDate := AFromDateEdit.Date;
-
-//  if AFromDateEdit.CanFocus and AToDateEdit.CanFocus then
-//  begin
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   try
     RegKey.RootKey := HKEY_CURRENT_USER;
     Regkey.OpenKey(KEY_TIME_SHEET, True);
-
-//      case ATag of
-//        0:
-//          begin
-//            FFromDate := AFromDateEdit.EditValue;
-//            if VarIsNull(AToDateEdit.EditValue) then
-//            begin
-//              FToDate := FromDate;
-//              AToDateEdit.EditValue := FromDate;
-//            end
-//            else if AToDateEdit.EditValue < AFromDateEdit.EditValue then
-//            begin
-//              FToDate := FFromDate;
-//              AToDateEdit.EditValue := FToDate;
-//            end;
-//          end;
-//
-//        1:
-//          begin
-//            FToDate := AToDateEdit.EditValue;
-//            if VarIsNull(AFromDateEdit.EditValue) then
-//            begin
-//              FFromDate := AToDateEdit.EditValue;
-//              AFromDateEdit.EditValue := FromDate;
-//            end
-//            else if AFromDateEdit.EditValue < AToDateEdit.EditValue then
-//            begin
-//              FFromDate := FToDate;
-//              AFromDateEdit.EditValue := FFromDate;
-//            end;
-//          end;
-//      end;
 
     if not FShowingForm then
     begin
       Regkey.WriteDate('From Date', FFromDate);
-
-//        if not VarIsNull(FToDate) then
-//          RegKey.WriteDate('To Date', FToDate);
-
-      if not FShowingForm then
-        actGetTimesheetData.Execute;
+      actGetTimesheetData.Execute;
     end;
 
     RegKey.CloseKey;
   finally
     RegKey.Free
   end;
-//  end;
 end;
 
 procedure TMainFrm.dteToDatePropertiesEditValueChanged(Sender: TObject);
 var
-  {AFromDateEdit, }AToDateEdit: TcxDateEdit;
+  AToDateEdit: TcxDateEdit;
   RegKey: TRegistry;
   ATag: integer;
 begin
   inherited;
-//  dteFromDate.SetFocus;
-//  AFromDateEdit := TcxBarEditItemControl(dteFromDate.Links[0].Control).Edit as TcxDateEdit;
-////  Atag := TcxBarEditItemControl(dteFromDate.Links[0].Control).Edit.Tag;
-//  Atag := TcxDateEdit(Sender).Tag;
   dteToDate.SetFocus;
   AToDateEdit := TcxBarEditItemControl(dteToDate.Links[0].Control).Edit as TcxDateEdit;
-
   FToDate := AToDateEdit.Date;
-
-//  if AFromDateEdit.CanFocus and AToDateEdit.CanFocus then
-//  begin
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   try
     RegKey.RootKey := HKEY_CURRENT_USER;
     Regkey.OpenKey(KEY_TIME_SHEET, True);
 
-//      case ATag of
-//        0:
-//          begin
-//            FToDate := AFromDateEdit.EditValue;
-//            if VarIsNull(AToDateEdit.EditValue) then
-//            begin
-//              FToDate := FromDate;
-//              AToDateEdit.EditValue := FromDate;
-//            end
-//            else if AToDateEdit.EditValue < AFromDateEdit.EditValue then
-//            begin
-//              FToDate := FToDate;
-//              AToDateEdit.EditValue := FToDate;
-//            end;
-//          end;
-//
-//        1:
-//          begin
-//            FToDate := AToDateEdit.EditValue;
-//            if VarIsNull(AFromDateEdit.EditValue) then
-//            begin
-//              FToDate := AToDateEdit.EditValue;
-//              AFromDateEdit.EditValue := FromDate;
-//            end
-//            else if AFromDateEdit.EditValue < AToDateEdit.EditValue then
-//            begin
-//              FToDate := FToDate;
-//              AFromDateEdit.EditValue := FToDate;
-//            end;
-//          end;
-//      end;
-
     if not FShowingForm then
     begin
       Regkey.WriteDate('To Date', FToDate);
-
-//        if not VarIsNull(FToDate) then
-//          RegKey.WriteDate('To Date', FToDate);
-
-      if not FShowingForm then
-        actGetTimesheetData.Execute;
+      actGetTimesheetData.Execute;
     end;
 
     RegKey.CloseKey;
   finally
     RegKey.Free
   end;
-//  end;
 end;
 
 procedure TMainFrm.lucViewModeChange(Sender: TObject);
@@ -1132,20 +1088,25 @@ end;
 procedure TMainFrm.DoInsertEntry(Sender: TObject);
 begin
   inherited;
-  case TAction(Sender).Tag of
-    0: TSDM.cdsTimesheet.Insert;
-    1: TSDM.cdsTimesheet.Edit;
+  Screen.Cursor := crHourglass;
+  try
+    case TAction(Sender).Tag of
+      0: TSDM.cdsTimesheet.Insert;
+      1: TSDM.cdsTimesheet.Edit;
+    end;
+
+    if TimesheetEditFrm = nil then
+      TimesheetEditFrm := TTimesheetEditFrm.Create(nil);
+
+    if TimesheetEditFrm.ShowModal = mrCancel then
+      if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
+        TSDM.cdsTimesheet.Cancel;
+
+    TimesheetEditFrm.Close;
+    FreeAndNil(TimesheetEditFrm);
+  finally
+    Screen.Cursor := crDefault;
   end;
-
-  if TimesheetEditFrm = nil then
-    TimesheetEditFrm := TTimesheetEditFrm.Create(nil);
-
-  if TimesheetEditFrm.ShowModal = mrCancel then
-    if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
-      TSDM.cdsTimesheet.Cancel;
-
-  TimesheetEditFrm.Close;
-  FreeAndNil(TimesheetEditFrm);
 end;
 
 procedure TMainFrm.DoPDF(Sender: TObject);
@@ -1157,11 +1118,16 @@ end;
 procedure TMainFrm.DoPreferences(Sender: TObject);
 begin
   inherited;
-  if TimesheetPrefrrencesFrm = nil then
-    TimesheetPrefrrencesFrm := TTimesheetPrefrrencesFrm.Create(nil);
-  TimesheetPrefrrencesFrm.ShowModal;
-  TimesheetPrefrrencesFrm.Close;
-  FreeAndNil(TimesheetPrefrrencesFrm);
+  Screen.Cursor := crHourglass;
+  try
+    if TimesheetPrefrrencesFrm = nil then
+      TimesheetPrefrrencesFrm := TTimesheetPrefrrencesFrm.Create(nil);
+    TimesheetPrefrrencesFrm.ShowModal;
+    TimesheetPrefrrencesFrm.Close;
+    FreeAndNil(TimesheetPrefrrencesFrm);
+  finally
+    Screen.Cursor := crDefault;
+  end;
 end;
 
 procedure TMainFrm.DoPrint(Sender: TObject);

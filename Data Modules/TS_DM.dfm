@@ -335,17 +335,17 @@ inherited TSDM: TTSDM
       Required = True
       DisplayFormat = '#,##0.00'
     end
-    object cdsPriceListINVOICE_DESCRIPTION: TStringField
-      DisplayLabel = 'invoice Description'
-      FieldName = 'INVOICE_DESCRIPTION'
-      Origin = 'INVOICE_DESCRIPTION'
-      Size = 200
-    end
     object cdsPriceListDESCRIPTION: TStringField
       DisplayLabel = 'Description'
       FieldName = 'DESCRIPTION'
       Origin = 'DESCRIPTION'
       Size = 500
+    end
+    object cdsPriceListINVOICE_DESCRIPTION: TStringField
+      DisplayLabel = 'invoice Description'
+      FieldName = 'INVOICE_DESCRIPTION'
+      Origin = 'INVOICE_DESCRIPTION'
+      Size = 200
     end
     object cdsPriceListRATE_UNIT: TStringField
       DisplayLabel = 'Unit'
@@ -623,5 +623,113 @@ inherited TSDM: TTSDM
   object dtsCustomerGroup: TDataSource
     Left = 130
     Top = 180
+  end
+  object cdsCustomerLookupPref: TFDMemTable
+    ActiveStoredUsage = [auDesignTime]
+    OnCalcFields = cdsCustomerLookupPrefCalcFields
+    FilterOptions = [foCaseInsensitive]
+    FieldDefs = <>
+    CachedUpdates = True
+    IndexDefs = <>
+    ConstraintsEnabled = True
+    FetchOptions.AssignedValues = [evMode, evRecordCountMode]
+    FetchOptions.Mode = fmAll
+    FetchOptions.RecordCountMode = cmTotal
+    FormatOptions.AssignedValues = [fvMaxBcdPrecision, fvMaxBcdScale, fvDataSnapCompatibility]
+    FormatOptions.MaxBcdPrecision = 2147483647
+    FormatOptions.MaxBcdScale = 1073741823
+    FormatOptions.DataSnapCompatibility = True
+    ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
+    ResourceOptions.Persistent = True
+    ResourceOptions.StorePrettyPrint = True
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvUpdateChngFields, uvUpdateMode, uvLockMode, uvLockPoint, uvLockWait, uvRefreshMode, uvFetchGeneratorsPoint, uvGeneratorName, uvCheckRequired, uvCheckReadOnly, uvCheckUpdatable, uvAutoCommitUpdates]
+    UpdateOptions.LockWait = True
+    UpdateOptions.FetchGeneratorsPoint = gpNone
+    UpdateOptions.GeneratorName = 'CUSTOMER_ID_GEN'
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    UpdateOptions.UpdateTableName = 'CUSTOMER'
+    StoreDefs = True
+    Left = 226
+    Top = 250
+  end
+  object cdsPriceListPref: TFDMemTable
+    ActiveStoredUsage = [auDesignTime]
+    FilterOptions = [foCaseInsensitive]
+    FieldDefs = <>
+    CachedUpdates = True
+    IndexDefs = <>
+    ConstraintsEnabled = True
+    FetchOptions.AssignedValues = [evMode, evRecordCountMode]
+    FetchOptions.Mode = fmAll
+    FetchOptions.RecordCountMode = cmTotal
+    FormatOptions.AssignedValues = [fvDataSnapCompatibility]
+    FormatOptions.DataSnapCompatibility = True
+    ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
+    ResourceOptions.Persistent = True
+    ResourceOptions.StorePrettyPrint = True
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvGeneratorName, uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.GeneratorName = 'PRICE_LIST_ID_GEN'
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    UpdateOptions.UpdateTableName = 'PRICE_LIST'
+    StoreDefs = True
+    Left = 357
+    Top = 250
+    object IntegerField6: TIntegerField
+      FieldName = 'ID'
+      Origin = 'ID'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+    object IntegerField7: TIntegerField
+      DisplayLabel = 'RU ID'
+      FieldName = 'RATE_UNIT_ID'
+      Origin = 'RATE_UNIT_ID'
+      Required = True
+    end
+    object StringField8: TStringField
+      DisplayLabel = 'Name'
+      FieldName = 'NAME'
+      Origin = 'NAME'
+      Required = True
+      Size = 200
+    end
+    object FloatField1: TFloatField
+      DisplayLabel = 'Rate'
+      FieldName = 'RATE'
+      Origin = 'RATE'
+      Required = True
+      DisplayFormat = '#,##0.00'
+    end
+    object StringField9: TStringField
+      DisplayLabel = 'invoice Description'
+      FieldName = 'INVOICE_DESCRIPTION'
+      Origin = 'INVOICE_DESCRIPTION'
+      Size = 200
+    end
+    object StringField10: TStringField
+      DisplayLabel = 'Description'
+      FieldName = 'DESCRIPTION'
+      Origin = 'DESCRIPTION'
+      Size = 500
+    end
+    object StringField11: TStringField
+      DisplayLabel = 'Unit'
+      FieldName = 'RATE_UNIT'
+      Size = 30
+    end
+  end
+  object dtsCustomerLookupPref: TDataSource
+    DataSet = cdsCustomerLookupPref
+    Left = 226
+    Top = 305
+  end
+  object dtsPriceListPref: TDataSource
+    DataSet = cdsPriceListPref
+    Left = 357
+    Top = 305
   end
 end

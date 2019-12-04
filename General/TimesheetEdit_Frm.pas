@@ -118,6 +118,7 @@ begin
   lucRateUnit.Properties.ListSource := TSDM.dtsRateUnit;
   // Hide drop down button of dteInvoiceDate control
   dteInvoiceDate.Properties.Buttons.Items[0].Visible := False;
+  Screen.Cursor := crDefault;
 end;
 
 end.

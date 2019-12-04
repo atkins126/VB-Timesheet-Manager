@@ -1,7 +1,9 @@
 inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsSingle
   Caption = 'TimesheetPrefrrencesFrm'
-  ClientHeight = 545
-  ClientWidth = 928
+  ClientHeight = 555
+  ClientWidth = 938
   ExplicitWidth = 944
   ExplicitHeight = 584
   PixelsPerInch = 96
@@ -22,6 +24,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       Caption = 'Use default customer'
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnEditValueChanged = cbxUseDefaultCustomerPropertiesEditValueChanged
       Style.HotTrack = False
       TabOrder = 0
       Transparent = True
@@ -32,6 +35,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       Caption = 'Use default price item'
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnEditValueChanged = cbxUseDefaultPriceItemPropertiesEditValueChanged
       Style.HotTrack = False
       TabOrder = 2
       Transparent = True
@@ -39,9 +43,10 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
     object cbxUseDefaultRate: TcxCheckBox [2]
       Left = 34
       Top = 133
-      Caption = 'use default rate'
+      Caption = 'Use default rate'
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnEditValueChanged = cbxUseDefaultRatePropertiesEditValueChanged
       Style.HotTrack = False
       TabOrder = 4
       Transparent = True
@@ -53,8 +58,19 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       Properties.DropDownAutoSize = True
       Properties.DropDownListStyle = lsFixedList
       Properties.ImmediatePost = True
-      Properties.ListColumns = <>
+      Properties.KeyFieldNames = 'ID'
+      Properties.ListColumns = <
+        item
+          Width = 350
+          FieldName = 'NAME'
+        end
+        item
+          Width = 40
+          FieldName = 'ACTIVE_STATUS'
+        end>
+      Properties.ListOptions.CaseInsensitive = True
       Properties.ListOptions.SyncMode = True
+      Properties.ListSource = TSDM.dtsCustomerLookupPref
       Style.HotTrack = False
       TabOrder = 1
       Width = 511
@@ -66,14 +82,31 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       Properties.DropDownAutoSize = True
       Properties.DropDownListStyle = lsFixedList
       Properties.ImmediatePost = True
-      Properties.ListColumns = <>
+      Properties.KeyFieldNames = 'ID'
+      Properties.ListColumns = <
+        item
+          Width = 650
+          FieldName = 'NAME'
+        end
+        item
+          Width = 80
+          FieldName = 'RATE'
+        end
+        item
+          Width = 190
+          FieldName = 'RATE_UNIT'
+        end>
+      Properties.ListOptions.CaseInsensitive = True
       Properties.ListOptions.SyncMode = True
+      Properties.ListSource = TSDM.dtsPriceListPref
+      Properties.OnEditValueChanged = lucPriceItemPropertiesEditValueChanged
+      EditValue = 0
       Style.HotTrack = False
       TabOrder = 3
       Width = 512
     end
     object edtDefaultRate: TcxCurrencyEdit [5]
-      Left = 183
+      Left = 184
       Top = 133
       Properties.DisplayFormat = '#,##0.00'
       Properties.EditFormat = '#,##0.00'
@@ -84,7 +117,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       Width = 120
     end
     object edtRateUnit: TcxTextEdit [6]
-      Left = 337
+      Left = 338
       Top = 133
       BeepOnEnter = False
       Properties.ReadOnly = True
@@ -126,7 +159,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
     object cbxUseTodaysDate: TcxCheckBox [8]
       Left = 34
       Top = 329
-      Caption = 'use today'#39's date when adding a new timesheet item'
+      Caption = 'Use today'#39's date when adding a new timesheet item'
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
       Style.HotTrack = False
@@ -277,7 +310,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       CaptionOptions.Visible = False
       Control = cbxUseDefaultRate
       ControlOptions.OriginalHeight = 19
-      ControlOptions.OriginalWidth = 111
+      ControlOptions.OriginalWidth = 112
       ControlOptions.ShowBorder = False
       Index = 0
     end

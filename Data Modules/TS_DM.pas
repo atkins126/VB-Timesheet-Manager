@@ -94,9 +94,21 @@ type
     cdsSystemUserPASSWORD: TStringField;
     cdsSystemUserACCOUNT_ENABLED: TIntegerField;
     cdsCustomerLookupACTIVE_STATUS: TStringField;
+    cdsCustomerLookupPref: TFDMemTable;
+    cdsPriceListPref: TFDMemTable;
+    IntegerField6: TIntegerField;
+    IntegerField7: TIntegerField;
+    StringField8: TStringField;
+    FloatField1: TFloatField;
+    StringField9: TStringField;
+    StringField10: TStringField;
+    StringField11: TStringField;
+    dtsCustomerLookupPref: TDataSource;
+    dtsPriceListPref: TDataSource;
     procedure dtsTimesheetStateChange(Sender: TObject);
     procedure cdsCustomerLookupCalcFields(DataSet: TDataSet);
     procedure cdsTimesheetNewRecord(DataSet: TDataSet);
+    procedure cdsCustomerLookupPrefCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
   public
@@ -120,7 +132,15 @@ begin
   case cdsCustomerLookup.FieldByName('IS_ACTIVE').Asinteger of
     0: cdsCustomerLookup.FieldByName('ACTIVE_STATUS').AsString := 'No';
     1: cdsCustomerLookup.FieldByName('ACTIVE_STATUS').AsString := 'Yes';
+  end;
+end;
 
+procedure TTSDM.cdsCustomerLookupPrefCalcFields(DataSet: TDataSet);
+begin
+  inherited;
+  case cdsCustomerLookupPref.FieldByName('IS_ACTIVE').Asinteger of
+    0: cdsCustomerLookupPref.FieldByName('ACTIVE_STATUS').AsString := 'No';
+    1: cdsCustomerLookupPref.FieldByName('ACTIVE_STATUS').AsString := 'Yes';
   end;
 end;
 
