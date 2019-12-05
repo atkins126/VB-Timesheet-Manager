@@ -17,6 +17,24 @@ uses
   FireDAC.VCLUI.Wait, FireDAC.DApt, FireDAC.Stan.StorageBin;
 
 type
+  TTimesheetOptions = record
+    UseDefaultCustomer: Boolean;
+    UseDefaultPriceItem: Boolean;
+    UseDefaultRate: Boolean;
+    DefaultCustomerID: Integer;
+    DefaultPriceItemID: Integer;
+    DefaultRate: Extended;
+    RateUnitID: Integer;
+    PriceListItemActionIndex: Integer;
+    UseTodaysDate: Boolean;
+    IncrementalLookupFitlering: Boolean;
+    HighlightLookupSearchMatch: Boolean;
+    SaveGridLayout: Boolean;
+  end;
+
+//    Regkey.WriteBool('Incremental Lookup Fitlering', cbxIncrementalFiltering.Checked);
+//    RegKey.WriteBool('Highlight Lookup Search Match', cbxHighlightSearchMatch.Checked);
+
   TTSDM = class(TVBBaseDM)
     cdsTimesheet: TFDMemTable;
     cdsCustomerLookup: TFDMemTable;
@@ -105,14 +123,32 @@ type
     StringField11: TStringField;
     dtsCustomerLookupPref: TDataSource;
     dtsPriceListPref: TDataSource;
+    cdsRatePUnitref: TFDMemTable;
+    IntegerField1: TIntegerField;
+    StringField1: TStringField;
+    dtsRateUnitPref: TDataSource;
+    cdsCustomerLookupPrefID: TIntegerField;
+    cdsCustomerLookupPrefCUSTOMER_TYPE_ID: TIntegerField;
+    cdsCustomerLookupPrefSTATUS_ID: TIntegerField;
+    cdsCustomerLookupPrefCUSTOMER_GROUP_ID: TIntegerField;
+    cdsCustomerLookupPrefNAME: TStringField;
+    cdsCustomerLookupPrefTRADING_AS: TStringField;
+    cdsCustomerLookupPrefCO_NO: TStringField;
+    cdsCustomerLookupPrefTAX_NO: TStringField;
+    cdsCustomerLookupPrefIS_ACTIVE: TIntegerField;
+    cdsCustomerLookupPrefCUSTOMER_TYPE: TStringField;
+    cdsCustomerLookupPrefCUSTOMER_STATUS: TStringField;
+    cdsCustomerLookupPrefACTIVE_STATUS: TStringField;
     procedure dtsTimesheetStateChange(Sender: TObject);
     procedure cdsCustomerLookupCalcFields(DataSet: TDataSet);
     procedure cdsTimesheetNewRecord(DataSet: TDataSet);
     procedure cdsCustomerLookupPrefCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
+    FTimesheetOption: TTimesheetOptions;
   public
     { Public declarations }
+    property TimesheetOption: TTimesheetOptions read FTimesheetOption write FTimesheetOption;
   end;
 
 var

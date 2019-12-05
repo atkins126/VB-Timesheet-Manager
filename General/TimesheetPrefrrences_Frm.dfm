@@ -12,12 +12,12 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
     Left = -2
     Top = -2
     Width = 800
-    Height = 490
+    Height = 518
     LayoutLookAndFeel = lafCustomSkin
     ExplicitLeft = -2
     ExplicitTop = -2
     ExplicitWidth = 800
-    ExplicitHeight = 490
+    ExplicitHeight = 518
     object cbxUseDefaultCustomer: TcxCheckBox [0]
       Left = 34
       Top = 79
@@ -42,7 +42,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
     end
     object cbxUseDefaultRate: TcxCheckBox [2]
       Left = 34
-      Top = 133
+      Top = 136
       Caption = 'Use default rate'
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
@@ -58,6 +58,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       Properties.DropDownAutoSize = True
       Properties.DropDownListStyle = lsFixedList
       Properties.ImmediatePost = True
+      Properties.IncrementalFilteringOptions = [ifoHighlightSearchText]
       Properties.KeyFieldNames = 'ID'
       Properties.ListColumns = <
         item
@@ -71,6 +72,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       Properties.ListOptions.CaseInsensitive = True
       Properties.ListOptions.SyncMode = True
       Properties.ListSource = TSDM.dtsCustomerLookupPref
+      Properties.PostPopupValueOnTab = True
       Style.HotTrack = False
       TabOrder = 1
       Width = 511
@@ -99,6 +101,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       Properties.ListOptions.CaseInsensitive = True
       Properties.ListOptions.SyncMode = True
       Properties.ListSource = TSDM.dtsPriceListPref
+      Properties.PostPopupValueOnTab = True
       Properties.OnEditValueChanged = lucPriceItemPropertiesEditValueChanged
       EditValue = 0
       Style.HotTrack = False
@@ -107,7 +110,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
     end
     object edtDefaultRate: TcxCurrencyEdit [5]
       Left = 184
-      Top = 133
+      Top = 135
       Properties.DisplayFormat = '#,##0.00'
       Properties.EditFormat = '#,##0.00'
       Properties.UseDisplayFormatWhenEditing = True
@@ -116,18 +119,9 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       TabOrder = 5
       Width = 120
     end
-    object edtRateUnit: TcxTextEdit [6]
-      Left = 338
-      Top = 133
-      BeepOnEnter = False
-      Properties.ReadOnly = True
-      Style.HotTrack = False
-      TabOrder = 6
-      Width = 120
-    end
-    object radPriceItemOption: TcxRadioGroup [7]
+    object radPriceItemOption: TcxRadioGroup [6]
       Left = 34
-      Top = 160
+      Top = 164
       Caption = 'When selecting a pricelist item'
       ParentBackground = False
       ParentColor = False
@@ -152,44 +146,45 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
             'iption.'
         end>
       Style.Color = 16053234
-      TabOrder = 7
+      TabOrder = 8
       Height = 120
       Width = 729
     end
-    object cbxUseTodaysDate: TcxCheckBox [8]
+    object cbxUseTodaysDate: TcxCheckBox [7]
       Left = 34
-      Top = 329
+      Top = 333
       Caption = 'Use today'#39's date when adding a new timesheet item'
-      Properties.ImmediatePost = True
-      Properties.UseAlignmentWhenInplace = True
-      Style.HotTrack = False
-      TabOrder = 8
-      Transparent = True
-    end
-    object cbxSaveGridLayout: TcxCheckBox [9]
-      Left = 34
-      Top = 354
-      Caption = 'Save grid layout when exiting'
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
       Style.HotTrack = False
       TabOrder = 9
       Transparent = True
     end
-    object btnSave: TcxButton [10]
+    object cbxSaveGridLayout: TcxCheckBox [8]
+      Left = 34
+      Top = 408
+      Caption = 'Save grid layout when exiting'
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
+      Style.HotTrack = False
+      TabOrder = 12
+      Transparent = True
+    end
+    object btnOK: TcxButton [9]
       Left = 633
-      Top = 454
+      Top = 482
       Width = 75
       Height = 25
-      Caption = 'Save'
+      Caption = 'OK'
       Default = True
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 10
+      TabOrder = 13
+      OnClick = btnOKClick
     end
-    object btnCancel: TcxButton [11]
+    object btnCancel: TcxButton [10]
       Left = 714
-      Top = 454
+      Top = 482
       Width = 75
       Height = 25
       Cancel = True
@@ -197,7 +192,56 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       ModalResult = 2
       ParentShowHint = False
       ShowHint = True
+      TabOrder = 14
+    end
+    object btnGetDefaultRate: TcxButton [11]
+      Left = 484
+      Top = 133
+      Width = 115
+      Height = 25
+      Action = actGetDefaultRate
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 7
+    end
+    object lucRateUnit: TcxLookupComboBox [12]
+      Left = 338
+      Top = 135
+      BeepOnEnter = False
+      Properties.DropDownAutoSize = True
+      Properties.DropDownListStyle = lsFixedList
+      Properties.ImmediatePost = True
+      Properties.KeyFieldNames = 'ID'
+      Properties.ListColumns = <
+        item
+          FieldName = 'NAME'
+        end>
+      Properties.ListOptions.SyncMode = True
+      Properties.ListSource = TSDM.dtsRateUnitPref
+      Style.HotTrack = False
+      TabOrder = 6
+      Width = 140
+    end
+    object cbxIncrementalFiltering: TcxCheckBox [13]
+      Left = 34
+      Top = 358
+      Caption = 'Use incremental filtering in lookup lists'
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
+      Properties.OnEditValueChanged = cbxIncrementalFilteringPropertiesEditValueChanged
+      Style.HotTrack = False
+      TabOrder = 10
+      Transparent = True
+    end
+    object cbxHighlightSearchMatch: TcxCheckBox [14]
+      Left = 50
+      Top = 383
+      Caption = 'Higlight search match in lookup lists'
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
+      Style.HotTrack = False
       TabOrder = 11
+      Transparent = True
     end
     object grpTimesheetOptionsTab: TdxLayoutGroup
       Parent = layMainGroup_Root
@@ -242,6 +286,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       Parent = grpSubOptions
       CaptionOptions.Text = 'When adding a new timesheet item'
       ButtonOptions.Buttons = <>
+      ItemIndex = 2
       Index = 0
     end
     object grpPriceOptions: TdxLayoutGroup
@@ -267,11 +312,6 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       ButtonOptions.Buttons = <>
       ItemIndex = 1
       Index = 0
-    end
-    object sep1: TdxLayoutSeparatorItem
-      AlignVert = avBottom
-      CaptionOptions.Text = 'Separator'
-      Index = -1
     end
     object litPriceItemSelectionOption: TdxLayoutItem
       Parent = grpPriceItemOptions
@@ -306,6 +346,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
     end
     object litUseDefaultRate: TdxLayoutItem
       Parent = grpRateOptions
+      AlignVert = avCenter
       CaptionOptions.Text = 'New Item'
       CaptionOptions.Visible = False
       Control = cbxUseDefaultRate
@@ -316,6 +357,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
     end
     object litDefaultRate: TdxLayoutItem
       Parent = grpRateOptions
+      AlignVert = avCenter
       CaptionOptions.Text = 'Rate'
       Control = edtDefaultRate
       ControlOptions.OriginalHeight = 21
@@ -325,10 +367,11 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
     end
     object litRateUnit: TdxLayoutItem
       Parent = grpRateOptions
+      AlignVert = avCenter
       CaptionOptions.Text = 'Unit'
-      Control = edtRateUnit
+      Control = lucRateUnit
       ControlOptions.OriginalHeight = 21
-      ControlOptions.OriginalWidth = 120
+      ControlOptions.OriginalWidth = 140
       ControlOptions.ShowBorder = False
       Index = 2
     end
@@ -352,7 +395,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       Parent = grpSubOptions
       CaptionOptions.Text = 'Other Optoins'
       ButtonOptions.Buttons = <>
-      ItemIndex = 1
+      ItemIndex = 2
       Index = 1
     end
     object litUseTodaysDate: TdxLayoutItem
@@ -373,7 +416,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 191
       ControlOptions.ShowBorder = False
-      Index = 1
+      Index = 3
     end
     object litCancel: TdxLayoutItem
       Parent = grpControls
@@ -389,7 +432,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       Parent = grpControls
       CaptionOptions.Text = 'New Item'
       CaptionOptions.Visible = False
-      Control = btnSave
+      Control = btnOK
       ControlOptions.OriginalHeight = 25
       ControlOptions.OriginalWidth = 75
       ControlOptions.ShowBorder = False
@@ -402,9 +445,60 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       SizeOptions.Width = 1
       Index = 1
     end
+    object litGetDefaultRate: TdxLayoutItem
+      Parent = grpRateOptions
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = btnGetDefaultRate
+      ControlOptions.OriginalHeight = 25
+      ControlOptions.OriginalWidth = 115
+      ControlOptions.ShowBorder = False
+      Index = 3
+    end
+    object litIncrementalFiltering: TdxLayoutItem
+      Parent = grpOtherOptions
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = cbxIncrementalFiltering
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 242
+      ControlOptions.ShowBorder = False
+      Index = 1
+    end
+    object litHighlightSearchMatch: TdxLayoutItem
+      Parent = grpHighlightSearchMatch
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = cbxHighlightSearchMatch
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 226
+      ControlOptions.ShowBorder = False
+      Index = 1
+    end
+    object spc2: TdxLayoutEmptySpaceItem
+      Parent = grpHighlightSearchMatch
+      CaptionOptions.Text = 'Empty Space Item'
+      SizeOptions.Height = 10
+      SizeOptions.Width = 10
+      Index = 0
+    end
+    object grpHighlightSearchMatch: TdxLayoutGroup
+      Parent = grpOtherOptions
+      CaptionOptions.Text = 'New Group'
+      ButtonOptions.Buttons = <>
+      LayoutDirection = ldHorizontal
+      ShowBorder = False
+      Index = 2
+    end
   end
   inherited styRepository: TcxStyleRepository
     PixelsPerInch = 96
+  end
+  inherited actList: TActionList
+    object actGetDefaultRate: TAction
+      Caption = 'Get Default Rate'
+      OnExecute = DoGetDefaultRate
+    end
   end
   inherited lafLayoutList: TdxLayoutLookAndFeelList
     inherited lafCustomSkin: TdxLayoutSkinLookAndFeel
@@ -416,5 +510,46 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
   end
   inherited img32: TcxImageList
     FormatVersion = 1
+  end
+  object repScreenTip: TdxScreenTipRepository
+    AssignedFonts = [stbHeader, stbDescription, stbFooter]
+    DescriptionFont.Charset = ANSI_CHARSET
+    DescriptionFont.Color = 5000268
+    DescriptionFont.Height = -11
+    DescriptionFont.Name = 'Verdana'
+    DescriptionFont.Style = []
+    FooterFont.Charset = ANSI_CHARSET
+    FooterFont.Color = 5000268
+    FooterFont.Height = -12
+    FooterFont.Name = 'Verdana'
+    FooterFont.Style = [fsBold]
+    HeaderFont.Charset = ANSI_CHARSET
+    HeaderFont.Color = 5000268
+    HeaderFont.Height = -12
+    HeaderFont.Name = 'Verdana'
+    HeaderFont.Style = [fsBold]
+    Left = 530
+    Top = 200
+    PixelsPerInch = 96
+    object tipGetDefaultRate: TdxScreenTip
+      Header.Text = 'Get default rate'
+      Description.Text = 'Get default rate from price list item'
+      Width = 250
+    end
+  end
+  object styHintController: TcxHintStyleController
+    Global = False
+    HintStyleClassName = 'TdxScreenTipStyle'
+    HintStyle.ScreenTipLinks = <
+      item
+        ScreenTip = tipGetDefaultRate
+        Control = btnGetDefaultRate
+      end>
+    HintStyle.ScreenTipActionLinks = <>
+    HintShortPause = 0
+    HintPause = 0
+    HintHidePause = 3000
+    Left = 620
+    Top = 199
   end
 end

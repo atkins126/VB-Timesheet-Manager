@@ -193,6 +193,7 @@ type
     procedure SetButtonStatus(EditMode: Boolean);
     procedure VerifyRegistry;
     function GetMonthEndDate(Period: Integer): TDateTime;
+    procedure ReadRegValues;
   protected
     procedure HandleStateChange(var MyMsg: TMessage); message WM_STATE_CHANGE;
     procedure DrawCellBorder(var Msg: TMessage); message CM_DRAWBORDER;
@@ -338,6 +339,7 @@ begin
       RegKey.CloseKey;
 
       VerifyRegistry;
+      ReadRegValues;
 
       RegKey.OpenKey(KEY_TIME_SHEET, True);
 
@@ -478,8 +480,8 @@ var
 begin
   inherited;
   Screen.Cursor := crHourglass;
-  DC :=  viewTimesheet.DataController;
-  RecordIndex :=  DC.FocusedRecordIndex;
+  DC := viewTimesheet.DataController;
+  RecordIndex := DC.FocusedRecordIndex;
 
   try
     if not TSDM.cdsTimesheet.IsEmpty then
@@ -613,9 +615,68 @@ begin
       Regkey.WriteDate('From Date', Date);
 
     if not Regkey.ValueExists('To Date') then
+
       Regkey.WriteDate('To Date', Date);
 
+    if not Regkey.ValueExists('Use Default Customer') then
+      Regkey.WriteBool('Use Default Customer', False);
+
+    if not Regkey.ValueExists('Default Customer ID') then
+      Regkey.WriteInteger('Default Customer ID', 0);
+
+    if not Regkey.ValueExists('Use Default Price Item') then
+      Regkey.WriteBool('Use Default Price Item', False);
+
+    if not Regkey.ValueExists('Default Price Item ID') then
+      Regkey.WriteInteger('Default Price Item ID', 0);
+
+    if not Regkey.ValueExists('Use Default Rate') then
+      Regkey.WriteBool('Use Default Rate', False);
+
+    if not Regkey.ValueExists('Default Rate') then
+      Regkey.WriteFloat('Default Rate', 0.0);
+
+    if not Regkey.ValueExists('Auto Date on New Timesheet Line') then
+      Regkey.WriteBool('Auto Date on New Timesheet Line', True);
+
+    if not Regkey.ValueExists('Save Grid Layout') then
+      Regkey.WriteBool('Save Grid Layout', False);
+
+    if not Regkey.ValueExists('Pricelist Item Action Index') then
+      RegKey.WriteInteger('Pricelist Item Action Index', 3);
+
+    if not Regkey.ValueExists('Incremental Lookup Fitlering') then
+      Regkey.WriteBool('Incremental Lookup Fitlering', True);
+
+    if not Regkey.ValueExists('Highlight Lookup Search Match') then
+      RegKey.WriteBool('Highlight Lookup Search Match', True);
+
     Regkey.CloseKey;
+  finally
+    RegKey.Free
+  end;
+end;
+
+procedure TMainFrm.ReadRegValues;
+var
+  RegKey: TRegistry;
+begin
+  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+  try
+    RegKey.RootKey := HKEY_CURRENT_USER;
+    RegKey.OpenKey(KEY_TIME_SHEET, True);
+    TSDM.TimesheetOption.UseDefaultCustomer := Regkey.ReadBool('Use Default Customer');
+    TSDM.TimesheetOption.UseDefaultPriceItem := Regkey.ReadBool('Use Default Price Item');
+    TSDM.TimesheetOption.UseDefaultRate := Regkey.ReadBool('Use Default Rate');
+    TSDM.TimesheetOption.UseTodaysDate := Regkey.ReadBool('Auto Date on New Timesheet Line');
+    TSDM.TimesheetOption.SaveGridLayout := Regkey.ReadBool('Save Grid Layout');
+    TSDM.TimesheetOption.DefaultCustomerID := Regkey.ReadInteger('Default Customer ID');
+    TSDM.TimesheetOption.DefaultPriceItemID := RegKey.ReadInteger('Default Price Item ID');
+    TSDM.TimesheetOption.DefaultRate := RegKey.ReadFloat('Default Rate');
+    TSDM.TimesheetOption.RateUnitID := RegKey.ReadInteger('Rate Unit ID');
+    TSDM.TimesheetOption.PriceListItemActionIndex := RegKey.ReadInteger('Pricelist Item Action Index');
+    TSDM.TimesheetOption.IncrementalLookupFitlering := Regkey.ReadBool('Incremental Lookup Fitlering');
+    TSDM.TimesheetOption.HighlightLookupSearchMatch := RegKey.ReadBool('Highlight Lookup Search Match');
   finally
     RegKey.Free
   end;

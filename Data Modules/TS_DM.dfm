@@ -653,6 +653,72 @@ inherited TSDM: TTSDM
     StoreDefs = True
     Left = 226
     Top = 250
+    object cdsCustomerLookupPrefID: TIntegerField
+      FieldName = 'ID'
+      Origin = 'ID'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+    object cdsCustomerLookupPrefCUSTOMER_TYPE_ID: TIntegerField
+      DisplayLabel = 'C ID'
+      FieldName = 'CUSTOMER_TYPE_ID'
+      Origin = 'CUSTOMER_TYPE_ID'
+      Required = True
+    end
+    object cdsCustomerLookupPrefSTATUS_ID: TIntegerField
+      DisplayLabel = 'ST ID'
+      FieldName = 'STATUS_ID'
+    end
+    object cdsCustomerLookupPrefCUSTOMER_GROUP_ID: TIntegerField
+      DisplayLabel = 'CG ID'
+      FieldName = 'CUSTOMER_GROUP_ID'
+      Origin = 'CUSTOMER_GROUP_ID'
+    end
+    object cdsCustomerLookupPrefNAME: TStringField
+      DisplayLabel = 'Name'
+      FieldName = 'NAME'
+      Origin = 'NAME'
+      Required = True
+      Size = 100
+    end
+    object cdsCustomerLookupPrefTRADING_AS: TStringField
+      DisplayLabel = 'Trading As'
+      FieldName = 'TRADING_AS'
+      Origin = 'TRADING_AS'
+      Size = 100
+    end
+    object cdsCustomerLookupPrefCO_NO: TStringField
+      DisplayLabel = 'Co No'
+      FieldName = 'CO_NO'
+      Origin = 'CO_NO'
+    end
+    object cdsCustomerLookupPrefTAX_NO: TStringField
+      DisplayLabel = 'Tax No'
+      FieldName = 'TAX_NO'
+      Origin = 'TAX_NO'
+    end
+    object cdsCustomerLookupPrefIS_ACTIVE: TIntegerField
+      DisplayLabel = 'Active'
+      FieldName = 'IS_ACTIVE'
+      Origin = 'IS_ACTIVE'
+      Required = True
+    end
+    object cdsCustomerLookupPrefCUSTOMER_TYPE: TStringField
+      DisplayLabel = 'Type'
+      FieldName = 'CUSTOMER_TYPE'
+      Size = 30
+    end
+    object cdsCustomerLookupPrefCUSTOMER_STATUS: TStringField
+      DisplayLabel = 'Status'
+      FieldName = 'CUSTOMER_STATUS'
+    end
+    object cdsCustomerLookupPrefACTIVE_STATUS: TStringField
+      DisplayLabel = 'Active'
+      FieldKind = fkCalculated
+      FieldName = 'ACTIVE_STATUS'
+      Size = 5
+      Calculated = True
+    end
   end
   object cdsPriceListPref: TFDMemTable
     ActiveStoredUsage = [auDesignTime]
@@ -730,6 +796,50 @@ inherited TSDM: TTSDM
   object dtsPriceListPref: TDataSource
     DataSet = cdsPriceListPref
     Left = 357
+    Top = 305
+  end
+  object cdsRatePUnitref: TFDMemTable
+    ActiveStoredUsage = [auDesignTime]
+    FilterOptions = [foCaseInsensitive]
+    FieldDefs = <>
+    CachedUpdates = True
+    IndexDefs = <>
+    ConstraintsEnabled = True
+    FetchOptions.AssignedValues = [evMode, evRecordCountMode]
+    FetchOptions.Mode = fmAll
+    FetchOptions.RecordCountMode = cmTotal
+    FormatOptions.AssignedValues = [fvDataSnapCompatibility]
+    FormatOptions.DataSnapCompatibility = True
+    ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
+    ResourceOptions.Persistent = True
+    ResourceOptions.StorePrettyPrint = True
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvGeneratorName, uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.GeneratorName = 'RATE_UNIT_ID_GEN'
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    UpdateOptions.UpdateTableName = 'RATE_UNIT'
+    StoreDefs = True
+    Left = 461
+    Top = 250
+    object IntegerField1: TIntegerField
+      Alignment = taLeftJustify
+      FieldName = 'ID'
+      Origin = 'ID'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+    object StringField1: TStringField
+      DisplayLabel = 'Name'
+      FieldName = 'NAME'
+      Origin = 'NAME'
+      Required = True
+      Size = 30
+    end
+  end
+  object dtsRateUnitPref: TDataSource
+    DataSet = cdsRatePUnitref
+    Left = 461
     Top = 305
   end
 end
