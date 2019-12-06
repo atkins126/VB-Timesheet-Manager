@@ -36,6 +36,7 @@ inherited MainFrm: TMainFrm
         PopupMenu = popTimesheet
         OnDblClick = viewTimesheetDblClick
         Navigator.Buttons.CustomButtons = <>
+        ScrollbarAnnotations.CustomAnnotations = <>
         OnCustomDrawCell = viewTimesheetCustomDrawCell
         OnSelectionChanged = viewTimesheetSelectionChanged
         DataController.DataSource = TSDM.dtsTimesheet
@@ -669,6 +670,7 @@ inherited MainFrm: TMainFrm
     Visible = False
     object viewTimesheetPrint: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
+      ScrollbarAnnotations.CustomAnnotations = <>
       DataController.DataSource = ReportDM.dtsTSBillable
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>

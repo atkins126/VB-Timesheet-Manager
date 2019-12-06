@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Classes, WinApi.Windows, Vcl.Forms, Data.DBXDataSnap,
-  Data.DBXCommon,
+  Data.DBXCommon, System.DateUtils,
 
   Base_DM, VBBase_DM, CommonValues, VBCommonValues,
 
@@ -145,10 +145,9 @@ type
     procedure cdsCustomerLookupPrefCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
-    FTimesheetOption: TTimesheetOptions;
   public
     { Public declarations }
-    property TimesheetOption: TTimesheetOptions read FTimesheetOption write FTimesheetOption;
+    TimesheetOption: TTimesheetOptions;
   end;
 
 var
@@ -181,12 +180,36 @@ begin
 end;
 
 procedure TTSDM.cdsTimesheetNewRecord(DataSet: TDataSet);
+var
+  aDay, aMonth, aYear: Word;
 begin
   inherited;
   cdsTimesheet.FieldByName('BILLABLE').AsInteger := 0;
   cdsTimesheet.FieldByName('IS_ADDITIONAL_WORK').AsInteger := 0;
   cdsTimesheet.FieldByName('CARRY_FORWARD').AsInteger := 0;
   cdsTimesheet.FieldByName('APPROVED').AsInteger := 0;
+  cdsTimesheet.FieldByName('TIME_SPENT').AsFloat := 0.0;
+  cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat := 0;
+
+  if TimesheetOption.UseTodaysDate then
+  begin
+    cdsTimesheet.FieldByName('ACTIVITY_DATE').AsDateTime := Date;
+    cdsTimesheet.FieldByName('DAY_NAME').AsString :=
+      DayMonthName(Date, ntDay, nfShort);
+  end;
+
+  if TimesheetOption.UseDefaultCustomer then
+    cdsTimesheet.FieldByName('CUSTOMER_ID').Asinteger :=
+      TimesheetOption.DefaultCustomerID;
+
+  if TimesheetOption.UseDefaultPriceItem then
+  begin
+    cdsTimesheet.FieldByName('PRICE_LIST_ITEM_ID').Asinteger :=
+      TimesheetOption.DefaultPriceItemID;
+    cdsTimesheet.FieldByName('ACTUAL_RATE').AsFloat := TimesheetOption.DefaultRate;
+    cdsTimesheet.FieldByName('STD_RATE').AsFloat := TimesheetOption.DefaultRate;
+    cdsTimesheet.FieldByName('RATE_UNIT_ID').AsInteger := TimesheetOption.RateUnitID;
+  end;
 end;
 
 procedure TTSDM.dtsTimesheetStateChange(Sender: TObject);

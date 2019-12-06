@@ -3,15 +3,18 @@ unit TimesheetEdit_Frm;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, BaseLayout_Frm, cxGraphics, cxControls,
-  cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore, dxSkinsDefaultPainters,
-  System.ImageList, Vcl.ImgList, cxImageList, dxLayoutLookAndFeels,
-  System.Actions, Vcl.ActnList, cxClasses, cxStyles, dxLayoutContainer,
-  dxLayoutControl, cxContainer, cxEdit, cxTextEdit, cxMaskEdit, cxDropDownEdit,
-  cxCalendar, cxDBEdit, cxCheckBox, dxLayoutcxEditAdapters, cxLookupEdit,
-  cxDBLookupEdit, cxDBLookupComboBox, dxLayoutControlAdapters, Vcl.Menus,
-  Vcl.StdCtrls, cxButtons, cxMemo, cxCurrencyEdit;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Forms,
+  System.Classes, Vcl.Graphics, System.ImageList, Vcl.ImgList, Vcl.StdCtrls,
+  Vcl.Controls, Vcl.Dialogs, Data.DB, System.Actions, Vcl.ActnList, Vcl.Menus,
+
+  BaseLayout_Frm, CommonValues,
+
+  cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore,
+  dxSkinsDefaultPainters, cxImageList, dxLayoutLookAndFeels, cxClasses, cxStyles,
+  dxLayoutContainer, dxLayoutControl, cxContainer, cxEdit, cxTextEdit, cxMaskEdit,
+  cxDropDownEdit, cxCalendar, cxDBEdit, cxCheckBox, dxLayoutcxEditAdapters,
+  cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox, dxLayoutControlAdapters,
+  cxButtons, cxMemo, cxCurrencyEdit, dxFormattedLabel;
 
 type
   TTimesheetEditFrm = class(TBaseLayoutFrm)
@@ -43,8 +46,6 @@ type
     edtRate: TcxDBCurrencyEdit;
     edtStdrate: TcxDBCurrencyEdit;
     edtitemValue: TcxDBCurrencyEdit;
-    edtInvoiceNo: TcxDBCurrencyEdit;
-    dteInvoiceDate: TcxDBDateEdit;
     litBillable: TdxLayoutItem;
     litTimeSpent: TdxLayoutItem;
     litHours: TdxLayoutItem;
@@ -53,10 +54,7 @@ type
     litRate: TdxLayoutItem;
     litRateUnit: TdxLayoutItem;
     litItemValue: TdxLayoutItem;
-    litInvoiceNo: TdxLayoutItem;
-    litInvoiceDate: TdxLayoutItem;
     grpActivityType: TdxLayoutGroup;
-    grpInvoice: TdxLayoutGroup;
     grpControls: TdxLayoutGroup;
     sep1: TdxLayoutSeparatorItem;
     btnOK: TcxButton;
@@ -69,10 +67,23 @@ type
     styReadOnly: TcxEditStyleController;
     litDayName: TdxLayoutItem;
     edtDayName: TcxDBTextEdit;
-    spc2: TdxLayoutEmptySpaceItem;
+    lbl1: TdxFormattedLabel;
+    spc3: TdxLayoutEmptySpaceItem;
     procedure FormCreate(Sender: TObject);
+    procedure dteActivityDatePropertiesEditValueChanged(Sender: TObject);
+    procedure btnOKClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure edtTimeSpentPropertiesChange(Sender: TObject);
+    procedure edtTimeSpentPropertiesValidate(Sender: TObject;
+      var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
+    procedure cbxBillablePropertiesEditValueChanged(Sender: TObject);
+    procedure lucPriceListItemPropertiesEditValueChanged(Sender: TObject);
+    procedure edtRatePropertiesChange(Sender: TObject);
+    procedure edtRatePropertiesEditValueChanged(Sender: TObject);
+    procedure lucRateUnitPropertiesEditValueChanged(Sender: TObject);
   private
     { Private declarations }
+    procedure RecalcValues;
   public
     { Public declarations }
   end;
@@ -84,14 +95,16 @@ implementation
 
 {$R *.dfm}
 
-uses TS_DM;
+uses
+  TS_DM,
+  RUtils;
 
 procedure TTimesheetEditFrm.FormCreate(Sender: TObject);
 begin
   inherited;
   // Width = 800;  Height = 405.
   Self.Width := 800;
-  Self.Height := 580;
+  Self.Height := 555;
   Caption := 'Timesheet Data';
   cbxAproved.DataBinding.DataSource := TSDM.dtsTimesheet;
   cbxCarryForward.DataBinding.DataSource := TSDM.dtsTimesheet;
@@ -104,10 +117,6 @@ begin
   edtHours.DataBinding.DataSource := TSDM.dtsTimesheet;
   edtRate.DataBinding.DataSource := TSDM.dtsTimesheet;
   edtStdrate.DataBinding.DataSource := TSDM.dtsTimesheet;
-  edtInvoiceNo.DataBinding.DataSource := TSDM.dtsTimesheet;
-  edtitemValue.DataBinding.DataSource := TSDM.dtsTimesheet;
-  edtInvoiceNo.DataBinding.DataSource := TSDM.dtsTimesheet;
-  dteInvoiceDate.DataBinding.DataSource := TSDM.dtsTimesheet;
   lucCustomer.Properties.ListSource := TSDM.dtsCustomerLookup;
   lucCustomer.DataBinding.DataSource := TSDM.dtsTimesheet;
   lucPriceListItem.Properties.ListSource := TSDM.dtsPriceList;
@@ -117,11 +126,325 @@ begin
   lucRateUnit.DataBinding.DataSource := TSDM.dtsTimesheet;
   lucRateUnit.Properties.ListSource := TSDM.dtsRateUnit;
   // Hide drop down button of dteInvoiceDate control
-  dteInvoiceDate.Properties.Buttons.Items[0].Visible := False;
 
-  {TODO: Set control options here}
+  lucCustomer.Properties.IncrementalFiltering := TSDM.TimesheetOption.IncrementalLookupFitlering;
+  lucCustomer.Properties.IncrementalFilteringOptions := [];
+  if TSDM.TimesheetOption.HighlightLookupSearchMatch then
+    lucCustomer.Properties.IncrementalFilteringOptions := [ifoHighlightSearchText];
 
+  lucPriceListItem.Properties.IncrementalFiltering := TSDM.TimesheetOption.IncrementalLookupFitlering;
+  lucPriceListItem.Properties.IncrementalFilteringOptions := [];
+  if TSDM.TimesheetOption.HighlightLookupSearchMatch then
+    lucPriceListItem.Properties.IncrementalFilteringOptions := [ifoHighlightSearchText];
+
+  lucRateUnit.Properties.IncrementalFiltering := TSDM.TimesheetOption.IncrementalLookupFitlering;
+  lucRateUnit.Properties.IncrementalFilteringOptions := [];
+  if TSDM.TimesheetOption.HighlightLookupSearchMatch then
+    lucRateUnit.Properties.IncrementalFilteringOptions := [ifoHighlightSearchText];
+
+  dteActivityDate.Properties.MinDate := StrToDate('01/01/2019');
+  dteActivityDate.Properties.MaxDate := Date;
   Screen.Cursor := crDefault;
+end;
+
+procedure TTimesheetEditFrm.FormShow(Sender: TObject);
+begin
+  inherited;
+  if VarIsNull(lucCustomer.EditValue) then
+    lucCustomer.SetFocus
+  else if VarIsnull(lucPriceListItem.EditValue) then
+    lucPriceListItem.SetFocus
+  else
+    lucActivityType.SetFocus;
+end;
+
+procedure TTimesheetEditFrm.btnOKClick(Sender: TObject);
+begin
+  inherited;
+  if VarIsNull(dteActivityDate.EditValue) or SameText(Trim(dteActivityDate.Text), '') then
+  begin
+    dteActivityDate.SetFocus;
+    raise EValidateException.Create('Activity date must have a value.');
+  end;
+
+  if VarIsNull(lucCustomer.EditValue) then
+  begin
+    lucCustomer.SetFocus;
+    raise EValidateException.Create('Customer must have a value.');
+  end;
+
+  if VarIsNull(lucPriceListItem.EditValue) then
+  begin
+    lucPriceListItem.SetFocus;
+    raise EValidateException.Create('Price item must have a value.');
+  end;
+
+  if VarIsNull(lucActivityType.EditValue) then
+  begin
+    lucActivityType.SetFocus;
+    raise EValidateException.Create('Activity type must have a value.');
+  end;
+
+  if VarIsNull(memActivity.EditValue) or SameText(Trim(memActivity.Text), '') then
+  begin
+    memActivity.SetFocus;
+    raise EValidateException.Create('Activity must have a value.');
+  end;
+
+  if VarIsNull(edtTimeSpent.EditValue) or (edtTimeSpent.Value <= 0) then
+  begin
+    edtTimeSpent.SetFocus;
+    raise EValidateException.Create('Time spent must have a value. Please enter a value greater than 0 with a maximum of 480');
+  end;
+
+  if VarIsNull(edtRate.EditValue) or (edtRate.Value <= 0) then
+  begin
+    edtRate.SetFocus;
+    raise EValidateException.Create('Rate spent must have a value. Please enter a value greater than 0.');
+  end;
+
+  if VarIsNull(lucRateUnit.EditValue) then
+  begin
+    lucRateUnit.SetFocus;
+    raise EValidateException.Create('Rate unit spent must have a value.');
+  end;
+
+end;
+
+procedure TTimesheetEditFrm.cbxBillablePropertiesEditValueChanged(Sender: TObject);
+begin
+  inherited;
+//  RecalcValues;
+//  if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
+//  begin
+//    if cbxBillable.Checked then
+//    begin
+//      case VarAstype(lucRateUnit.EditValue, varInteger) of
+//        1: edtitemValue.Value := edtTimeSpent.Value * edtRate.Value / 60;
+//      else
+//        edtitemValue.Value := edtTimeSpent.Value * edtRate.Value;
+//      end;
+//    end
+//    else
+//      edtitemValue.Value := 0;
+//  end;
+
+  if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
+  begin
+    if cbxBillable.Checked then
+    begin
+      case VarAstype(lucRateUnit.EditValue, varInteger) of
+        1: TSDM.cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat := edtTimeSpent.Value * edtRate.Value / 60;
+      else
+        TSDM.cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat := {edtTimeSpent.Value * }edtRate.Value;
+      end;
+    end
+    else
+      TSDM.cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat := 0;
+  end;
+end;
+
+procedure TTimesheetEditFrm.lucPriceListItemPropertiesEditValueChanged(Sender: TObject);
+begin
+  inherited;
+  if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
+  begin
+//    edtRate.Properties.OnChange := nil;
+    try
+//      edtRate.EditValue := TSDM.cdsPriceList.FieldByName('RATE').AsFloat;
+//      edtStdRate.EditValue := TSDM.cdsPriceList.FieldByName('RATE').AsFloat;
+//
+//      if cbxBillable.Checked then
+//        edtitemValue.EditValue := edtTimeSpent.Value * edtRate.Value
+//      else
+//        edtitemValue.EditValue := 0;
+
+      TSDM.cdsTimesheet.FieldByName('ACTUAL_RATE').AsFloat := TSDM.cdsPriceList.FieldByName('RATE').AsFloat;
+      TSDM.cdsTimesheet.FieldByName('STD_RATE').AsFloat := TSDM.cdsPriceList.FieldByName('RATE').AsFloat;
+      if cbxBillable.Checked then
+        TSDM.cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat := edtTimeSpent.Value * edtRate.Value
+      else
+        TSDM.cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat := 0;
+//    RecalcValues;
+//    cbxBillablePropertiesEditValueChanged(nil);
+    finally
+//      edtRate.Properties.OnChange := edtRatePropertiesChange;
+    end;
+  end;
+end;
+
+procedure TTimesheetEditFrm.lucRateUnitPropertiesEditValueChanged(  Sender: TObject);
+begin
+  inherited;
+  if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
+  begin
+    if cbxBillable.Checked then
+    begin
+      case VarAstype(lucRateUnit.EditValue, varInteger) of
+        1: TSDM.cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat := edtTimeSpent.Value * edtRate.Value / 60;
+      else
+        TSDM.cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat := {edtTimeSpent.Value * }edtRate.Value;
+      end;
+    end
+    else
+      TSDM.cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat := 0;
+  end;
+end;
+
+procedure TTimesheetEditFrm.RecalcValues;
+begin
+  if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
+  begin
+    TSDM.cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat :=
+      TSDM.cdsTimesheet.FieldByName('TIME_SPENT').AsFloat / 60;
+
+    if cbxBillable.Checked then
+    begin
+      case VarAstype(lucRateUnit.EditValue, varInteger) of
+        1: TSDM.cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat :=
+          TSDM.cdsTimesheet.FieldByName('TIME_SPENT').AsFloat * edtRate.Value / 60;
+      else
+        TSDM.cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat :=
+          TSDM.cdsTimesheet.FieldByName('TIME_SPENT').AsFloat * edtRate.Value;
+
+        TSDM.cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat :=
+          TSDM.cdsTimesheet.FieldByName('TIME_SPENT').AsFloat * edtRate.Value;
+      end
+    end
+    else
+      edtitemValue.Value := 0;
+  end;
+
+//  if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
+//  begin
+//    edtHours.Value := edtTimeSpent.Value / 60;
+//
+//    if cbxBillable.Checked then
+//    begin
+//      case VarAstype(lucRateUnit.EditValue, varInteger) of
+//        1: edtitemValue.Value := edtTimeSpent.Value * edtRate.Value / 60;
+//      else
+//        edtitemValue.Value := edtTimeSpent.Value * edtRate.Value;
+//
+//        edtitemValue.Value := edtTimeSpent.Value * edtRate.Value;
+//      end
+//    end
+//    else
+//      edtitemValue.Value := 0;
+//  end;
+end;
+
+procedure TTimesheetEditFrm.dteActivityDatePropertiesEditValueChanged(Sender: TObject);
+begin
+  inherited;
+  if VarIsNull(dteActivityDate.EditValue) then
+    Exit;
+
+  if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
+    TSDM.cdsTimesheet.FieldByName('DAY_NAME').AsString :=
+      DayMonthName(dteActivityDate.EditValue, ntDay, nfShort);
+end;
+
+procedure TTimesheetEditFrm.edtRatePropertiesChange(Sender: TObject);
+begin
+  inherited;
+////  RecalcValues;
+//  if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
+//  begin
+//    if cbxBillable.Checked then
+//      edtitemValue.Value := edtTimeSpent.Value * edtRate.Value
+//    else
+//      edtitemValue.Value := 0;
+//  end;
+//
+////  if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
+////  begin
+////    if cbxBillable.Checked then
+////      TSDM.cdsTimesheet. FieldByName('ITEM_VALUE').AsFloat   := edtTimeSpent.Value * edtRate.Value
+////    else
+////      TSDM.cdsTimesheet. FieldByName('ITEM_VALUE').AsFloat  := 0;
+////  end;
+end;
+
+procedure TTimesheetEditFrm.edtRatePropertiesEditValueChanged(Sender: TObject);
+begin
+  inherited;
+//  RecalcValues;
+//  if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
+//  begin
+//    if cbxBillable.Checked then
+//      edtitemValue.Value := edtTimeSpent.Value * edtRate.Value
+//    else
+//      edtitemValue.Value := 0;
+//  end;
+
+  if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
+  begin
+    if cbxBillable.Checked then
+      TSDM.cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat :=
+        TSDM.cdsTimesheet.FieldByName('TIME_SPENT').AsFloat * edtRate.Value
+    else
+      TSDM.cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat := 0;
+  end;
+end;
+
+procedure TTimesheetEditFrm.edtTimeSpentPropertiesChange(Sender: TObject);
+begin
+  inherited;
+////  RecalcValues;
+//  if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
+//  begin
+//    edtHours.Value := edtTimeSpent.Value / 60;
+//
+//    if cbxBillable.Checked then
+//      edtitemValue.Value := edtTimeSpent.Value * edtRate.Value
+//    else
+//      edtitemValue.Value := 0;
+//  end;
+//
+
+//  if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
+//  begin
+//    TSDM.cdsTimesheet.FieldByName('TIME_HOURS').AsFloat :=
+//      TSDM.cdsTimesheet.FieldByName('TIME_SPENT').AsFloat / 60;
+//
+//    if cbxBillable.Checked then
+//      TSDM.cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat :=
+//        TSDM.cdsTimesheet.FieldByName('TIME_SPENT').AsFloat * TSDM.cdsTimesheet.FieldByName('ACTUAL_RATE').AsFloat
+//    else
+//      TSDM.cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat := 0;
+//  end;
+end;
+
+procedure TTimesheetEditFrm.edtTimeSpentPropertiesValidate(Sender: TObject;
+  var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
+begin
+  inherited;
+  ErrorText := 'Invalid value for time spent. Please enter a value greater than 0 with a maximum of ' +
+    FormatFloat('#,##0', edtTimeSpent.Properties.MaxValue);
+
+//  if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
+//  begin
+//    edtHours.Value := edtTimeSpent.Value / 60;
+//
+//    if cbxBillable.Checked then
+//      edtitemValue.Value := edtTimeSpent.Value * edtRate.Value
+//    else
+//      edtitemValue.Value := 0;
+//  end;
+
+  if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
+  begin
+    TSDM.cdsTimesheet.FieldByName('TIME_HOURS').AsFloat :=
+      TSDM.cdsTimesheet.FieldByName('TIME_SPENT').AsFloat / 60;
+
+    if cbxBillable.Checked then
+      TSDM.cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat :=
+        TSDM.cdsTimesheet.FieldByName('TIME_SPENT').AsFloat *
+        TSDM.cdsTimesheet.FieldByName('ACTUAL_RATE').AsFloat
+    else
+      edtitemValue.Value := 0;
+  end;
 end;
 
 end.

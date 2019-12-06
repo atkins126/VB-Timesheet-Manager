@@ -4,6 +4,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
   Caption = 'TimesheetPrefrrencesFrm'
   ClientHeight = 555
   ClientWidth = 938
+  OnCloseQuery = FormCloseQuery
   ExplicitWidth = 944
   ExplicitHeight = 584
   PixelsPerInch = 96
@@ -24,6 +25,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       Caption = 'Use default customer'
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       Properties.OnEditValueChanged = cbxUseDefaultCustomerPropertiesEditValueChanged
       Style.HotTrack = False
       TabOrder = 0
@@ -35,6 +37,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       Caption = 'Use default price item'
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       Properties.OnEditValueChanged = cbxUseDefaultPriceItemPropertiesEditValueChanged
       Style.HotTrack = False
       TabOrder = 2
@@ -46,6 +49,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       Caption = 'Use default rate'
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       Properties.OnEditValueChanged = cbxUseDefaultRatePropertiesEditValueChanged
       Style.HotTrack = False
       TabOrder = 4
@@ -73,6 +77,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       Properties.ListOptions.SyncMode = True
       Properties.ListSource = TSDM.dtsCustomerLookupPref
       Properties.PostPopupValueOnTab = True
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       Style.HotTrack = False
       TabOrder = 1
       Width = 511
@@ -102,6 +107,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       Properties.ListOptions.SyncMode = True
       Properties.ListSource = TSDM.dtsPriceListPref
       Properties.PostPopupValueOnTab = True
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       Properties.OnEditValueChanged = lucPriceItemPropertiesEditValueChanged
       EditValue = 0
       Style.HotTrack = False
@@ -115,6 +121,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       Properties.EditFormat = '#,##0.00'
       Properties.UseDisplayFormatWhenEditing = True
       Properties.UseThousandSeparator = True
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       Style.HotTrack = False
       TabOrder = 5
       Width = 120
@@ -145,6 +152,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
             'Do nothing. Just populate price list item with the default descr' +
             'iption.'
         end>
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       Style.Color = 16053234
       TabOrder = 8
       Height = 120
@@ -156,6 +164,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       Caption = 'Use today'#39's date when adding a new timesheet item'
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       Style.HotTrack = False
       TabOrder = 9
       Transparent = True
@@ -166,6 +175,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       Caption = 'Save grid layout when exiting'
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       Style.HotTrack = False
       TabOrder = 12
       Transparent = True
@@ -189,10 +199,10 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       Height = 25
       Cancel = True
       Caption = 'Cancel'
-      ModalResult = 2
       ParentShowHint = False
       ShowHint = True
       TabOrder = 14
+      OnClick = btnCancelClick
     end
     object btnGetDefaultRate: TcxButton [11]
       Left = 484
@@ -218,6 +228,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
         end>
       Properties.ListOptions.SyncMode = True
       Properties.ListSource = TSDM.dtsRateUnitPref
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       Style.HotTrack = False
       TabOrder = 6
       Width = 140
@@ -228,6 +239,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       Caption = 'Use incremental filtering in lookup lists'
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       Properties.OnEditValueChanged = cbxIncrementalFilteringPropertiesEditValueChanged
       Style.HotTrack = False
       TabOrder = 10
@@ -239,6 +251,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       Caption = 'Higlight search match in lookup lists'
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       Style.HotTrack = False
       TabOrder = 11
       Transparent = True
@@ -440,9 +453,9 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
     end
     object spc1: TdxLayoutEmptySpaceItem
       Parent = grpCustomerOptions
-      CaptionOptions.Text = 'Empty Space Item'
       SizeOptions.Height = 10
       SizeOptions.Width = 1
+      CaptionOptions.Text = 'Empty Space Item'
       Index = 1
     end
     object litGetDefaultRate: TdxLayoutItem
@@ -477,9 +490,9 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
     end
     object spc2: TdxLayoutEmptySpaceItem
       Parent = grpHighlightSearchMatch
-      CaptionOptions.Text = 'Empty Space Item'
       SizeOptions.Height = 10
       SizeOptions.Width = 10
+      CaptionOptions.Text = 'Empty Space Item'
       Index = 0
     end
     object grpHighlightSearchMatch: TdxLayoutGroup

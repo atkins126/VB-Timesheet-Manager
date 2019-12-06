@@ -19,7 +19,7 @@ uses
   cxGridBandedTableView, cxGridDBBandedTableView, cxGrid, cxDBLookupComboBox,
   cxTextEdit, cxCheckBox, cxCalendar, CommonMethods, cxContainer, Vcl.ComCtrls,
   dxCore, cxDateUtils, cxDropDownEdit, cxMaskEdit, cxLookupEdit, cxDBLookupEdit,
-  dxBarExtItems, cxBarEditItem, cxMemo, Vcl.Menus;
+  dxBarExtItems, cxBarEditItem, cxMemo, Vcl.Menus, dxScrollbarAnnotations;
 
 type
   TMainFrm = class(TBaseLayoutFrm)
@@ -311,9 +311,9 @@ begin
     TcxLookupComboBoxProperties(lucCustomerGroup.Properties).listSource := TSDM.dtsCustomerGroup;
     TcxLookupComboBoxProperties(lucPeriod.Properties).ListSource := TSDM.dtsTSPeriod;
     TcxLookupComboBoxProperties(lucUser.Properties).ListSource := TSDM.dtsSytemUser;
-    TcxDateEditProperties(dteFromDate.Properties).MinDate := StrToDate('10/01/2018');
+    TcxDateEditProperties(dteFromDate.Properties).MinDate := StrToDate('01/01/2019');
     TcxDateEditProperties(dteFromDate.Properties).MaxDate := Date;
-    TcxDateEditProperties(dteToDate.Properties).MinDate := StrToDate('10/01/2018');
+    TcxDateEditProperties(dteToDate.Properties).MinDate := StrToDate('01/01/2019');
     TcxDateEditProperties(dteToDate.Properties).MaxDate := Date;
 
     RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
