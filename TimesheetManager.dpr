@@ -26,13 +26,13 @@ uses
   Progress_Frm in '..\..\..\..\Lib\Progress_Frm.pas' {ProgressFrm},
   RUtils in '..\..\..\..\Lib\RUtils.pas',
   VBBase_DM in '..\..\Lib\VBBase_DM.pas' {VBBaseDM: TDataModule},
-  VBProxyClass in '..\Lib\VBProxyClass.pas',
   Main_Frm in 'General\Main_Frm.pas' {MainFrm},
   TS_DM in 'Data Modules\TS_DM.pas' {TSDM: TDataModule},
   VBCommonValues in '..\..\Lib\VBCommonValues.pas',
   Report_DM in '..\Lib\Report_DM.pas' {ReportDM: TDataModule},
   TimesheetEdit_Frm in 'General\TimesheetEdit_Frm.pas' {TimesheetEditFrm},
-  TimesheetPrefrrences_Frm in 'General\TimesheetPrefrrences_Frm.pas' {TimesheetPrefrrencesFrm};
+  TimesheetPrefrrences_Frm in 'General\TimesheetPrefrrences_Frm.pas' {TimesheetPrefrrencesFrm},
+  VBProxyClass in '..\Lib\VBProxyClass.pas';
 
 {$R *.res}
 

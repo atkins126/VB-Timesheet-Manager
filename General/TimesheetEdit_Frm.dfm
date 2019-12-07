@@ -222,35 +222,13 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Properties.UseLeftAlignmentOnEditing = False
       Properties.UseThousandSeparator = True
       Properties.OnChange = edtTimeSpentPropertiesChange
+      Properties.OnEditValueChanged = edtTimeSpentPropertiesEditValueChanged
       Properties.OnValidate = edtTimeSpentPropertiesValidate
       Style.HotTrack = False
       TabOrder = 9
       Width = 50
     end
-    object edtHours: TcxDBCurrencyEdit [11]
-      Left = 186
-      Top = 415
-      TabStop = False
-      DataBinding.DataField = 'TIME_HOURS'
-      DataBinding.DataSource = TSDM.dtsTimesheet
-      Properties.Alignment.Horz = taLeftJustify
-      Properties.DecimalPlaces = 2
-      Properties.DisplayFormat = '#,##0.00'
-      Properties.EditFormat = '#,##0.00'
-      Properties.ReadOnly = True
-      Properties.UseDisplayFormatWhenEditing = True
-      Properties.UseLeftAlignmentOnEditing = False
-      Properties.UseThousandSeparator = True
-      Style.HotTrack = False
-      Style.LookAndFeel.NativeStyle = False
-      Style.StyleController = styReadOnly
-      StyleDisabled.LookAndFeel.NativeStyle = False
-      StyleFocused.LookAndFeel.NativeStyle = False
-      StyleHot.LookAndFeel.NativeStyle = False
-      TabOrder = 10
-      Width = 45
-    end
-    object edtRate: TcxDBCurrencyEdit [12]
+    object edtRate: TcxDBCurrencyEdit [11]
       Left = 269
       Top = 415
       DataBinding.DataField = 'ACTUAL_RATE'
@@ -268,7 +246,7 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       TabOrder = 11
       Width = 80
     end
-    object edtStdrate: TcxDBCurrencyEdit [13]
+    object edtStdrate: TcxDBCurrencyEdit [12]
       Left = 268
       Top = 442
       TabStop = False
@@ -287,26 +265,7 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       TabOrder = 14
       Width = 80
     end
-    object edtitemValue: TcxDBCurrencyEdit [14]
-      Left = 91
-      Top = 442
-      TabStop = False
-      DataBinding.DataField = 'ITEM_VALUE'
-      DataBinding.DataSource = TSDM.dtsTimesheet
-      Properties.Alignment.Horz = taLeftJustify
-      Properties.DecimalPlaces = 2
-      Properties.DisplayFormat = '#,##0.00'
-      Properties.EditFormat = '#,##0.00'
-      Properties.ReadOnly = True
-      Properties.UseDisplayFormatWhenEditing = True
-      Properties.UseLeftAlignmentOnEditing = False
-      Properties.UseThousandSeparator = True
-      Style.HotTrack = False
-      Style.StyleController = styReadOnly
-      TabOrder = 13
-      Width = 100
-    end
-    object btnOK: TcxButton [15]
+    object btnOK: TcxButton [13]
       Left = 633
       Top = 525
       Width = 75
@@ -318,7 +277,7 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       TabOrder = 17
       OnClick = btnOKClick
     end
-    object btnCancel: TcxButton [16]
+    object btnCancel: TcxButton [14]
       Left = 714
       Top = 525
       Width = 75
@@ -330,7 +289,7 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       ShowHint = True
       TabOrder = 18
     end
-    object lucRateUnit: TcxDBLookupComboBox [17]
+    object lucRateUnit: TcxDBLookupComboBox [15]
       Left = 383
       Top = 415
       BeepOnEnter = False
@@ -351,18 +310,46 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       TabOrder = 12
       Width = 150
     end
-    object edtDayName: TcxDBTextEdit [18]
+    object edtDayName: TcxTextEdit [16]
       Left = 226
       Top = 11
       TabStop = False
       BeepOnEnter = False
-      DataBinding.DataField = 'DAY_NAME'
-      DataBinding.DataSource = TSDM.dtsTimesheet
       Properties.ReadOnly = True
       Style.HotTrack = False
       Style.StyleController = styReadOnly
+      Style.TransparentBorder = False
       TabOrder = 1
       Width = 50
+    end
+    object edtHours: TcxCurrencyEdit [17]
+      Left = 186
+      Top = 415
+      TabStop = False
+      Properties.DisplayFormat = '#,##0.00'
+      Properties.EditFormat = '#,##0.00'
+      Properties.UseDisplayFormatWhenEditing = True
+      Properties.UseThousandSeparator = True
+      Style.HotTrack = False
+      Style.StyleController = styReadOnly
+      Style.TransparentBorder = False
+      TabOrder = 10
+      Width = 45
+    end
+    object edtitemValue: TcxCurrencyEdit [18]
+      Left = 91
+      Top = 442
+      Properties.Alignment.Horz = taLeftJustify
+      Properties.DisplayFormat = '#,##0.00'
+      Properties.EditFormat = '#,##0.00'
+      Properties.ReadOnly = True
+      Properties.UseDisplayFormatWhenEditing = True
+      Properties.UseThousandSeparator = True
+      Style.HotTrack = False
+      Style.StyleController = styReadOnly
+      Style.TransparentBorder = False
+      TabOrder = 13
+      Width = 100
     end
     inherited layMainGroup_Root: TdxLayoutGroup
       ItemIndex = 7
@@ -511,7 +498,7 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Parent = grpTime
       CaptionOptions.Text = 'Hours'
       Control = edtHours
-      ControlOptions.OriginalHeight = 21
+      ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 45
       ControlOptions.ShowBorder = False
       Index = 1
@@ -557,7 +544,7 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Parent = grpRate
       CaptionOptions.Text = 'Item Value'
       Control = edtitemValue
-      ControlOptions.OriginalHeight = 21
+      ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 100
       ControlOptions.ShowBorder = False
       Index = 0
@@ -628,7 +615,7 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Parent = grpGeneralInfo
       CaptionOptions.Text = 'Day'
       Control = edtDayName
-      ControlOptions.OriginalHeight = 21
+      ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 50
       ControlOptions.ShowBorder = False
       Index = 1
@@ -640,11 +627,6 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       CaptionOptions.Text = 'Empty Space Item'
       Index = 1
     end
-  end
-  object lbl1: TdxFormattedLabel [1]
-    Left = 8
-    Top = 205
-    Caption = 'Format'
   end
   inherited styRepository: TcxStyleRepository
     PixelsPerInch = 96

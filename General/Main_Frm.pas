@@ -170,7 +170,6 @@ type
     procedure viewTimesheetSelectionChanged(Sender: TcxCustomGridTableView);
   private
     { Private declarations }
-    FCurrentUserID: Integer;
     FTSUserID: Integer;
     FTimesheetPeriod: Integer;
     FTimeshetMonth: Integer;
@@ -179,7 +178,6 @@ type
     FFromDate: TDateTime;
     FToDate: TDateTime;
 
-    property CurrentUserID: Integer read FCurrentUserID write FCurrentUserID;
     property TSUserID: Integer read FTSUserID write FTSUserID;
     property TimesheetPeriod: Integer read FTimesheetPeriod write FTimesheetPeriod;
     property TimesheetMonth: Integer read FTimeshetMonth write FTimeshetMonth;
@@ -242,11 +240,11 @@ procedure TMainFrm.FormShow(Sender: TObject);
 var
   VBShell: string;
 {$IFDEF DEBUG}ErrorMsg, {$ENDIF}SkinResourceFileName, SkinName: string;
-  Day, Month, Year: Word;
+//  Day, Month, Year: Word;
   RegKey: TRegistry;
-  AComboBox: TcxComboBox;
-  ALookupComboBox: TcxLookupComboBox;
-  ADateEdit: TcxDateEdit;
+  //AComboBox: TcxComboBox;
+  //ALookupComboBox: TcxLookupComboBox;
+  //ADateEdit: TcxDateEdit;
 begin
   inherited;
   Screen.Cursor := crHourglass;
@@ -300,9 +298,9 @@ begin
     if BaseFrm = nil then
       BaseFrm := TBaseFrm.Create(nil);
 
-    DecodeDate(Date, Year, Month, Day);
-    VBBaseDM.CurrentPeriod := Year * 100 + Month;
-    VBBaseDM.CurrentMonth := VBBaseDM.CurrentPeriod mod 100;
+    VBBaseDM.CurrentPeriod := RUtils.CurrentPeriod(Date);
+    VBBaseDM.CurrentMonth :=  RUtils.MonthInt(Date);
+
     viewTimesheet.DataController.DataSource := TSDM.dtsTimesheet;
     TcxLookupComboBoxProperties(lucCustomer.Properties).listSource := TSDM.dtsCustomerLookup;
     TcxLookupComboBoxProperties(lucPriceItem.Properties).listSource := TSDM.dtsPriceList;
@@ -321,21 +319,21 @@ begin
     try
       RegKey.OpenKey(KEY_USER_DATA, True);
       OpenTables;
-      FCurrentUserID := RegKey.ReadInteger('User ID');
+      TSDM.CurrentUserID := RegKey.ReadInteger('User ID');
 
-      if not TSDM.cdsSystemUser.Locate('ID', FCurrentUserID, []) then
+      if not TSDM.cdsSystemUser.Locate('ID', TSDM.CurrentUserID, []) then
       begin
         TSDM.cdsSystemUser.First;
-        FCurrentUserID := TSDM.cdsSystemUser.FieldByName('ID').AsInteger;
+        TSDM.CurrentUserID := TSDM.cdsSystemUser.FieldByName('ID').AsInteger;
       end;
-      FTSUserID := FCurrentUserID;
+      FTSUserID := TSDM.CurrentUserID;
 
 //      lucUser.SetFocus;
 //      ALookupComboBox := TcxBarEditItemControl(lucUser.Links[0].Control).Edit as TcxLookupComboBox;
-//      ALookupComboBox.EditValue := FCurrentUserID;
+//      ALookupComboBox.EditValue := TSDM.CurrentUserID;
 //      TcxLookupComboBox(lucUser).EditValue := TSDM.cdsSystemUser.FieldByName('LOGIN_NAME').AsString;
-//      lucUser.EditValue := FCurrentUserID;
-      lucUser.EditValue := FCurrentUserID; //TSDM.cdsSystemUser.FieldByName('LOGIN_NAME').AsString;
+//      lucUser.EditValue := TSDM.CurrentUserID;
+      lucUser.EditValue := TSDM.CurrentUserID; //TSDM.cdsSystemUser.FieldByName('LOGIN_NAME').AsString;
       RegKey.CloseKey;
 
       VerifyRegistry;
@@ -513,7 +511,7 @@ end;
 
 procedure TMainFrm.DoGetTimesheetData(Sender: TObject);
 var
-  ParamList, WhereClause: string;
+  ParamList{, WhereClause}: string;
   AToDateEdit: TcxDateEdit;
 begin
   inherited;
@@ -977,7 +975,7 @@ procedure TMainFrm.dteFromDatePropertiesEditValueChanged(Sender: TObject);
 var
   AFromDateEdit: TcxDateEdit;
   RegKey: TRegistry;
-  ATag: integer;
+  //ATag: integer;
 begin
   inherited;
   dteFromDate.SetFocus;
@@ -1004,7 +1002,7 @@ procedure TMainFrm.dteToDatePropertiesEditValueChanged(Sender: TObject);
 var
   AToDateEdit: TcxDateEdit;
   RegKey: TRegistry;
-  ATag: integer;
+  //ATag: integer;
 begin
   inherited;
   dteToDate.SetFocus;

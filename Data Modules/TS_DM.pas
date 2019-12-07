@@ -143,11 +143,14 @@ type
     procedure cdsCustomerLookupCalcFields(DataSet: TDataSet);
     procedure cdsTimesheetNewRecord(DataSet: TDataSet);
     procedure cdsCustomerLookupPrefCalcFields(DataSet: TDataSet);
+    procedure cdsTimesheetAfterPost(DataSet: TDataSet);
   private
+    FCurrentUserID: Integer;
     { Private declarations }
   public
     { Public declarations }
     TimesheetOption: TTimesheetOptions;
+    property CurrentUserID: Integer read FCurrentUserID write FCurrentUserID;
   end;
 
 var
@@ -179,17 +182,29 @@ begin
   end;
 end;
 
-procedure TTSDM.cdsTimesheetNewRecord(DataSet: TDataSet);
-var
-  aDay, aMonth, aYear: Word;
+procedure TTSDM.cdsTimesheetAfterPost(DataSet: TDataSet);
 begin
   inherited;
-  cdsTimesheet.FieldByName('BILLABLE').AsInteger := 0;
-  cdsTimesheet.FieldByName('IS_ADDITIONAL_WORK').AsInteger := 0;
-  cdsTimesheet.FieldByName('CARRY_FORWARD').AsInteger := 0;
-  cdsTimesheet.FieldByName('APPROVED').AsInteger := 0;
+  SetLength(VBBaseDM.FDataSetArray, 1);
+  VBBaseDM.FDataSetArray[0] := TFDMemTable(DataSet);
+  VBBaseDM.ApplyUpdates(VBBaseDM.FDataSetArray, TFDMemTable(DataSet).UpdateOptions.Generatorname, TFDMemTable(DataSet).UpdateOptions.UpdateTableName);
+//  SendMessage(Application.MainForm.Handle, WM_RECORD_ID, DWORD(PChar('REQUEST=REFRESH_DATA' + '|ID=' + FID.ToString)), 0);
+end;
+
+procedure TTSDM.cdsTimesheetNewRecord(DataSet: TDataSet);
+//var
+//  aDay, aMonth, aYear: Word;
+begin
+  inherited;
+  cdsTimesheet.FieldByName('ID').AsInteger := 0;
+  cdsTimesheet.FieldByName('USER_ID').AsInteger := FCurrentUserID;
+//  cdsTimesheet.FieldByName('THE_PERIOD').AsInteger := VBBaseDM.CurrentPeriod;
   cdsTimesheet.FieldByName('TIME_SPENT').AsFloat := 0.0;
   cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat := 0;
+  cdsTimesheet.FieldByName('BILLABLE').AsInteger := 0;
+  cdsTimesheet.FieldByName('CARRY_FORWARD').AsInteger := 0;
+  cdsTimesheet.FieldByName('APPROVED').AsInteger := 0;
+  cdsTimesheet.FieldByName('IS_ADDITIONAL_WORK').AsInteger := 0;
 
   if TimesheetOption.UseTodaysDate then
   begin
@@ -225,4 +240,6 @@ begin
 end;
 
 end.
+
+
 
