@@ -143,6 +143,8 @@ type
     tipExcel: TdxScreenTip;
     tipReports: TdxScreenTip;
     tipTimesheetPreferences: TdxScreenTip;
+    btnSaveGridLayout: TdxBarLargeButton;
+    actSaveGridLayout: TAction;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoInsertEntry(Sender: TObject);
     procedure DoEditEntry(Sender: TObject);
@@ -168,6 +170,7 @@ type
     procedure DoPreferences(Sender: TObject);
     procedure viewTimesheetDblClick(Sender: TObject);
     procedure viewTimesheetSelectionChanged(Sender: TcxCustomGridTableView);
+    procedure DoSaveGridLayout(Sender: TObject);
   private
     { Private declarations }
     FTSUserID: Integer;
@@ -504,6 +507,12 @@ begin
 end;
 
 procedure TMainFrm.DoReports(Sender: TObject);
+begin
+  inherited;
+//
+end;
+
+procedure TMainFrm.DoSaveGridLayout(Sender: TObject);
 begin
   inherited;
 //

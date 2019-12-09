@@ -6,6 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Forms,
   System.Classes, Vcl.Graphics, System.ImageList, Vcl.ImgList, Vcl.StdCtrls,
   Vcl.Controls, Vcl.Dialogs, Data.DB, System.Actions, Vcl.ActnList, Vcl.Menus,
+  System.DateUtils,
 
   BaseLayout_Frm, CommonValues,
 
@@ -218,6 +219,17 @@ begin
   NextID := VBBaseDM.GetNextID(TSDM.cdsTimesheet.UpdateOptions.GeneratorName);
   TSDM.cdsTimesheet.FieldByName('ID').AsInteger := NextID;
   TSDM.cdsTimesheet.Post;
+  TSDM.PostData(TSDM.cdsTimesheet);
+
+  if not (TSDM.cdsTimesheet.State in [dsEdit, dsInsert]) then
+    TSDM.cdsTimesheet.Edit;
+
+  TSDM.cdsTimesheet.FieldByName('TIME_HOURS').AsFloat := edtHours.Value;
+  TSDM.cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat := edtitemValue.Value;
+  TSDM.cdsTimesheet.FieldByName('DAY_NAME').AsString := edtDayName.Text;
+  TSDM.cdsTimesheet.FieldByName('DAY_ORDER').Asinteger := DayOfTheWeek(TSDM.cdsTimesheet.FieldByName('ACTIVITY_DATE').AsDateTime);
+  TSDM.cdsTimesheet.Post;
+
   Self.ModalResult := mrOK;
 end;
 
@@ -253,16 +265,16 @@ begin
 //      TSDM.cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat := 0;
 //  end;
 
-    if cbxBillable.Checked then
-    begin
-      case VarAstype(lucRateUnit.EditValue, varInteger) of
-        1: edtitemValue.Value := edtTimeSpent.Value * edtRate.Value / 60;
-      else
-        edtitemValue.Value := {edtTimeSpent.Value * }edtRate.Value;
-      end;
-    end
+  if cbxBillable.Checked then
+  begin
+    case VarAstype(lucRateUnit.EditValue, varInteger) of
+      1: edtitemValue.Value := edtTimeSpent.Value * edtRate.Value / 60;
     else
-      edtitemValue.Value := 0;
+      edtitemValue.Value := {edtTimeSpent.Value * }edtRate.Value;
+    end;
+  end
+  else
+    edtitemValue.Value := 0;
 end;
 
 procedure TTimesheetEditFrm.lucPriceListItemPropertiesEditValueChanged(Sender: TObject);

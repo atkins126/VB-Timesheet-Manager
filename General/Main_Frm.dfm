@@ -47,6 +47,7 @@ inherited MainFrm: TMainFrm
         OptionsBehavior.FocusCellOnTab = True
         OptionsBehavior.NavigatorHints = True
         OptionsBehavior.FocusCellOnCycle = True
+        OptionsCustomize.ColumnsQuickCustomization = True
         OptionsSelection.MultiSelect = True
         Bands = <
           item
@@ -79,7 +80,7 @@ inherited MainFrm: TMainFrm
           Options.Moving = False
           Width = 60
           Position.BandIndex = 0
-          Position.ColIndex = 10
+          Position.ColIndex = 0
           Position.RowIndex = 0
         end
         object edtUserID: TcxGridDBBandedColumn
@@ -100,7 +101,7 @@ inherited MainFrm: TMainFrm
           Options.Moving = False
           Width = 60
           Position.BandIndex = 0
-          Position.ColIndex = 11
+          Position.ColIndex = 1
           Position.RowIndex = 0
         end
         object cbxApproved: TcxGridDBBandedColumn
@@ -116,12 +117,10 @@ inherited MainFrm: TMainFrm
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
-          Options.Grouping = False
           Options.HorzSizing = False
-          Options.Moving = False
           Width = 40
           Position.BandIndex = 0
-          Position.ColIndex = 1
+          Position.ColIndex = 2
           Position.RowIndex = 0
         end
         object cbxCarryForward: TcxGridDBBandedColumn
@@ -137,26 +136,8 @@ inherited MainFrm: TMainFrm
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
-          Options.Grouping = False
           Options.HorzSizing = False
-          Options.Moving = False
           Width = 40
-          Position.BandIndex = 0
-          Position.ColIndex = 2
-          Position.RowIndex = 0
-        end
-        object edtDayname: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'DAY_NAME'
-          PropertiesClassName = 'TcxTextEditProperties'
-          Properties.ReadOnly = True
-          MinWidth = 30
-          Options.Editing = False
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Width = 30
           Position.BandIndex = 0
           Position.ColIndex = 3
           Position.RowIndex = 0
@@ -177,7 +158,22 @@ inherited MainFrm: TMainFrm
           Options.Moving = False
           Width = 65
           Position.BandIndex = 0
-          Position.ColIndex = 0
+          Position.ColIndex = 4
+          Position.RowIndex = 0
+        end
+        object edtDayname: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'DAY_NAME'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          MinWidth = 30
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Width = 30
+          Position.BandIndex = 0
+          Position.ColIndex = 5
           Position.RowIndex = 0
         end
         object dteActivityDate: TcxGridDBBandedColumn
@@ -193,10 +189,9 @@ inherited MainFrm: TMainFrm
           Options.Editing = False
           Options.IncSearch = False
           Options.HorzSizing = False
-          Options.Moving = False
           Width = 90
           Position.BandIndex = 0
-          Position.ColIndex = 4
+          Position.ColIndex = 6
           Position.RowIndex = 0
         end
         object lucCustomer: TcxGridDBBandedColumn
@@ -215,10 +210,9 @@ inherited MainFrm: TMainFrm
           Options.Editing = False
           Options.IncSearch = False
           Options.HorzSizing = False
-          Options.Moving = False
           Width = 300
           Position.BandIndex = 0
-          Position.ColIndex = 5
+          Position.ColIndex = 7
           Position.RowIndex = 0
         end
         object lucPriceItem: TcxGridDBBandedColumn
@@ -238,29 +232,10 @@ inherited MainFrm: TMainFrm
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
-          Options.Grouping = False
           Options.HorzSizing = False
-          Options.Moving = False
           Width = 300
           Position.BandIndex = 0
-          Position.ColIndex = 6
-          Position.RowIndex = 0
-        end
-        object memActivity: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'ACTIVITY'
-          PropertiesClassName = 'TcxTextEditProperties'
-          Properties.IncrementalSearch = False
-          Properties.ReadOnly = True
-          MinWidth = 300
-          Options.Editing = False
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Width = 300
-          Position.BandIndex = 0
-          Position.ColIndex = 7
+          Position.ColIndex = 8
           Position.RowIndex = 0
         end
         object lucActivityType: TcxGridDBBandedColumn
@@ -279,10 +254,25 @@ inherited MainFrm: TMainFrm
           Options.Editing = False
           Options.IncSearch = False
           Options.HorzSizing = False
-          Options.Moving = False
           Width = 200
           Position.BandIndex = 0
-          Position.ColIndex = 8
+          Position.ColIndex = 9
+          Position.RowIndex = 0
+        end
+        object memActivity: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'ACTIVITY'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.IncrementalSearch = False
+          Properties.ReadOnly = True
+          MinWidth = 300
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Width = 300
+          Position.BandIndex = 0
+          Position.ColIndex = 10
           Position.RowIndex = 0
         end
         object cbxBillable: TcxGridDBBandedColumn
@@ -298,7 +288,6 @@ inherited MainFrm: TMainFrm
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
-          Options.Grouping = False
           Options.HorzSizing = False
           Options.Moving = False
           Width = 30
@@ -548,10 +537,9 @@ inherited MainFrm: TMainFrm
           Options.Editing = False
           Options.IncSearch = False
           Options.HorzSizing = False
-          Options.Moving = False
           Width = 30
           Position.BandIndex = 0
-          Position.ColIndex = 9
+          Position.ColIndex = 11
           Position.RowIndex = 0
         end
         object dteModified: TcxGridDBBandedColumn
@@ -1308,6 +1296,12 @@ inherited MainFrm: TMainFrm
       Caption = 'Preferences'
       ImageIndex = 19
       OnExecute = DoPreferences
+    end
+    object actSaveGridLayout: TAction
+      Category = 'General'
+      Caption = 'Save Grid Layout'
+      ImageIndex = 24
+      OnExecute = DoSaveGridLayout
     end
   end
   inherited lafLayoutList: TdxLayoutLookAndFeelList
@@ -4620,6 +4614,122 @@ inherited MainFrm: TMainFrm
           0000000000000805010D2E1C05494B2E09785F3B0C9666400E9F643F0E9D5635
           0A883D260761190F032800000000000000000000000000000000000000000000
           0000000000000000000000000000000000000000000000000000}
+      end
+      item
+        ImageClass = 'TdxPNGImage'
+        Image.Data = {
+          89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7A
+          F40000000F744558745469746C650075703B666F6C64657203118AA00000074B
+          49444154785EC5977F8C1D5515C73F7766DEBEADDBB245DAEDAEA5B58506224A
+          5AB121802D4401C1A251D00069B081AA51D462AAF10FB469508C5AB48A102254
+          D04423224DFCA398B64ADA12A454932214D4FEA2407761DBEDFE783FF7BD99B9
+          F79E63E9CCEEA468A4241ABEC9C93DF7BEE47CBFE7DC3367DE1855E5ED44C45B
+          80318653842183F22608F8DFC2E431C3DC02E0BFAA8E3A3B3B014E353525C7CA
+          7567114586B0044108F77DF9504E4EB4EAFE051B40C37BBF78E8738005E4961F
+          CE536715EFC059E5D13BFB3301856A823729A594CB65499244F303EEBE6D1B60
+          3098E302E61A205AF983799F3E7FFE921510B0E2BBF6F15FADE9FF1D607FF98D
+          57A4911E54506EBEE3F2937A20D8BEFEE20F777795BE1704663139544FCE79BC
+          6D972F5DFDF4C6E322FCEB22C483E08180A9A5F90608AFB9B5F7ECBEDEBEFBAF
+          5DF21544130EBDBAF7BE2B5726CF3DFE8BA17D8035381504EFA5C8F078C0D233
+          3FBB7460DE4756CDEAEA39BB602CD871AD060737DD35BC6377FFA2AF3DF08F63
+          809043448CF73E3CBD37EABAF6EB7336AFFAD4BA8B66F59419F787A90C7770F7
+          6FBEBFFBB17B07AEAA1D730DC055923DBAE25B1FE5B11F0D161550D1595DBDEF
+          03BB1FD03C7D01CDFC288AE8BBE0B299173636FD18F86C2E00553540608C295F
+          B1B2F79B572EBEF1A2DE9ED3A824CF63B545F71933B8FA924F2EAE571F59B369
+          FD91B5809E5E5EE897ADEE53A0E8015540253334F78B15B54C9F3B8F05975D77
+          C35F7EC20D2800A809E93E7719876A23ECAC3FCBA58B2F67B4FD2CB11B4180C4
+          1EE6C20F9CC79E03EFF9EA92E5F689A71E1ED906C4DEAB2F0400EA2688FC1B88
+          85C252A6CFEE63D12D7780998622A46E2A957A8BCD1B6FE30BD7AFA6123FCF58
+          FCCA64F7AA2AB17B811BAFF944F072FFE107E62E6C2DEDDFD37AF58FF71C55E0
+          844580112F8003F1FF4E2C024C884BA15107EFF09C46EC67F1D0E69F72F94557
+          31CE018E55F71218250A23C0E0C5629DA5A2635CB76C59EFC8C823F71E177013
+          90134226407252F1279117623CC8C499C3FB9024E861C79E1D982921EF9A3B85
+          97C67612BB0606433130F31008A7F794B8F8C2455737ABBB57EEDE58D900B400
+          97F580D78C5C5C417C12A99FDCABB3B88E73E83F32C0D617B6F2F99B3EC391DA
+          0B589712994E8C3134D31A4695AEF2741450F5D4DA4759B2E41C5E7C79E03BCD
+          0FB95DFB76349E017C04205E411D88CB85E484E47BEF519F0910E71062EEDFF2
+          738E8C1EE1DBEBEF02A3A842777707577C7C01ED3401203031DBFEF012956A1B
+          4300E6EF18B473E9250B9EFCF5ADCB775FBCFCF64BB32B7082A431C40D541CA4
+          29EA5310878AC7780F78C40BEA1D9839ACF9D897A85613CA3D0B88BA66D06834
+          58FBF08D4CEB9CC9687310C51012E1ACB2EEE647993AB58B5214118621815AF3
+          EA93BF3F2B0802269BD0C5E348B385A66DC6478E30F2DA5192D8822A2A822A18
+          F1885744F7306DEEFB99F3C1EB09422539BA1DE7CF3C4196D836716AC1404882
+          B530C5BEC694C167298506139518DC7788FDDB776DA2780A14173770F53A9A8C
+          3378708073AF5B43C7D41964508CD1DC55D47B44058D07F143CF13C46D82E84C
+          BC55E2B4456A2D182520C15B2140098DA514189490B1970FD388DD56638C4C0A
+          489B4DD27A9DD6E830D1B43E3ABAA6E15FDB823A5B0C27511445C50380085E05
+          118B318AB34ADB8E63821030243E214D213082A631A2010A0C0F0CC55BFE39BE
+          1DC804F8D4639B75E26A8DEAD03033165E80B68691A405282AC57052325F2704
+          A960BC500AA1AFBB8FDF3EB8376B4A0113C07BFBCEA164001723448CBE7EB56D
+          FBE7CDFB9BE3F91580774ADCA8D1AA346856C6397BF6BB91F1812C7B55104155
+          118AC1A4C5E34AE01D65AD71E70DAB89E314EF1CA24A68A0B35CA2C38F816DA1
+          36E0D8A1019A6DFF27408A41643D71AD4673AC421075F08EA99DA4AFEC444530
+          51194384070232212AAE684EF188F7E8D02E4AA92350873A0F08F86C847BB1E0
+          1D94CA0C1D1EE5C048BA15F0934DE8ACA75DAF501FA931F3BCF391F630BE318A
+          A259924631A603893A4003340C50EB010F3E5F9D1088076FC15AD45BC4591401
+          04C550ABC634EBF1FE7BFE5A3D0C685181C4D11EABD16AB678E7ECD9D86A3FDE
+          5A4040003C5EDA208228C53BC298E27A9CC3E04FF86495CACC2B26108C1A46FA
+          1B3462DD3191FD43CB66651548ADD0AA551107D36775E346F7A3362982A8271B
+          D79207CF7D2D880C925D8951109D3C4724D31A1A4687C7A9B4DCD38000AAA244
+          4060134F73648CE9BD6740D2C0558751E7C008E205340F0E04EAB380AA28023E
+          23D57C6F848C580539B12A1845D28091A138D9F462EB09C003884004A8738EB8
+          D964FEC239B8C62092C6A89F28A5648155C12B425EF29C040102411D80E25102
+          5124270670A950194DA8B7FCAEE78E254D40375C3953D1AC023649F95B54E682
+          BD3B0FB0EFA9FDA8024650316410508089ECC83303152583A2F9B9024CFA8A88
+          1227BEB2EB68B216480109C260F24F6907D00994FFE387C41BF76FFD37053C90
+          006DC03E7875AF804E0A0880CC4E1D86B70605243705348E6300A2E210CFFF1F
+          CA1BF0B67F1D07BCCDF8170EDF2FED44D790E90000000049454E44AE426082}
+      end
+      item
+        ImageClass = 'TdxPNGImage'
+        Image.Data = {
+          89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7A
+          F400000015744558745469746C6500446F776E6C6F61643B4172726F773BEC8F
+          1AD00000057A49444154785EAD576B6C544514FEE6DEBB7777B53518447CF19F
+          3FA87F8C89422CEA0F251082048D24A81802061F94AA1113890F0C26F897F828
+          49832288561E8A0935502C5DE80668212014B76C61DB525AB7DB6EBB651FF731
+          33762733BB4BE366F712677372A6A767CFF9CE77CECCBD4B38E7285D8410785C
+          D3BFC0516195E634BC272AEA72F10B527E5506D0D8B202E01C1C44845AB7A899
+          7CFDFBF2A39C602178B10ACE38408416194793936D9FAE6E7D1600FBB8E91911
+          010CF86CCD316F005C97E295451BC5BE465B40001097D285AB97BC5BBE6E000D
+          DBDEAC03A00160EFBDFA89B0D57FB1DE3B038EE34E3791BC8D320B37AD383878
+          B19762CFE0F7D580BA5CB58770E9C084CD2B009762FA7CDA0E0563140ECDC9E4
+          024661AF6B26182B0090DFE7A094DD16030A800AA809063885ED6625E332B9D4
+          86E62F65008C33818252EF0C900F57FE81295193AEE5C5B5F30CB8B00B0C3001
+          92E735387C34A0AAD50168779B75444D87D4BC1A00448A2E1313A97D96EBC265
+          2E2C37232A63B27AC580A35B0A805F0DA274A000DCE2DFC5F55F171101606CFA
+          6ABECD3929F458EC39B0E1B5B730387EA1601740C084BE2B380BDFEE6C8630CB
+          23AC7C1A3F3A1B00E00060D55C44249148FFFAE2E2954B1F99FBB0022D02A5ED
+          11584E46555FF88033D84E16F56BD62268DE0B706147E7F9B368DAB3F71000E2
+          650658E4DCE8DB07CD7D4FDA46EC1ECDC8C1D0CD92A9BF75F8986C43CE8E6138
+          754D1C49973AB0B20CFB0E5C48F49E4F6E50F45704209D58E8407F7CD683C186
+          CED357BF9FF7582DB2D90C6A7C33008DC8EA00282024AF050C714CB3760A3E3D
+          8013C76F207E3DFDFEE5F0E83F0068B5001408BA7F7BE4805E4F7E9A7DDFA32F
+          F9675A18CA5C85DFB8133EDD84A669D06180132EAAA5F27E70A80DBF11C440EF
+          242297469ADB9B07F6ABDE7B69819A5CFB6238F181E9EFAE5BBC6CDEEC2CBB86
+          B49502010A0C88D612B5E5D0A1835A7E84DB22F16867721300AB4CF542349459
+          2B36CE15202E9F4A8CDCE89B78A7A32D86DAC04C30C640A74468CEA724BF9742
+          3902662D42ADFD18EE4FD7F775A7E200DCA756CE619E6F42973248DA9C3FF7F6
+          B59801B2EBFE39B5AB663C1440CEC9CA330CD102484EFCC61DE8F96B02BD9793
+          BBBB5A860F03B001B0E37B068867065C87A33DFA79A11597C2639B3BDA7B0735
+          6706C035C940BE6A80320ECE0872690D67424383D1AEE46649BD0B004F2C7F40
+          24F70480510697E6D43C38D723A9D1E1BEC9FA8E63FD2CE0AB01635C886A814F
+          0FA2E3C8108BF7671BE2B14C4256CF0F9E7F83AB678137065C0E9B6671B8BB81
+          CB56589D2DC3ADD1BF133BAF755B3034134C5EC786E643CF8514623DA9EF2EB6
+          8F1C95D5B35FBA5673CBCD81DD1600CA60BB3921725100B9A933BDE57468A0CF
+          CD04C4E483136452C0D950A26F6AEAB700C84A5F312B4E1E00F30840BD44E4D1
+          DB4E0E3F77BDCE552B9243B9B1E1D8CDFA9353749B7A103A31113E1267230399
+          8D13716B549DF9A6F00BDC61366CD7122C793E05943138AE25AF5D8A5DA75EE6
+          AB1EFF51B010098F9D08D6183B22E702EB6CEAE07A34BDE3CA996408400E006D
+          0C2DE18E63171ED98C7A04A018D8BEAD4D5EB790C10039D9992BA7935B35932C
+          CCDBA39DE35B4BA8276B171C42992582547A1C0B25A5DC5E07600208485B4E02
+          A3657E2FDCF23E50E9712C126CF9E1E923BA863A0E0252029ECB7B577C580968
+          2275A148A2BC911C4F9FF872FDA9E7548BAA7923F2A527ADBAA5CFCF2F738111
+          D992624242A6BB14B1EC6E6ECD070A02B0150B950018131336129323189AE881
+          5AA5295508A22CE4D6FF9312DCA9714BE522550FE1602CD9D6D478B24EE552EC
+          72994645921669E3C251F9292FDBA2273DBC0F0827FBB76FA2CBE490196506B2
+          922E1DC00C80B4A2BF1A008E74CE9609ECF5D73295C2AA6340C9FFB8CAC5FB17
+          B024B60E1605DAAE0000000049454E44AE426082}
       end>
   end
   object sknController: TdxSkinController
@@ -4833,6 +4943,10 @@ inherited MainFrm: TMainFrm
           BeginGroup = True
           Visible = True
           ItemName = 'btnOptions'
+        end
+        item
+          Visible = True
+          ItemName = 'btnSaveGridLayout'
         end>
       OneOnRow = True
       Row = 0
@@ -5013,6 +5127,11 @@ inherited MainFrm: TMainFrm
       Action = actPreferences
       Category = 0
       ScreenTip = tipTimesheetPreferences
+      AutoGrayScale = False
+    end
+    object btnSaveGridLayout: TdxBarLargeButton
+      Action = actSaveGridLayout
+      Category = 0
       AutoGrayScale = False
     end
   end

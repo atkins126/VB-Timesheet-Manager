@@ -51,7 +51,7 @@ inherited TSDM: TTSDM
       Alignment = taLeftJustify
       DisplayLabel = 'Price Item'
       FieldName = 'PRICE_LIST_ITEM_ID'
-      Origin = 'PRICE_ITEM_ID'
+      Origin = 'PRICE_LIST_ITEM_ID'
       Required = True
     end
     object cdsTimesheetRATE_UNIT_ID: TIntegerField
@@ -103,7 +103,6 @@ inherited TSDM: TTSDM
       DisplayLabel = 'Hrs'
       FieldName = 'TIME_HOURS'
       Origin = 'TIME_HOURS'
-      ProviderFlags = [pfInWhere]
     end
     object cdsTimesheetACTUAL_RATE: TFloatField
       DisplayLabel = 'Rate'
@@ -121,7 +120,6 @@ inherited TSDM: TTSDM
       DisplayLabel = 'Value'
       FieldName = 'ITEM_VALUE'
       Origin = 'ITEM_VALUE'
-      ProviderFlags = [pfInWhere]
     end
     object cdsTimesheetLOCKED: TIntegerField
       Alignment = taCenter
@@ -160,7 +158,6 @@ inherited TSDM: TTSDM
       DisplayLabel = 'Day'
       FieldName = 'DAY_NAME'
       Origin = 'DAY_NAME'
-      ProviderFlags = [pfInWhere]
       FixedChar = True
       Size = 3
     end
@@ -169,7 +166,6 @@ inherited TSDM: TTSDM
       DisplayLabel = 'Day Ord'
       FieldName = 'DAY_ORDER'
       Origin = 'DAY_ORDER'
-      ProviderFlags = [pfInWhere]
     end
     object cdsTimesheetINVOICE_DATE: TDateField
       DisplayLabel = 'Inv Date'
