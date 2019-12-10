@@ -2,7 +2,9 @@ inherited TSDM: TTSDM
   Width = 864
   object cdsTimesheet: TFDMemTable
     ActiveStoredUsage = [auDesignTime]
+    BeforeEdit = cdsTimesheetBeforeEdit
     AfterPost = cdsTimesheetAfterPost
+    AfterDelete = cdsTimesheetAfterPost
     OnNewRecord = cdsTimesheetNewRecord
     FilterOptions = [foCaseInsensitive]
     FieldDefs = <>

@@ -143,8 +143,9 @@ type
     procedure cdsCustomerLookupCalcFields(DataSet: TDataSet);
     procedure cdsTimesheetNewRecord(DataSet: TDataSet);
     procedure cdsCustomerLookupPrefCalcFields(DataSet: TDataSet);
-    procedure cdsTimesheetAfterPost(DataSet: TDataSet);
     procedure PostData(DataSet: TFDMemTable);
+    procedure cdsTimesheetBeforeEdit(DataSet: TDataSet);
+    procedure cdsTimesheetAfterPost(DataSet: TDataSet);
   private
     FCurrentUserID: Integer;
     { Private declarations }
@@ -186,10 +187,13 @@ end;
 procedure TTSDM.cdsTimesheetAfterPost(DataSet: TDataSet);
 begin
   inherited;
-//  SetLength(VBBaseDM.FDataSetArray, 1);
-//  VBBaseDM.FDataSetArray[0] := TFDMemTable(DataSet);
-//  VBBaseDM.ApplyUpdates(VBBaseDM.FDataSetArray, TFDMemTable(DataSet).UpdateOptions.Generatorname, TFDMemTable(DataSet).UpdateOptions.UpdateTableName);
-////  SendMessage(Application.MainForm.Handle, WM_RECORD_ID, DWORD(PChar('REQUEST=REFRESH_DATA' + '|ID=' + FID.ToString)), 0);
+  VBBaseDM.DBAction := acBrowsing;
+end;
+
+procedure TTSDM.cdsTimesheetBeforeEdit(DataSet: TDataSet);
+begin
+  inherited;
+  VBBaseDM.DBAction := acModify;
 end;
 
 procedure TTSDM.cdsTimesheetNewRecord(DataSet: TDataSet);
@@ -207,9 +211,9 @@ begin
 
    YOU HAVE BEEN WARNED!!
   }
+  VBBaseDM.DBAction := acInsert;
   cdsTimesheet.FieldByName('ID').AsInteger := 0;
   cdsTimesheet.FieldByName('USER_ID').AsInteger := FCurrentUserID;
-//  cdsTimesheet.FieldByName('THE_PERIOD').AsInteger := VBBaseDM.CurrentPeriod;
   cdsTimesheet.FieldByName('TIME_SPENT').AsFloat := 0.0;
   cdsTimesheet.FieldByName('BILLABLE').AsInteger := 0;
   cdsTimesheet.FieldByName('CARRY_FORWARD').AsInteger := 0;
@@ -238,10 +242,6 @@ procedure TTSDM.dtsTimesheetStateChange(Sender: TObject);
 var
   EditMode: string;
 begin
-//  EditMode := 'False';
-//  EditMode :=  cdsTimesheet.State in [dsEdit, dsInsert];
-//    EditMode := 'True';
-
   EditMode := BooleanToString(cdsTimesheet.State in [dsEdit, dsInsert]);
   SendMessage(Application.MainForm.Handle, WM_STATE_CHANGE, DWORD(PChar(EditMode)), 0);
 end;
@@ -254,6 +254,4 @@ begin
 end;
 
 end.
-
-
 

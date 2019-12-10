@@ -6,16 +6,16 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Forms,
   System.Classes, Vcl.Graphics, System.ImageList, Vcl.ImgList, Vcl.StdCtrls,
   Vcl.Controls, Vcl.Dialogs, Data.DB, System.Actions, Vcl.ActnList, Vcl.Menus,
-  System.DateUtils,
+  System.DateUtils, Vcl.ComCtrls,
 
-  BaseLayout_Frm, CommonValues,
+  BaseLayout_Frm, VBBase_DM, CommonValues,
 
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore,
   dxSkinsDefaultPainters, cxImageList, dxLayoutLookAndFeels, cxClasses, cxStyles,
   dxLayoutContainer, dxLayoutControl, cxContainer, cxEdit, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, cxDBEdit, cxCheckBox, dxLayoutcxEditAdapters,
   cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox, dxLayoutControlAdapters,
-  cxButtons, cxMemo, cxCurrencyEdit, dxFormattedLabel, VBBase_DM, Vcl.ComCtrls,
+  cxButtons, cxMemo, cxCurrencyEdit, dxFormattedLabel,
   dxCore, cxDateUtils;
 
 type
@@ -216,8 +216,12 @@ begin
     raise EValidateException.Create('Rate unit spent must have a value.');
   end;
 
-  NextID := VBBaseDM.GetNextID(TSDM.cdsTimesheet.UpdateOptions.GeneratorName);
-  TSDM.cdsTimesheet.FieldByName('ID').AsInteger := NextID;
+  if VBBaseDM.DBAction = acInsert then
+  begin
+    NextID := VBBaseDM.GetNextID(TSDM.cdsTimesheet.UpdateOptions.GeneratorName);
+    TSDM.cdsTimesheet.FieldByName('ID').AsInteger := NextID;
+  end;
+
   TSDM.cdsTimesheet.Post;
   TSDM.PostData(TSDM.cdsTimesheet);
 
@@ -229,7 +233,6 @@ begin
   TSDM.cdsTimesheet.FieldByName('DAY_NAME').AsString := edtDayName.Text;
   TSDM.cdsTimesheet.FieldByName('DAY_ORDER').Asinteger := DayOfTheWeek(TSDM.cdsTimesheet.FieldByName('ACTIVITY_DATE').AsDateTime);
   TSDM.cdsTimesheet.Post;
-
   Self.ModalResult := mrOK;
 end;
 

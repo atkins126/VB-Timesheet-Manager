@@ -147,7 +147,6 @@ type
     actSaveGridLayout: TAction;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoInsertEntry(Sender: TObject);
-    procedure DoEditEntry(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
     procedure DoRefresh(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -220,7 +219,9 @@ uses
   Base_Frm,
   Progress_Frm,
   CommonValues,
-  Report_DM, TimesheetEdit_Frm, TimesheetPrefrrences_Frm;
+  Report_DM,
+  TimesheetEdit_Frm,
+  TimesheetPrefrrences_Frm;
 
 procedure TMainFrm.DrawCellBorder(var Msg: TMessage);
 begin
@@ -302,7 +303,7 @@ begin
       BaseFrm := TBaseFrm.Create(nil);
 
     VBBaseDM.CurrentPeriod := RUtils.CurrentPeriod(Date);
-    VBBaseDM.CurrentMonth :=  RUtils.MonthInt(Date);
+    VBBaseDM.CurrentMonth := RUtils.MonthInt(Date);
 
     viewTimesheet.DataController.DataSource := TSDM.dtsTimesheet;
     TcxLookupComboBoxProperties(lucCustomer.Properties).listSource := TSDM.dtsCustomerLookup;
@@ -419,6 +420,7 @@ begin
         WindowState := wsMaximized;
   finally
     FShowingForm := False;
+    VBBaseDM.DBAction := acBrowsing;
     Screen.Cursor := crDefault;
   end;
 end;
@@ -461,17 +463,24 @@ begin
     TSDM.cdsTimesheet.Cancel;
 
   C := viewTimesheet.Controller;
+  if c.SelectedRecordCount = 0 then
+    Exit;
+
   Beep;
   if
     DisplayMsg(
     Application.Title,
     'Delete Confirmaiton',
     'Are you sure you want to delete the ' + C.SelectedRecordCount.ToString + ' selected timesheet item(s)?' + CRLF + CRLF +
+    'WARNING!' + CRLF + CRLF +
     'This action cannot be undone!',
     mtConfirmation,
     [mbYes, mbNo]
     ) = mrNo then
     Exit;
+  VBBaseDM.DBAction := acDelete;
+  C.DeleteSelection;
+  TSDM.PostData(TSDM.cdsTimesheet);
 end;
 
 procedure TMainFrm.DoRefresh(Sender: TObject);
@@ -520,7 +529,7 @@ end;
 
 procedure TMainFrm.DoGetTimesheetData(Sender: TObject);
 var
-  ParamList{, WhereClause}: string;
+  ParamList {, WhereClause}: string;
   AToDateEdit: TcxDateEdit;
 begin
   inherited;
@@ -1202,12 +1211,6 @@ procedure TMainFrm.DoPrint(Sender: TObject);
 begin
   inherited;
 //
-end;
-
-procedure TMainFrm.DoEditEntry(Sender: TObject);
-begin
-  inherited;
-  //
 end;
 
 procedure TMainFrm.DoExcel(Sender: TObject);

@@ -48,6 +48,7 @@ inherited MainFrm: TMainFrm
         OptionsBehavior.NavigatorHints = True
         OptionsBehavior.FocusCellOnCycle = True
         OptionsCustomize.ColumnsQuickCustomization = True
+        OptionsData.DeletingConfirmation = False
         OptionsSelection.MultiSelect = True
         Bands = <
           item
