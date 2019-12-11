@@ -8,7 +8,7 @@ uses
   Vcl.Dialogs, System.Actions, Vcl.ActnList, System.Win.Registry, Data.DB,
   System.DateUtils,
 
-  BaseLayout_Frm, VBProxyClass, VBCommonValues, CommonFunction,
+  Base_Frm, BaseLayout_Frm, VBProxyClass, VBCommonValues, CommonFunction,
 
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore,
   dxSkinsDefaultPainters, cxImageList, dxLayoutLookAndFeels, cxClasses, cxStyles,
@@ -145,6 +145,11 @@ type
     tipTimesheetPreferences: TdxScreenTip;
     btnSaveGridLayout: TdxBarLargeButton;
     actSaveGridLayout: TAction;
+    actCopyCell: TAction;
+    Copy1: TMenuItem;
+    actRefreshLookupTables: TAction;
+    btnRefreshLookupTables: TdxBarLargeButton;
+    tipRefreshLookupTables: TdxScreenTip;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoInsertEntry(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
@@ -170,6 +175,8 @@ type
     procedure viewTimesheetDblClick(Sender: TObject);
     procedure viewTimesheetSelectionChanged(Sender: TcxCustomGridTableView);
     procedure DoSaveGridLayout(Sender: TObject);
+    procedure DoCopyCell(Sender: TObject);
+    procedure DoRefreshLookupTables(Sender: TObject);
   private
     { Private declarations }
     FTSUserID: Integer;
@@ -216,7 +223,6 @@ uses
   VBBase_DM,
   MsgDialog_Frm,
   RUtils,
-  Base_Frm,
   Progress_Frm,
   CommonValues,
   Report_DM,
@@ -237,7 +243,8 @@ begin
   layMain.LayoutLookAndFeel := lafCustomSkin;
   Application.HintPause := 0;
   Application.HintShortPause := 0;
-  styHintController.HintHidePause := 15000;
+  Application.HintHidePause := 150000;
+//  styHintController.HintHidePause := 15000;
 end;
 
 procedure TMainFrm.FormShow(Sender: TObject);
@@ -454,6 +461,12 @@ begin
   MainFrm.Close;
 end;
 
+procedure TMainFrm.DoCopyCell(Sender: TObject);
+begin
+  inherited;
+  CopyCellValue(viewTimesheet);
+end;
+
 procedure TMainFrm.DoDeleteEntry(Sender: TObject);
 var
   C: TcxCustomGridTableController;
@@ -490,6 +503,7 @@ var
 begin
   inherited;
   Screen.Cursor := crHourglass;
+  actRefresh.Enabled := False;
   DC := viewTimesheet.DataController;
   RecordIndex := DC.FocusedRecordIndex;
 
@@ -511,6 +525,27 @@ begin
       end;
     end;
   finally
+    actRefresh.Enabled := True;
+    Screen.Cursor := crDefault;
+  end;
+end;
+
+procedure TMainFrm.DoRefreshLookupTables(Sender: TObject);
+begin
+  inherited;
+  Screen.Cursor := crHourglass;
+  actRefreshLookupTables.Enabled := False;
+
+  try
+    OpenTables;
+    FIteration := 0;
+  finally
+    if ProgressFrm <> nil then
+    begin
+      ProgressFrm.Close;
+      FreeAndNil(ProgressFrm);
+    end;
+    actRefreshLookupTables.Enabled := True;
     Screen.Cursor := crDefault;
   end;
 end;
@@ -533,6 +568,7 @@ var
   AToDateEdit: TcxDateEdit;
 begin
   inherited;
+  Screen.Cursor := crHourglass;
   if lucViewMode.ItemIndex = 0 then
   begin
     if FTimesheetPeriod < 201901 then
@@ -563,7 +599,7 @@ begin
 
   viewTimesheet.DataController.BeginUpdate;
   try
-    if FIteration > 0 then
+    if (FIteration > 0) and (ProgressFrm <> nil) then
       SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Price List Table' + '|PROGRESS=' + FIteration.ToString)), 0);
 
 //    ParamList := ' WHERE T.USER_ID=' + FTSUserID.ToString +
@@ -583,6 +619,8 @@ begin
       FreeAndNil(ProgressFrm);
     end;
     viewTimesheet.DataController.EndUpdate;
+    FIteration := 0;
+    Screen.Cursor := crDefault;
   end;
 end;
 
@@ -744,6 +782,7 @@ var
 begin
   if ProgressFrm = nil then
     ProgressFrm := TProgressFrm.Create(nil);
+
   ProgressFrm.FormStyle := fsStayOnTop;
   ProgressFrm.Show;
 
