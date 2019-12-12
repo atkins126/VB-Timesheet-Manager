@@ -19,7 +19,8 @@ uses
   cxGridBandedTableView, cxGridDBBandedTableView, cxGrid, cxDBLookupComboBox,
   cxTextEdit, cxCheckBox, cxCalendar, CommonMethods, cxContainer, Vcl.ComCtrls,
   dxCore, cxDateUtils, cxDropDownEdit, cxMaskEdit, cxLookupEdit, cxDBLookupEdit,
-  dxBarExtItems, cxBarEditItem, cxMemo, Vcl.Menus, dxScrollbarAnnotations;
+  dxBarExtItems, cxBarEditItem, cxMemo, Vcl.Menus, dxScrollbarAnnotations,
+  dxRibbonSkins, dxRibbonCustomizationForm, dxRibbon;
 
 type
   TMainFrm = class(TBaseLayoutFrm)
@@ -30,10 +31,7 @@ type
     tipEdit: TdxScreenTip;
     styHintController: TcxHintStyleController;
     barManager: TdxBarManager;
-    barToolbar: TdxBar;
-    docToolbar: TdxBarDockControl;
-    grpToolbar: TdxLayoutGroup;
-    litToolbar: TdxLayoutItem;
+    barTimesheet: TdxBar;
     btnExit: TdxBarLargeButton;
     btnInsert: TdxBarLargeButton;
     imgNav32: TcxImageList;
@@ -75,12 +73,7 @@ type
     dteInvoiceDate: TcxGridDBBandedColumn;
     cbxCarryForward: TcxGridDBBandedColumn;
     cbxApproved: TcxGridDBBandedColumn;
-    cbsAddWork: TcxGridDBBandedColumn;
-    lblUser: TdxBarStatic;
-    lblViewMode: TdxBarStatic;
-    lblPeriod: TdxBarStatic;
-    lblFromDate: TdxBarStatic;
-    lblToDate: TdxBarStatic;
+    cbxAddWork: TcxGridDBBandedColumn;
     btnPreview: TdxBarLargeButton;
     actGetTimesheetData: TAction;
     lucPeriod: TcxBarEditItem;
@@ -93,12 +86,10 @@ type
     actPDF: TAction;
     actExcel: TAction;
     actReports: TAction;
-    actPreferences: TAction;
+    actOptions: TAction;
     btnPrint: TdxBarLargeButton;
     btnPDF: TdxBarLargeButton;
     btnExcel: TdxBarLargeButton;
-    btnReports: TdxBarLargeButton;
-    btnOptions: TdxBarLargeButton;
     grdTimesheetPrint: TcxGrid;
     viewTimesheetPrint: TcxGridDBBandedTableView;
     edtTID: TcxGridDBBandedColumn;
@@ -143,13 +134,26 @@ type
     tipExcel: TdxScreenTip;
     tipReports: TdxScreenTip;
     tipTimesheetPreferences: TdxScreenTip;
-    btnSaveGridLayout: TdxBarLargeButton;
-    actSaveGridLayout: TAction;
+    actLayoutManager: TAction;
     actCopyCell: TAction;
     Copy1: TMenuItem;
     actRefreshLookupTables: TAction;
     btnRefreshLookupTables: TdxBarLargeButton;
     tipRefreshLookupTables: TdxScreenTip;
+    tabTimesheet: TdxRibbonTab;
+    ribMain: TdxRibbon;
+    barReports: TdxBar;
+    tabReports: TdxRibbonTab;
+    btnReports: TdxBarLargeButton;
+    tabAdmin: TdxRibbonTab;
+    barAdmin: TdxBar;
+    btnExit2: TdxBarLargeButton;
+    btnExit3: TdxBarLargeButton;
+    btnOptions: TdxBarLargeButton;
+    btnLayoutManager: TdxBarLargeButton;
+    tabBillableSummary: TdxRibbonTab;
+    barBillableSummary: TdxBar;
+    btnExit4: TdxBarLargeButton;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoInsertEntry(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
@@ -171,10 +175,10 @@ type
     procedure DoPDF(Sender: TObject);
     procedure DoExcel(Sender: TObject);
     procedure DoReports(Sender: TObject);
-    procedure DoPreferences(Sender: TObject);
+    procedure DoOptions(Sender: TObject);
     procedure viewTimesheetDblClick(Sender: TObject);
     procedure viewTimesheetSelectionChanged(Sender: TcxCustomGridTableView);
-    procedure DoSaveGridLayout(Sender: TObject);
+    procedure DoLayoutManager(Sender: TObject);
     procedure DoCopyCell(Sender: TObject);
     procedure DoRefreshLookupTables(Sender: TObject);
   private
@@ -556,7 +560,7 @@ begin
 //
 end;
 
-procedure TMainFrm.DoSaveGridLayout(Sender: TObject);
+procedure TMainFrm.DoLayoutManager(Sender: TObject);
 begin
   inherited;
 //
@@ -1091,7 +1095,7 @@ var
   MonthEndDate: TDateTime;
 begin
   inherited;
-  barToolbar.Bars.BeginUpdate;
+  ribMain.BeginUpdate;
 //  AComboBox := TcxBarEditItemControl(lucViewMode.Links[0].Control).Edit as TcxComboBox;
   lucPeriod.Enabled := lucViewMode.ItemIndex = 0;
   dteFromDate.Enabled := not lucPeriod.Enabled;
@@ -1103,25 +1107,19 @@ begin
       0:
         begin
           lucPeriod.Visible := ivAlways;
-          lblPeriod.Visible := ivAlways;
-          lblFromDate.Visible := ivNever;
           dteFromDate.Visible := ivNever;
-          lblToDate.Visible := ivNever;
           dteToDate.Visible := ivNever;
         end;
 
       1:
         begin
           lucPeriod.Visible := ivNever;
-          lblPeriod.Visible := ivNever;
-          lblFromDate.Visible := ivAlways;
           dteFromDate.Visible := ivAlways;
-          lblToDate.Visible := ivAlways;
           dteToDate.Visible := ivAlways;
         end;
     end;
   finally
-    barToolbar.Bars.EndUpdate(True);
+    ribMain.EndUpdate;
   end;
 
   Regkey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
@@ -1231,7 +1229,7 @@ begin
 //
 end;
 
-procedure TMainFrm.DoPreferences(Sender: TObject);
+procedure TMainFrm.DoOptions(Sender: TObject);
 begin
   inherited;
   Screen.Cursor := crHourglass;
