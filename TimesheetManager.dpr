@@ -32,7 +32,8 @@ uses
   Report_DM in '..\Lib\Report_DM.pas' {ReportDM: TDataModule},
   TimesheetEdit_Frm in 'General\TimesheetEdit_Frm.pas' {TimesheetEditFrm},
   TimesheetPrefrrences_Frm in 'General\TimesheetPrefrrences_Frm.pas' {TimesheetPrefrrencesFrm},
-  VBProxyClass in '..\Lib\VBProxyClass.pas';
+  VBProxyClass in '..\Lib\VBProxyClass.pas',
+  TimesheetDetailReport_Frm in 'General\TimesheetDetailReport_Frm.pas' {TimesheetDetailReportFrm};
 
 {$R *.res}
 

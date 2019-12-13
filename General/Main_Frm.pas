@@ -85,7 +85,7 @@ type
     actPrint: TAction;
     actPDF: TAction;
     actExcel: TAction;
-    actReports: TAction;
+    actTimsheetDetail: TAction;
     actOptions: TAction;
     btnPrint: TdxBarLargeButton;
     btnPDF: TdxBarLargeButton;
@@ -154,6 +154,7 @@ type
     tabBillableSummary: TdxRibbonTab;
     barBillableSummary: TdxBar;
     btnExit4: TdxBarLargeButton;
+    lbl1: TdxBarStatic;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoInsertEntry(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
@@ -174,13 +175,13 @@ type
     procedure DoPrint(Sender: TObject);
     procedure DoPDF(Sender: TObject);
     procedure DoExcel(Sender: TObject);
-    procedure DoReports(Sender: TObject);
     procedure DoOptions(Sender: TObject);
     procedure viewTimesheetDblClick(Sender: TObject);
     procedure viewTimesheetSelectionChanged(Sender: TcxCustomGridTableView);
     procedure DoLayoutManager(Sender: TObject);
     procedure DoCopyCell(Sender: TObject);
     procedure DoRefreshLookupTables(Sender: TObject);
+    procedure DoTimeSheetDetail(Sender: TObject);
   private
     { Private declarations }
     FTSUserID: Integer;
@@ -231,7 +232,8 @@ uses
   CommonValues,
   Report_DM,
   TimesheetEdit_Frm,
-  TimesheetPrefrrences_Frm;
+  TimesheetPrefrrences_Frm,
+  TimesheetDetailReport_Frm;
 
 procedure TMainFrm.DrawCellBorder(var Msg: TMessage);
 begin
@@ -249,6 +251,8 @@ begin
   Application.HintShortPause := 0;
   Application.HintHidePause := 150000;
 //  styHintController.HintHidePause := 15000;
+  ribMain.ActiveTab := tabTimesheet;
+  ribMain.Update;
 end;
 
 procedure TMainFrm.FormShow(Sender: TObject);
@@ -457,6 +461,9 @@ begin
 
   if Assigned(VBBaseDM) then
     FreeAndNil(VBBaseDM);
+
+  if Assigned(ReportDM) then
+    FreeAndNil(ReportDM);
 end;
 
 procedure TMainFrm.DoExitTimesheetManager(Sender: TObject);
@@ -554,10 +561,19 @@ begin
   end;
 end;
 
-procedure TMainFrm.DoReports(Sender: TObject);
+procedure TMainFrm.DoTimeSheetDetail(Sender: TObject);
 begin
   inherited;
-//
+  Screen.Cursor := crHourglass;
+  try
+    if TimesheetDetailReportFrm = nil then
+      TimesheetDetailReportFrm := TTimesheetDetailReportFrm.Create(nil);
+    TimesheetDetailReportFrm.ShowModal;
+    TimesheetDetailReportFrm.Close;
+    FreeAndNil(TimesheetDetailReportFrm);
+  finally
+    Screen.Cursor := crDefault;
+  end;
 end;
 
 procedure TMainFrm.DoLayoutManager(Sender: TObject);

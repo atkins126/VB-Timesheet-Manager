@@ -1198,7 +1198,6 @@ inherited MainFrm: TMainFrm
     TabOrder = 3
     TabStop = False
     object tabTimesheet: TdxRibbonTab
-      Active = True
       Caption = 'Timesheet'
       Groups = <
         item
@@ -1215,6 +1214,7 @@ inherited MainFrm: TMainFrm
       Index = 1
     end
     object tabReports: TdxRibbonTab
+      Active = True
       Caption = 'Reports'
       Groups = <
         item
@@ -1305,11 +1305,11 @@ inherited MainFrm: TMainFrm
       ImageIndex = 4
       OnExecute = DoExcel
     end
-    object actReports: TAction
+    object actTimsheetDetail: TAction
       Category = 'Reports'
-      Caption = 'Reports'
+      Caption = 'Timsheet Detail'
       ImageIndex = 1
-      OnExecute = DoReports
+      OnExecute = DoTimeSheetDetail
     end
     object actOptions: TAction
       Category = 'System'
@@ -5317,6 +5317,10 @@ inherited MainFrm: TMainFrm
         end
         item
           Visible = True
+          ItemName = 'lbl1'
+        end
+        item
+          Visible = True
           ItemName = 'lucPeriod'
         end
         item
@@ -5467,7 +5471,7 @@ inherited MainFrm: TMainFrm
       AutoGrayScale = False
     end
     object lucPeriod: TcxBarEditItem
-      Caption = 'Period               '
+      Caption = 'Period       '
       Category = 0
       Hint = 'Period'
       Visible = ivAlways
@@ -5562,7 +5566,7 @@ inherited MainFrm: TMainFrm
       AutoGrayScale = False
     end
     object btnReports: TdxBarLargeButton
-      Action = actReports
+      Action = actTimsheetDetail
       Category = 0
     end
     object btnExit2: TdxBarLargeButton
@@ -5584,6 +5588,12 @@ inherited MainFrm: TMainFrm
     object btnExit4: TdxBarLargeButton
       Action = actExit
       Category = 0
+    end
+    object lbl1: TdxBarStatic
+      Caption = ' '
+      Category = 0
+      Hint = ' '
+      Visible = ivAlways
     end
   end
   object imgNav32: TcxImageList
