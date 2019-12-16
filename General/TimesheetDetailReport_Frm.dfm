@@ -1800,8 +1800,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     end
   end
   object grdTimesheetBillable: TcxGrid [3]
-    Left = 1204
-    Top = 8
+    Left = 1066
+    Top = 135
     Width = 1181
     Height = 421
     Font.Charset = ANSI_CHARSET
@@ -1810,7 +1810,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     Font.Name = 'Calibri'
     Font.Style = []
     ParentFont = False
-    TabOrder = 7
+    TabOrder = 3
     Visible = False
     object viewTimesheetBillable: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>

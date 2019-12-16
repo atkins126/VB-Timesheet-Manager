@@ -619,9 +619,53 @@ inherited MainFrm: TMainFrm
     Font.Name = 'Tahoma'
     Font.Style = []
   end
-  object grdTimesheetPrint: TcxGrid [2]
-    Left = 1417
-    Top = 573
+  object ribMain: TdxRibbon [2]
+    Left = 0
+    Top = 0
+    Width = 1455
+    Height = 126
+    BarManager = barManager
+    ColorSchemeName = 'Blue'
+    Contexts = <>
+    TabOrder = 2
+    TabStop = False
+    object tabTimesheet: TdxRibbonTab
+      Active = True
+      Caption = 'Timesheet'
+      Groups = <
+        item
+          ToolbarName = 'barTimesheet'
+        end>
+      Index = 0
+    end
+    object tabBillableSummary: TdxRibbonTab
+      Caption = 'Billable Summary'
+      Groups = <
+        item
+          ToolbarName = 'barBillableSummary'
+        end>
+      Index = 1
+    end
+    object tabReports: TdxRibbonTab
+      Caption = 'Reports'
+      Groups = <
+        item
+          ToolbarName = 'barReports'
+        end>
+      Index = 2
+    end
+    object tabAdmin: TdxRibbonTab
+      Caption = 'Admin'
+      Groups = <
+        item
+          ToolbarName = 'barAdmin'
+        end>
+      Index = 3
+    end
+  end
+  object grdTimesheetBillable: TcxGrid [3]
+    Left = 1406
+    Top = 180
     Width = 1181
     Height = 421
     Font.Charset = ANSI_CHARSET
@@ -630,9 +674,9 @@ inherited MainFrm: TMainFrm
     Font.Name = 'Calibri'
     Font.Style = []
     ParentFont = False
-    TabOrder = 2
+    TabOrder = 3
     Visible = False
-    object viewTimesheetPrint: TcxGridDBBandedTableView
+    object viewTimesheetBillable: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       ScrollbarAnnotations.CustomAnnotations = <>
       DataController.DataSource = ReportDM.dtsTSBillable
@@ -1183,52 +1227,8 @@ inherited MainFrm: TMainFrm
         Position.RowIndex = 0
       end
     end
-    object lvlTimesheetPrint: TcxGridLevel
-      GridView = viewTimesheetPrint
-    end
-  end
-  object ribMain: TdxRibbon [3]
-    Left = 0
-    Top = 0
-    Width = 1455
-    Height = 126
-    BarManager = barManager
-    ColorSchemeName = 'Blue'
-    Contexts = <>
-    TabOrder = 3
-    TabStop = False
-    object tabTimesheet: TdxRibbonTab
-      Caption = 'Timesheet'
-      Groups = <
-        item
-          ToolbarName = 'barTimesheet'
-        end>
-      Index = 0
-    end
-    object tabBillableSummary: TdxRibbonTab
-      Caption = 'Billable Summary'
-      Groups = <
-        item
-          ToolbarName = 'barBillableSummary'
-        end>
-      Index = 1
-    end
-    object tabReports: TdxRibbonTab
-      Active = True
-      Caption = 'Reports'
-      Groups = <
-        item
-          ToolbarName = 'barReports'
-        end>
-      Index = 2
-    end
-    object tabAdmin: TdxRibbonTab
-      Caption = 'Admin'
-      Groups = <
-        item
-          ToolbarName = 'barAdmin'
-        end>
-      Index = 3
+    object lvlTimesheetBillable: TcxGridLevel
+      GridView = viewTimesheetBillable
     end
   end
   inherited styRepository: TcxStyleRepository
@@ -5342,11 +5342,11 @@ inherited MainFrm: TMainFrm
         end
         item
           Visible = True
-          ItemName = 'btnPDF'
+          ItemName = 'btnExcel'
         end
         item
           Visible = True
-          ItemName = 'btnExcel'
+          ItemName = 'btnPDF'
         end>
       OneOnRow = True
       Row = 0
@@ -7258,5 +7258,17 @@ inherited MainFrm: TMainFrm
       ImageIndex = 5
       ShortCut = 16451
     end
+  end
+  object dlgPrint: TdxPrintDialog
+    ButtonsEnabled = [pdbPrinterProperties, pdbNetwork, pdbPreview, pdbPageSetup]
+    ButtonsVisible = [pdbPrinterProperties, pdbNetwork, pdbPageSetup]
+    OptionsEnabled = [pdoPrintToFile, pdoAllPages, pdoCurrentPage, pdoPageRange]
+    Left = 370
+    Top = 284
+  end
+  object dlgFileSave: TSaveDialog
+    Filter = 'Excel Files (*.xlsx)|*.xlsx'
+    Left = 430
+    Top = 283
   end
 end

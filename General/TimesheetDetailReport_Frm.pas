@@ -274,6 +274,7 @@ begin
   viewSystemUser.DataController.DataSource := ReportDM.dtsSystemUser;
   viewCustomerListing.DataController.DataSource := ReportDM.dtsTSCustomer;
   viewActivityType.DataController.DataSource := ReportDM.dtsActivityType;
+  viewTimesheetBillable.DataController.DataSource := ReportDM.dtsTSBillable;
 //  viewSummaryByActivity.DataController.DataSource := ReportDM.dtsTSSummaryByActivity;
   viewTimesheet.DataController.DataSource := ReportDM.dtsTimesheet;
   viewCarryForwardDetail.DataController.DataSource := ReportDM.dtsCarryForwardDetail;
@@ -667,12 +668,12 @@ begin
   edtTActivtyType.Visible := False;
 
   GetTimesheetDetail;
-  RepFileName := TSDM.ShellResource.ReportFolder + FReportFileName[grpData.ItemIndex];
-
-  if not TFile.Exists(RepFileName) then
-    raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
-
-  ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + FReportFileName[grpData.ItemIndex]);
+//  RepFileName := TSDM.ShellResource.ReportFolder + FReportFileName[grpData.ItemIndex];
+//
+//  if not TFile.Exists(RepFileName) then
+//    raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
+//
+//  ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + FReportFileName[grpData.ItemIndex]);
 
   case grpData.ItemIndex of
     0:
@@ -762,12 +763,12 @@ begin
   end;
 
   GetTimesheetDetail;
-  RepFileName := TSDM.ShellResource.ReportFolder + FReportFileName[grpData.ItemIndex];
-
-  if not TFile.Exists(RepFileName) then
-    raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
-
-  ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + FReportFileName[grpData.ItemIndex]);
+//  RepFileName := TSDM.ShellResource.ReportFolder + FReportFileName[grpData.ItemIndex];
+//
+//  if not TFile.Exists(RepFileName) then
+//    raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
+//
+//  ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + FReportFileName[grpData.ItemIndex]);
 
   DC := viewTimesheetBillable.DataController;
   DC.BeginUpdate;

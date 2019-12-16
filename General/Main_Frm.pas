@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Forms,
   System.Classes, Vcl.Graphics, System.ImageList, Vcl.ImgList, Vcl.Controls,
   Vcl.Dialogs, System.Actions, Vcl.ActnList, System.Win.Registry, Data.DB,
-  System.DateUtils,
+  System.DateUtils, System.IOUtils, WinApi.ShellApi,
 
   Base_Frm, BaseLayout_Frm, VBProxyClass, VBCommonValues, CommonFunction,
 
@@ -20,7 +20,8 @@ uses
   cxTextEdit, cxCheckBox, cxCalendar, CommonMethods, cxContainer, Vcl.ComCtrls,
   dxCore, cxDateUtils, cxDropDownEdit, cxMaskEdit, cxLookupEdit, cxDBLookupEdit,
   dxBarExtItems, cxBarEditItem, cxMemo, Vcl.Menus, dxScrollbarAnnotations,
-  dxRibbonSkins, dxRibbonCustomizationForm, dxRibbon;
+  dxRibbonSkins, dxRibbonCustomizationForm, dxRibbon, dxPrnDev, dxPrnDlg,
+  cxGridExportLink;
 
 type
   TMainFrm = class(TBaseLayoutFrm)
@@ -90,38 +91,6 @@ type
     btnPrint: TdxBarLargeButton;
     btnPDF: TdxBarLargeButton;
     btnExcel: TdxBarLargeButton;
-    grdTimesheetPrint: TcxGrid;
-    viewTimesheetPrint: TcxGridDBBandedTableView;
-    edtTID: TcxGridDBBandedColumn;
-    edtTFirstName: TcxGridDBBandedColumn;
-    edtTLastName: TcxGridDBBandedColumn;
-    edtTThePeriod: TcxGridDBBandedColumn;
-    edtTLoginName: TcxGridDBBandedColumn;
-    edtTActivityDate: TcxGridDBBandedColumn;
-    edtTCustomerType: TcxGridDBBandedColumn;
-    edtTCustomerName: TcxGridDBBandedColumn;
-    edtTActivtyType: TcxGridDBBandedColumn;
-    edtTAActivty: TcxGridDBBandedColumn;
-    edtTPriceItem: TcxGridDBBandedColumn;
-    edtTTimeSpent: TcxGridDBBandedColumn;
-    edtTHours: TcxGridDBBandedColumn;
-    edtTRate: TcxGridDBBandedColumn;
-    edtTStdRate: TcxGridDBBandedColumn;
-    edtTItemValue: TcxGridDBBandedColumn;
-    edtTTotalCFwd: TcxGridDBBandedColumn;
-    edtTWeekEnding: TcxGridDBBandedColumn;
-    edtTBillable: TcxGridDBBandedColumn;
-    edtTBillableStr: TcxGridDBBandedColumn;
-    edtTInvoiceNo: TcxGridDBBandedColumn;
-    edtTInvDate: TcxGridDBBandedColumn;
-    edtTCreditNoteNo: TcxGridDBBandedColumn;
-    edtTLocked: TcxGridDBBandedColumn;
-    edtTLockedStr: TcxGridDBBandedColumn;
-    edtTCFwd: TcxGridDBBandedColumn;
-    edtTCFwdStr: TcxGridDBBandedColumn;
-    edtTAddWork: TcxGridDBBandedColumn;
-    edtTAddWorkStr: TcxGridDBBandedColumn;
-    lvlTimesheetPrint: TcxGridLevel;
     popTimesheet: TPopupMenu;
     Insert1: TMenuItem;
     Edit1: TMenuItem;
@@ -155,6 +124,40 @@ type
     barBillableSummary: TdxBar;
     btnExit4: TdxBarLargeButton;
     lbl1: TdxBarStatic;
+    dlgPrint: TdxPrintDialog;
+    dlgFileSave: TSaveDialog;
+    grdTimesheetBillable: TcxGrid;
+    viewTimesheetBillable: TcxGridDBBandedTableView;
+    edtTID: TcxGridDBBandedColumn;
+    edtTFirstName: TcxGridDBBandedColumn;
+    edtTLastName: TcxGridDBBandedColumn;
+    edtTThePeriod: TcxGridDBBandedColumn;
+    edtTLoginName: TcxGridDBBandedColumn;
+    edtTActivityDate: TcxGridDBBandedColumn;
+    edtTCustomerType: TcxGridDBBandedColumn;
+    edtTCustomerName: TcxGridDBBandedColumn;
+    edtTActivtyType: TcxGridDBBandedColumn;
+    edtTAActivty: TcxGridDBBandedColumn;
+    edtTPriceItem: TcxGridDBBandedColumn;
+    edtTTimeSpent: TcxGridDBBandedColumn;
+    edtTHours: TcxGridDBBandedColumn;
+    edtTRate: TcxGridDBBandedColumn;
+    edtTStdRate: TcxGridDBBandedColumn;
+    edtTItemValue: TcxGridDBBandedColumn;
+    edtTTotalCFwd: TcxGridDBBandedColumn;
+    edtTWeekEnding: TcxGridDBBandedColumn;
+    edtTBillable: TcxGridDBBandedColumn;
+    edtTBillableStr: TcxGridDBBandedColumn;
+    edtTInvoiceNo: TcxGridDBBandedColumn;
+    edtTInvDate: TcxGridDBBandedColumn;
+    edtTCreditNoteNo: TcxGridDBBandedColumn;
+    edtTLocked: TcxGridDBBandedColumn;
+    edtTLockedStr: TcxGridDBBandedColumn;
+    edtTCFwd: TcxGridDBBandedColumn;
+    edtTCFwdStr: TcxGridDBBandedColumn;
+    edtTAddWork: TcxGridDBBandedColumn;
+    edtTAddWorkStr: TcxGridDBBandedColumn;
+    lvlTimesheetBillable: TcxGridLevel;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoInsertEntry(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
@@ -301,6 +304,9 @@ begin
     if TSDM = nil then
       TSDM := TTSDM.Create(nil);
 
+    if ReportDM = nil then
+      ReportDM := TReportDM.Create(nil);
+
     sbrMain.Panels[1].Text := 'User: ' + VBBaseDM.FUserData.UserName;
     VBBaseDM.SetConnectionProperties;
     VBBaseDM.sqlConnection.Open;
@@ -321,6 +327,7 @@ begin
     VBBaseDM.CurrentMonth := RUtils.MonthInt(Date);
 
     viewTimesheet.DataController.DataSource := TSDM.dtsTimesheet;
+    viewTimesheetBillable.DataController.DataSource := ReportDM.dtsTSBillable;
     TcxLookupComboBoxProperties(lucCustomer.Properties).listSource := TSDM.dtsCustomerLookup;
     TcxLookupComboBoxProperties(lucPriceItem.Properties).listSource := TSDM.dtsPriceList;
     TcxLookupComboBoxProperties(lucRateUnit.Properties).listSource := TSDM.dtsRateUnit;
@@ -1239,12 +1246,6 @@ begin
   end;
 end;
 
-procedure TMainFrm.DoPDF(Sender: TObject);
-begin
-  inherited;
-//
-end;
-
 procedure TMainFrm.DoOptions(Sender: TObject);
 begin
   inherited;
@@ -1261,15 +1262,186 @@ begin
 end;
 
 procedure TMainFrm.DoPrint(Sender: TObject);
+var
+  WhereClause, UserClause, OrderByClause, DateClause, FileName, RepFileName: string;
 begin
   inherited;
-//
+  FileName := 'Timesheet Detail by User';
+  DateClause := 'WHERE T.THE_PERIOD = ' + FTimesheetPeriod.ToString;
+  UserClause := ' AND T.USER_ID IN (' + FTSUserID.ToString + ')';
+  OrderByClause := 'ORDER BY T.ACTIVITY_DATE';
+  WhereClause := DateClause + UserClause + ' ';
+  ReportDM.FReport := ReportDM.rptTimesheetByUser;
+
+  VBBaseDM.GetData(45, ReportDM.cdsTSBillable, ReportDM.cdsTSBillable.Name, WhereClause + ';' + OrderByClause,
+    'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsTSBillable.UpdateOptions.Generatorname,
+    ReportDM.cdsTSBillable.UpdateOptions.UpdateTableName);
+
+  RepFileName := TSDM.ShellResource.ReportFolder + 'TimesheetUser.fr3';
+
+  if not TFile.Exists(RepFileName) then
+    raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
+
+  ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + 'TimesheetUser.fr3');
+
+  if ReportDM.FReport.PrepareReport then
+    if TAction(Sender).Tag = 0 then
+      ReportDM.FReport.ShowPreparedReport
+    else
+    begin
+      if dlgPrint.Execute then
+      begin
+        ReportDM.FReport.PrintOptions.Copies :=
+          dlgPrint.DialogData.Copies;
+
+        ReportDM.FReport.Print;
+      end;
+    end;
 end;
 
 procedure TMainFrm.DoExcel(Sender: TObject);
+var
+  WhereClause, UserClause, OrderByClause, DateClause, FileName, RepFileName: string;
+  DestFolder, FolderPath, ExportFileName: string;
+  FileSaved: Boolean;
 begin
   inherited;
-//
+  FolderPath := EXCEL_DOCS;
+//  FolderPath := MainFrm.FShellResource.RootFolder + '\' + FSHIFT_FOLDER + 'Export\';
+  TDirectory.CreateDirectory(FolderPath);
+  dlgFileSave.DefaultExt := 'xlsx';
+  dlgFileSave.InitialDir := FolderPath;
+  dlgFileSave.FileName := '*.xlsx';
+  FileSaved := dlgFileSave.Execute;
+
+  if not FileSaved then
+    Exit;
+
+//  if dlgFileSave.Execute then
+  if TFile.Exists(dlgFileSave.FileName) then
+  begin
+    Beep;
+    if DisplayMsg(Application.Title,
+      'File Overwrite',
+      'The file ' + dlgFileSave.FileName + ' already exists.' + CRLF +
+      'Do you want to overwrite this file?',
+      mtConfirmation,
+      [mbYes, mbNo]
+      ) = mrNo then
+      Exit;
+  end;
+
+  edtTLoginName.GroupIndex := -1;
+  edtTCustomerName.GroupIndex := -1;
+  edtTActivtyType.GroupIndex := -1;
+  edtTLoginName.Visible := False;
+  edtTCustomerName.Visible := False;
+  edtTActivtyType.Visible := False;
+
+  FileName := 'Timesheet Detail by User';
+  DateClause := 'WHERE T.THE_PERIOD = ' + FTimesheetPeriod.ToString;
+  UserClause := ' AND T.USER_ID IN (' + FTSUserID.ToString + ')';
+  OrderByClause := 'ORDER BY T.ACTIVITY_DATE';
+  WhereClause := DateClause + UserClause + ' ';
+  ReportDM.FReport := ReportDM.rptTimesheetByUser;
+
+  VBBaseDM.GetData(45, ReportDM.cdsTSBillable, ReportDM.cdsTSBillable.Name, WhereClause + ';' + OrderByClause,
+    'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsTSBillable.UpdateOptions.Generatorname,
+    ReportDM.cdsTSBillable.UpdateOptions.UpdateTableName);
+
+  RepFileName := TSDM.ShellResource.ReportFolder + 'TimesheetUser.fr3';
+
+  if not TFile.Exists(RepFileName) then
+    raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
+
+  ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + 'TimesheetUser.fr3');
+
+  edtTCustomerName.Visible := True;
+  viewTimesheetBillable.OptionsView.BandHeaders := False;
+
+  try
+    ExportFileName := dlgFileSave.FileName;
+    ExportGridToXLSX(
+      ExportFileName, // Filename to export
+      grdTimesheetBillable, // Grid whose data must be exported
+      True, // Expand groups
+      True, // Save all records (Selected and un-selected ones)
+      True, // Use native format
+      'xlsx');
+
+//    if cbxOepnDocument.Checked then
+    ShellExecute(0, 'open', PChar('Excel.exe'), PChar('"' + ExportFileName + '"'), nil, SW_SHOWNORMAL)
+  finally
+    viewTimesheetBillable.OptionsView.BandHeaders := True;
+  end;
+end;
+
+procedure TMainFrm.DoPDF(Sender: TObject);
+var
+  WhereClause, UserClause, OrderByClause, DateClause, FileName, RepFileName: string;
+  FileSaved: Boolean;
+  DC: TcxCustomDataController;
+begin
+  inherited;
+  Screen.Cursor := crHourglass;
+  ReportDM.frxPDFExport.ShowDialog := False;
+  ReportDM.frxPDFExport.Background := True;
+  ReportDM.frxPDFExport.OpenAfterExport := True; // cbxOepnDocument.Checked;
+  ReportDM.frxPDFExport.OverwritePrompt := True;
+  ReportDM.frxPDFExport.ShowProgress := True;
+  dlgFileSave.DefaultExt := 'pdf';
+  dlgFileSave.InitialDir := PDF_DOCS;
+  dlgFileSave.FileName := '*.pdf';
+  FileSaved := dlgFileSave.Execute;
+
+  if not FileSaved then
+    Exit;
+
+  if TFile.Exists(dlgFileSave.FileName) then
+  begin
+    Beep;
+    if DisplayMsg(Application.Title,
+      'File Overwrite',
+      'The file ' + ExtractFileName(dlgFileSave.FileName) + ' already exists. Do you want to overwrite this file?',
+      mtConfirmation,
+      [mbYes, mbNo]
+      ) = mrNo then
+      Exit;
+  end;
+
+  try
+    FileName := 'Timesheet Detail by User';
+    DateClause := 'WHERE T.THE_PERIOD = ' + FTimesheetPeriod.ToString;
+    UserClause := ' AND T.USER_ID IN (' + FTSUserID.ToString + ')';
+    OrderByClause := 'ORDER BY T.ACTIVITY_DATE';
+    WhereClause := DateClause + UserClause + ' ';
+    ReportDM.FReport := ReportDM.rptTimesheetByUser;
+
+    VBBaseDM.GetData(45, ReportDM.cdsTSBillable, ReportDM.cdsTSBillable.Name, WhereClause + ';' + OrderByClause,
+      'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsTSBillable.UpdateOptions.Generatorname,
+      ReportDM.cdsTSBillable.UpdateOptions.UpdateTableName);
+
+    RepFileName := TSDM.ShellResource.ReportFolder + 'TimesheetUser.fr3';
+
+    if not TFile.Exists(RepFileName) then
+      raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
+
+    ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + 'TimesheetUser.fr3');
+
+    edtTCustomerName.Visible := True;
+    viewTimesheetBillable.OptionsView.BandHeaders := False;
+
+    DC := viewTimesheetBillable.DataController;
+    DC.BeginUpdate;
+    ReportDM.frxPDFExport.FileName := dlgFileSave.FileName;
+    if ReportDM.FReport.PrepareReport(True) then
+      ReportDM.FReport.Export(ReportDM.frxPDFExport);
+  finally
+    ReportDM.cdsTSBillable.First;
+    viewTimesheetBillable.OptionsView.BandHeaders := True;
+    DC.EndUpdate;
+    Screen.Cursor := crDefault;
+  end;
 end;
 
 end.
