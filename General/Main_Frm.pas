@@ -120,9 +120,6 @@ type
     btnExit3: TdxBarLargeButton;
     btnOptions: TdxBarLargeButton;
     btnLayoutManager: TdxBarLargeButton;
-    tabBillableSummary: TdxRibbonTab;
-    barBillableSummary: TdxBar;
-    btnExit4: TdxBarLargeButton;
     lbl1: TdxBarStatic;
     dlgPrint: TdxPrintDialog;
     dlgFileSave: TSaveDialog;
@@ -158,6 +155,8 @@ type
     edtTAddWork: TcxGridDBBandedColumn;
     edtTAddWorkStr: TcxGridDBBandedColumn;
     lvlTimesheetBillable: TcxGridLevel;
+    actBillableSummary: TAction;
+    btnBillableSummary: TdxBarLargeButton;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoInsertEntry(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
@@ -185,6 +184,7 @@ type
     procedure DoCopyCell(Sender: TObject);
     procedure DoRefreshLookupTables(Sender: TObject);
     procedure DoTimeSheetDetail(Sender: TObject);
+    procedure DoBillableSummary(Sender: TObject);
   private
     { Private declarations }
     FTSUserID: Integer;
@@ -236,7 +236,7 @@ uses
   Report_DM,
   TimesheetEdit_Frm,
   TimesheetPrefrrences_Frm,
-  TimesheetDetailReport_Frm;
+  TimesheetDetailReport_Frm, BillableSummary_Frm;
 
 procedure TMainFrm.DrawCellBorder(var Msg: TMessage);
 begin
@@ -306,6 +306,8 @@ begin
 
     if ReportDM = nil then
       ReportDM := TReportDM.Create(nil);
+
+    VBBaseDM.PopulateUserData;
 
     sbrMain.Panels[1].Text := 'User: ' + VBBaseDM.FUserData.UserName;
     VBBaseDM.SetConnectionProperties;
@@ -583,6 +585,16 @@ begin
   end;
 end;
 
+procedure TMainFrm.DoBillableSummary(Sender: TObject);
+begin
+  inherited;
+  if BillableSummaryFrm = nil then
+    BillableSummaryFrm := TBillableSummaryFrm.Create(nil);
+  BillableSummaryFrm.ShowModal;
+  BillableSummaryFrm.Close;
+  FreeAndNil(BillableSummaryFrm);
+end;
+
 procedure TMainFrm.DoLayoutManager(Sender: TObject);
 begin
   inherited;
@@ -764,8 +776,7 @@ begin
 end;
 
 procedure TMainFrm.viewTimesheetCustomDrawCell(Sender: TcxCustomGridTableView;
-  ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
-  var ADone: Boolean);
+  ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
 begin
   inherited;
   if AViewInfo.GridRecord = nil then

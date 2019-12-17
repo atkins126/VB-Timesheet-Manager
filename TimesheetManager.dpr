@@ -33,7 +33,8 @@ uses
   TimesheetEdit_Frm in 'General\TimesheetEdit_Frm.pas' {TimesheetEditFrm},
   TimesheetPrefrrences_Frm in 'General\TimesheetPrefrrences_Frm.pas' {TimesheetPrefrrencesFrm},
   VBProxyClass in '..\Lib\VBProxyClass.pas',
-  TimesheetDetailReport_Frm in 'General\TimesheetDetailReport_Frm.pas' {TimesheetDetailReportFrm};
+  TimesheetDetailReport_Frm in 'General\TimesheetDetailReport_Frm.pas' {TimesheetDetailReportFrm},
+  BillableSummary_Frm in 'General\BillableSummary_Frm.pas' {BillableSummaryFrm};
 
 {$R *.res}
 
