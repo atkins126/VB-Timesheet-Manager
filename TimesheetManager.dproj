@@ -157,11 +157,6 @@
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
         <DCCReference Include="..\..\Lib\VBCommonValues.pas"/>
-        <DCCReference Include="..\Lib\Report_DM.pas">
-            <Form>ReportDM</Form>
-            <FormType>dfm</FormType>
-            <DesignClass>TDataModule</DesignClass>
-        </DCCReference>
         <DCCReference Include="General\TimesheetEdit_Frm.pas">
             <Form>TimesheetEditFrm</Form>
             <FormType>dfm</FormType>
@@ -178,6 +173,11 @@
         <DCCReference Include="General\BillableSummary_Frm.pas">
             <Form>BillableSummaryFrm</Form>
             <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Data Modules\Report_DM.pas">
+            <Form>ReportDM</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
         </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

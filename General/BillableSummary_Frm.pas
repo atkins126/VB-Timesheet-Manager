@@ -3,18 +3,22 @@ unit BillableSummary_Frm;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, BaseLayout_Frm, cxGraphics, cxControls,
-  cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore, dxSkinsDefaultPainters,
-  System.ImageList, Vcl.ImgList, cxImageList, dxLayoutLookAndFeels,
-  System.Actions, Vcl.ActnList, cxClasses, cxStyles, dxLayoutContainer,
-  dxLayoutControl, dxBar, dxBarExtItems, cxContainer, cxEdit, Vcl.Menus,
-  cxDBLookupComboBox, cxDropDownEdit, cxCheckBox, cxBarEditItem, Vcl.StdCtrls,
-  cxButtons, cxTextEdit, cxMaskEdit, cxLookupEdit, cxDBLookupEdit, cxCustomData,
-  cxFilter, cxData, cxDataStorage, cxNavigator, dxDateRanges,
-  dxScrollbarAnnotations, Data.DB, cxDBData, cxCurrencyEdit, cxCalendar, cxMemo,
-  cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridBandedTableView,
-  cxGridDBBandedTableView, cxGridCustomView, cxGrid;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Forms,
+  System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Dialogs, System.StrUtils,
+  System.ImageList, Vcl.ImgList, System.Actions, Vcl.ActnList, Vcl.Menus,
+  Data.DB, Vcl.StdCtrls,
+
+  BaseLayout_Frm,
+
+  cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore,
+  dxSkinsDefaultPainters, cxImageList, dxLayoutLookAndFeels, cxClasses, cxStyles,
+  dxLayoutContainer, dxLayoutControl, dxBar, dxBarExtItems, cxContainer, cxEdit,
+  cxDBLookupComboBox, cxDropDownEdit, cxCheckBox, cxBarEditItem, cxButtons,
+  cxTextEdit, cxMaskEdit, cxLookupEdit, cxDBLookupEdit, cxCustomData, cxData,
+  cxFilter, cxDataStorage, cxNavigator, dxDateRanges, dxScrollbarAnnotations,
+  cxDBData, cxCurrencyEdit, cxCalendar, cxMemo, cxGridLevel, cxGridCustomTableView,
+  cxGridTableView, cxGridBandedTableView, cxGridDBBandedTableView, cxGridCustomView,
+  cxGrid;
 
 type
   TBillableSummaryFrm = class(TBaseLayoutFrm)
@@ -124,6 +128,9 @@ type
     procedure viewBillableFocusedRecordChanged(Sender: TcxCustomGridTableView;
       APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord;
       ANewItemRecordFocusingChanged: Boolean);
+    procedure viewBillableCustomDrawGroupCell(Sender: TcxCustomGridTableView;
+      ACanvas: TcxCanvas; AViewInfo: TcxGridTableCellViewInfo;
+      var ADone: Boolean);
   private
     { Private declarations }
   public
@@ -184,6 +191,7 @@ begin
   viewBillable.DataController.DataSource := ReportDM.dtsBillableSummary;
   viewTimesheet.DataController.DataSource := ReportDM.dtsTimesheet;
   viewCarryForwardDetail.DataController.DataSource := ReportDM.dtsCarryForwardDetail;
+  grpData.ItemIndex := 0;
   GetPeriods;
   lucFromPeriod.EditValue := VBBaseDM.CurrentPeriod;
   lucToPeriod.EditValue := VBBaseDM.CurrentPeriod;
@@ -290,8 +298,8 @@ begin
       ReportDM.cdsBillableSummary.UpdateOptions.UpdateTableName);
 
     viewBillable.ViewData.Collapse(True);
-    if lucFromPeriod.EditValue = lucToPeriod.EditValue then
-      viewBillable.ViewData.Expand(True);
+//    if lucFromPeriod.EditValue = lucToPeriod.EditValue then
+//      viewBillable.ViewData.Expand(True);
   finally
     SL.Free;
   end;
@@ -307,7 +315,9 @@ begin
     GroupByClause := ONE_SPACE;
 
     WhereClause :=
-      ' WHERE T.THE_PERIOD <= ' + VarAsType(lucToPeriod.EditValue, varString) +
+//      ' WHERE T.THE_PERIOD <= ' + VarAsType(lucToPeriod.EditValue, varString) +
+//      ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ' +
+      'WHERE T.THE_PERIOD = ' + VarAsType(ReportDM.cdsBillableSummary. FieldByName('THE_PERIOD').AsInteger, varString) +
       ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ' +
       ' AND T.CARRY_FORWARD = 1 ';
 
@@ -322,9 +332,14 @@ begin
     if ReportDM.cdsTimesheet.Active then
       ReportDM.cdsCarryForwardDetail.Data := ReportDM.cdsTimesheet.Data;
 
+//    WhereClause :=
+//      'WHERE T.THE_PERIOD >= ' + VarAsType(lucFromPeriod.EditValue, varString) +
+//      ' AND  T.THE_PERIOD <= ' + VarAsType(lucToPeriod.EditValue, varString) +
+//      ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ';
+
     WhereClause :=
-      'WHERE T.THE_PERIOD >= ' + VarAsType(lucFromPeriod.EditValue, varString) +
-      ' AND  T.THE_PERIOD <= ' + VarAsType(lucToPeriod.EditValue, varString) +
+      'WHERE T.THE_PERIOD = ' + VarAsType(ReportDM.cdsBillableSummary. FieldByName('THE_PERIOD').AsInteger, varString) +
+//      ' AND  T.THE_PERIOD <= ' + VarAsType(lucToPeriod.EditValue, varString) +
       ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ';
 
     VBBaseDM.GetData(27, ReportDM.cdsTimesheet, ReportDM.cdsTimesheet.Name, WhereClause + ';' + OrderByClause + ';' + GroupByClause,
@@ -346,10 +361,35 @@ begin
   ReportDM.cdsToPeriod.Data := ReportDM.cdsPeriod.Data;
 
   if not ReportDM.cdsPeriod.Locate('THE_PERIOD', VBBaseDM.CurrentPeriod, []) then
-    ReportDM.cdsPeriod.First;
+    ReportDM.cdsPeriod.Last;
 
   if not ReportDM.cdsToPeriod.Locate('THE_PERIOD', VBBaseDM.CurrentPeriod, []) then
-    ReportDM.cdsToPeriod.First;
+    ReportDM.cdsToPeriod.Last;
+end;
+
+procedure TBillableSummaryFrm.viewBillableCustomDrawGroupCell(
+  Sender: TcxCustomGridTableView; ACanvas: TcxCanvas;
+  AViewInfo: TcxGridTableCellViewInfo; var ADone: Boolean);
+var
+  Pos: Integer;
+  AText: string;
+begin
+  inherited;
+  AText := AViewInfo.Text;
+
+//  aText := System.StrUtils.ReplaceStr(aText, ' :', ':');
+  AText := System.StrUtils.ReplaceStr(AText, ',', '');
+  AViewInfo.Text := AText;
+
+  // This works
+//  ACanvas.Font.Style :=  [fsBold];
+
+  Pos := AnsiPos(' :', AViewInfo.Text);
+  if Pos > 0 then
+  begin
+    System.Delete(AText, 1, Pos + 2);
+    AViewInfo.Text := AText;
+  end;
 end;
 
 procedure TBillableSummaryFrm.viewBillableFocusedRecordChanged(

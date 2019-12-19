@@ -29,12 +29,12 @@ uses
   Main_Frm in 'General\Main_Frm.pas' {MainFrm},
   TS_DM in 'Data Modules\TS_DM.pas' {TSDM: TDataModule},
   VBCommonValues in '..\..\Lib\VBCommonValues.pas',
-  Report_DM in '..\Lib\Report_DM.pas' {ReportDM: TDataModule},
   TimesheetEdit_Frm in 'General\TimesheetEdit_Frm.pas' {TimesheetEditFrm},
   TimesheetPrefrrences_Frm in 'General\TimesheetPrefrrences_Frm.pas' {TimesheetPrefrrencesFrm},
   VBProxyClass in '..\Lib\VBProxyClass.pas',
   TimesheetDetailReport_Frm in 'General\TimesheetDetailReport_Frm.pas' {TimesheetDetailReportFrm},
-  BillableSummary_Frm in 'General\BillableSummary_Frm.pas' {BillableSummaryFrm};
+  BillableSummary_Frm in 'General\BillableSummary_Frm.pas' {BillableSummaryFrm},
+  Report_DM in 'Data Modules\Report_DM.pas' {ReportDM: TDataModule};
 
 {$R *.res}
 
