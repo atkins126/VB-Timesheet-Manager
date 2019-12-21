@@ -158,7 +158,7 @@ type
     actBillableSummary: TAction;
     btnBillableSummary: TdxBarLargeButton;
     procedure DoExitTimesheetManager(Sender: TObject);
-    procedure DoInsertEntry(Sender: TObject);
+    procedure DoEditInsertEntry(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
     procedure DoRefresh(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -588,11 +588,18 @@ end;
 procedure TMainFrm.DoBillableSummary(Sender: TObject);
 begin
   inherited;
-  if BillableSummaryFrm = nil then
-    BillableSummaryFrm := TBillableSummaryFrm.Create(nil);
-  BillableSummaryFrm.ShowModal;
-  BillableSummaryFrm.Close;
-  FreeAndNil(BillableSummaryFrm);
+  Screen.Cursor := crHourglass;
+  try
+    if BillableSummaryFrm = nil then
+      BillableSummaryFrm := TBillableSummaryFrm.Create(nil);
+
+    BillableSummaryFrm.ShowModal;
+    BillableSummaryFrm.Close;
+    FreeAndNil(BillableSummaryFrm);
+  finally
+    ribMain.ActiveTab := tabTimesheet;
+    Screen.Cursor := crDefault;
+  end;
 end;
 
 procedure TMainFrm.DoLayoutManager(Sender: TObject);
@@ -1233,7 +1240,7 @@ begin
   Result := EncodeDate(Ayear, Amonth, Aday);
 end;
 
-procedure TMainFrm.DoInsertEntry(Sender: TObject);
+procedure TMainFrm.DoEditInsertEntry(Sender: TObject);
 begin
   inherited;
   Screen.Cursor := crHourglass;
@@ -1245,6 +1252,9 @@ begin
 
     if TimesheetEditFrm = nil then
       TimesheetEditFrm := TTimesheetEditFrm.Create(nil);
+
+    TimesheetEditFrm.MyDataSet := TSDM.cdsTimesheet;
+    TimesheetEditFrm.MyDataSource := TSDM.dtsTimesheet;
 
     if TimesheetEditFrm.ShowModal = mrCancel then
       if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then

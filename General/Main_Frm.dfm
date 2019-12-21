@@ -39,11 +39,13 @@ inherited MainFrm: TMainFrm
         DataController.Summary.SummaryGroups = <>
         OptionsBehavior.CellHints = True
         OptionsBehavior.FocusCellOnTab = True
+        OptionsBehavior.IncSearch = True
         OptionsBehavior.NavigatorHints = True
         OptionsBehavior.FocusCellOnCycle = True
         OptionsCustomize.ColumnsQuickCustomization = True
         OptionsData.DeletingConfirmation = False
         OptionsSelection.MultiSelect = True
+        OptionsView.NoDataToDisplayInfoText = '<No Timesheet data to display>'
         Bands = <
           item
             Caption = 'General'
@@ -69,7 +71,6 @@ inherited MainFrm: TMainFrm
           MinWidth = 60
           Options.Editing = False
           Options.Filtering = False
-          Options.IncSearch = False
           Options.Grouping = False
           Options.HorzSizing = False
           Options.Moving = False
@@ -631,6 +632,7 @@ inherited MainFrm: TMainFrm
     TabOrder = 2
     TabStop = False
     object tabTimesheet: TdxRibbonTab
+      Active = True
       Caption = 'Timesheet'
       Groups = <
         item
@@ -639,7 +641,6 @@ inherited MainFrm: TMainFrm
       Index = 0
     end
     object tabReports: TdxRibbonTab
-      Active = True
       Caption = 'Reports'
       Groups = <
         item
@@ -1238,14 +1239,14 @@ inherited MainFrm: TMainFrm
       Category = 'System'
       Caption = 'Insert'
       ImageIndex = 12
-      OnExecute = DoInsertEntry
+      OnExecute = DoEditInsertEntry
     end
     object actEdit: TAction
       Tag = 1
       Category = 'System'
       Caption = 'Edit'
       ImageIndex = 13
-      OnExecute = DoInsertEntry
+      OnExecute = DoEditInsertEntry
     end
     object actDelete: TAction
       Tag = 2

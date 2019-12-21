@@ -8,7 +8,7 @@ uses
   System.ImageList, Vcl.ImgList, System.Actions, Vcl.ActnList, Vcl.Menus,
   Data.DB, Vcl.StdCtrls,
 
-  BaseLayout_Frm,
+  BaseLayout_Frm, VBCommonValues,
 
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore,
   dxSkinsDefaultPainters, cxImageList, dxLayoutLookAndFeels, cxClasses, cxStyles,
@@ -46,6 +46,18 @@ type
     litBillableSummary: TdxLayoutItem;
     litTimesheet: TdxLayoutItem;
     litCarryForward: TdxLayoutItem;
+    grdBillableSummary: TcxGrid;
+    viewBillable: TcxGridDBBandedTableView;
+    edtBCustomerID: TcxGridDBBandedColumn;
+    edtBPeriod: TcxGridDBBandedColumn;
+    edtBName: TcxGridDBBandedColumn;
+    edtBhours: TcxGridDBBandedColumn;
+    edtBValue: TcxGridDBBandedColumn;
+    edtBNonHours: TcxGridDBBandedColumn;
+    edtBNonValue: TcxGridDBBandedColumn;
+    edtBCarryForward: TcxGridDBBandedColumn;
+    lvlBillable: TcxGridLevel;
+    actGetData: TAction;
     grdCarryForwardDetail: TcxGrid;
     viewCarryForwardDetail: TcxGridDBBandedTableView;
     edtCFID: TcxGridDBBandedColumn;
@@ -102,18 +114,6 @@ type
     cbxTSAddWork: TcxGridDBBandedColumn;
     edtTSCGrpID: TcxGridDBBandedColumn;
     lvlTimesheet: TcxGridLevel;
-    grdBillableSummary: TcxGrid;
-    viewBillable: TcxGridDBBandedTableView;
-    edtBCustomerID: TcxGridDBBandedColumn;
-    edtBPeriod: TcxGridDBBandedColumn;
-    edtBName: TcxGridDBBandedColumn;
-    edtBhours: TcxGridDBBandedColumn;
-    edtBValue: TcxGridDBBandedColumn;
-    edtBNonHours: TcxGridDBBandedColumn;
-    edtBNonValue: TcxGridDBBandedColumn;
-    edtBCarryForward: TcxGridDBBandedColumn;
-    lvlBillable: TcxGridLevel;
-    actGetData: TAction;
     procedure GetBillableSummary;
     procedure GetBillableTimesheet;
     procedure GetPeriods;
@@ -131,10 +131,23 @@ type
     procedure viewBillableCustomDrawGroupCell(Sender: TcxCustomGridTableView;
       ACanvas: TcxCanvas; AViewInfo: TcxGridTableCellViewInfo;
       var ADone: Boolean);
+    procedure viewTimesheetDblClick(Sender: TObject);
+    procedure viewBillableCustomDrawCell(Sender: TcxCustomGridTableView;
+      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
+      var ADone: Boolean);
   private
     { Private declarations }
+    procedure OpenTables;
+    procedure GetSystemUser;
+    procedure GetActivityType;
+    procedure GetPriceList;
+    procedure GetRateUnit;
+    procedure CloseDataSets;
+  protected
+    procedure DrawCellBorder(var Msg: TMessage); message CM_DRAWBORDER;
   public
     { Public declarations }
+
   end;
 
 var
@@ -150,11 +163,14 @@ uses
   Report_DM,
   Progress_Frm,
   CommonFunction,
-  CommonValues, TS_DM;
+  CommonValues,
+  TS_DM,
+  TimesheetEdit_Frm;
 
 procedure TBillableSummaryFrm.DoCloseForm(Sender: TObject);
 begin
   inherited;
+  CloseDataSets;
   Self.ModalResult := mrOK;
 end;
 
@@ -182,17 +198,46 @@ begin
 //
 end;
 
+procedure TBillableSummaryFrm.DrawCellBorder(var Msg: TMessage);
+begin
+  if (TObject(Msg.WParam) is TcxCanvas)
+    and (TObject(Msg.LParam) is TcxGridTableDataCellViewInfo) then
+    TcxCanvas(Msg.WParam).DrawComplexFrame(TcxGridTableDataCellViewInfo(Msg.LParam).ClientBounds, clRed, clRed, cxBordersAll, 1);
+end;
+
 procedure TBillableSummaryFrm.FormCreate(Sender: TObject);
 begin
   inherited;
   Caption := 'Billable Summary Report';
   TcxLookupComboBoxProperties(lucFromPeriod.Properties).ListSource := ReportDM.dtsPeriod;
   TcxLookupComboBoxProperties(lucToPeriod.Properties).ListSource := ReportDM.dtsToPeriod;
+
+  TcxLookupComboBoxProperties(lucSystemUser.Properties).ListSource := ReportDM.dtsSystemUser1;
+  TcxLookupComboBoxProperties(lucCFSystemuser.Properties).ListSource := ReportDM.dtsSystemUser2;
+  TcxLookupComboBoxProperties(lucPriceList.Properties).ListSource := ReportDM.dtsPriceList1;
+  TcxLookupComboBoxProperties(lucCFPriceList.Properties).ListSource := ReportDM.dtsPriceList2;
+  TcxLookupComboBoxProperties(lucRateUnit.Properties).ListSource := ReportDM.dtsRateUnit1;
+  TcxLookupComboBoxProperties(lucCFRateUnit.Properties).ListSource := ReportDM.dtsRateUnit2;
+  TcxLookupComboBoxProperties(lucActivityType.Properties).ListSource := ReportDM.dtsActivityType1;
+  TcxLookupComboBoxProperties(lucCFActivityType.Properties).ListSource := ReportDM.dtsActivityType2;
+
+  TcxLookupComboBoxProperties(lucSystemUser.Properties).Buttons.Items[0].Visible := False;
+  TcxLookupComboBoxProperties(lucCFSystemuser.Properties).Buttons.Items[0].Visible := False;
+  TcxLookupComboBoxProperties(lucPriceList.Properties).Buttons.Items[0].Visible := False;
+  TcxLookupComboBoxProperties(lucCFPriceList.Properties).Buttons.Items[0].Visible := False;
+  TcxLookupComboBoxProperties(lucRateUnit.Properties).Buttons.Items[0].Visible := False;
+  TcxLookupComboBoxProperties(lucCFRateUnit.Properties).Buttons.Items[0].Visible := False;
+  TcxLookupComboBoxProperties(lucActivityType.Properties).Buttons.Items[0].Visible := False;
+  TcxLookupComboBoxProperties(lucCFActivityType.Properties).Buttons.Items[0].Visible := False;
+
   viewBillable.DataController.DataSource := ReportDM.dtsBillableSummary;
-  viewTimesheet.DataController.DataSource := ReportDM.dtsTimesheet;
-  viewCarryForwardDetail.DataController.DataSource := ReportDM.dtsCarryForwardDetail;
+  viewTimesheet.DataController.DataSource := ReportDM.dtsTimesheetDetail;
+  viewCarryForwardDetail.DataController.DataSource := ReportDM.dtsTimesheetCF;
   grpData.ItemIndex := 0;
-  GetPeriods;
+  litTimesheet.CaptionOptions.Text := 'Timesheet Details (0 Items)';
+  litCarryForward.CaptionOptions.Text := 'Carry Forwad Details (0 Items)';
+  OpenTables;
+//  GetPeriods;
   lucFromPeriod.EditValue := VBBaseDM.CurrentPeriod;
   lucToPeriod.EditValue := VBBaseDM.CurrentPeriod;
   lucGroupBy.EditValue := 'Period';
@@ -202,6 +247,7 @@ procedure TBillableSummaryFrm.FormShow(Sender: TObject);
 begin
   inherited;
   GetBillableSummary;
+  Screen.Cursor := crDefault;
 end;
 
 procedure TBillableSummaryFrm.GetBillableSummary;
@@ -298,8 +344,8 @@ begin
       ReportDM.cdsBillableSummary.UpdateOptions.UpdateTableName);
 
     viewBillable.ViewData.Collapse(True);
-//    if lucFromPeriod.EditValue = lucToPeriod.EditValue then
-//      viewBillable.ViewData.Expand(True);
+    if lucFromPeriod.EditValue = lucToPeriod.EditValue then
+      viewBillable.ViewData.Expand(True);
   finally
     SL.Free;
   end;
@@ -317,20 +363,20 @@ begin
     WhereClause :=
 //      ' WHERE T.THE_PERIOD <= ' + VarAsType(lucToPeriod.EditValue, varString) +
 //      ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ' +
-      'WHERE T.THE_PERIOD = ' + VarAsType(ReportDM.cdsBillableSummary. FieldByName('THE_PERIOD').AsInteger, varString) +
+    'WHERE T.THE_PERIOD <= ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) +
       ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ' +
       ' AND T.CARRY_FORWARD = 1 ';
 
     OrderByClause := 'ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
 
-    VBBaseDM.GetData(27, ReportDM.cdsTimesheet, ReportDM.cdsTimesheet.Name, WhereClause + ';' + OrderByClause + ';' + GroupByClause,
-      'C:\Data\Xml\Carry Forward Summary.xml', ReportDM.cdsTimesheet.UpdateOptions.Generatorname,
-      ReportDM.cdsTimesheet.UpdateOptions.UpdateTableName);
+    VBBaseDM.GetData(45, ReportDM.cdsTimesheetDetail, ReportDM.cdsTimesheetDetail.Name, WhereClause + ';' + OrderByClause + ';' + GroupByClause,
+      'C:\Data\Xml\Carry Forward Summary.xml', ReportDM.cdsTimesheetDetail.UpdateOptions.Generatorname,
+      ReportDM.cdsTimesheetDetail.UpdateOptions.UpdateTableName);
 
-    ReportDM.cdsCarryForwardDetail.Close;
+    ReportDM.cdsTimesheetCF.Close;
 
-    if ReportDM.cdsTimesheet.Active then
-      ReportDM.cdsCarryForwardDetail.Data := ReportDM.cdsTimesheet.Data;
+    if ReportDM.cdsTimesheetDetail.Active then
+      ReportDM.cdsTimesheetCF.Data := ReportDM.cdsTimesheetDetail.Data;
 
 //    WhereClause :=
 //      'WHERE T.THE_PERIOD >= ' + VarAsType(lucFromPeriod.EditValue, varString) +
@@ -338,13 +384,23 @@ begin
 //      ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ';
 
     WhereClause :=
-      'WHERE T.THE_PERIOD = ' + VarAsType(ReportDM.cdsBillableSummary. FieldByName('THE_PERIOD').AsInteger, varString) +
+      'WHERE T.THE_PERIOD = ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) +
 //      ' AND  T.THE_PERIOD <= ' + VarAsType(lucToPeriod.EditValue, varString) +
-      ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ';
+    ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ';
 
-    VBBaseDM.GetData(27, ReportDM.cdsTimesheet, ReportDM.cdsTimesheet.Name, WhereClause + ';' + OrderByClause + ';' + GroupByClause,
-      'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsTimesheet.UpdateOptions.Generatorname,
-      ReportDM.cdsTimesheet.UpdateOptions.UpdateTableName);
+    VBBaseDM.GetData(45, ReportDM.cdsTimesheetDetail, ReportDM.cdsTimesheetDetail.Name, WhereClause + ';' + OrderByClause + ';' + GroupByClause,
+      'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsTimesheetDetail.UpdateOptions.Generatorname,
+      ReportDM.cdsTimesheetDetail.UpdateOptions.UpdateTableName);
+
+    if ReportDM.cdsTimesheetDetail.IsEmpty then
+      litTimesheet.CaptionOptions.Text := 'Timesheet Details (0 Items)'
+    else
+      litTimesheet.CaptionOptions.Text := 'Timesheet Details (' + ReportDM.cdsTimesheetDetail.RecordCount.ToString + ' Items)';
+
+    if ReportDM.cdsTimesheetCF.IsEmpty then
+      litCarryForward.CaptionOptions.Text := 'Carry Forwad Details (0 Items)'
+    else
+      litCarryForward.CaptionOptions.Text := 'Timesheet Details (' + ReportDM.cdsTimesheetCF.RecordCount.ToString + ' Items)';
   finally
     Screen.Cursor := crDefault;
   end;
@@ -365,6 +421,138 @@ begin
 
   if not ReportDM.cdsToPeriod.Locate('THE_PERIOD', VBBaseDM.CurrentPeriod, []) then
     ReportDM.cdsToPeriod.Last;
+end;
+
+procedure TBillableSummaryFrm.GetPriceList;
+begin
+  ReportDM.cdsPriceList2.Close;
+
+  VBBaseDM.GetData(42, ReportDM.cdsPriceList1, ReportDM.cdsPriceList1.Name, '',
+    'C:\Data\Xml\Price list.xml', ReportDM.cdsPriceList1.UpdateOptions.Generatorname,
+    ReportDM.cdsPriceList1.UpdateOptions.UpdateTableName);
+
+  ReportDM.cdsPriceList2.Data := ReportDM.cdsPriceList1.Data;
+end;
+
+procedure TBillableSummaryFrm.GetRateUnit;
+begin
+  ReportDM.cdsRateUnit2.Close;
+
+  VBBaseDM.GetData(38, ReportDM.cdsRateUnit1, ReportDM.cdsRateUnit1.Name, '',
+    'C:\Data\Xml\Rate unit.xml', ReportDM.cdsRateUnit1.UpdateOptions.Generatorname,
+    ReportDM.cdsRateUnit1.UpdateOptions.UpdateTableName);
+
+  ReportDM.cdsRateUnit2.Data := ReportDM.cdsRateUnit1.Data;
+end;
+
+procedure TBillableSummaryFrm.GetSystemUser;
+begin
+  ReportDM.cdsSystemUser2.Close;
+
+  VBBaseDM.GetData(24, ReportDM.cdsSystemUser1, ReportDM.cdsSystemUser1.Name, '',
+    'C:\Data\Xml\System User.xml', ReportDM.cdsSystemUser1.UpdateOptions.Generatorname,
+    ReportDM.cdsSystemUser1.UpdateOptions.UpdateTableName);
+
+  ReportDM.cdsSystemUser2.Data := ReportDM.cdsSystemUser1.Data;
+end;
+
+procedure TBillableSummaryFrm.GetActivityType;
+begin
+  ReportDM.cdsActivityType2.Close;
+
+  VBBaseDM.GetData(39, ReportDM.cdsActivityType1, ReportDM.cdsActivityType1.Name, '',
+    'C:\Data\Xml\Activity Type.xml', ReportDM.cdsActivityType1.UpdateOptions.Generatorname,
+    ReportDM.cdsActivityType1.UpdateOptions.UpdateTableName);
+
+  ReportDM.cdsActivityType2.Data := ReportDM.cdsActivityType1.Data;
+end;
+
+procedure TBillableSummaryFrm.OpenTables;
+var
+  I: Integer;
+  DownloadCaption: string;
+  Progress: Extended;
+begin
+  if ProgressFrm = nil then
+    ProgressFrm := TProgressFrm.Create(nil);
+  ProgressFrm.lblAppTitle.Caption := 'Getting Data...';
+  ProgressFrm.Update;
+  ProgressFrm.Show;
+  ProgressFrm.Update;
+  I := 1;
+
+  try
+    DownloadCaption := 'Opening_Period_Table';
+    Progress := StrToFloat(I.ToString) / StrToFloat(TABLE_COUNT.ToString) * 100;
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
+    GetPeriods;
+
+    Inc(I);
+    DownloadCaption := 'Opening_System_User_Table';
+    Progress := StrToFloat(I.ToString) / StrToFloat(TABLE_COUNT.ToString) * 100;
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
+    GetSystemUser;
+
+    Inc(I);
+    Progress := StrToFloat(I.ToString) / StrToFloat(TABLE_COUNT.ToString) * 100;
+    DownloadCaption := 'Opening_Activity_Type_Table';
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
+    GetActivityType;
+
+    Inc(I);
+    Progress := StrToFloat(I.ToString) / StrToFloat(TABLE_COUNT.ToString) * 100;
+    DownloadCaption := 'Opening_Customer_Table';
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
+    GetPriceList;
+
+    Inc(I);
+    Progress := StrToFloat(I.ToString) / StrToFloat(TABLE_COUNT.ToString) * 100;
+    DownloadCaption := 'Opening_Rate_Unit_Table';
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
+    GetRateUnit;
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=100' + '|CAPTION=All_tables_opened')), 0);
+  finally
+    ProgressFrm.Close;
+    FreeAndNil(ProgressFrm);
+    Screen.Cursor := crDefault;
+  end;
+
+end;
+
+procedure TBillableSummaryFrm.CloseDataSets;
+begin
+  ReportDM.cdsToPeriod.Close;
+  ReportDM.cdsPeriod.Close;
+  ReportDM.cdsSystemUser1.Close;
+  ReportDM.cdsSystemUser2.Close;
+  ReportDM.cdsRateUnit1.Close;
+  ReportDM.cdsRateUnit2.Close;
+  ReportDM.cdsPriceList1.Close;
+  ReportDM.cdsPriceList2.Close;
+  ReportDM.cdsActivityType1.Close;
+  ReportDM.cdsActivityType2.Close;
+end;
+
+procedure TBillableSummaryFrm.viewBillableCustomDrawCell(
+  Sender: TcxCustomGridTableView; ACanvas: TcxCanvas;
+  AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
+begin
+  inherited;
+  if AViewInfo.GridRecord = nil then
+    Exit;
+
+  if AViewInfo.GridRecord.Focused then
+  // This renders the background and font colours of the focused record
+  begin
+    if AViewInfo.Item <> nil then
+      if AViewInfo.Item.Focused then
+      begin
+      // This renders the background and border colour of the focused cell
+        ACanvas.Brush.Color := $B6EDFA;
+        ACanvas.Font.Color := RootLookAndFeel.SkinPainter.DefaultSelectionColor;
+        PostMessage(Handle, CM_DRAWBORDER, Integer(ACanvas), Integer(AViewInfo));
+      end;
+  end;
 end;
 
 procedure TBillableSummaryFrm.viewBillableCustomDrawGroupCell(
@@ -402,11 +590,91 @@ begin
 
   if not AFocusedRecord.IsData then
   begin
-    ReportDM.cdsTimesheet.Close;
+    ReportDM.cdsTimesheetDetail.Close;
+    ReportDM.CDSCarryForwardDetail.Close;
     Exit;
   end;
 
   GetBillableTimesheet;
+end;
+
+procedure TBillableSummaryFrm.viewTimesheetDblClick(Sender: TObject);
+var
+  TSID, ID: Integer;
+begin
+  inherited;
+  Screen.Cursor := crHourglass;
+
+  try
+    if TimesheetEditFrm = nil then
+      TimesheetEditFrm := TTimesheetEditFrm.Create(nil);
+
+    case TcxGridDBBandedTableView(Sender).Tag of
+      0: // Timesheet details
+        begin
+          TimesheetEditFrm.MyDataSet := ReportDM.cdsTimesheetDetail;
+          TimesheetEditFrm.MyDataSource := ReportDM.dtsTimesheetDetail;
+        end;
+
+      1: // Carry Forward details
+        begin
+          TimesheetEditFrm.MyDataSet := ReportDM.cdsTimesheetCF;
+          TimesheetEditFrm.MyDataSource := ReportDM.dtsTimesheetCF;
+        end;
+    end;
+
+    TimesheetEditFrm.MyDataSet.Edit;
+
+    if TimesheetEditFrm.ShowModal = mrCancel then
+    begin
+      if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
+        TSDM.cdsTimesheet.Cancel;
+    end
+    else
+    begin
+//      case TcxGridDBBandedTableView(Sender).Tag of
+//        0: // Timesheet details
+//          begin
+            // Get the ID of the current recored that was modified
+      ID := TimesheetEditFrm.MyDataSet.FieldByName('ID').AsInteger;
+
+            // We need to update the Tiemsheet record if it is in the current
+            // Timesheet dataset.
+      if (TSDM.cdsTimesheet.Active) and not (TSDM.cdsTimesheet.IsEmpty) then
+      begin
+              // Get the ID of the currently selected/focused Timesheet
+              // record.
+        TSID := TSDM.cdsTimesheet.FieldByName('ID').AsInteger;
+
+              // If we find the modified billable summary record in the
+              // current Timesheet dataset then update its values.
+        if TSDM.cdsTimesheet.Locate('ID', ID, []) then
+        begin
+          if not (TSDM.cdsTimesheet.State in [dsEdit, dsInsert]) then
+            TSDM.cdsTimesheet.Edit;
+
+                // Copy the modified recored to the corresponding Timesheet
+                // datset record.
+          TSDM.cdsTimesheet.CopyRecord(TimesheetEditFrm.MyDataSet);
+          TSDM.cdsTimesheet.Post;
+                // Relocated the original Timesheet selected/focused record.
+          TSDM.cdsTimesheet.Locate('ID', TSID, []);
+        end;
+      end;
+//          end;
+
+//        1: // Carry forward details
+//          begin
+//
+//          end;
+//      end;
+    end;
+
+    TimesheetEditFrm.Close;
+    FreeAndNil(TimesheetEditFrm);
+  finally
+    Screen.Cursor := crDefault;
+  end;
 end;
 
 end.

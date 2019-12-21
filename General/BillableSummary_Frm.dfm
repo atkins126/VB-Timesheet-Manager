@@ -8,1149 +8,28 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
   TextHeight = 13
   inherited layMain: TdxLayoutControl
     Width = 1126
-    Height = 656
+    Height = 706
+    LayoutLookAndFeel = lafCustomSkin
     ExplicitWidth = 1126
-    ExplicitHeight = 656
+    ExplicitHeight = 706
     object docToolbar: TdxBarDockControl [0]
       Left = 11
       Top = 11
-      Width = 1087
+      Width = 1104
       Height = 58
       Align = dalNone
       BarManager = barManager
     end
-    object grdCarryForwardDetail: TcxGrid [1]
-      Left = 39
-      Top = 485
-      Width = 1031
-      Height = 250
-      TabOrder = 3
-      object viewCarryForwardDetail: TcxGridDBBandedTableView
-        Navigator.Buttons.CustomButtons = <>
-        ScrollbarAnnotations.CustomAnnotations = <>
-        DataController.DataSource = ReportDM.dtsCarryForwardDetail
-        DataController.Summary.DefaultGroupSummaryItems = <>
-        DataController.Summary.FooterSummaryItems = <
-          item
-            Format = '#,###,##0.00'
-            Kind = skSum
-            FieldName = 'TIME_HOURS'
-            Column = edtCFTimeHours
-          end
-          item
-            Format = '#,###,##0.00'
-            Kind = skSum
-            FieldName = 'ITEM_VALUE'
-            Column = edtCFItemValue
-          end>
-        DataController.Summary.SummaryGroups = <>
-        OptionsBehavior.FocusCellOnTab = True
-        OptionsBehavior.FocusCellOnCycle = True
-        OptionsCustomize.ColumnsQuickCustomization = True
-        OptionsView.CellAutoHeight = True
-        OptionsView.ExpandButtonsForEmptyDetails = False
-        OptionsView.Footer = True
-        OptionsView.GroupByBox = False
-        OptionsView.ShowColumnFilterButtons = sfbAlways
-        Bands = <
-          item
-            Caption = 'Timesheet Detail'
-          end
-          item
-            Caption = 'Time/Values'
-          end
-          item
-            Caption = 'Other'
-          end>
-        object edtCFID: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'ID'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DecimalPlaces = 0
-          Properties.DisplayFormat = '######0'
-          Properties.EditFormat = '######0'
-          Properties.ReadOnly = True
-          Visible = False
-          MinWidth = 50
-          Options.Editing = False
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Options.Sorting = False
-          Width = 50
-          Position.BandIndex = 0
-          Position.ColIndex = 0
-          Position.RowIndex = 0
-        end
-        object edtCFCustomerID: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'CUSTOMER_ID'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DecimalPlaces = 0
-          Properties.DisplayFormat = '######0'
-          Properties.EditFormat = '######0'
-          Properties.ReadOnly = True
-          Visible = False
-          MinWidth = 50
-          Options.Editing = False
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Options.Sorting = False
-          Width = 50
-          Position.BandIndex = 0
-          Position.ColIndex = 1
-          Position.RowIndex = 0
-        end
-        object edtCFPIID: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'PRICE_ITEM_ID'
-          PropertiesClassName = 'TcxTextEditProperties'
-          Visible = False
-          MinWidth = 50
-          Options.Editing = False
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Options.Sorting = False
-          Width = 50
-          Position.BandIndex = 0
-          Position.ColIndex = 2
-          Position.RowIndex = 0
-        end
-        object lucCFSystemuser: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'USER_ID'
-          PropertiesClassName = 'TcxLookupComboBoxProperties'
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DropDownAutoSize = True
-          Properties.ImmediatePost = True
-          Properties.KeyFieldNames = 'ID'
-          Properties.ListColumns = <
-            item
-              Caption = 'User Name'
-              FieldName = 'LOGIN_NAME'
-            end>
-          Properties.ListOptions.CaseInsensitive = True
-          Properties.ListOptions.SyncMode = True
-          Properties.PostPopupValueOnTab = True
-          Properties.ReadOnly = False
-          MinWidth = 120
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Width = 120
-          Position.BandIndex = 0
-          Position.ColIndex = 3
-          Position.RowIndex = 0
-        end
-        object edtCFPeriod: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'THE_PERIOD'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DecimalPlaces = 0
-          Properties.DisplayFormat = '#####0'
-          Properties.EditFormat = '#####0'
-          Properties.ReadOnly = True
-          MinWidth = 65
-          Options.Editing = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Width = 65
-          Position.BandIndex = 0
-          Position.ColIndex = 4
-          Position.RowIndex = 0
-        end
-        object lucCFActivityDate: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'ACTIVITY_DATE'
-          PropertiesClassName = 'TcxDateEditProperties'
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DisplayFormat = 'dd/MM/yyyy'
-          Properties.EditFormat = 'dd/MM/yyyy'
-          Properties.ImmediatePost = True
-          Properties.PostPopupValueOnTab = True
-          Properties.SaveTime = False
-          Properties.ShowOnlyValidDates = True
-          Properties.ShowTime = False
-          MinWidth = 90
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Width = 90
-          Position.BandIndex = 0
-          Position.ColIndex = 5
-          Position.RowIndex = 0
-        end
-        object lucCFPriceList: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'PRICE_LIST_ITEM_ID'
-          PropertiesClassName = 'TcxLookupComboBoxProperties'
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DropDownAutoSize = True
-          Properties.ImmediatePost = True
-          Properties.KeyFieldNames = 'ID'
-          Properties.ListColumns = <
-            item
-              Width = 850
-              FieldName = 'NAME'
-            end
-            item
-              HeaderAlignment = taRightJustify
-              Width = 50
-              FieldName = 'RATE'
-            end
-            item
-              Width = 120
-              FieldName = 'RATE_UNIT'
-            end>
-          Properties.PostPopupValueOnTab = True
-          Properties.ReadOnly = False
-          MinWidth = 300
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Options.Sorting = False
-          Width = 300
-          Position.BandIndex = 0
-          Position.ColIndex = 6
-          Position.RowIndex = 0
-        end
-        object lucCFRateUnit: TcxGridDBBandedColumn
-          Caption = 'Rate'
-          DataBinding.FieldName = 'RATE_UNIT_ID'
-          PropertiesClassName = 'TcxLookupComboBoxProperties'
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DropDownAutoSize = True
-          Properties.ImmediatePost = True
-          Properties.KeyFieldNames = 'ID'
-          Properties.ListColumns = <
-            item
-              FieldName = 'NAME'
-            end>
-          Properties.ReadOnly = False
-          MinWidth = 60
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Options.Sorting = False
-          Width = 60
-          Position.BandIndex = 0
-          Position.ColIndex = 7
-          Position.RowIndex = 0
-        end
-        object lucCFActivityType: TcxGridDBBandedColumn
-          Caption = 'Activty Type'
-          DataBinding.FieldName = 'ACTIVITY_TYPE_ID'
-          PropertiesClassName = 'TcxLookupComboBoxProperties'
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DropDownAutoSize = True
-          Properties.ImmediatePost = True
-          Properties.KeyFieldNames = 'ID'
-          Properties.ListColumns = <
-            item
-              FieldName = 'NAME'
-            end>
-          Properties.PostPopupValueOnTab = True
-          MinWidth = 300
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Options.Sorting = False
-          Width = 300
-          Position.BandIndex = 0
-          Position.ColIndex = 8
-          Position.RowIndex = 0
-        end
-        object edtCFActivity: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'ACTIVITY'
-          PropertiesClassName = 'TcxMemoProperties'
-          Options.Filtering = False
-          Options.Sorting = False
-          Width = 400
-          Position.BandIndex = 0
-          Position.ColIndex = 9
-          Position.RowIndex = 0
-        end
-        object edtCFTimeMins: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'TIME_SPENT'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.Alignment.Horz = taRightJustify
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DisplayFormat = '###,##0'
-          Properties.EditFormat = '###,##0'
-          Properties.UseDisplayFormatWhenEditing = True
-          Properties.UseLeftAlignmentOnEditing = False
-          HeaderAlignmentHorz = taRightJustify
-          MinWidth = 50
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Options.Sorting = False
-          Width = 50
-          Position.BandIndex = 1
-          Position.ColIndex = 0
-          Position.RowIndex = 0
-        end
-        object edtCFTimeHours: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'TIME_HOURS'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = '###,##0.00'
-          Properties.EditFormat = '###,##0.00'
-          Properties.ReadOnly = True
-          HeaderAlignmentHorz = taRightJustify
-          MinWidth = 50
-          Options.Editing = False
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Options.Sorting = False
-          Width = 50
-          Position.BandIndex = 1
-          Position.ColIndex = 1
-          Position.RowIndex = 0
-        end
-        object edtCFRate: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'ACTUAL_RATE'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.Alignment.Horz = taRightJustify
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DisplayFormat = '###,##0.00'
-          Properties.EditFormat = '###,##0.00'
-          Properties.UseDisplayFormatWhenEditing = True
-          Properties.UseLeftAlignmentOnEditing = False
-          HeaderAlignmentHorz = taRightJustify
-          MinWidth = 75
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Options.Sorting = False
-          Width = 75
-          Position.BandIndex = 1
-          Position.ColIndex = 2
-          Position.RowIndex = 0
-        end
-        object edtCFStdRate: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'STD_RATE'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.Alignment.Horz = taRightJustify
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DisplayFormat = '###,##0.00'
-          Properties.EditFormat = '###,##0.00'
-          Properties.ReadOnly = True
-          Properties.UseDisplayFormatWhenEditing = True
-          Properties.UseLeftAlignmentOnEditing = False
-          HeaderAlignmentHorz = taRightJustify
-          MinWidth = 75
-          Options.Editing = False
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Options.Sorting = False
-          Width = 75
-          Position.BandIndex = 1
-          Position.ColIndex = 3
-          Position.RowIndex = 0
-        end
-        object edtCFItemValue: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'ITEM_VALUE'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.Alignment.Horz = taRightJustify
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DisplayFormat = '###,##0.00'
-          Properties.EditFormat = '###,##0.00'
-          Properties.ReadOnly = True
-          Properties.UseDisplayFormatWhenEditing = True
-          Properties.UseLeftAlignmentOnEditing = False
-          HeaderAlignmentHorz = taRightJustify
-          MinWidth = 80
-          Options.Editing = False
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Options.Sorting = False
-          Width = 80
-          Position.BandIndex = 1
-          Position.ColIndex = 4
-          Position.RowIndex = 0
-        end
-        object edtCFInvID: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'INVOICE_ID'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DecimalPlaces = 0
-          Properties.DisplayFormat = '######0'
-          Properties.EditFormat = '######0'
-          Properties.ReadOnly = True
-          MinWidth = 75
-          Options.Editing = False
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Options.Sorting = False
-          Width = 75
-          Position.BandIndex = 2
-          Position.ColIndex = 4
-          Position.RowIndex = 0
-        end
-        object edtCFCreditnoteID: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'CN_ID'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DecimalPlaces = 0
-          Properties.DisplayFormat = '######0'
-          Properties.EditFormat = '######0'
-          Properties.ReadOnly = True
-          MinWidth = 75
-          Options.Editing = False
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Options.Sorting = False
-          Width = 75
-          Position.BandIndex = 2
-          Position.ColIndex = 6
-          Position.RowIndex = 0
-        end
-        object cbxCFLocked: TcxGridDBBandedColumn
-          Caption = 'Lock'
-          DataBinding.FieldName = 'LOCKED'
-          PropertiesClassName = 'TcxCheckBoxProperties'
-          Properties.Alignment = taCenter
-          Properties.ReadOnly = True
-          Properties.UseAlignmentWhenInplace = True
-          Properties.ValueChecked = 1
-          Properties.ValueUnchecked = 0
-          HeaderAlignmentHorz = taCenter
-          MinWidth = 40
-          Options.Editing = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Width = 40
-          Position.BandIndex = 2
-          Position.ColIndex = 7
-          Position.RowIndex = 0
-        end
-        object lucCFModified: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'DATE_MODIFIED'
-          Visible = False
-          Width = 80
-          Position.BandIndex = 0
-          Position.ColIndex = 10
-          Position.RowIndex = 0
-        end
-        object cbxCFBillable: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'BILLABLE'
-          PropertiesClassName = 'TcxCheckBoxProperties'
-          Properties.Alignment = taCenter
-          Properties.UseAlignmentWhenInplace = True
-          Properties.ValueChecked = 1
-          Properties.ValueUnchecked = 0
-          HeaderAlignmentHorz = taCenter
-          MinWidth = 50
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Width = 50
-          Position.BandIndex = 2
-          Position.ColIndex = 0
-          Position.RowIndex = 0
-        end
-        object edtCFInvoiceDate: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'INVOICE_DATE'
-          PropertiesClassName = 'TcxDateEditProperties'
-          Properties.DisplayFormat = 'dd/MM/yyyy'
-          Properties.EditFormat = 'dd/MM/yyyy'
-          Properties.ReadOnly = True
-          Properties.SaveTime = False
-          Properties.ShowTime = False
-          MinWidth = 90
-          Options.Editing = False
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Width = 90
-          Position.BandIndex = 2
-          Position.ColIndex = 5
-          Position.RowIndex = 0
-        end
-        object cbxCFCarryForward: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'CARRY_FORWARD'
-          PropertiesClassName = 'TcxCheckBoxProperties'
-          Properties.Alignment = taCenter
-          Properties.UseAlignmentWhenInplace = True
-          Properties.ValueChecked = 1
-          Properties.ValueUnchecked = 0
-          HeaderAlignmentHorz = taCenter
-          MinWidth = 50
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Width = 50
-          Position.BandIndex = 2
-          Position.ColIndex = 3
-          Position.RowIndex = 0
-        end
-        object cbxCFApproved: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'APPROVED'
-          PropertiesClassName = 'TcxCheckBoxProperties'
-          Properties.Alignment = taCenter
-          Properties.UseAlignmentWhenInplace = True
-          Properties.ValueChecked = 1
-          Properties.ValueUnchecked = 0
-          HeaderAlignmentHorz = taCenter
-          MinWidth = 50
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Width = 50
-          Position.BandIndex = 2
-          Position.ColIndex = 2
-          Position.RowIndex = 0
-        end
-        object cbxCFAddWork: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'IS_ADDITIONAL_WORK'
-          PropertiesClassName = 'TcxCheckBoxProperties'
-          Properties.Alignment = taRightJustify
-          Properties.UseAlignmentWhenInplace = True
-          Properties.ValueChecked = 1
-          Properties.ValueUnchecked = 0
-          HeaderAlignmentHorz = taCenter
-          MinWidth = 50
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Width = 50
-          Position.BandIndex = 2
-          Position.ColIndex = 1
-          Position.RowIndex = 0
-        end
-        object edtCFCGID: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'CUSTOMER_GROUP_ID'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = '######0'
-          Properties.EditFormat = '######0'
-          Properties.ReadOnly = True
-          Visible = False
-          MinWidth = 74
-          Options.Editing = False
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Position.BandIndex = 0
-          Position.ColIndex = 11
-          Position.RowIndex = 0
-        end
-      end
-      object lvlCarryForwardDetail: TcxGridLevel
-        GridView = viewCarryForwardDetail
-      end
-    end
-    object grdTimesheet: TcxGrid [2]
-      Left = 10000
-      Top = 10000
-      Width = 1031
-      Height = 421
-      TabOrder = 2
-      Visible = False
-      object viewTimesheet: TcxGridDBBandedTableView
-        Navigator.Buttons.CustomButtons = <>
-        ScrollbarAnnotations.CustomAnnotations = <>
-        DataController.DataSource = ReportDM.dtsTimesheet
-        DataController.Summary.DefaultGroupSummaryItems = <>
-        DataController.Summary.FooterSummaryItems = <
-          item
-            Format = '#,###,##0.00'
-            Kind = skSum
-            FieldName = 'TIME_HOURS'
-            Column = edtTSTimeHours
-          end
-          item
-            Format = '#,###,##0.00'
-            Kind = skSum
-            FieldName = 'ITEM_VALUE'
-            Column = edtTSItemValue
-          end>
-        DataController.Summary.SummaryGroups = <>
-        OptionsBehavior.FocusCellOnTab = True
-        OptionsBehavior.FocusCellOnCycle = True
-        OptionsCustomize.ColumnsQuickCustomization = True
-        OptionsView.CellAutoHeight = True
-        OptionsView.ExpandButtonsForEmptyDetails = False
-        OptionsView.Footer = True
-        OptionsView.GroupByBox = False
-        OptionsView.ShowColumnFilterButtons = sfbAlways
-        Bands = <
-          item
-            Caption = 'Timesheet Detail'
-          end
-          item
-            Caption = 'Time/Values'
-          end
-          item
-            Caption = 'Other'
-          end>
-        object edtTSID: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'ID'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DecimalPlaces = 0
-          Properties.DisplayFormat = '######0'
-          Properties.EditFormat = '######0'
-          Properties.ReadOnly = True
-          Visible = False
-          MinWidth = 50
-          Options.Editing = False
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Options.Sorting = False
-          Width = 50
-          Position.BandIndex = 0
-          Position.ColIndex = 0
-          Position.RowIndex = 0
-        end
-        object edtTSCID: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'CUSTOMER_ID'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DecimalPlaces = 0
-          Properties.DisplayFormat = '######0'
-          Properties.EditFormat = '######0'
-          Properties.ReadOnly = True
-          Visible = False
-          MinWidth = 50
-          Options.Editing = False
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Options.Sorting = False
-          Width = 50
-          Position.BandIndex = 0
-          Position.ColIndex = 1
-          Position.RowIndex = 0
-        end
-        object edtTSPID: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'PRICE_ITEM_ID'
-          PropertiesClassName = 'TcxTextEditProperties'
-          Visible = False
-          MinWidth = 50
-          Options.Editing = False
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Options.Sorting = False
-          Width = 50
-          Position.BandIndex = 0
-          Position.ColIndex = 2
-          Position.RowIndex = 0
-        end
-        object lucSystemUser: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'USER_ID'
-          PropertiesClassName = 'TcxLookupComboBoxProperties'
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DropDownAutoSize = True
-          Properties.ImmediatePost = True
-          Properties.KeyFieldNames = 'ID'
-          Properties.ListColumns = <
-            item
-              Caption = 'User Name'
-              FieldName = 'LOGIN_NAME'
-            end>
-          Properties.ListOptions.CaseInsensitive = True
-          Properties.ListOptions.SyncMode = True
-          Properties.PostPopupValueOnTab = True
-          Properties.ReadOnly = False
-          MinWidth = 120
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Width = 120
-          Position.BandIndex = 0
-          Position.ColIndex = 3
-          Position.RowIndex = 0
-        end
-        object edtTSPeriod: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'THE_PERIOD'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DecimalPlaces = 0
-          Properties.DisplayFormat = '#####0'
-          Properties.EditFormat = '#####0'
-          Properties.ReadOnly = True
-          MinWidth = 65
-          Options.Editing = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Width = 65
-          Position.BandIndex = 0
-          Position.ColIndex = 4
-          Position.RowIndex = 0
-        end
-        object lucTSActivityDate: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'ACTIVITY_DATE'
-          PropertiesClassName = 'TcxDateEditProperties'
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DisplayFormat = 'dd/MM/yyyy'
-          Properties.EditFormat = 'dd/MM/yyyy'
-          Properties.ImmediatePost = True
-          Properties.PostPopupValueOnTab = True
-          Properties.SaveTime = False
-          Properties.ShowOnlyValidDates = True
-          Properties.ShowTime = False
-          MinWidth = 90
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Width = 90
-          Position.BandIndex = 0
-          Position.ColIndex = 5
-          Position.RowIndex = 0
-        end
-        object lucPriceList: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'PRICE_LIST_ITEM_ID'
-          PropertiesClassName = 'TcxLookupComboBoxProperties'
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DropDownAutoSize = True
-          Properties.ImmediatePost = True
-          Properties.KeyFieldNames = 'ID'
-          Properties.ListColumns = <
-            item
-              Width = 850
-              FieldName = 'NAME'
-            end
-            item
-              HeaderAlignment = taRightJustify
-              Width = 50
-              FieldName = 'RATE'
-            end
-            item
-              Width = 120
-              FieldName = 'RATE_UNIT'
-            end>
-          Properties.PostPopupValueOnTab = True
-          Properties.ReadOnly = False
-          MinWidth = 300
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Options.Sorting = False
-          Width = 300
-          Position.BandIndex = 0
-          Position.ColIndex = 6
-          Position.RowIndex = 0
-        end
-        object lucRateUnit: TcxGridDBBandedColumn
-          Caption = 'Rate'
-          DataBinding.FieldName = 'RATE_UNIT_ID'
-          PropertiesClassName = 'TcxLookupComboBoxProperties'
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DropDownAutoSize = True
-          Properties.ImmediatePost = True
-          Properties.KeyFieldNames = 'ID'
-          Properties.ListColumns = <
-            item
-              FieldName = 'NAME'
-            end>
-          Properties.ReadOnly = False
-          MinWidth = 60
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Options.Sorting = False
-          Width = 60
-          Position.BandIndex = 0
-          Position.ColIndex = 7
-          Position.RowIndex = 0
-        end
-        object lucActivityType: TcxGridDBBandedColumn
-          Caption = 'Activty Type'
-          DataBinding.FieldName = 'ACTIVITY_TYPE_ID'
-          PropertiesClassName = 'TcxLookupComboBoxProperties'
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DropDownAutoSize = True
-          Properties.ImmediatePost = True
-          Properties.KeyFieldNames = 'ID'
-          Properties.ListColumns = <
-            item
-              FieldName = 'NAME'
-            end>
-          Properties.PostPopupValueOnTab = True
-          MinWidth = 300
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Options.Sorting = False
-          Width = 300
-          Position.BandIndex = 0
-          Position.ColIndex = 8
-          Position.RowIndex = 0
-        end
-        object edtTSActivity: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'ACTIVITY'
-          PropertiesClassName = 'TcxMemoProperties'
-          Options.Filtering = False
-          Options.Sorting = False
-          Width = 400
-          Position.BandIndex = 0
-          Position.ColIndex = 9
-          Position.RowIndex = 0
-        end
-        object edtTSTimeMins: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'TIME_SPENT'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.Alignment.Horz = taRightJustify
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DisplayFormat = '###,##0'
-          Properties.EditFormat = '###,##0'
-          Properties.UseDisplayFormatWhenEditing = True
-          Properties.UseLeftAlignmentOnEditing = False
-          HeaderAlignmentHorz = taRightJustify
-          MinWidth = 50
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Options.Sorting = False
-          Width = 50
-          Position.BandIndex = 1
-          Position.ColIndex = 0
-          Position.RowIndex = 0
-        end
-        object edtTSTimeHours: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'TIME_HOURS'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = '###,##0.00'
-          Properties.EditFormat = '###,##0.00'
-          Properties.ReadOnly = True
-          HeaderAlignmentHorz = taRightJustify
-          MinWidth = 50
-          Options.Editing = False
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Options.Sorting = False
-          Width = 50
-          Position.BandIndex = 1
-          Position.ColIndex = 1
-          Position.RowIndex = 0
-        end
-        object edtTSRate: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'ACTUAL_RATE'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.Alignment.Horz = taRightJustify
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DisplayFormat = '###,##0.00'
-          Properties.EditFormat = '###,##0.00'
-          Properties.UseDisplayFormatWhenEditing = True
-          Properties.UseLeftAlignmentOnEditing = False
-          HeaderAlignmentHorz = taRightJustify
-          MinWidth = 75
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Options.Sorting = False
-          Width = 75
-          Position.BandIndex = 1
-          Position.ColIndex = 2
-          Position.RowIndex = 0
-        end
-        object edtTSStdRate: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'STD_RATE'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.Alignment.Horz = taRightJustify
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DisplayFormat = '###,##0.00'
-          Properties.EditFormat = '###,##0.00'
-          Properties.ReadOnly = True
-          Properties.UseDisplayFormatWhenEditing = True
-          Properties.UseLeftAlignmentOnEditing = False
-          HeaderAlignmentHorz = taRightJustify
-          MinWidth = 75
-          Options.Editing = False
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Options.Sorting = False
-          Width = 75
-          Position.BandIndex = 1
-          Position.ColIndex = 3
-          Position.RowIndex = 0
-        end
-        object edtTSItemValue: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'ITEM_VALUE'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.Alignment.Horz = taRightJustify
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DisplayFormat = '###,##0.00'
-          Properties.EditFormat = '###,##0.00'
-          Properties.ReadOnly = True
-          Properties.UseDisplayFormatWhenEditing = True
-          Properties.UseLeftAlignmentOnEditing = False
-          HeaderAlignmentHorz = taRightJustify
-          MinWidth = 80
-          Options.Editing = False
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Options.Sorting = False
-          Width = 80
-          Position.BandIndex = 1
-          Position.ColIndex = 4
-          Position.RowIndex = 0
-        end
-        object edtTSInvID: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'INVOICE_ID'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DecimalPlaces = 0
-          Properties.DisplayFormat = '######0'
-          Properties.EditFormat = '######0'
-          Properties.ReadOnly = True
-          MinWidth = 75
-          Options.Editing = False
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Options.Sorting = False
-          Width = 75
-          Position.BandIndex = 2
-          Position.ColIndex = 4
-          Position.RowIndex = 0
-        end
-        object edtTSCreditnoteID: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'CN_ID'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.Alignment.Vert = taTopJustify
-          Properties.DecimalPlaces = 0
-          Properties.DisplayFormat = '######0'
-          Properties.EditFormat = '######0'
-          Properties.ReadOnly = True
-          MinWidth = 75
-          Options.Editing = False
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Options.Sorting = False
-          Width = 75
-          Position.BandIndex = 2
-          Position.ColIndex = 6
-          Position.RowIndex = 0
-        end
-        object cbxTSLocked: TcxGridDBBandedColumn
-          Caption = 'Lock'
-          DataBinding.FieldName = 'LOCKED'
-          PropertiesClassName = 'TcxCheckBoxProperties'
-          Properties.Alignment = taCenter
-          Properties.ReadOnly = True
-          Properties.UseAlignmentWhenInplace = True
-          Properties.ValueChecked = 1
-          Properties.ValueUnchecked = 0
-          HeaderAlignmentHorz = taCenter
-          MinWidth = 40
-          Options.Editing = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Width = 40
-          Position.BandIndex = 2
-          Position.ColIndex = 7
-          Position.RowIndex = 0
-        end
-        object edtTSModified: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'DATE_MODIFIED'
-          Visible = False
-          Width = 80
-          Position.BandIndex = 0
-          Position.ColIndex = 10
-          Position.RowIndex = 0
-        end
-        object cbxTSBillable: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'BILLABLE'
-          PropertiesClassName = 'TcxCheckBoxProperties'
-          Properties.Alignment = taCenter
-          Properties.UseAlignmentWhenInplace = True
-          Properties.ValueChecked = 1
-          Properties.ValueUnchecked = 0
-          HeaderAlignmentHorz = taCenter
-          MinWidth = 50
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Width = 50
-          Position.BandIndex = 2
-          Position.ColIndex = 0
-          Position.RowIndex = 0
-        end
-        object edtTSInvoiceDate: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'INVOICE_DATE'
-          PropertiesClassName = 'TcxDateEditProperties'
-          Properties.DisplayFormat = 'dd/MM/yyyy'
-          Properties.EditFormat = 'dd/MM/yyyy'
-          Properties.ReadOnly = True
-          Properties.SaveTime = False
-          Properties.ShowTime = False
-          MinWidth = 90
-          Options.Editing = False
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Width = 90
-          Position.BandIndex = 2
-          Position.ColIndex = 5
-          Position.RowIndex = 0
-        end
-        object cbxTSCarryForward: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'CARRY_FORWARD'
-          PropertiesClassName = 'TcxCheckBoxProperties'
-          Properties.Alignment = taCenter
-          Properties.UseAlignmentWhenInplace = True
-          Properties.ValueChecked = 1
-          Properties.ValueUnchecked = 0
-          HeaderAlignmentHorz = taCenter
-          MinWidth = 50
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Width = 50
-          Position.BandIndex = 2
-          Position.ColIndex = 3
-          Position.RowIndex = 0
-        end
-        object cbxTSApproved: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'APPROVED'
-          PropertiesClassName = 'TcxCheckBoxProperties'
-          Properties.Alignment = taCenter
-          Properties.UseAlignmentWhenInplace = True
-          Properties.ValueChecked = 1
-          Properties.ValueUnchecked = 0
-          HeaderAlignmentHorz = taCenter
-          MinWidth = 50
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Width = 50
-          Position.BandIndex = 2
-          Position.ColIndex = 2
-          Position.RowIndex = 0
-        end
-        object cbxTSAddWork: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'IS_ADDITIONAL_WORK'
-          PropertiesClassName = 'TcxCheckBoxProperties'
-          Properties.Alignment = taRightJustify
-          Properties.UseAlignmentWhenInplace = True
-          Properties.ValueChecked = 1
-          Properties.ValueUnchecked = 0
-          HeaderAlignmentHorz = taCenter
-          MinWidth = 50
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Width = 50
-          Position.BandIndex = 2
-          Position.ColIndex = 1
-          Position.RowIndex = 0
-        end
-        object edtTSCGrpID: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'CUSTOMER_GROUP_ID'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = '######0'
-          Properties.EditFormat = '######0'
-          Properties.ReadOnly = True
-          Visible = False
-          MinWidth = 74
-          Options.Editing = False
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Position.BandIndex = 0
-          Position.ColIndex = 11
-          Position.RowIndex = 0
-        end
-      end
-      object lvlTimesheet: TcxGridLevel
-        GridView = viewTimesheet
-      end
-    end
-    object grdBillableSummary: TcxGrid [3]
+    object grdBillableSummary: TcxGrid [1]
       Left = 11
       Top = 75
-      Width = 1087
+      Width = 1104
       Height = 350
       TabOrder = 1
       object viewBillable: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
+        OnCustomDrawCell = viewBillableCustomDrawCell
         OnFocusedRecordChanged = viewBillableFocusedRecordChanged
         DataController.DataSource = ReportDM.dtsBillableSummary
         DataController.Options = [dcoCaseInsensitive, dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding]
@@ -1390,6 +269,1220 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
         GridView = viewBillable
       end
     end
+    object grdCarryForwardDetail: TcxGrid [2]
+      Left = 25
+      Top = 468
+      Width = 1073
+      Height = 210
+      TabOrder = 3
+      object viewCarryForwardDetail: TcxGridDBBandedTableView
+        Tag = 1
+        OnDblClick = viewTimesheetDblClick
+        Navigator.Buttons.CustomButtons = <>
+        ScrollbarAnnotations.CustomAnnotations = <>
+        OnCustomDrawCell = viewBillableCustomDrawCell
+        DataController.DataSource = ReportDM.dtsTimesheetCF
+        DataController.Summary.DefaultGroupSummaryItems = <>
+        DataController.Summary.FooterSummaryItems = <
+          item
+            Format = '#,###,##0.00'
+            Kind = skSum
+            FieldName = 'TIME_HOURS'
+            Column = edtCFTimeHours
+          end
+          item
+            Format = '#,###,##0.00'
+            Kind = skSum
+            FieldName = 'ITEM_VALUE'
+            Column = edtCFItemValue
+          end>
+        DataController.Summary.SummaryGroups = <>
+        OptionsBehavior.CellHints = True
+        OptionsBehavior.FocusCellOnTab = True
+        OptionsBehavior.FocusCellOnCycle = True
+        OptionsCustomize.ColumnsQuickCustomization = True
+        OptionsView.NoDataToDisplayInfoText = '<No Carry Forward data to display>'
+        OptionsView.ExpandButtonsForEmptyDetails = False
+        OptionsView.Footer = True
+        OptionsView.GroupByBox = False
+        OptionsView.ShowColumnFilterButtons = sfbAlways
+        Bands = <
+          item
+            Caption = 'Timesheet Detail'
+          end
+          item
+            Caption = 'Time/Values'
+          end
+          item
+            Caption = 'Other'
+          end>
+        object edtCFID: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'ID'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = '######0'
+          Properties.EditFormat = '######0'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 50
+          Options.Editing = False
+          Options.Filtering = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 50
+          Position.BandIndex = 0
+          Position.ColIndex = 0
+          Position.RowIndex = 0
+        end
+        object edtCFCustomerID: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'CUSTOMER_ID'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = '######0'
+          Properties.EditFormat = '######0'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 50
+          Options.Editing = False
+          Options.Filtering = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 50
+          Position.BandIndex = 0
+          Position.ColIndex = 1
+          Position.RowIndex = 0
+        end
+        object edtCFPIID: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'PRICE_ITEM_ID'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 50
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 50
+          Position.BandIndex = 0
+          Position.ColIndex = 2
+          Position.RowIndex = 0
+        end
+        object lucCFSystemuser: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'USER_ID'
+          PropertiesClassName = 'TcxLookupComboBoxProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DropDownAutoSize = True
+          Properties.ImmediatePost = True
+          Properties.KeyFieldNames = 'ID'
+          Properties.ListColumns = <
+            item
+              Caption = 'User Name'
+              FieldName = 'LOGIN_NAME'
+            end>
+          Properties.ListOptions.CaseInsensitive = True
+          Properties.ListOptions.SyncMode = True
+          Properties.ListSource = ReportDM.dtsSystemUser2
+          Properties.PostPopupValueOnTab = True
+          Properties.ReadOnly = True
+          MinWidth = 120
+          Options.Editing = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 120
+          Position.BandIndex = 0
+          Position.ColIndex = 3
+          Position.RowIndex = 0
+        end
+        object edtCFPeriod: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'THE_PERIOD'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = '#####0'
+          Properties.EditFormat = '#####0'
+          Properties.ReadOnly = True
+          MinWidth = 65
+          Options.Editing = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 65
+          Position.BandIndex = 0
+          Position.ColIndex = 4
+          Position.RowIndex = 0
+        end
+        object lucCFActivityDate: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'ACTIVITY_DATE'
+          PropertiesClassName = 'TcxDateEditProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DisplayFormat = 'dd/MM/yyyy'
+          Properties.EditFormat = 'dd/MM/yyyy'
+          Properties.ImmediatePost = True
+          Properties.PostPopupValueOnTab = True
+          Properties.ReadOnly = True
+          Properties.SaveTime = False
+          Properties.ShowOnlyValidDates = True
+          Properties.ShowTime = False
+          MinWidth = 90
+          Options.Editing = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 90
+          Position.BandIndex = 0
+          Position.ColIndex = 5
+          Position.RowIndex = 0
+        end
+        object lucCFPriceList: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'PRICE_LIST_ITEM_ID'
+          PropertiesClassName = 'TcxLookupComboBoxProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DropDownAutoSize = True
+          Properties.ImmediatePost = True
+          Properties.KeyFieldNames = 'ID'
+          Properties.ListColumns = <
+            item
+              Width = 850
+              FieldName = 'NAME'
+            end
+            item
+              HeaderAlignment = taRightJustify
+              Width = 50
+              FieldName = 'RATE'
+            end
+            item
+              Width = 120
+              FieldName = 'RATE_UNIT'
+            end>
+          Properties.ListSource = ReportDM.dtsPriceList2
+          Properties.PostPopupValueOnTab = True
+          Properties.ReadOnly = True
+          MinWidth = 300
+          Options.Editing = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 300
+          Position.BandIndex = 0
+          Position.ColIndex = 6
+          Position.RowIndex = 0
+        end
+        object lucCFRateUnit: TcxGridDBBandedColumn
+          Caption = 'Rate'
+          DataBinding.FieldName = 'RATE_UNIT_ID'
+          PropertiesClassName = 'TcxLookupComboBoxProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DropDownAutoSize = True
+          Properties.ImmediatePost = True
+          Properties.KeyFieldNames = 'ID'
+          Properties.ListColumns = <
+            item
+              FieldName = 'NAME'
+            end>
+          Properties.ListSource = ReportDM.dtsRateUnit2
+          Properties.ReadOnly = True
+          MinWidth = 60
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 60
+          Position.BandIndex = 0
+          Position.ColIndex = 7
+          Position.RowIndex = 0
+        end
+        object lucCFActivityType: TcxGridDBBandedColumn
+          Caption = 'Activty Type'
+          DataBinding.FieldName = 'ACTIVITY_TYPE_ID'
+          PropertiesClassName = 'TcxLookupComboBoxProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DropDownAutoSize = True
+          Properties.ImmediatePost = True
+          Properties.KeyFieldNames = 'ID'
+          Properties.ListColumns = <
+            item
+              FieldName = 'NAME'
+            end>
+          Properties.ListSource = ReportDM.dtsActivityType2
+          Properties.PostPopupValueOnTab = True
+          Properties.ReadOnly = True
+          MinWidth = 300
+          Options.Editing = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 300
+          Position.BandIndex = 0
+          Position.ColIndex = 8
+          Position.RowIndex = 0
+        end
+        object edtCFActivity: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'ACTIVITY'
+          PropertiesClassName = 'TcxMemoProperties'
+          Properties.ReadOnly = True
+          MinWidth = 400
+          Options.Editing = False
+          Options.Filtering = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 400
+          Position.BandIndex = 0
+          Position.ColIndex = 9
+          Position.RowIndex = 0
+        end
+        object edtCFTimeMins: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'TIME_SPENT'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DisplayFormat = '###,##0'
+          Properties.EditFormat = '###,##0'
+          Properties.ReadOnly = True
+          Properties.UseDisplayFormatWhenEditing = True
+          Properties.UseLeftAlignmentOnEditing = False
+          HeaderAlignmentHorz = taRightJustify
+          MinWidth = 50
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 50
+          Position.BandIndex = 1
+          Position.ColIndex = 0
+          Position.RowIndex = 0
+        end
+        object edtCFTimeHours: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'TIME_HOURS'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = '###,##0.00'
+          Properties.EditFormat = '###,##0.00'
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taRightJustify
+          MinWidth = 50
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 50
+          Position.BandIndex = 1
+          Position.ColIndex = 1
+          Position.RowIndex = 0
+        end
+        object edtCFRate: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'ACTUAL_RATE'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DisplayFormat = '###,##0.00'
+          Properties.EditFormat = '###,##0.00'
+          Properties.ReadOnly = True
+          Properties.UseDisplayFormatWhenEditing = True
+          Properties.UseLeftAlignmentOnEditing = False
+          HeaderAlignmentHorz = taRightJustify
+          MinWidth = 75
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 75
+          Position.BandIndex = 1
+          Position.ColIndex = 2
+          Position.RowIndex = 0
+        end
+        object edtCFStdRate: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'STD_RATE'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DisplayFormat = '###,##0.00'
+          Properties.EditFormat = '###,##0.00'
+          Properties.ReadOnly = True
+          Properties.UseDisplayFormatWhenEditing = True
+          Properties.UseLeftAlignmentOnEditing = False
+          HeaderAlignmentHorz = taRightJustify
+          MinWidth = 75
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 75
+          Position.BandIndex = 1
+          Position.ColIndex = 3
+          Position.RowIndex = 0
+        end
+        object edtCFItemValue: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'ITEM_VALUE'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DisplayFormat = '###,##0.00'
+          Properties.EditFormat = '###,##0.00'
+          Properties.ReadOnly = True
+          Properties.UseDisplayFormatWhenEditing = True
+          Properties.UseLeftAlignmentOnEditing = False
+          HeaderAlignmentHorz = taRightJustify
+          MinWidth = 80
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 80
+          Position.BandIndex = 1
+          Position.ColIndex = 4
+          Position.RowIndex = 0
+        end
+        object edtCFInvID: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'INVOICE_ID'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = '######0'
+          Properties.EditFormat = '######0'
+          Properties.ReadOnly = True
+          MinWidth = 75
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 75
+          Position.BandIndex = 2
+          Position.ColIndex = 4
+          Position.RowIndex = 0
+        end
+        object edtCFCreditnoteID: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'CN_ID'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = '######0'
+          Properties.EditFormat = '######0'
+          Properties.ReadOnly = True
+          MinWidth = 75
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 75
+          Position.BandIndex = 2
+          Position.ColIndex = 6
+          Position.RowIndex = 0
+        end
+        object cbxCFLocked: TcxGridDBBandedColumn
+          Caption = 'Lock'
+          DataBinding.FieldName = 'LOCKED'
+          PropertiesClassName = 'TcxCheckBoxProperties'
+          Properties.Alignment = taCenter
+          Properties.ReadOnly = True
+          Properties.UseAlignmentWhenInplace = True
+          Properties.ValueChecked = 1
+          Properties.ValueUnchecked = 0
+          HeaderAlignmentHorz = taCenter
+          MinWidth = 40
+          Options.Editing = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 40
+          Position.BandIndex = 2
+          Position.ColIndex = 7
+          Position.RowIndex = 0
+        end
+        object lucCFModified: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'DATE_MODIFIED'
+          PropertiesClassName = 'TcxDateEditProperties'
+          Properties.DisplayFormat = 'dd/MM/yyyy'
+          Properties.EditFormat = 'dd/MM/yyyy'
+          Properties.ReadOnly = True
+          Properties.SaveTime = False
+          Properties.ShowTime = False
+          Visible = False
+          MinWidth = 80
+          Options.Editing = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 80
+          Position.BandIndex = 0
+          Position.ColIndex = 10
+          Position.RowIndex = 0
+        end
+        object cbxCFBillable: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'BILLABLE'
+          PropertiesClassName = 'TcxCheckBoxProperties'
+          Properties.Alignment = taCenter
+          Properties.ReadOnly = True
+          Properties.UseAlignmentWhenInplace = True
+          Properties.ValueChecked = 1
+          Properties.ValueUnchecked = 0
+          HeaderAlignmentHorz = taCenter
+          MinWidth = 40
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 40
+          Position.BandIndex = 2
+          Position.ColIndex = 0
+          Position.RowIndex = 0
+        end
+        object edtCFInvoiceDate: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'INVOICE_DATE'
+          PropertiesClassName = 'TcxDateEditProperties'
+          Properties.DisplayFormat = 'dd/MM/yyyy'
+          Properties.EditFormat = 'dd/MM/yyyy'
+          Properties.ReadOnly = True
+          Properties.SaveTime = False
+          Properties.ShowTime = False
+          MinWidth = 90
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 90
+          Position.BandIndex = 2
+          Position.ColIndex = 5
+          Position.RowIndex = 0
+        end
+        object cbxCFCarryForward: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'CARRY_FORWARD'
+          PropertiesClassName = 'TcxCheckBoxProperties'
+          Properties.Alignment = taCenter
+          Properties.ReadOnly = True
+          Properties.UseAlignmentWhenInplace = True
+          Properties.ValueChecked = 1
+          Properties.ValueUnchecked = 0
+          HeaderAlignmentHorz = taCenter
+          MinWidth = 50
+          Options.Editing = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 50
+          Position.BandIndex = 2
+          Position.ColIndex = 3
+          Position.RowIndex = 0
+        end
+        object cbxCFApproved: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'APPROVED'
+          PropertiesClassName = 'TcxCheckBoxProperties'
+          Properties.Alignment = taCenter
+          Properties.ReadOnly = True
+          Properties.UseAlignmentWhenInplace = True
+          Properties.ValueChecked = 1
+          Properties.ValueUnchecked = 0
+          HeaderAlignmentHorz = taCenter
+          MinWidth = 50
+          Options.Editing = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 50
+          Position.BandIndex = 2
+          Position.ColIndex = 2
+          Position.RowIndex = 0
+        end
+        object cbxCFAddWork: TcxGridDBBandedColumn
+          Caption = 'Ad Wk'
+          DataBinding.FieldName = 'IS_ADDITIONAL_WORK'
+          PropertiesClassName = 'TcxCheckBoxProperties'
+          Properties.Alignment = taRightJustify
+          Properties.ReadOnly = True
+          Properties.UseAlignmentWhenInplace = True
+          Properties.ValueChecked = 1
+          Properties.ValueUnchecked = 0
+          HeaderAlignmentHorz = taCenter
+          MinWidth = 45
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 45
+          Position.BandIndex = 2
+          Position.ColIndex = 1
+          Position.RowIndex = 0
+        end
+        object edtCFCGID: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'CUSTOMER_GROUP_ID'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = '######0'
+          Properties.EditFormat = '######0'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 74
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Position.BandIndex = 0
+          Position.ColIndex = 11
+          Position.RowIndex = 0
+        end
+      end
+      object lvlCarryForwardDetail: TcxGridLevel
+        GridView = viewCarryForwardDetail
+      end
+    end
+    object grdTimesheet: TcxGrid [3]
+      Left = 10000
+      Top = 10000
+      Width = 1073
+      Height = 210
+      TabOrder = 2
+      Visible = False
+      object viewTimesheet: TcxGridDBBandedTableView
+        OnDblClick = viewTimesheetDblClick
+        Navigator.Buttons.CustomButtons = <>
+        ScrollbarAnnotations.CustomAnnotations = <>
+        OnCustomDrawCell = viewBillableCustomDrawCell
+        DataController.DataSource = ReportDM.dtsTimesheetDetail
+        DataController.Summary.DefaultGroupSummaryItems = <>
+        DataController.Summary.FooterSummaryItems = <
+          item
+            Format = '#,###,##0.00'
+            Kind = skSum
+            FieldName = 'TIME_HOURS'
+            Column = edtTSTimeHours
+          end
+          item
+            Format = '#,###,##0.00'
+            Kind = skSum
+            FieldName = 'ITEM_VALUE'
+            Column = edtTSItemValue
+          end>
+        DataController.Summary.SummaryGroups = <>
+        OptionsBehavior.CellHints = True
+        OptionsBehavior.FocusCellOnTab = True
+        OptionsBehavior.FocusCellOnCycle = True
+        OptionsCustomize.ColumnsQuickCustomization = True
+        OptionsView.NoDataToDisplayInfoText = '<No Timesheet data to display>'
+        OptionsView.ExpandButtonsForEmptyDetails = False
+        OptionsView.Footer = True
+        OptionsView.GroupByBox = False
+        OptionsView.ShowColumnFilterButtons = sfbAlways
+        Bands = <
+          item
+            Caption = 'Timesheet Detail'
+          end
+          item
+            Caption = 'Time/Values'
+          end
+          item
+            Caption = 'Other'
+          end>
+        object edtTSID: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'ID'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = '######0'
+          Properties.EditFormat = '######0'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 50
+          Options.Editing = False
+          Options.Filtering = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 50
+          Position.BandIndex = 0
+          Position.ColIndex = 0
+          Position.RowIndex = 0
+        end
+        object edtTSCID: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'CUSTOMER_ID'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = '######0'
+          Properties.EditFormat = '######0'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 50
+          Options.Editing = False
+          Options.Filtering = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 50
+          Position.BandIndex = 0
+          Position.ColIndex = 1
+          Position.RowIndex = 0
+        end
+        object edtTSPID: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'PRICE_ITEM_ID'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 50
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 50
+          Position.BandIndex = 0
+          Position.ColIndex = 2
+          Position.RowIndex = 0
+        end
+        object lucSystemUser: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'USER_ID'
+          PropertiesClassName = 'TcxLookupComboBoxProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DropDownAutoSize = True
+          Properties.ImmediatePost = True
+          Properties.KeyFieldNames = 'ID'
+          Properties.ListColumns = <
+            item
+              Caption = 'User Name'
+              FieldName = 'LOGIN_NAME'
+            end>
+          Properties.ListOptions.CaseInsensitive = True
+          Properties.ListOptions.SyncMode = True
+          Properties.ListSource = ReportDM.dtsSystemUser1
+          Properties.PostPopupValueOnTab = True
+          Properties.ReadOnly = True
+          MinWidth = 120
+          Options.Editing = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 120
+          Position.BandIndex = 0
+          Position.ColIndex = 3
+          Position.RowIndex = 0
+        end
+        object edtTSPeriod: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'THE_PERIOD'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = '#####0'
+          Properties.EditFormat = '#####0'
+          Properties.ReadOnly = True
+          MinWidth = 65
+          Options.Editing = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 65
+          Position.BandIndex = 0
+          Position.ColIndex = 4
+          Position.RowIndex = 0
+        end
+        object lucTSActivityDate: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'ACTIVITY_DATE'
+          PropertiesClassName = 'TcxDateEditProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DisplayFormat = 'dd/MM/yyyy'
+          Properties.EditFormat = 'dd/MM/yyyy'
+          Properties.ImmediatePost = True
+          Properties.PostPopupValueOnTab = True
+          Properties.ReadOnly = True
+          Properties.SaveTime = False
+          Properties.ShowOnlyValidDates = True
+          Properties.ShowTime = False
+          MinWidth = 90
+          Options.Editing = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 90
+          Position.BandIndex = 0
+          Position.ColIndex = 5
+          Position.RowIndex = 0
+        end
+        object lucPriceList: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'PRICE_LIST_ITEM_ID'
+          PropertiesClassName = 'TcxLookupComboBoxProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DropDownAutoSize = True
+          Properties.ImmediatePost = True
+          Properties.KeyFieldNames = 'ID'
+          Properties.ListColumns = <
+            item
+              Width = 850
+              FieldName = 'NAME'
+            end
+            item
+              HeaderAlignment = taRightJustify
+              Width = 50
+              FieldName = 'RATE'
+            end
+            item
+              Width = 120
+              FieldName = 'RATE_UNIT'
+            end>
+          Properties.ListSource = ReportDM.dtsPriceList1
+          Properties.PostPopupValueOnTab = True
+          Properties.ReadOnly = True
+          MinWidth = 300
+          Options.Editing = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 300
+          Position.BandIndex = 0
+          Position.ColIndex = 6
+          Position.RowIndex = 0
+        end
+        object lucRateUnit: TcxGridDBBandedColumn
+          Caption = 'Rate'
+          DataBinding.FieldName = 'RATE_UNIT_ID'
+          PropertiesClassName = 'TcxLookupComboBoxProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DropDownAutoSize = True
+          Properties.ImmediatePost = True
+          Properties.KeyFieldNames = 'ID'
+          Properties.ListColumns = <
+            item
+              FieldName = 'NAME'
+            end>
+          Properties.ListSource = ReportDM.dtsRateUnit1
+          Properties.ReadOnly = True
+          MinWidth = 60
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 60
+          Position.BandIndex = 0
+          Position.ColIndex = 7
+          Position.RowIndex = 0
+        end
+        object lucActivityType: TcxGridDBBandedColumn
+          Caption = 'Activty Type'
+          DataBinding.FieldName = 'ACTIVITY_TYPE_ID'
+          PropertiesClassName = 'TcxLookupComboBoxProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DropDownAutoSize = True
+          Properties.ImmediatePost = True
+          Properties.KeyFieldNames = 'ID'
+          Properties.ListColumns = <
+            item
+              FieldName = 'NAME'
+            end>
+          Properties.ListSource = ReportDM.dtsActivityType1
+          Properties.PostPopupValueOnTab = True
+          Properties.ReadOnly = True
+          MinWidth = 300
+          Options.Editing = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 300
+          Position.BandIndex = 0
+          Position.ColIndex = 8
+          Position.RowIndex = 0
+        end
+        object edtTSActivity: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'ACTIVITY'
+          PropertiesClassName = 'TcxMemoProperties'
+          Properties.ReadOnly = True
+          MinWidth = 400
+          Options.Editing = False
+          Options.Filtering = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 400
+          Position.BandIndex = 0
+          Position.ColIndex = 9
+          Position.RowIndex = 0
+        end
+        object edtTSTimeMins: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'TIME_SPENT'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DisplayFormat = '###,##0'
+          Properties.EditFormat = '###,##0'
+          Properties.ReadOnly = True
+          Properties.UseDisplayFormatWhenEditing = True
+          Properties.UseLeftAlignmentOnEditing = False
+          HeaderAlignmentHorz = taRightJustify
+          MinWidth = 50
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 50
+          Position.BandIndex = 1
+          Position.ColIndex = 0
+          Position.RowIndex = 0
+        end
+        object edtTSTimeHours: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'TIME_HOURS'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = '###,##0.00'
+          Properties.EditFormat = '###,##0.00'
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taRightJustify
+          MinWidth = 50
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 50
+          Position.BandIndex = 1
+          Position.ColIndex = 1
+          Position.RowIndex = 0
+        end
+        object edtTSRate: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'ACTUAL_RATE'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DisplayFormat = '###,##0.00'
+          Properties.EditFormat = '###,##0.00'
+          Properties.ReadOnly = True
+          Properties.UseDisplayFormatWhenEditing = True
+          Properties.UseLeftAlignmentOnEditing = False
+          HeaderAlignmentHorz = taRightJustify
+          MinWidth = 75
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 75
+          Position.BandIndex = 1
+          Position.ColIndex = 2
+          Position.RowIndex = 0
+        end
+        object edtTSStdRate: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'STD_RATE'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DisplayFormat = '###,##0.00'
+          Properties.EditFormat = '###,##0.00'
+          Properties.ReadOnly = True
+          Properties.UseDisplayFormatWhenEditing = True
+          Properties.UseLeftAlignmentOnEditing = False
+          HeaderAlignmentHorz = taRightJustify
+          MinWidth = 75
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 75
+          Position.BandIndex = 1
+          Position.ColIndex = 3
+          Position.RowIndex = 0
+        end
+        object edtTSItemValue: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'ITEM_VALUE'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DisplayFormat = '###,##0.00'
+          Properties.EditFormat = '###,##0.00'
+          Properties.ReadOnly = True
+          Properties.UseDisplayFormatWhenEditing = True
+          Properties.UseLeftAlignmentOnEditing = False
+          HeaderAlignmentHorz = taRightJustify
+          MinWidth = 80
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 80
+          Position.BandIndex = 1
+          Position.ColIndex = 4
+          Position.RowIndex = 0
+        end
+        object edtTSInvID: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'INVOICE_ID'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = '######0'
+          Properties.EditFormat = '######0'
+          Properties.ReadOnly = True
+          MinWidth = 75
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 75
+          Position.BandIndex = 2
+          Position.ColIndex = 4
+          Position.RowIndex = 0
+        end
+        object edtTSCreditnoteID: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'CN_ID'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = '######0'
+          Properties.EditFormat = '######0'
+          Properties.ReadOnly = True
+          MinWidth = 75
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 75
+          Position.BandIndex = 2
+          Position.ColIndex = 6
+          Position.RowIndex = 0
+        end
+        object cbxTSLocked: TcxGridDBBandedColumn
+          Caption = 'Lock'
+          DataBinding.FieldName = 'LOCKED'
+          PropertiesClassName = 'TcxCheckBoxProperties'
+          Properties.Alignment = taCenter
+          Properties.ReadOnly = True
+          Properties.UseAlignmentWhenInplace = True
+          Properties.ValueChecked = 1
+          Properties.ValueUnchecked = 0
+          HeaderAlignmentHorz = taCenter
+          MinWidth = 40
+          Options.Editing = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 40
+          Position.BandIndex = 2
+          Position.ColIndex = 7
+          Position.RowIndex = 0
+        end
+        object edtTSModified: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'DATE_MODIFIED'
+          PropertiesClassName = 'TcxDateEditProperties'
+          Properties.DisplayFormat = 'dd/MM/yyyy'
+          Properties.EditFormat = 'dd/MM/yyyy'
+          Properties.ReadOnly = True
+          Properties.SaveTime = False
+          Properties.ShowTime = False
+          Visible = False
+          MinWidth = 80
+          Options.Editing = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 80
+          Position.BandIndex = 0
+          Position.ColIndex = 10
+          Position.RowIndex = 0
+        end
+        object cbxTSBillable: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'BILLABLE'
+          PropertiesClassName = 'TcxCheckBoxProperties'
+          Properties.Alignment = taCenter
+          Properties.ReadOnly = True
+          Properties.UseAlignmentWhenInplace = True
+          Properties.ValueChecked = 1
+          Properties.ValueUnchecked = 0
+          HeaderAlignmentHorz = taCenter
+          MinWidth = 40
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 40
+          Position.BandIndex = 2
+          Position.ColIndex = 0
+          Position.RowIndex = 0
+        end
+        object edtTSInvoiceDate: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'INVOICE_DATE'
+          PropertiesClassName = 'TcxDateEditProperties'
+          Properties.DisplayFormat = 'dd/MM/yyyy'
+          Properties.EditFormat = 'dd/MM/yyyy'
+          Properties.ReadOnly = True
+          Properties.SaveTime = False
+          Properties.ShowTime = False
+          MinWidth = 90
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 90
+          Position.BandIndex = 2
+          Position.ColIndex = 5
+          Position.RowIndex = 0
+        end
+        object cbxTSCarryForward: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'CARRY_FORWARD'
+          PropertiesClassName = 'TcxCheckBoxProperties'
+          Properties.Alignment = taCenter
+          Properties.ReadOnly = True
+          Properties.UseAlignmentWhenInplace = True
+          Properties.ValueChecked = 1
+          Properties.ValueUnchecked = 0
+          HeaderAlignmentHorz = taCenter
+          MinWidth = 50
+          Options.Editing = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 50
+          Position.BandIndex = 2
+          Position.ColIndex = 3
+          Position.RowIndex = 0
+        end
+        object cbxTSApproved: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'APPROVED'
+          PropertiesClassName = 'TcxCheckBoxProperties'
+          Properties.Alignment = taCenter
+          Properties.ReadOnly = True
+          Properties.UseAlignmentWhenInplace = True
+          Properties.ValueChecked = 1
+          Properties.ValueUnchecked = 0
+          HeaderAlignmentHorz = taCenter
+          MinWidth = 50
+          Options.Editing = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 50
+          Position.BandIndex = 2
+          Position.ColIndex = 2
+          Position.RowIndex = 0
+        end
+        object cbxTSAddWork: TcxGridDBBandedColumn
+          Caption = 'Ad Wk'
+          DataBinding.FieldName = 'IS_ADDITIONAL_WORK'
+          PropertiesClassName = 'TcxCheckBoxProperties'
+          Properties.Alignment = taRightJustify
+          Properties.ReadOnly = True
+          Properties.UseAlignmentWhenInplace = True
+          Properties.ValueChecked = 1
+          Properties.ValueUnchecked = 0
+          HeaderAlignmentHorz = taCenter
+          MinWidth = 45
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 45
+          Position.BandIndex = 2
+          Position.ColIndex = 1
+          Position.RowIndex = 0
+        end
+        object edtTSCGrpID: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'CUSTOMER_GROUP_ID'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = '######0'
+          Properties.EditFormat = '######0'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 74
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Position.BandIndex = 0
+          Position.ColIndex = 11
+          Position.RowIndex = 0
+        end
+      end
+      object lvlTimesheet: TcxGridLevel
+        GridView = viewTimesheet
+      end
+    end
     inherited layMainGroup_Root: TdxLayoutGroup
       ItemIndex = 2
     end
@@ -1408,6 +1501,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       ButtonOptions.Buttons = <>
       ItemIndex = 1
       LayoutDirection = ldTabbed
+      ShowBorder = False
       Index = 2
     end
     object litToolbar: TdxLayoutItem
@@ -1431,20 +1525,24 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
     end
     object litTimesheet: TdxLayoutItem
       Parent = grpData
+      AlignHorz = ahClient
+      AlignVert = avClient
       CaptionOptions.Text = 'Timesheet Details'
       CaptionOptions.Visible = False
       Control = grdTimesheet
-      ControlOptions.OriginalHeight = 421
+      ControlOptions.OriginalHeight = 350
       ControlOptions.OriginalWidth = 1181
       ControlOptions.ShowBorder = False
       Index = 0
     end
     object litCarryForward: TdxLayoutItem
       Parent = grpData
+      AlignHorz = ahClient
+      AlignVert = avClient
       CaptionOptions.Text = 'Carry Forward Details'
       CaptionOptions.Visible = False
       Control = grdCarryForwardDetail
-      ControlOptions.OriginalHeight = 250
+      ControlOptions.OriginalHeight = 421
       ControlOptions.OriginalWidth = 1181
       ControlOptions.ShowBorder = False
       Index = 1
@@ -2355,14 +2453,20 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           ItemName = 'btnClose'
         end
         item
+          UserDefine = [udWidth]
+          UserWidth = 70
           Visible = True
           ItemName = 'lucFromPeriod'
         end
         item
+          UserDefine = [udWidth]
+          UserWidth = 70
           Visible = True
           ItemName = 'lucToPeriod'
         end
         item
+          UserDefine = [udWidth]
+          UserWidth = 90
           Visible = True
           ItemName = 'lucGroupBy'
         end
