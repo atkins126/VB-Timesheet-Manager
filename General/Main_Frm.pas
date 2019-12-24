@@ -185,6 +185,7 @@ type
     procedure DoRefreshLookupTables(Sender: TObject);
     procedure DoTimeSheetDetail(Sender: TObject);
     procedure DoBillableSummary(Sender: TObject);
+    procedure ribMainTabChanged(Sender: TdxCustomRibbon);
   private
     { Private declarations }
     FTSUserID: Integer;
@@ -597,7 +598,7 @@ begin
     BillableSummaryFrm.Close;
     FreeAndNil(BillableSummaryFrm);
   finally
-    ribMain.ActiveTab := tabTimesheet;
+//    ribMain.ActiveTab := tabTimesheet;
     Screen.Cursor := crDefault;
   end;
 end;
@@ -780,6 +781,12 @@ begin
   finally
     RegKey.Free
   end;
+end;
+
+procedure TMainFrm.ribMainTabChanged(Sender: TdxCustomRibbon);
+begin
+  inherited;
+  litTimesheet.Visible :=  ribMain.ActiveTab = tabTimesheet;
 end;
 
 procedure TMainFrm.viewTimesheetCustomDrawCell(Sender: TcxCustomGridTableView;

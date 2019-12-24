@@ -631,8 +631,8 @@ inherited MainFrm: TMainFrm
     Contexts = <>
     TabOrder = 2
     TabStop = False
+    OnTabChanged = ribMainTabChanged
     object tabTimesheet: TdxRibbonTab
-      Active = True
       Caption = 'Timesheet'
       Groups = <
         item
@@ -641,6 +641,7 @@ inherited MainFrm: TMainFrm
       Index = 0
     end
     object tabReports: TdxRibbonTab
+      Active = True
       Caption = 'Reports'
       Groups = <
         item
@@ -5615,6 +5616,7 @@ inherited MainFrm: TMainFrm
       Visible = ivAlways
       Width = 130
       PropertiesClassName = 'TcxLookupComboBoxProperties'
+      Properties.ImmediateDropDownWhenActivated = True
       Properties.ImmediatePost = True
       Properties.KeyFieldNames = 'ID'
       Properties.ListColumns = <

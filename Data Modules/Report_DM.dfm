@@ -406,6 +406,8 @@ inherited ReportDM: TReportDM
   object rptBillableSummaryByCustomer: TfrxReport
     Version = '6.2.1'
     DotMatrixReport = False
+    EngineOptions.DoublePass = True
+    EngineOptions.PrintIfEmpty = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick, pbCopy, pbSelection]
     PreviewOptions.Zoom = 1.000000000000000000
@@ -901,7 +903,7 @@ inherited ReportDM: TReportDM
       ''
       'end.')
     Left = 355
-    Top = 375
+    Top = 370
     Datasets = <
       item
         DataSetName = 'Timesheet'
@@ -1496,6 +1498,8 @@ inherited ReportDM: TReportDM
   object rptBillableSummaryByPeriod: TfrxReport
     Version = '6.2.1'
     DotMatrixReport = False
+    EngineOptions.DoublePass = True
+    EngineOptions.PrintIfEmpty = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick, pbCopy, pbSelection]
     PreviewOptions.Zoom = 1.000000000000000000

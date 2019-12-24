@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Forms,
   System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Dialogs, System.StrUtils,
   System.ImageList, Vcl.ImgList, System.Actions, Vcl.ActnList, Vcl.Menus,
-  Data.DB, Vcl.StdCtrls,
+  Data.DB, Vcl.StdCtrls, System.IOUtils,
 
   BaseLayout_Frm, VBCommonValues,
 
@@ -18,7 +18,7 @@ uses
   cxFilter, cxDataStorage, cxNavigator, dxDateRanges, dxScrollbarAnnotations,
   cxDBData, cxCurrencyEdit, cxCalendar, cxMemo, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridBandedTableView, cxGridDBBandedTableView, cxGridCustomView,
-  cxGrid;
+  cxGrid, dxPrnDev, dxPrnDlg;
 
 type
   TBillableSummaryFrm = class(TBaseLayoutFrm)
@@ -47,7 +47,7 @@ type
     litTimesheet: TdxLayoutItem;
     litCarryForward: TdxLayoutItem;
     grdBillableSummary: TcxGrid;
-    viewBillable: TcxGridDBBandedTableView;
+    viewBillableSummary: TcxGridDBBandedTableView;
     edtBCustomerID: TcxGridDBBandedColumn;
     edtBPeriod: TcxGridDBBandedColumn;
     edtBName: TcxGridDBBandedColumn;
@@ -56,7 +56,7 @@ type
     edtBNonHours: TcxGridDBBandedColumn;
     edtBNonValue: TcxGridDBBandedColumn;
     edtBCarryForward: TcxGridDBBandedColumn;
-    lvlBillable: TcxGridLevel;
+    lvlBillableSummary: TcxGridLevel;
     actGetData: TAction;
     grdCarryForwardDetail: TcxGrid;
     viewCarryForwardDetail: TcxGridDBBandedTableView;
@@ -114,6 +114,8 @@ type
     cbxTSAddWork: TcxGridDBBandedColumn;
     edtTSCGrpID: TcxGridDBBandedColumn;
     lvlTimesheet: TcxGridLevel;
+    dlgPrint: TdxPrintDialog;
+    dlgFileSave: TSaveDialog;
     procedure GetBillableSummary;
     procedure GetBillableTimesheet;
     procedure GetPeriods;
@@ -125,18 +127,20 @@ type
     procedure DoPDF(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure viewBillableFocusedRecordChanged(Sender: TcxCustomGridTableView;
+    procedure viewBillableSummaryFocusedRecordChanged(Sender: TcxCustomGridTableView;
       APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord;
       ANewItemRecordFocusingChanged: Boolean);
-    procedure viewBillableCustomDrawGroupCell(Sender: TcxCustomGridTableView;
+    procedure viewBillableSummaryCustomDrawGroupCell(Sender: TcxCustomGridTableView;
       ACanvas: TcxCanvas; AViewInfo: TcxGridTableCellViewInfo;
       var ADone: Boolean);
     procedure viewTimesheetDblClick(Sender: TObject);
-    procedure viewBillableCustomDrawCell(Sender: TcxCustomGridTableView;
+    procedure viewBillableSummaryCustomDrawCell(Sender: TcxCustomGridTableView;
       ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
       var ADone: Boolean);
   private
     { Private declarations }
+    FShowingForm: Boolean;
+
     procedure OpenTables;
     procedure GetSystemUser;
     procedure GetActivityType;
@@ -193,9 +197,58 @@ begin
 end;
 
 procedure TBillableSummaryFrm.DoPrint(Sender: TObject);
+var
+  AComboBox: TcxComboBox;
+  RepFileName: string;
 begin
   inherited;
-//
+  lucGroupBy.SetFocus;
+  AComboBox := TcxBarEditItemControl(lucGroupBy.Links[0].Control).Edit as TcxComboBox;
+  case AComboBox.ItemIndex of
+    0:
+      begin
+        edtBPeriod.GroupIndex := 0;
+        ReportDM.cdsBillableSummary.IndexName := 'idxBillablePeriod';
+        ReportDM.FReport := ReportDM.rptBillableSummaryByPeriod;
+        RepFileName := TSDM.ShellResource.ReportFolder + 'BillableSummaryByPeriod.fr3';
+      end;
+    1:
+      begin
+        edtBName.GroupIndex := 0;
+        ReportDM.cdsBillableSummary.IndexName := 'idxBillableCustomer';
+        ReportDM.FReport := ReportDM.rptBillableSummaryByCustomer;
+        RepFileName := TSDM.ShellResource.ReportFolder + 'BillableSummaryByCustomer.fr3';
+      end;
+  end;
+
+  try
+     if not TFile.Exists(RepFileName) then
+      raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
+
+    ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + RepFileName);
+
+    viewBillableSummary.DataController.BeginUpdate;
+    if ReportDM.FReport.PrepareReport then
+      if TAction(Sender).Tag = 0 then
+        ReportDM.FReport.ShowPreparedReport
+      else
+      begin
+        if dlgPrint.Execute then
+        begin
+          ReportDM.FReport.PrintOptions.Copies :=
+            dlgPrint.DialogData.Copies;
+
+//              ReportDM.FReport.PrintOptions.Printer.
+//                dxPrintDevice.PrinterIndex;
+
+          ReportDM.FReport.Print;
+        end;
+      end;
+  finally
+    ReportDM.cdsBillableSummary.First;
+//    viewBillableSummary.ViewData.Collapse(True);
+    viewBillableSummary.DataController.EndUpdate;
+  end;
 end;
 
 procedure TBillableSummaryFrm.DrawCellBorder(var Msg: TMessage);
@@ -209,6 +262,7 @@ procedure TBillableSummaryFrm.FormCreate(Sender: TObject);
 begin
   inherited;
   Caption := 'Billable Summary Report';
+  FShowingForm := True;
   TcxLookupComboBoxProperties(lucFromPeriod.Properties).ListSource := ReportDM.dtsPeriod;
   TcxLookupComboBoxProperties(lucToPeriod.Properties).ListSource := ReportDM.dtsToPeriod;
 
@@ -230,7 +284,7 @@ begin
   TcxLookupComboBoxProperties(lucActivityType.Properties).Buttons.Items[0].Visible := False;
   TcxLookupComboBoxProperties(lucCFActivityType.Properties).Buttons.Items[0].Visible := False;
 
-  viewBillable.DataController.DataSource := ReportDM.dtsBillableSummary;
+  viewBillableSummary.DataController.DataSource := ReportDM.dtsBillableSummary;
   viewTimesheet.DataController.DataSource := ReportDM.dtsTimesheetDetail;
   viewCarryForwardDetail.DataController.DataSource := ReportDM.dtsTimesheetCF;
   grpData.ItemIndex := 0;
@@ -247,6 +301,8 @@ procedure TBillableSummaryFrm.FormShow(Sender: TObject);
 begin
   inherited;
   GetBillableSummary;
+  FShowingForm := False;
+  GetBillableTimesheet;
   Screen.Cursor := crDefault;
 end;
 
@@ -256,6 +312,7 @@ var
   FromPeriod, ToPeriod, I, Period: Integer;
   OrderByClause, FileName: string;
   AComboBox: TcxComboBox;
+  SamePeriod: Boolean;
 const
   SQL_PERIOD = 'SELECT THE_PERIOD FROM SourcePeriod WHERE THE_PERIOD >= %d AND THE_PERIOD <= %d';
   SQL_DELETE_SUMMARY_DATA = 'DELETE FROM BILLABLE_SUMMARY WHERE USER_ID = %d';
@@ -338,14 +395,26 @@ begin
         end;
     end;
 
+//    VBBaseDM.GetData(61, ReportDM.cdsBillableSummary, ReportDM.cdsBillableSummary.Name,
+//      'B.USER_ID = ' + VBBaseDM.FUserData.UserID.ToString + ';' + OrderByClause,
+//      'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsBillableSummary.UpdateOptions.Generatorname,
+//      ReportDM.cdsBillableSummary.UpdateOptions.UpdateTableName);
+
+    viewBillableSummary.ViewData.Collapse(True);
+    SamePeriod := lucFromPeriod.EditValue = lucToPeriod.EditValue;
+    edtBName.Visible := SamePeriod;
+    edtBPeriod.Visible := not SamePeriod;
+    viewBillableSummary.OptionsView.GroupByBox := not SamePeriod;
+
+    if SamePeriod then
+      edtBName.GroupIndex := -1
+    else
+      edtBName.GroupIndex := 0;
+//      viewBillable.ViewData.Expand(True);
     VBBaseDM.GetData(61, ReportDM.cdsBillableSummary, ReportDM.cdsBillableSummary.Name,
       'B.USER_ID = ' + VBBaseDM.FUserData.UserID.ToString + ';' + OrderByClause,
       'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsBillableSummary.UpdateOptions.Generatorname,
       ReportDM.cdsBillableSummary.UpdateOptions.UpdateTableName);
-
-    viewBillable.ViewData.Collapse(True);
-    if lucFromPeriod.EditValue = lucToPeriod.EditValue then
-      viewBillable.ViewData.Expand(True);
   finally
     SL.Free;
   end;
@@ -533,7 +602,7 @@ begin
   ReportDM.cdsActivityType2.Close;
 end;
 
-procedure TBillableSummaryFrm.viewBillableCustomDrawCell(
+procedure TBillableSummaryFrm.viewBillableSummaryCustomDrawCell(
   Sender: TcxCustomGridTableView; ACanvas: TcxCanvas;
   AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
 begin
@@ -555,7 +624,7 @@ begin
   end;
 end;
 
-procedure TBillableSummaryFrm.viewBillableCustomDrawGroupCell(
+procedure TBillableSummaryFrm.viewBillableSummaryCustomDrawGroupCell(
   Sender: TcxCustomGridTableView; ACanvas: TcxCanvas;
   AViewInfo: TcxGridTableCellViewInfo; var ADone: Boolean);
 var
@@ -580,7 +649,7 @@ begin
   end;
 end;
 
-procedure TBillableSummaryFrm.viewBillableFocusedRecordChanged(
+procedure TBillableSummaryFrm.viewBillableSummaryFocusedRecordChanged(
   Sender: TcxCustomGridTableView; APrevFocusedRecord,
   AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
 begin
@@ -592,10 +661,11 @@ begin
   begin
     ReportDM.cdsTimesheetDetail.Close;
     ReportDM.CDSCarryForwardDetail.Close;
-    Exit;
-  end;
-
-  GetBillableTimesheet;
+//    Exit;
+  end
+  else
+  if not FShowingForm then
+      GetBillableTimesheet;
 end;
 
 procedure TBillableSummaryFrm.viewTimesheetDblClick(Sender: TObject);
