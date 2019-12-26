@@ -1635,7 +1635,7 @@ inherited ReportDM: TReportDM
         object Memo27: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 619.842919999999900000
+          Left = 619.842920000000000000
           Width = 389.291590000000000000
           Height = 26.456710000000000000
           Font.Charset = ANSI_CHARSET

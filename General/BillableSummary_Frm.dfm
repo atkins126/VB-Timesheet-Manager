@@ -2945,6 +2945,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       Visible = ivAlways
       ShowCaption = True
       PropertiesClassName = 'TcxLookupComboBoxProperties'
+      Properties.ImmediatePost = True
       Properties.KeyFieldNames = 'THE_PERIOD'
       Properties.ListColumns = <
         item
@@ -2952,6 +2953,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
         end>
       Properties.ListOptions.SyncMode = True
       Properties.ListSource = ReportDM.dtsPeriod
+      Properties.OnEditValueChanged = lucFromPeriodPropertiesEditValueChanged
     end
     object lucToPeriod: TcxBarEditItem
       Caption = 'To Period'
@@ -2960,6 +2962,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       Visible = ivAlways
       ShowCaption = True
       PropertiesClassName = 'TcxLookupComboBoxProperties'
+      Properties.ImmediatePost = True
       Properties.KeyFieldNames = 'THE_PERIOD'
       Properties.ListColumns = <
         item
@@ -2967,12 +2970,14 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
         end>
       Properties.ListOptions.SyncMode = True
       Properties.ListSource = ReportDM.dtsToPeriod
+      Properties.OnEditValueChanged = lucFromPeriodPropertiesEditValueChanged
     end
     object lucGroupBy: TcxBarEditItem
       Caption = 'Group By'
       Category = 0
       Hint = 'Group By'
       Visible = ivAlways
+      OnKeyDown = lucGroupByKeyDown
       ShowCaption = True
       PropertiesClassName = 'TcxComboBoxProperties'
       Properties.DropDownListStyle = lsFixedList
@@ -2981,6 +2986,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
         'Period'
         'Customer')
       Properties.PostPopupValueOnTab = True
+      Properties.OnChange = lucGroupByPropertiesChange
     end
     object cbxRemoveZeroValues: TcxBarEditItem
       Caption = 'Remove items with zero billable values'

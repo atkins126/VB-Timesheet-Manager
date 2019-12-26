@@ -34,7 +34,8 @@ uses
   VBProxyClass in '..\Lib\VBProxyClass.pas',
   TimesheetDetailReport_Frm in 'General\TimesheetDetailReport_Frm.pas' {TimesheetDetailReportFrm},
   BillableSummary_Frm in 'General\BillableSummary_Frm.pas' {BillableSummaryFrm},
-  Report_DM in 'Data Modules\Report_DM.pas' {ReportDM: TDataModule};
+  Report_DM in 'Data Modules\Report_DM.pas' {ReportDM: TDataModule},
+  TimehseetSummaryByActivity_Frm in 'General\TimehseetSummaryByActivity_Frm.pas' {TimehseetSummaryByActivityFrm};
 
 {$R *.res}
 

@@ -10,7 +10,7 @@ uses
 
   frxClass,
 
-  BaseLayout_Frm, VBCommonValues, Base_DM, CommonFunction,
+  BaseLayout_Frm, VBCommonValues, Base_DM, CommonFunction, CommonValues,
 
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore,
   dxSkinsDefaultPainters, cxImageList, dxLayoutLookAndFeels, cxClasses, cxStyles,
@@ -233,8 +233,7 @@ uses
   TS_DM,
   RUtils,
   Report_DM,
-//  Lookup_DM,
-  Progress_Frm, CommonValues;
+  Progress_Frm;
 
 procedure TTimesheetDetailReportFrm.FormCreate(Sender: TObject);
 var
@@ -755,7 +754,7 @@ begin
     Beep;
     if DisplayMsg(Application.Title,
       'File Overwrite',
-      'The file ' + ExtractFileName(dlgFileSave.FileName) + ' already exists. Do you want to overwrite this file?',
+      'The file ' + dlgFileSave.FileName + ' already exists. Do you want to overwrite this file?',
       mtConfirmation,
       [mbYes, mbNo]
       ) = mrNo then

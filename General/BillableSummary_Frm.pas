@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Forms,
   System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Dialogs, System.StrUtils,
   System.ImageList, Vcl.ImgList, System.Actions, Vcl.ActnList, Vcl.Menus,
-  Data.DB, Vcl.StdCtrls, System.IOUtils,
+  Data.DB, Vcl.StdCtrls, System.IOUtils, WinApi.ShellApi,
 
   BaseLayout_Frm, VBCommonValues,
 
@@ -18,7 +18,7 @@ uses
   cxFilter, cxDataStorage, cxNavigator, dxDateRanges, dxScrollbarAnnotations,
   cxDBData, cxCurrencyEdit, cxCalendar, cxMemo, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridBandedTableView, cxGridDBBandedTableView, cxGridCustomView,
-  cxGrid, dxPrnDev, dxPrnDlg;
+  cxGrid, dxPrnDev, dxPrnDlg, cxGridExportLink;
 
 type
   TBillableSummaryFrm = class(TBaseLayoutFrm)
@@ -137,6 +137,10 @@ type
     procedure viewBillableSummaryCustomDrawCell(Sender: TcxCustomGridTableView;
       ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
       var ADone: Boolean);
+    procedure lucGroupByKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure lucGroupByPropertiesChange(Sender: TObject);
+    procedure lucFromPeriodPropertiesEditValueChanged(Sender: TObject);
   private
     { Private declarations }
     FShowingForm: Boolean;
@@ -179,9 +183,151 @@ begin
 end;
 
 procedure TBillableSummaryFrm.DoExcel(Sender: TObject);
+var
+  DestFolder, FolderPath, ExportFileName: string;
+  FileSaved: Boolean;
+  RepFileName: string;
+  CustomerID: Integer;
+//  ProgressDialog: TExcelExportProgressFrm;
 begin
   inherited;
-//
+  FolderPath := EXCEL_DOCS;
+//  FolderPath := MainFrm.FShellResource.RootFolder + '\' + FSHIFT_FOLDER + 'Export\';
+  TDirectory.CreateDirectory(FolderPath);
+  dlgFileSave.DefaultExt := 'xlsx';
+  dlgFileSave.InitialDir := FolderPath;
+  dlgFileSave.FileName := '*.xlsx';
+  FileSaved := dlgFileSave.Execute;
+
+  if not FileSaved then
+    Exit;
+
+  CustomerID := ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').Asinteger;
+
+//  if dlgFileSave.Execute then
+  if TFile.Exists(dlgFileSave.FileName) then
+  begin
+    Beep;
+    if DisplayMsg(Application.Title,
+      'File Overwrite',
+      'The file ' + dlgFileSave.FileName + ' already exists.' + CRLF +
+      'Do you want to overwrite this file?',
+      mtConfirmation,
+      [mbYes, mbNo]
+      ) = mrNo then
+      Exit;
+  end;
+
+  viewBillableSummary.ViewData.Expand(True);
+  viewBillableSummary.DataController.BeginUpdate;
+//  edtBPeriod.Caption := 'Period';
+//  edtBName.Caption := 'Customer';
+  grdBillableSummary.Visible := False;
+  grdBillableSummary.Align := alNone;
+  grdBillableSummary.Font.Name := 'Calibri';
+  grdBillableSummary.Font.Size := 11;
+
+  try
+    ExportFileName := dlgFileSave.FileName;
+    // Use this method to export formatted data
+    ExportGridToXLSX(
+      ExportFileName, // Filename to export
+      grdBillableSummary, // Grid whose data must be exported
+      True, // Expand groups
+      True, // Save all records (Selected and un-selected ones)
+      True, // Use native format
+      'xlsx');
+
+      // Use this method to export un-formatted data
+//    ExportGridDataToXLSX(
+//      ExportFileName, // Filename to export
+//      grdBillableSummary, // Grid whose data must be exported
+//      True, // Expand groups
+//      True, // Save all records (Selected and un-selected ones)
+//      True, // Use native format
+//      'xlsx');
+
+//    if cbxOepnDocument.Checked then
+    ShellExecute(0, 'open', PChar('Excel.exe'), PChar('"' + ExportFileName + '"'), nil, SW_SHOWNORMAL)
+  finally
+    grdBillableSummary.Font.Name := 'Verdana';
+    grdBillableSummary.Font.Size := 8;
+    grdBillableSummary.Align := alClient;
+    grdBillableSummary.Visible := True;
+    if not ReportDM.cdsBillableSummary.Locate('CUSTOMER_ID', CustomerID, []) then
+      ReportDM.cdsBillableSummary.First;
+    if lucFromPeriod.EditValue <> lucToPeriod.EditValue then
+      viewBillableSummary.ViewData.Collapse(True);
+    viewBillableSummary.DataController.EndUpdate;
+//    edtBPeriod.Caption := '    Period';
+//    edtBName.Caption := '    Customer';
+  end;
+end;
+
+procedure TBillableSummaryFrm.DoPDF(Sender: TObject);
+var
+  FileSaved: Boolean;
+  DC: TcxCustomDataController;
+  RepFileName: string;
+  AComboBox: TcxComboBox;
+  CustomerID: Integer;
+begin
+  inherited;
+  ReportDM.frxPDFExport.ShowDialog := False;
+  ReportDM.frxPDFExport.Background := True;
+  ReportDM.frxPDFExport.OpenAfterExport := True; // cbxOepnDocument.Checked;
+  ReportDM.frxPDFExport.OverwritePrompt := True;
+  ReportDM.frxPDFExport.ShowProgress := True;
+//  TfrxGroupHeader(ReportDM.rptBillableSummaryByCustomer.FindObject('bndCustomerHeader')).Visible := False;
+//  TfrxMemoView(ReportDM.rptBillableSummaryByCustomer.FindObject('lblCustomerHeader')).Visible := False;
+  dlgFileSave.DefaultExt := 'pdf';
+  dlgFileSave.InitialDir := PDF_DOCS;
+  dlgFileSave.FileName := '*.pdf';
+
+  FileSaved := dlgFileSave.Execute;
+
+  if not FileSaved then
+    Exit;
+
+  if TFile.Exists(dlgFileSave.FileName) then
+  begin
+    Beep;
+    if DisplayMsg(Application.Title,
+      'File Overwrite',
+      'The file ''' + dlgFileSave.FileName + ''' already exists. Do you want to overwrite this file?',
+      mtConfirmation,
+      [mbYes, mbNo]
+      ) = mrNo then
+      Exit;
+  end;
+
+//  GetTimesheetDetail;
+
+  CustomerID := ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger;
+
+  lucGroupBy.SetFocus;
+  AComboBox := TcxBarEditItemControl(lucGroupBy.Links[0].Control).Edit as TcxComboBox;
+  case AComboBox.ItemIndex of
+    0: RepFileName := TSDM.ShellResource.ReportFolder + 'BillableSummaryByPeriod.fr3';
+    1: RepFileName := TSDM.ShellResource.ReportFolder + 'BillableSummaryByCustomer.fr3';
+  end;
+
+  if not TFile.Exists(RepFileName) then
+    raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
+
+  ReportDM.FReport.LoadFromFile(RepFileName);
+
+  DC := viewBillableSummary.DataController;
+  DC.BeginUpdate;
+  try
+    ReportDM.frxPDFExport.FileName := dlgFileSave.FileName;
+    if ReportDM.FReport.PrepareReport(True) then
+      ReportDM.FReport.Export(ReportDM.frxPDFExport);
+  finally
+    if not ReportDM.cdsBillableSummary.Locate('CUSTOMER_ID', CustomerID, []) then
+      ReportDM.cdsBillableSummary.First;
+    DC.EndUpdate;
+  end;
 end;
 
 procedure TBillableSummaryFrm.DoGetData(Sender: TObject);
@@ -190,31 +336,30 @@ begin
   GetBillableSummary;
 end;
 
-procedure TBillableSummaryFrm.DoPDF(Sender: TObject);
-begin
-  inherited;
-//
-end;
-
 procedure TBillableSummaryFrm.DoPrint(Sender: TObject);
 var
   AComboBox: TcxComboBox;
   RepFileName: string;
+  CustomerID: Integer;
 begin
   inherited;
+  CustomerID := ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger;
   lucGroupBy.SetFocus;
   AComboBox := TcxBarEditItemControl(lucGroupBy.Links[0].Control).Edit as TcxComboBox;
+
   case AComboBox.ItemIndex of
     0:
       begin
-        edtBPeriod.GroupIndex := 0;
+        if lucFromPeriod.EditValue <> lucToPeriod.EditValue then
+          edtBPeriod.GroupIndex := 0;
         ReportDM.cdsBillableSummary.IndexName := 'idxBillablePeriod';
         ReportDM.FReport := ReportDM.rptBillableSummaryByPeriod;
         RepFileName := TSDM.ShellResource.ReportFolder + 'BillableSummaryByPeriod.fr3';
       end;
     1:
       begin
-        edtBName.GroupIndex := 0;
+        if lucFromPeriod.EditValue <> lucToPeriod.EditValue then
+          edtBName.GroupIndex := 0;
         ReportDM.cdsBillableSummary.IndexName := 'idxBillableCustomer';
         ReportDM.FReport := ReportDM.rptBillableSummaryByCustomer;
         RepFileName := TSDM.ShellResource.ReportFolder + 'BillableSummaryByCustomer.fr3';
@@ -222,10 +367,10 @@ begin
   end;
 
   try
-     if not TFile.Exists(RepFileName) then
+    if not TFile.Exists(RepFileName) then
       raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 
-    ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + RepFileName);
+    ReportDM.FReport.LoadFromFile({TSDM.ShellResource.ReportFolder + }RepFileName);
 
     viewBillableSummary.DataController.BeginUpdate;
     if ReportDM.FReport.PrepareReport then
@@ -245,7 +390,8 @@ begin
         end;
       end;
   finally
-    ReportDM.cdsBillableSummary.First;
+    if not ReportDM.cdsBillableSummary.Locate('CUSTOMER_ID', CustomerID, []) then
+      ReportDM.cdsBillableSummary.First;
 //    viewBillableSummary.ViewData.Collapse(True);
     viewBillableSummary.DataController.EndUpdate;
   end;
@@ -294,6 +440,7 @@ begin
 //  GetPeriods;
   lucFromPeriod.EditValue := VBBaseDM.CurrentPeriod;
   lucToPeriod.EditValue := VBBaseDM.CurrentPeriod;
+  lucFromPeriodPropertiesEditValueChanged(lucFromPeriod.Properties);
   lucGroupBy.EditValue := 'Period';
 end;
 
@@ -525,6 +672,52 @@ begin
   ReportDM.cdsSystemUser2.Data := ReportDM.cdsSystemUser1.Data;
 end;
 
+procedure TBillableSummaryFrm.lucFromPeriodPropertiesEditValueChanged(Sender: TObject);
+begin
+  inherited;
+  lucGroupBy.Properties.ReadOnly := lucFromPeriod.EditValue = lucToPeriod.EditValue;
+end;
+
+procedure TBillableSummaryFrm.lucGroupByKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+  inherited;
+  if not TcxComboBox(Sender).DroppedDown then
+    Exit;
+end;
+
+procedure TBillableSummaryFrm.lucGroupByPropertiesChange(Sender: TObject);
+var
+  AComboBox: TcxComboBox;
+begin
+  inherited;
+  viewBillableSummary.OnCustomDrawCell := nil;
+  edtBPeriod.GroupIndex := -1;
+  edtBName.GroupIndex := -1;
+
+  lucGroupBy.SetFocus;
+  AComboBox := TcxBarEditItemControl(lucGroupBy.Links[0].Control).Edit as TcxComboBox;
+  case AComboBox.ItemIndex of
+    0:
+      begin
+        edtBPeriod.GroupIndex := 0;
+        ReportDM.cdsBillableSummary.IndexName := 'idxBillablePeriod';
+        ReportDM.FReport := ReportDM.rptBillableSummaryByPeriod;
+      end;
+    1:
+      begin
+        edtBName.GroupIndex := 0;
+        ReportDM.cdsBillableSummary.IndexName := 'idxBillableCustomer';
+        ReportDM.FReport := ReportDM.rptBillableSummaryByCustomer;
+      end;
+  end;
+  try
+    edtBPeriod.Visible := edtBPeriod.GroupIndex = -1;
+    edtBName.Visible := not edtBPeriod.Visible;
+  finally
+    viewBillableSummary.OnCustomDrawCell := viewBillableSummaryCustomDrawCell;
+  end;
+end;
+
 procedure TBillableSummaryFrm.GetActivityType;
 begin
   ReportDM.cdsActivityType2.Close;
@@ -663,9 +856,8 @@ begin
     ReportDM.CDSCarryForwardDetail.Close;
 //    Exit;
   end
-  else
-  if not FShowingForm then
-      GetBillableTimesheet;
+  else if not FShowingForm then
+    GetBillableTimesheet;
 end;
 
 procedure TBillableSummaryFrm.viewTimesheetDblClick(Sender: TObject);
