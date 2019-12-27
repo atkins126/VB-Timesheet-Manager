@@ -83,8 +83,6 @@ type
     FMadeChanges: Boolean;
     FShowingForm: Boolean;
 
-    property MadeChanges: Boolean read FMadeChanges write FMadeChanges;
-    property ShowingForm: Boolean read FShowingForm write FShowingForm;
     procedure SetControlValues;
   public
     { Public declarations }

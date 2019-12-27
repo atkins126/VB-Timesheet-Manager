@@ -157,6 +157,11 @@ type
     lvlTimesheetBillable: TcxGridLevel;
     actBillableSummary: TAction;
     btnBillableSummary: TdxBarLargeButton;
+    btnTimesheetActivitySummary: TdxBarLargeButton;
+    actActivitySummary: TAction;
+    tipTimesheetDetail: TdxScreenTip;
+    tipBillableSummary: TdxScreenTip;
+    tipTimesheetActivitySummary: TdxScreenTip;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoEditInsertEntry(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
@@ -186,29 +191,20 @@ type
     procedure DoTimeSheetDetail(Sender: TObject);
     procedure DoBillableSummary(Sender: TObject);
     procedure ribMainTabChanged(Sender: TdxCustomRibbon);
+    procedure DoActivitySummary(Sender: TObject);
   private
     { Private declarations }
     FTSUserID: Integer;
     FTimesheetPeriod: Integer;
-    FTimeshetMonth: Integer;
     FIteration: Extended;
     FShowingForm: Boolean;
     FFromDate: TDateTime;
     FToDate: TDateTime;
 
-    property TSUserID: Integer read FTSUserID write FTSUserID;
-    property TimesheetPeriod: Integer read FTimesheetPeriod write FTimesheetPeriod;
-    property TimesheetMonth: Integer read FTimeshetMonth write FTimeshetMonth;
-    property Iteration: Extended read FIteration write FIteration;
-    property ShowingForm: Boolean read FShowingForm write FShowingForm;
-    property FromDate: TDateTime read FFromDate write FFromDate;
-    property ToDate: TDateTime read FToDate write FToDate;
-
     procedure UpdateApplicationSkin(SkinResourceFileName, SkinName: string);
     procedure OpenTables;
     procedure SetButtonStatus(EditMode: Boolean);
     procedure VerifyRegistry;
-    function GetMonthEndDate(Period: Integer): TDateTime;
     procedure ReadRegValues;
   protected
     procedure HandleStateChange(var MyMsg: TMessage); message WM_STATE_CHANGE;
@@ -237,7 +233,9 @@ uses
   Report_DM,
   TimesheetEdit_Frm,
   TimesheetPrefrrences_Frm,
-  TimesheetDetailReport_Frm, BillableSummary_Frm;
+  TimesheetDetailReport_Frm,
+  BillableSummary_Frm,
+  TimesheetActivitySummary_Frm;
 
 procedure TMainFrm.DrawCellBorder(var Msg: TMessage);
 begin
@@ -586,6 +584,21 @@ begin
   end;
 end;
 
+procedure TMainFrm.DoActivitySummary(Sender: TObject);
+begin
+  inherited;
+  Screen.Cursor := crHourglass;
+  try
+    if TimesheetActivitySummaryFrm = nil then
+      TimesheetActivitySummaryFrm := TTimesheetActivitySummaryFrm.Create(nil);
+    TimesheetActivitySummaryFrm.ShowModal;
+    TimesheetActivitySummaryFrm.Close;
+    FreeAndNil(TimesheetActivitySummaryFrm);
+  finally
+    Screen.Cursor := crDefault;
+  end;
+end;
+
 procedure TMainFrm.DoBillableSummary(Sender: TObject);
 begin
   inherited;
@@ -786,7 +799,7 @@ end;
 procedure TMainFrm.ribMainTabChanged(Sender: TdxCustomRibbon);
 begin
   inherited;
-  litTimesheet.Visible :=  ribMain.ActiveTab = tabTimesheet;
+  litTimesheet.Visible := ribMain.ActiveTab = tabTimesheet;
 end;
 
 procedure TMainFrm.viewTimesheetCustomDrawCell(Sender: TcxCustomGridTableView;
@@ -1140,7 +1153,7 @@ var
 //  ALookupComboBox: TcxLookupComboBox;
 //  AFromDateEdit, AToDateEdit: TcxDateEdit;
   RegKey: TRegistry;
-  MonthEndDate: TDateTime;
+//  MonthEndDate: TDateTime;
 begin
   inherited;
   ribMain.BeginUpdate;
@@ -1148,7 +1161,7 @@ begin
   lucPeriod.Enabled := lucViewMode.ItemIndex = 0;
   dteFromDate.Enabled := not lucPeriod.Enabled;
   dteToDate.Enabled := not lucPeriod.Enabled;
-  MonthEndDate := GetMonthEndDate(FTimesheetPeriod);
+//  MonthEndDate := GetMonthEndDate(FTimesheetPeriod);
 
   try
     case lucViewMode.ItemIndex of
@@ -1189,7 +1202,7 @@ var
 //  ALookupComboBox: TcxLookupComboBox;
 //  AFromDateEdit, AToDateEdit: TcxDateEdit;
   RegKey: TRegistry;
-  MonthEndDate: TDateTime;
+//  MonthEndDate: TDateTime;
 begin
   inherited;
 //  barToolbar.Bars.BeginUpdate;
@@ -1197,7 +1210,7 @@ begin
   lucPeriod.Enabled := lucViewMode.ItemIndex = 0;
   dteFromDate.Enabled := not lucPeriod.Enabled;
   dteToDate.Enabled := not lucPeriod.Enabled;
-  MonthEndDate := GetMonthEndDate(FTimesheetPeriod);
+//  MonthEndDate := GetMonthEndDate(FTimesheetPeriod);
 
 //  try
 //    case AComboBox.ItemIndex of
@@ -1235,16 +1248,6 @@ begin
   end;
 //  if not FShowingForm then
 //    actGetTimesheetData.Execute;
-end;
-
-function TMainFrm.GetMonthEndDate(Period: Integer): TDateTime;
-var
-  AYear, AMonth, Aday: Word;
-begin
-  Ayear := Period div 100;
-  AMonth := Period mod 100;
-  ADay := DaysInAMonth(AYear, AMonth);
-  Result := EncodeDate(Ayear, Amonth, Aday);
 end;
 
 procedure TMainFrm.DoEditInsertEntry(Sender: TObject);
@@ -1330,7 +1333,7 @@ end;
 procedure TMainFrm.DoExcel(Sender: TObject);
 var
   WhereClause, UserClause, OrderByClause, DateClause, FileName, RepFileName: string;
-  DestFolder, FolderPath, ExportFileName: string;
+  FolderPath, ExportFileName: string;
   FileSaved: Boolean;
 begin
   inherited;
@@ -1437,6 +1440,7 @@ begin
       Exit;
   end;
 
+  DC := viewTimesheetBillable.DataController;
   try
     FileName := 'Timesheet Detail by User';
     DateClause := 'WHERE T.THE_PERIOD = ' + FTimesheetPeriod.ToString;
@@ -1459,7 +1463,6 @@ begin
     edtTCustomerName.Visible := True;
     viewTimesheetBillable.OptionsView.BandHeaders := False;
 
-    DC := viewTimesheetBillable.DataController;
     DC.BeginUpdate;
     ReportDM.frxPDFExport.FileName := dlgFileSave.FileName;
     if ReportDM.FReport.PrepareReport(True) then

@@ -179,8 +179,8 @@
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
-        <DCCReference Include="General\TimehseetSummaryByActivity_Frm.pas">
-            <Form>TimehseetSummaryByActivityFrm</Form>
+        <DCCReference Include="General\TimesheetActivitySummary_Frm.pas">
+            <Form>TimesheetActivitySummaryFrm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">
