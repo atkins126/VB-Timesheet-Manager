@@ -44,7 +44,7 @@ var
   LaunchDrive: string;
 
 const
-  APP_NAME = 'MasterTableManager.exe';
+  APP_NAME = 'TimesheetManager.exe';
 
 begin
 {$IFDEF DEBUG}

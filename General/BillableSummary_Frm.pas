@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Forms,
   System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Dialogs, System.StrUtils,
   System.ImageList, Vcl.ImgList, System.Actions, Vcl.ActnList, Vcl.Menus,
-  Data.DB, Vcl.StdCtrls, System.IOUtils, WinApi.ShellApi,
+  Data.DB, Vcl.StdCtrls, System.IOUtils, WinApi.ShellApi, System.Win.Registry,
 
   BaseLayout_Frm, VBCommonValues,
 
@@ -116,6 +116,7 @@ type
     lvlTimesheet: TcxGridLevel;
     dlgPrint: TdxPrintDialog;
     dlgFileSave: TSaveDialog;
+    cbxSamePeriod: TcxBarEditItem;
     procedure GetBillableSummary;
     procedure GetBillableTimesheet;
     procedure GetPeriods;
@@ -131,16 +132,16 @@ type
       APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord;
       ANewItemRecordFocusingChanged: Boolean);
     procedure viewBillableSummaryCustomDrawGroupCell(Sender: TcxCustomGridTableView;
-      ACanvas: TcxCanvas; AViewInfo: TcxGridTableCellViewInfo;
-      var ADone: Boolean);
+      ACanvas: TcxCanvas; AViewInfo: TcxGridTableCellViewInfo; var ADone: Boolean);
     procedure viewTimesheetDblClick(Sender: TObject);
     procedure viewBillableSummaryCustomDrawCell(Sender: TcxCustomGridTableView;
-      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
-      var ADone: Boolean);
-    procedure lucGroupByKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
+      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
+    procedure lucGroupByKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure lucGroupByPropertiesChange(Sender: TObject);
     procedure lucFromPeriodPropertiesEditValueChanged(Sender: TObject);
+    procedure lucToPeriodPropertiesEditValueChanged(Sender: TObject);
+    procedure cbxSamePeriodPropertiesEditValueChanged(Sender: TObject);
+    procedure lucToPeriodPropertiesInitPopup(Sender: TObject);
   private
     { Private declarations }
     FShowingForm: Boolean;
@@ -405,6 +406,8 @@ begin
 end;
 
 procedure TBillableSummaryFrm.FormCreate(Sender: TObject);
+var
+  RegKey: TRegistry;
 begin
   inherited;
   Caption := 'Billable Summary Report';
@@ -438,10 +441,26 @@ begin
   litCarryForward.CaptionOptions.Text := 'Carry Forwad Details (0 Items)';
   OpenTables;
 //  GetPeriods;
-  lucFromPeriod.EditValue := VBBaseDM.CurrentPeriod;
-  lucToPeriod.EditValue := VBBaseDM.CurrentPeriod;
-  lucFromPeriodPropertiesEditValueChanged(lucFromPeriod.Properties);
-  lucGroupBy.EditValue := 'Period';
+  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+  RegKey.RootKey := HKEY_CURRENT_USER;
+  try
+    RegKey.OpenKey(KEY_TIME_SHEET, True);
+
+    if not RegKey.ValueExists('To Period same as From Period') then
+      RegKey.WriteBool('To Period same as From Period', True);
+
+    cbxSamePeriod.EditValue := RegKey.ReadBool('To Period same as From Period');
+    cbxSamePeriodPropertiesEditValueChanged(cbxSamePeriod.Properties);
+    RegKey.CloseKey;
+
+    lucFromPeriod.EditValue := VBBaseDM.CurrentPeriod;
+    lucToPeriod.EditValue := VBBaseDM.CurrentPeriod;
+    lucToPeriod.Properties.ReadOnly := cbxSamePeriod.EditValue;
+    lucFromPeriodPropertiesEditValueChanged(lucFromPeriod.Properties);
+    lucGroupBy.EditValue := 'Period';
+  finally
+    RegKey.Free;
+  end;
 end;
 
 procedure TBillableSummaryFrm.FormShow(Sender: TObject);
@@ -676,6 +695,26 @@ procedure TBillableSummaryFrm.lucFromPeriodPropertiesEditValueChanged(Sender: TO
 begin
   inherited;
   lucGroupBy.Properties.ReadOnly := lucFromPeriod.EditValue = lucToPeriod.EditValue;
+  if cbxSamePeriod.EditValue then
+    lucToPeriod.EditValue := lucFromPeriod.EditValue;
+
+  if lucFromPeriod.EditValue > lucToPeriod.EditValue then
+    raise EValidateException.Create('To Period must be later than From Period.');
+end;
+
+procedure TBillableSummaryFrm.lucToPeriodPropertiesEditValueChanged(Sender: TObject);
+begin
+  inherited;
+  lucGroupBy.Properties.ReadOnly := lucFromPeriod.EditValue = lucToPeriod.EditValue;
+
+  if lucFromPeriod.EditValue > lucToPeriod.EditValue then
+    raise EValidateException.Create('To Period must be later than From Period.');
+end;
+
+procedure TBillableSummaryFrm.lucToPeriodPropertiesInitPopup(Sender: TObject);
+begin
+  inherited;
+  TcxLookupComboBox(Sender).DroppedDown := not TcxLookupComboBox(Sender).Properties.ReadOnly
 end;
 
 procedure TBillableSummaryFrm.lucGroupByKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -779,6 +818,28 @@ begin
     Screen.Cursor := crDefault;
   end;
 
+end;
+
+procedure TBillableSummaryFrm.cbxSamePeriodPropertiesEditValueChanged(Sender: TObject);
+var
+  RegKey: TRegistry;
+begin
+  inherited;
+  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+  RegKey.RootKey := HKEY_CURRENT_USER;
+  try
+    RegKey.OpenKey(KEY_TIME_SHEET, True);
+    RegKey.WriteBool('To Period same as From Period', cbxSamePeriod.EditValue);
+    RegKey.CloseKey;
+    lucToPeriod.Properties.ReadOnly := cbxSamePeriod.EditValue;
+    TcxLookupComboBoxProperties(lucToPeriod.Properties).Buttons[0].Visible :=
+      not cbxSamePeriod.EditValue;
+
+    TcxLookupComboBoxProperties(lucToPeriod.Properties).ImmediateDropDownWhenKeyPressed :=
+      not cbxSamePeriod.EditValue;
+  finally
+    RegKey.Free;
+  end;
 end;
 
 procedure TBillableSummaryFrm.CloseDataSets;

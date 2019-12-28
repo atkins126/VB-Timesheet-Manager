@@ -3296,6 +3296,13 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
           UserWidth = 127
           Visible = True
           ItemName = 'lucReportType'
+        end
+        item
+          UserDefine = [udWidth]
+          UserWidth = 18
+          ViewLayout = ivlGlyphControlCaption
+          Visible = True
+          ItemName = 'cbxSamePeriod'
         end>
       MultiLine = True
       NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
@@ -3352,6 +3359,14 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         'Customer'
         'Activity Type')
       Properties.OnEditValueChanged = lucReportTypePropertiesEditValueChanged
+    end
+    object cbxSamePeriod: TcxBarEditItem
+      Caption = 'Same Period'
+      Category = 0
+      Hint = 'Same Period'
+      Visible = ivAlways
+      ShowCaption = True
+      PropertiesClassName = 'TcxCheckBoxProperties'
     end
   end
   object dlgPrint: TdxPrintDialog

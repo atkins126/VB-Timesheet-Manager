@@ -831,8 +831,8 @@ inherited TSDM: TTSDM
       Required = True
     end
     object cdsTimesheetEditIS_ADDITIONAL_WORK: TIntegerField
-      Alignment = taLeftJustify
-      DisplayLabel = 'Add Wk'
+      Alignment = taCenter
+      DisplayLabel = 'Ad Wk'
       FieldName = 'IS_ADDITIONAL_WORK'
       Origin = 'IS_ADDITIONAL_WORK'
       Required = True

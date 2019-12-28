@@ -2868,6 +2868,13 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
         end
         item
           UserDefine = [udWidth]
+          UserWidth = 18
+          ViewLayout = ivlGlyphControlCaption
+          Visible = True
+          ItemName = 'cbxSamePeriod'
+        end
+        item
+          UserDefine = [udWidth]
           UserWidth = 90
           Visible = True
           ItemName = 'lucGroupBy'
@@ -2970,7 +2977,8 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
         end>
       Properties.ListOptions.SyncMode = True
       Properties.ListSource = ReportDM.dtsToPeriod
-      Properties.OnEditValueChanged = lucFromPeriodPropertiesEditValueChanged
+      Properties.OnEditValueChanged = lucToPeriodPropertiesEditValueChanged
+      Properties.OnInitPopup = lucToPeriodPropertiesInitPopup
     end
     object lucGroupBy: TcxBarEditItem
       Caption = 'Group By'
@@ -2998,6 +3006,17 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
       InternalEditValue = True
+    end
+    object cbxSamePeriod: TcxBarEditItem
+      Caption = 'Same Period'
+      Category = 0
+      Hint = 'Same Period'
+      Visible = ivAlways
+      ShowCaption = True
+      PropertiesClassName = 'TcxCheckBoxProperties'
+      Properties.ImmediatePost = True
+      Properties.OnEditValueChanged = cbxSamePeriodPropertiesEditValueChanged
+      InternalEditValue = 'Null'
     end
   end
   object dlgPrint: TdxPrintDialog

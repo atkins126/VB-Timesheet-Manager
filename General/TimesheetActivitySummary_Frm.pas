@@ -31,7 +31,6 @@ type
     btnPreview: TdxBarLargeButton;
     btnPrint: TdxBarLargeButton;
     lucFromPeriod: TcxBarEditItem;
-    cbxRemoveZeroValues: TcxBarEditItem;
     dlgPrint: TdxPrintDialog;
     dlgFileSave: TSaveDialog;
     grdSummaryByActivity: TcxGrid;

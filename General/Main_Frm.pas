@@ -249,10 +249,6 @@ begin
   inherited;
   Caption := Application.Title;
   layMain.LayoutLookAndFeel := lafCustomSkin;
-  Application.HintPause := 0;
-  Application.HintShortPause := 0;
-  Application.HintHidePause := 150000;
-//  styHintController.HintHidePause := 15000;
   ribMain.ActiveTab := tabTimesheet;
   ribMain.Update;
 end;
@@ -426,7 +422,10 @@ begin
       viewTimesheet.Controller.MakeFocusedItemVisible;
     end;
 
+    VBBaseDM.DBAction := acBrowsing;
+
     if FCallingFromShell then
+    begin
       if not SendMessageToApp('VB Shell', 'App Ready') then
       begin
         Beep;
@@ -438,12 +437,13 @@ begin
           [mbOK]
           );
         Application.Terminate;
-      end
-      else
-        WindowState := wsMaximized;
+      end;
+      WindowState := wsMaximized;
+    end;
+//      else
+//        WindowState := wsMaximized;
   finally
     FShowingForm := False;
-    VBBaseDM.DBAction := acBrowsing;
     Screen.Cursor := crDefault;
   end;
 end;
@@ -1297,37 +1297,42 @@ var
   WhereClause, UserClause, OrderByClause, DateClause, FileName, RepFileName: string;
 begin
   inherited;
-  FileName := 'Timesheet Detail by User';
-  DateClause := 'WHERE T.THE_PERIOD = ' + FTimesheetPeriod.ToString;
-  UserClause := ' AND T.USER_ID IN (' + FTSUserID.ToString + ')';
-  OrderByClause := 'ORDER BY T.ACTIVITY_DATE';
-  WhereClause := DateClause + UserClause + ' ';
-  ReportDM.FReport := ReportDM.rptTimesheetByUser;
+  Screen.Cursor := crHourglass;
+  try
+    FileName := 'Timesheet Detail by User';
+    DateClause := 'WHERE T.THE_PERIOD = ' + FTimesheetPeriod.ToString;
+    UserClause := ' AND T.USER_ID IN (' + FTSUserID.ToString + ')';
+    OrderByClause := 'ORDER BY T.ACTIVITY_DATE';
+    WhereClause := DateClause + UserClause + ' ';
+    ReportDM.FReport := ReportDM.rptTimesheetByUser;
 
-  VBBaseDM.GetData(45, ReportDM.cdsTSBillable, ReportDM.cdsTSBillable.Name, WhereClause + ';' + OrderByClause,
-    'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsTSBillable.UpdateOptions.Generatorname,
-    ReportDM.cdsTSBillable.UpdateOptions.UpdateTableName);
+    VBBaseDM.GetData(45, ReportDM.cdsTSBillable, ReportDM.cdsTSBillable.Name, WhereClause + ';' + OrderByClause,
+      'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsTSBillable.UpdateOptions.Generatorname,
+      ReportDM.cdsTSBillable.UpdateOptions.UpdateTableName);
 
-  RepFileName := TSDM.ShellResource.ReportFolder + 'TimesheetUser.fr3';
+    RepFileName := TSDM.ShellResource.ReportFolder + 'TimesheetUser.fr3';
 
-  if not TFile.Exists(RepFileName) then
-    raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
+    if not TFile.Exists(RepFileName) then
+      raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 
-  ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + 'TimesheetUser.fr3');
+    ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + 'TimesheetUser.fr3');
 
-  if ReportDM.FReport.PrepareReport then
-    if TAction(Sender).Tag = 0 then
-      ReportDM.FReport.ShowPreparedReport
-    else
-    begin
-      if dlgPrint.Execute then
+    if ReportDM.FReport.PrepareReport then
+      if TAction(Sender).Tag = 0 then
+        ReportDM.FReport.ShowPreparedReport
+      else
       begin
-        ReportDM.FReport.PrintOptions.Copies :=
-          dlgPrint.DialogData.Copies;
+        if dlgPrint.Execute then
+        begin
+          ReportDM.FReport.PrintOptions.Copies :=
+            dlgPrint.DialogData.Copies;
 
-        ReportDM.FReport.Print;
+          ReportDM.FReport.Print;
+        end;
       end;
-    end;
+  finally
+    Screen.Cursor := crDefault;
+  end;
 end;
 
 procedure TMainFrm.DoExcel(Sender: TObject);

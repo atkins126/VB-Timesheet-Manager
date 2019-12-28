@@ -187,6 +187,7 @@ type
     edtTAddWork: TcxGridDBBandedColumn;
     edtTAddWorkStr: TcxGridDBBandedColumn;
     lvlTimesheetBillable: TcxGridLevel;
+    cbxSamePeriod: TcxBarEditItem;
     procedure FormCreate(Sender: TObject);
     procedure DoCloseForm(Sender: TObject);
     procedure DoGetData(Sender: TObject);

@@ -114,6 +114,7 @@ inherited MainFrm: TMainFrm
           Options.Filtering = False
           Options.IncSearch = False
           Options.HorzSizing = False
+          Options.Sorting = False
           Width = 40
           Position.BandIndex = 0
           Position.ColIndex = 2
@@ -133,6 +134,7 @@ inherited MainFrm: TMainFrm
           Options.Filtering = False
           Options.IncSearch = False
           Options.HorzSizing = False
+          Options.Sorting = False
           Width = 40
           Position.BandIndex = 0
           Position.ColIndex = 3
@@ -161,13 +163,14 @@ inherited MainFrm: TMainFrm
           DataBinding.FieldName = 'DAY_NAME'
           PropertiesClassName = 'TcxTextEditProperties'
           Properties.ReadOnly = True
-          MinWidth = 30
+          MinWidth = 35
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
           Options.Grouping = False
           Options.HorzSizing = False
-          Width = 30
+          Options.Sorting = False
+          Width = 35
           Position.BandIndex = 0
           Position.ColIndex = 5
           Position.RowIndex = 0
@@ -266,6 +269,7 @@ inherited MainFrm: TMainFrm
           Options.IncSearch = False
           Options.Grouping = False
           Options.HorzSizing = False
+          Options.Sorting = False
           Width = 300
           Position.BandIndex = 0
           Position.ColIndex = 10
@@ -343,15 +347,16 @@ inherited MainFrm: TMainFrm
           Properties.ReadOnly = True
           Properties.ValueChecked = 1
           Properties.ValueUnchecked = 0
-          HeaderAlignmentHorz = taRightJustify
+          HeaderAlignmentHorz = taCenter
           HeaderHint = 'Additioal work time (Mins)'
-          MinWidth = 74
+          MinWidth = 50
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
           Options.Grouping = False
           Options.HorzSizing = False
           Options.Moving = False
+          Width = 50
           Position.BandIndex = 1
           Position.ColIndex = 3
           Position.RowIndex = 0
@@ -414,6 +419,7 @@ inherited MainFrm: TMainFrm
           Options.Grouping = False
           Options.HorzSizing = False
           Options.Moving = False
+          Options.Sorting = False
           Width = 90
           Position.BandIndex = 2
           Position.ColIndex = 2
@@ -633,6 +639,7 @@ inherited MainFrm: TMainFrm
     TabStop = False
     OnTabChanged = ribMainTabChanged
     object tabTimesheet: TdxRibbonTab
+      Active = True
       Caption = 'Timesheet'
       Groups = <
         item
@@ -641,7 +648,6 @@ inherited MainFrm: TMainFrm
       Index = 0
     end
     object tabReports: TdxRibbonTab
-      Active = True
       Caption = 'Reports'
       Groups = <
         item
@@ -5449,7 +5455,7 @@ inherited MainFrm: TMainFrm
     HintStyle.ScreenTipActionLinks = <>
     HintShortPause = 0
     HintPause = 0
-    HintHidePause = 3000
+    HintHidePause = 15000
     Left = 290
     Top = 284
   end

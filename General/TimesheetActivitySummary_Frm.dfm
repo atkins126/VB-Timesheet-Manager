@@ -1359,13 +1359,6 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
         item
           Visible = True
           ItemName = 'btnPDF'
-        end
-        item
-          UserDefine = [udWidth]
-          UserWidth = 20
-          ViewLayout = ivlGlyphControlCaption
-          Visible = True
-          ItemName = 'cbxRemoveZeroValues'
         end>
       MultiLine = True
       NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
@@ -1402,9 +1395,9 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
       AutoGrayScale = False
     end
     object lucFromPeriod: TcxBarEditItem
-      Caption = 'From Period'
+      Caption = 'Period'
       Category = 0
-      Hint = 'From Period'
+      Hint = 'Period'
       Visible = ivAlways
       ShowCaption = True
       PropertiesClassName = 'TcxLookupComboBoxProperties'
@@ -1417,17 +1410,6 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
       Properties.ListOptions.SyncMode = True
       Properties.ListSource = ReportDM.dtsPeriod
       Properties.OnEditValueChanged = lucFromPeriodPropertiesEditValueChanged
-    end
-    object cbxRemoveZeroValues: TcxBarEditItem
-      Caption = 'Remove items with zero billable values'
-      Category = 0
-      Hint = 'Remove items with zero billable values'
-      Visible = ivAlways
-      ShowCaption = True
-      PropertiesClassName = 'TcxCheckBoxProperties'
-      Properties.ImmediatePost = True
-      Properties.UseAlignmentWhenInplace = True
-      InternalEditValue = True
     end
   end
   object dlgPrint: TdxPrintDialog
