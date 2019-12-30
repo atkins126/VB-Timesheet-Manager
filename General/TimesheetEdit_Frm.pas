@@ -1,5 +1,12 @@
 unit TimesheetEdit_Frm;
 
+{
+ReadOnly Colour
+
+Light Pink: $E6E6FF
+Light yellow: $00B6EDFA
+}
+
 interface
 
 uses
@@ -85,6 +92,7 @@ type
     procedure edtRatePropertiesEditValueChanged(Sender: TObject);
     procedure lucRateUnitPropertiesEditValueChanged(Sender: TObject);
     procedure edtTimeSpentPropertiesEditValueChanged(Sender: TObject);
+    procedure styReadOnlyStyleChanged(Sender: TObject);
   private
     FMyDataSet: TFDMemTable;
     FMyDataSource: TDataSource;
@@ -338,6 +346,12 @@ begin
     else
       MyDataSet.FieldByName('ITEM_VALUE').AsFloat := 0;
   end;
+end;
+
+procedure TTimesheetEditFrm.styReadOnlyStyleChanged(Sender: TObject);
+begin
+  inherited;
+
 end;
 
 //procedure TTimesheetEditFrm.RecalcValues;

@@ -630,7 +630,8 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
     FormatVersion = 1
   end
   object styReadOnly: TcxEditStyleController
-    Style.Color = 11988474
+    Style.Color = 15132415
+    OnStyleChanged = styReadOnlyStyleChanged
     Left = 375
     Top = 145
     PixelsPerInch = 96

@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Forms,
   System.Classes, Vcl.Graphics, System.ImageList, Vcl.ImgList, Vcl.Controls,
   Vcl.Dialogs, System.Actions, Vcl.ActnList, System.Win.Registry, Data.DB,
-  System.DateUtils, System.IOUtils, WinApi.ShellApi,
+  System.DateUtils, System.IOUtils, WinApi.ShellApi, System.Types,
 
   Base_Frm, BaseLayout_Frm, VBProxyClass, VBCommonValues, CommonFunction,
 
@@ -21,7 +21,7 @@ uses
   dxCore, cxDateUtils, cxDropDownEdit, cxMaskEdit, cxLookupEdit, cxDBLookupEdit,
   dxBarExtItems, cxBarEditItem, cxMemo, Vcl.Menus, dxScrollbarAnnotations,
   dxRibbonSkins, dxRibbonCustomizationForm, dxRibbon, dxPrnDev, dxPrnDlg,
-  cxGridExportLink;
+  cxGridExportLink, cxDataUtils;
 
 type
   TMainFrm = class(TBaseLayoutFrm)
@@ -162,6 +162,32 @@ type
     tipTimesheetDetail: TdxScreenTip;
     tipBillableSummary: TdxScreenTip;
     tipTimesheetActivitySummary: TdxScreenTip;
+    actToggleApprovalStatus: TAction;
+    oggleApprovalStatus1: TMenuItem;
+    btnApprove: TdxBarLargeButton;
+    actApprove: TAction;
+    actUnApprove: TAction;
+    N1: TMenuItem;
+    Approve1: TMenuItem;
+    UnApprove1: TMenuItem;
+    popApproval: TdxBarPopupMenu;
+    dxBarButton1: TdxBarButton;
+    btnUnApprove: TdxBarButton;
+    btnToggleApproval: TdxBarButton;
+    tipApprove: TdxScreenTip;
+    btnToggleBillable: TdxBarLargeButton;
+    actBilable: TAction;
+    actNotBillable: TAction;
+    actToggleBillable: TAction;
+    popBillable: TdxBarPopupMenu;
+    btnBillable: TdxBarButton;
+    btnNotBillable: TdxBarButton;
+    dxBarButton2: TdxBarButton;
+    N2: TMenuItem;
+    Billable1: TMenuItem;
+    NotBillable1: TMenuItem;
+    oggleBillable1: TMenuItem;
+    tipBillable: TdxScreenTip;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoEditInsertEntry(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
@@ -192,6 +218,11 @@ type
     procedure DoBillableSummary(Sender: TObject);
     procedure ribMainTabChanged(Sender: TdxCustomRibbon);
     procedure DoActivitySummary(Sender: TObject);
+    procedure cbxApprovedCustomDrawCell(Sender: TcxCustomGridTableView;
+      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
+    procedure DoTogleApprovalStatus(Sender: TObject);
+    procedure btnApproveClick(Sender: TObject);
+    procedure DoToggleBillable(Sender: TObject);
   private
     { Private declarations }
     FTSUserID: Integer;
@@ -206,6 +237,8 @@ type
     procedure SetButtonStatus(EditMode: Boolean);
     procedure VerifyRegistry;
     procedure ReadRegValues;
+    procedure ApproveTimesheetItem(ApprovalAction: TApprovalActions);
+    procedure BillTimesheetItem(BillableAction: TBillableActions);
   protected
     procedure HandleStateChange(var MyMsg: TMessage); message WM_STATE_CHANGE;
     procedure DrawCellBorder(var Msg: TMessage); message CM_DRAWBORDER;
@@ -584,6 +617,182 @@ begin
   end;
 end;
 
+procedure TMainFrm.DoTogleApprovalStatus(Sender: TObject);
+begin
+  inherited;
+  case TAction(Sender).Tag of
+    100: ApproveTimesheetItem(apApprove);
+    101: ApproveTimesheetItem(apUnApprove);
+    102: ApproveTimesheetItem(apToggleApproval);
+  end;
+end;
+
+procedure TMainFrm.ApproveTimesheetItem(ApprovalAction: TApprovalActions);
+var
+  DC: TcxDBDataController;
+  C: TcxCustomGridTableController;
+  I: Integer;
+  RecIndex: Integer;
+begin
+  inherited;
+  DC := viewTimesheet.DataController;
+  C := viewTimesheet.Controller;
+  DC.BeginUpdate;
+
+  try
+    begin
+      for I := 0 to C.SelectedRecordCount - 1 do
+      begin
+        DC.Edit;
+        RecIndex := C.SelectedRecords[I].RecordIndex;
+        DC.FocusedRecordIndex := RecIndex;
+
+        case ApprovalAction of
+          apApprove, apUnApprove:
+            case ApprovalAction of
+              apApprove: DC.SetEditValue(cbxApproved.Index, 1, evsValue);
+              apUnApprove: DC.SetEditValue(cbxApproved.Index, 0, evsValue);
+            end;
+
+          apToggleApproval:
+            begin
+              if DC.Values[RecIndex, cbxApproved.Index] = 0 then
+                DC.SetEditValue(cbxApproved.Index, 1, evsValue)
+              else
+                DC.SetEditValue(cbxApproved.Index, 0, evsValue);
+            end;
+        end;
+        DC.Post(True);
+      end;
+    end;
+
+    TSDM.PostData(TSDM.cdsTimesheet);
+
+//      if DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 0 then
+//        DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 1
+//      else
+//        DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 0;
+//
+//      DC.Post(True);
+//    end;
+//    TSDM.PostData(TSDM.cdsTimesheet);
+  finally
+    DC.EndUpdate;
+  end;
+end;
+
+procedure TMainFrm.DoToggleBillable(Sender: TObject);
+begin
+  inherited;
+  case TAction(Sender).Tag of
+    110: BillTimesheetItem(abBillable);
+    111: BillTimesheetItem(abNotBillable);
+    112: BillTimesheetItem(abToggleBillable);
+  end;
+end;
+
+procedure TMainFrm.BillTimesheetItem(BillableAction: TBillableActions);
+var
+  DC: TcxDBDataController;
+  C: TcxCustomGridTableController;
+  I: Integer;
+  RecIndex: Integer;
+begin
+  inherited;
+  DC := viewTimesheet.DataController;
+  C := viewTimesheet.Controller;
+  DC.BeginUpdate;
+
+  try
+    begin
+      for I := 0 to C.SelectedRecordCount - 1 do
+      begin
+        DC.Edit;
+        RecIndex := C.SelectedRecords[I].RecordIndex;
+        DC.FocusedRecordIndex := RecIndex;
+
+        case BillableAction of
+          abBillable, abNotBillable:
+            case BillableAction of
+              abBillable: DC.SetEditValue(cbxBillable.Index, 1, evsValue);
+              abNotBillable: DC.SetEditValue(cbxBillable.Index, 0, evsValue);
+            end;
+
+          abToggleBillable:
+            begin
+              if DC.Values[RecIndex, cbxBillable.Index] = 0 then
+                DC.SetEditValue(cbxBillable.Index, 1, evsValue)
+              else
+                DC.SetEditValue(cbxBillable.Index, 0, evsValue);
+            end;
+        end;
+
+//        case VarAstype(lucRateUnit.EditValue, varInteger) of
+//          1: edtitemValue.Value := edtTimeSpent.Value * edtRate.Value / 60;
+//        else
+//          edtitemValue.Value := {edtTimeSpent.Value * }edtRate.Value;
+//        end;
+
+        DC.SetEditValue(edtItemValue.Index, 0, evsValue);
+//        DC.Values[RecIndex, edtItemValue.Index] := 0;
+
+        if DC.Values[RecIndex, cbxBillable.Index] = 1 then
+          if DC.Values[RecIndex, lucRateUnit.Index] = 1 then
+            DC.SetEditValue(edtItemValue.Index, DC.Values[RecIndex, edtTimeSpent.Index] *
+              DC.Values[RecIndex, edtRate.Index] / 60, evsValue)
+//            DC.Values[RecIndex, edtItemValue.Index] := DC.Values[RecIndex, edtTimeSpent.Index] *
+//              DC.Values[RecIndex, edtRate.Index] / 60
+          else
+            DC.SetEditValue(edtItemValue.Index,
+              DC.Values[RecIndex, edtRate.Index], evsValue);
+//            DC.Values[RecIndex, edtItemValue.Index] := DC.Values[RecIndex, edtRate.Index];
+
+        DC.Post(True);
+      end;
+    end;
+
+    TSDM.PostData(TSDM.cdsTimesheet);
+
+//      if DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 0 then
+//        DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 1
+//      else
+//        DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 0;
+//
+//      DC.Post(True);
+//    end;
+//    TSDM.PostData(TSDM.cdsTimesheet);
+  finally
+    DC.EndUpdate;
+  end;
+end;
+
+procedure TMainFrm.btnApproveClick(Sender: TObject);
+var
+  aControl: TdxBarItemControl;
+  APopupPoint: TPoint;
+begin
+  inherited;
+  aControl := TdxBarButton(Sender).ClickItemLink.Control;
+  APopupPoint := Point(aControl.ItemBounds.Left, aControl.ItemBounds.Bottom);
+  APopupPoint := aControl.Parent.ClientToScreen(APopupPoint);
+  popApproval.Popup(APopupPoint.X, APopupPoint.Y);
+end;
+
+procedure TMainFrm.cbxApprovedCustomDrawCell(Sender: TcxCustomGridTableView;
+  ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
+var
+  DC: TcxDBDataController;
+//  C: TcxCustomGridTableController;
+begin
+  inherited;
+  DC := viewTimesheet.DataController;
+//  C := viewTimesheet.Controller;
+  if DC.Values[AViewInfo.GridRecord.Index, cbxApproved.Index] then
+    ACanvas.Brush.Color := clGreen
+  else
+    ACanvas.Brush.Color := clMaroon;
+end;
+
 procedure TMainFrm.DoActivitySummary(Sender: TObject);
 begin
   inherited;
@@ -813,7 +1022,7 @@ begin
   // This renders the background and font colours of the focused record
   begin
     if AViewInfo.Item <> nil then
-      if AViewInfo.Item.Focused then
+      if (AViewInfo.Item <> cbxApproved) and (AViewInfo.Item.Focused) then
       begin
       // This renders the background and border colour of the focused cell
         ACanvas.Brush.Color := $B6EDFA;
