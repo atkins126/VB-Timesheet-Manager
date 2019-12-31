@@ -461,7 +461,7 @@ begin
   finally
     RegKey.Free;
   end;
-end;
+ end;
 
 procedure TBillableSummaryFrm.FormShow(Sender: TObject);
 begin

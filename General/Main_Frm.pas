@@ -188,6 +188,9 @@ type
     NotBillable1: TMenuItem;
     oggleBillable1: TMenuItem;
     tipBillable: TdxScreenTip;
+    popInvoice: TdxBarPopupMenu;
+    actInvoiceItem: TAction;
+    actUnInvoice: TAction;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoEditInsertEntry(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
@@ -223,6 +226,7 @@ type
     procedure DoTogleApprovalStatus(Sender: TObject);
     procedure btnApproveClick(Sender: TObject);
     procedure DoToggleBillable(Sender: TObject);
+    procedure DoInvoiceItem(Sender: TObject);
   private
     { Private declarations }
     FTSUserID: Integer;
@@ -617,6 +621,18 @@ begin
   end;
 end;
 
+procedure TMainFrm.btnApproveClick(Sender: TObject);
+//var
+//  aControl: TdxBarItemControl;
+//  APopupPoint: TPoint;
+begin
+  inherited;
+//  aControl := TdxBarButton(Sender).ClickItemLink.Control;
+//  APopupPoint := Point(aControl.ItemBounds.Left, aControl.ItemBounds.Bottom);
+//  APopupPoint := aControl.Parent.ClientToScreen(APopupPoint);
+//  popApproval.Popup(APopupPoint.X, APopupPoint.Y);
+end;
+
 procedure TMainFrm.DoTogleApprovalStatus(Sender: TObject);
 begin
   inherited;
@@ -632,20 +648,25 @@ var
   DC: TcxDBDataController;
   C: TcxCustomGridTableController;
   I: Integer;
-  RecIndex: Integer;
+  RecIndex, ChangeCount: Integer;
 begin
   inherited;
   DC := viewTimesheet.DataController;
   C := viewTimesheet.Controller;
   DC.BeginUpdate;
+  ChangeCount := 0;
 
   try
     begin
       for I := 0 to C.SelectedRecordCount - 1 do
       begin
-        DC.Edit;
         RecIndex := C.SelectedRecords[I].RecordIndex;
         DC.FocusedRecordIndex := RecIndex;
+
+        if DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] = 0 then
+          Continue;
+
+        DC.Edit;
 
         case ApprovalAction of
           apApprove, apUnApprove:
@@ -663,10 +684,12 @@ begin
             end;
         end;
         DC.Post(True);
+        inc(ChangeCount);
       end;
     end;
 
-    TSDM.PostData(TSDM.cdsTimesheet);
+    if ChangeCount > 0 then
+      TSDM.PostData(TSDM.cdsTimesheet);
 
 //      if DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 0 then
 //        DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 1
@@ -766,16 +789,10 @@ begin
   end;
 end;
 
-procedure TMainFrm.btnApproveClick(Sender: TObject);
-var
-  aControl: TdxBarItemControl;
-  APopupPoint: TPoint;
+procedure TMainFrm.DoInvoiceItem(Sender: TObject);
 begin
   inherited;
-  aControl := TdxBarButton(Sender).ClickItemLink.Control;
-  APopupPoint := Point(aControl.ItemBounds.Left, aControl.ItemBounds.Bottom);
-  APopupPoint := aControl.Parent.ClientToScreen(APopupPoint);
-  popApproval.Popup(APopupPoint.X, APopupPoint.Y);
+//
 end;
 
 procedure TMainFrm.cbxApprovedCustomDrawCell(Sender: TcxCustomGridTableView;
