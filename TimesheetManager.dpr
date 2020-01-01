@@ -35,7 +35,8 @@ uses
   TimesheetDetailReport_Frm in 'General\TimesheetDetailReport_Frm.pas' {TimesheetDetailReportFrm},
   BillableSummary_Frm in 'General\BillableSummary_Frm.pas' {BillableSummaryFrm},
   Report_DM in 'Data Modules\Report_DM.pas' {ReportDM: TDataModule},
-  TimesheetActivitySummary_Frm in 'General\TimesheetActivitySummary_Frm.pas' {TimesheetActivitySummaryFrm};
+  TimesheetActivitySummary_Frm in 'General\TimesheetActivitySummary_Frm.pas' {TimesheetActivitySummaryFrm},
+  InvoiceDate_Frm in 'General\InvoiceDate_Frm.pas' {InvoiceDateFrm};
 
 {$R *.res}
 

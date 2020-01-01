@@ -191,6 +191,12 @@ type
     popInvoice: TdxBarPopupMenu;
     actInvoiceItem: TAction;
     actUnInvoice: TAction;
+    btnInvoice: TdxBarLargeButton;
+    btnInvoiceItem: TdxBarButton;
+    btnUnInvoiceItem: TdxBarButton;
+    N3: TMenuItem;
+    Invoice1: TMenuItem;
+    UnInvoice1: TMenuItem;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoEditInsertEntry(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
@@ -223,9 +229,9 @@ type
     procedure DoActivitySummary(Sender: TObject);
     procedure cbxApprovedCustomDrawCell(Sender: TcxCustomGridTableView;
       ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
-    procedure DoTogleApprovalStatus(Sender: TObject);
+    procedure DoApprovalStatus(Sender: TObject);
     procedure btnApproveClick(Sender: TObject);
-    procedure DoToggleBillable(Sender: TObject);
+    procedure DoBillable(Sender: TObject);
     procedure DoInvoiceItem(Sender: TObject);
   private
     { Private declarations }
@@ -243,6 +249,8 @@ type
     procedure ReadRegValues;
     procedure ApproveTimesheetItem(ApprovalAction: TApprovalActions);
     procedure BillTimesheetItem(BillableAction: TBillableActions);
+    procedure InvoiceTimesheetItem;
+    procedure UnInvoiceTimesheetItem;
   protected
     procedure HandleStateChange(var MyMsg: TMessage); message WM_STATE_CHANGE;
     procedure DrawCellBorder(var Msg: TMessage); message CM_DRAWBORDER;
@@ -272,7 +280,7 @@ uses
   TimesheetPrefrrences_Frm,
   TimesheetDetailReport_Frm,
   BillableSummary_Frm,
-  TimesheetActivitySummary_Frm;
+  TimesheetActivitySummary_Frm, InvoiceDate_Frm;
 
 procedure TMainFrm.DrawCellBorder(var Msg: TMessage);
 begin
@@ -622,18 +630,23 @@ begin
 end;
 
 procedure TMainFrm.btnApproveClick(Sender: TObject);
-//var
-//  aControl: TdxBarItemControl;
-//  APopupPoint: TPoint;
+var
+  aControl: TdxBarItemControl;
+  APopupPoint: TPoint;
 begin
   inherited;
-//  aControl := TdxBarButton(Sender).ClickItemLink.Control;
-//  APopupPoint := Point(aControl.ItemBounds.Left, aControl.ItemBounds.Bottom);
-//  APopupPoint := aControl.Parent.ClientToScreen(APopupPoint);
-//  popApproval.Popup(APopupPoint.X, APopupPoint.Y);
+  aControl := TdxBarButton(Sender).ClickItemLink.Control;
+  APopupPoint := Point(aControl.ItemBounds.Left, aControl.ItemBounds.Bottom);
+  APopupPoint := aControl.Parent.ClientToScreen(APopupPoint);
+
+  case TdxBarlargeButton(Sender).Tag of
+    0: popApproval.Popup(APopupPoint.X, APopupPoint.Y);
+    1: popBillable.Popup(APopupPoint.X, APopupPoint.Y);
+    2: popInvoice.Popup(APopupPoint.X, APopupPoint.Y);
+  end;
 end;
 
-procedure TMainFrm.DoTogleApprovalStatus(Sender: TObject);
+procedure TMainFrm.DoApprovalStatus(Sender: TObject);
 begin
   inherited;
   case TAction(Sender).Tag of
@@ -663,7 +676,7 @@ begin
         RecIndex := C.SelectedRecords[I].RecordIndex;
         DC.FocusedRecordIndex := RecIndex;
 
-        if DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] = 0 then
+        if DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] <> 0 then
           Continue;
 
         DC.Edit;
@@ -704,7 +717,7 @@ begin
   end;
 end;
 
-procedure TMainFrm.DoToggleBillable(Sender: TObject);
+procedure TMainFrm.DoBillable(Sender: TObject);
 begin
   inherited;
   case TAction(Sender).Tag of
@@ -792,7 +805,116 @@ end;
 procedure TMainFrm.DoInvoiceItem(Sender: TObject);
 begin
   inherited;
+  case TAction(Sender).Tag of
+    120: InvoiceTimesheetItem;
+    121: UnInvoiceTimesheetItem;
+  end;
+end;
+
+procedure TMainFrm.InvoiceTimesheetItem;
+var
+  DC: TcxDBDataController;
+  C: TcxCustomGridTableController;
+  I, ChangeCount: Integer;
+  RecIndex: Integer;
+  InvoiceDate: TDateTime;
+begin
+  inherited;
+  if InvoiceDateFrm = nil then
+    InvoiceDateFrm := TInvoiceDateFrm.Create(nil);
+
+  if InvoiceDateFrm.ShowModal = mrOK then
+    try
+      InvoiceDate := VarAsType(InvoiceDateFrm.dteInvoiceDate.EditValue, varDate);
+
+      DC := viewTimesheet.DataController;
+      C := viewTimesheet.Controller;
+      ChangeCount := 0;
+
+      DC.BeginUpdate;
+      try
+        for I := 0 to C.SelectedRecordCount - 1 do
+        begin
+          if DC.Values[C.SelectedRecords[I].RecordIndex, cbxLocked.Index] = 0 then
+          begin
+            DC.Edit;
+            RecIndex := C.SelectedRecords[I].RecordIndex;
+            DC.FocusedRecordIndex := RecIndex;
+
+            if DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] = 0 then
+            begin
+              DC.SetEditValue(edtInvoiceID.Index, 1, evsValue);
+              DC.SetEditValue(cbxLocked.Index, 1, evsValue);
+              DC.SetEditValue(dteInvoiceDate.Index, InvoiceDate, evsValue);
+            end;
+          end;
+          DC.Post(True);
+          Inc(ChangeCount);
+        end;
+
+        if ChangeCount > 0 then
+          TSDM.PostData(TSDM.cdsTimesheet);
+
+//      if DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 0 then
+//        DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 1
+//      else
+//        DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 0;
 //
+//      DC.Post(True);
+//    end;
+//    TSDM.PostData(TSDM.cdsTimesheet);
+      finally
+        DC.EndUpdate;
+      end;
+    finally
+      if Assigned(InvoiceDateFrm) then
+      begin
+        InvoiceDateFrm.Close;
+        FreeAndNil(InvoiceDateFrm);
+      end;
+    end;
+end;
+
+procedure TMainFrm.UnInvoiceTimesheetItem;
+var
+  DC: TcxDBDataController;
+  C: TcxCustomGridTableController;
+  I, ChangeCount: Integer;
+  RecIndex: Integer;
+  InvoiceDate: TDateTime;
+begin
+  inherited;
+  DC := viewTimesheet.DataController;
+  C := viewTimesheet.Controller;
+  ChangeCount := 0;
+
+  DC.BeginUpdate;
+  try
+    for I := 0 to C.SelectedRecordCount - 1 do
+    begin
+      if DC.Values[C.SelectedRecords[I].RecordIndex, cbxLocked.Index] = 1 then
+      begin
+        DC.Edit;
+        RecIndex := C.SelectedRecords[I].RecordIndex;
+        DC.FocusedRecordIndex := RecIndex;
+
+        if DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] = 1 then
+        begin
+          DC.SetEditValue(edtInvoiceID.Index, 0, evsValue);
+          DC.SetEditValue(cbxLocked.Index, 0, evsValue);
+          DC.SetEditValue(dteInvoiceDate.Index, Null, evsValue);
+        end;
+        DC.Post(True);
+        Inc(ChangeCount);
+      end;
+    end;
+
+    if ChangeCount > 0 then
+      TSDM.PostData(TSDM.cdsTimesheet);
+  finally
+    DC.EndUpdate;
+    Screen.Cursor := crDefault;
+  end;
 end;
 
 procedure TMainFrm.cbxApprovedCustomDrawCell(Sender: TcxCustomGridTableView;
