@@ -453,6 +453,13 @@ begin
     cbxSamePeriodPropertiesEditValueChanged(cbxSamePeriod.Properties);
     RegKey.CloseKey;
 
+    if not ReportDM.cdsPeriod.Locate('THE_PERIOD', VBBaseDM.CurrentPeriod, []) then
+    begin
+      ReportDM.cdsPeriod.Last;
+      ReportDM.cdsToPeriod.Last;
+      VBBaseDM.CurrentPeriod := ReportDM.cdsPeriod.FieldByName('THE_PERIOD').AsInteger;
+    end;
+
     lucFromPeriod.EditValue := VBBaseDM.CurrentPeriod;
     lucToPeriod.EditValue := VBBaseDM.CurrentPeriod;
     lucToPeriod.Properties.ReadOnly := cbxSamePeriod.EditValue;
@@ -461,7 +468,7 @@ begin
   finally
     RegKey.Free;
   end;
- end;
+end;
 
 procedure TBillableSummaryFrm.FormShow(Sender: TObject);
 begin
@@ -621,7 +628,8 @@ begin
     WhereClause :=
       'WHERE T.THE_PERIOD = ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) +
 //      ' AND  T.THE_PERIOD <= ' + VarAsType(lucToPeriod.EditValue, varString) +
-    ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ';
+    ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ' +
+      ' AND T.CARRY_FORWARD = 0 ';
 
     VBBaseDM.GetData(45, ReportDM.cdsTimesheetDetail, ReportDM.cdsTimesheetDetail.Name, WhereClause + ';' + OrderByClause + ';' + GroupByClause,
       'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsTimesheetDetail.UpdateOptions.Generatorname,

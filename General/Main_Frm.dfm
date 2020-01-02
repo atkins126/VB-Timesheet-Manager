@@ -36,7 +36,25 @@ inherited MainFrm: TMainFrm
         DataController.DataSource = TSDM.dtsTimesheet
         DataController.Options = [dcoCaseInsensitive, dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding]
         DataController.Summary.DefaultGroupSummaryItems = <>
-        DataController.Summary.FooterSummaryItems = <>
+        DataController.Summary.FooterSummaryItems = <
+          item
+            Format = '#,##0.00'
+            Kind = skSum
+            FieldName = 'TIME_SPENT'
+            Column = edtTimeSpent
+          end
+          item
+            Format = '#,##0.00'
+            Kind = skSum
+            FieldName = 'TIME_HOURS'
+            Column = edtTimeHours
+          end
+          item
+            Format = '#,##0.00'
+            Kind = skSum
+            FieldName = 'ITEM_VALUE'
+            Column = edtItemValue
+          end>
         DataController.Summary.SummaryGroups = <>
         OptionsBehavior.CellHints = True
         OptionsBehavior.FocusCellOnTab = True
@@ -50,6 +68,7 @@ inherited MainFrm: TMainFrm
         OptionsSelection.MultiSelect = True
         OptionsSelection.CheckBoxVisibility = [cbvDataRow, cbvColumnHeader]
         OptionsView.NoDataToDisplayInfoText = '<No Timesheet data to display>'
+        OptionsView.Footer = True
         Bands = <
           item
             Caption = 'General'
@@ -191,7 +210,6 @@ inherited MainFrm: TMainFrm
           Properties.ShowTime = False
           MinWidth = 90
           Options.Editing = False
-          Options.IncSearch = False
           Options.HorzSizing = False
           Width = 90
           Position.BandIndex = 0
@@ -212,7 +230,6 @@ inherited MainFrm: TMainFrm
           Properties.ReadOnly = True
           MinWidth = 300
           Options.Editing = False
-          Options.IncSearch = False
           Options.HorzSizing = False
           Width = 300
           Position.BandIndex = 0
@@ -235,7 +252,6 @@ inherited MainFrm: TMainFrm
           MinWidth = 300
           Options.Editing = False
           Options.Filtering = False
-          Options.IncSearch = False
           Options.HorzSizing = False
           Width = 300
           Position.BandIndex = 0
@@ -256,7 +272,6 @@ inherited MainFrm: TMainFrm
           Properties.ReadOnly = True
           MinWidth = 200
           Options.Editing = False
-          Options.IncSearch = False
           Options.HorzSizing = False
           Width = 200
           Position.BandIndex = 0
@@ -415,7 +430,11 @@ inherited MainFrm: TMainFrm
           PropertiesClassName = 'TcxLookupComboBoxProperties'
           Properties.DropDownListStyle = lsFixedList
           Properties.ImmediatePost = True
-          Properties.ListColumns = <>
+          Properties.KeyFieldNames = 'ID'
+          Properties.ListColumns = <
+            item
+              FieldName = 'NAME'
+            end>
           Properties.ListSource = TSDM.dtsRateUnit
           MinWidth = 90
           Options.Editing = False
@@ -686,7 +705,6 @@ inherited MainFrm: TMainFrm
     object viewTimesheetBillable: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       ScrollbarAnnotations.CustomAnnotations = <>
-      DataController.DataSource = ReportDM.dtsTSBillable
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
@@ -1064,7 +1082,7 @@ inherited MainFrm: TMainFrm
         Properties.DisplayFormat = '######'
         Properties.EditFormat = '######'
         Properties.ReadOnly = True
-        MinWidth = 74
+        MinWidth = 64
         Options.Editing = False
         Options.Filtering = False
         Options.IncSearch = False
@@ -1100,7 +1118,7 @@ inherited MainFrm: TMainFrm
         Properties.DisplayFormat = '######'
         Properties.EditFormat = '######'
         Properties.ReadOnly = True
-        MinWidth = 74
+        MinWidth = 64
         Options.Editing = False
         Options.Filtering = False
         Options.IncSearch = False
@@ -6533,6 +6551,7 @@ inherited MainFrm: TMainFrm
           ItemName = 'btnRefreshLookupTables'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'btnApprove'
         end
@@ -6832,12 +6851,6 @@ inherited MainFrm: TMainFrm
       Category = 0
       ImageIndex = 8
     end
-    object btnToggleApproval: TdxBarButton
-      Action = actToggleApprovalStatus
-      Category = 0
-      Visible = ivNever
-      ImageIndex = 6
-    end
     object btnToggleBillable: TdxBarLargeButton
       Tag = 1
       Caption = 'Billable'
@@ -6863,11 +6876,6 @@ inherited MainFrm: TMainFrm
       Category = 0
       ImageIndex = 10
       LargeImageIndex = 10
-    end
-    object dxBarButton2: TdxBarButton
-      Action = actToggleBillable
-      Category = 0
-      Visible = ivNever
     end
     object btnInvoice: TdxBarLargeButton
       Tag = 2
@@ -8571,12 +8579,6 @@ inherited MainFrm: TMainFrm
       Hint = 'Un-Approve selected timesheet item(s)'
       ImageIndex = 8
     end
-    object oggleApprovalStatus1: TMenuItem
-      Action = actToggleApprovalStatus
-      Hint = 'Toggle approval status of selected timesheet item(s)'
-      ImageIndex = 6
-      Visible = False
-    end
     object N2: TMenuItem
       Caption = '-'
     end
@@ -8587,11 +8589,6 @@ inherited MainFrm: TMainFrm
     object NotBillable1: TMenuItem
       Action = actNotBillable
       ImageIndex = 10
-    end
-    object oggleBillable1: TMenuItem
-      Action = actToggleBillable
-      ImageIndex = 11
-      Visible = False
     end
     object N3: TMenuItem
       Caption = '-'
@@ -8628,10 +8625,6 @@ inherited MainFrm: TMainFrm
       item
         Visible = True
         ItemName = 'btnUnApprove'
-      end
-      item
-        Visible = True
-        ItemName = 'btnToggleApproval'
       end>
     UseOwnFont = False
     Left = 450
@@ -8649,10 +8642,6 @@ inherited MainFrm: TMainFrm
       item
         Visible = True
         ItemName = 'btnNotBillable'
-      end
-      item
-        Visible = True
-        ItemName = 'dxBarButton2'
       end>
     UseOwnFont = False
     Left = 525

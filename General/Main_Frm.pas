@@ -163,7 +163,6 @@ type
     tipBillableSummary: TdxScreenTip;
     tipTimesheetActivitySummary: TdxScreenTip;
     actToggleApprovalStatus: TAction;
-    oggleApprovalStatus1: TMenuItem;
     btnApprove: TdxBarLargeButton;
     actApprove: TAction;
     actUnApprove: TAction;
@@ -173,7 +172,6 @@ type
     popApproval: TdxBarPopupMenu;
     dxBarButton1: TdxBarButton;
     btnUnApprove: TdxBarButton;
-    btnToggleApproval: TdxBarButton;
     tipApprove: TdxScreenTip;
     btnToggleBillable: TdxBarLargeButton;
     actBilable: TAction;
@@ -182,11 +180,9 @@ type
     popBillable: TdxBarPopupMenu;
     btnBillable: TdxBarButton;
     btnNotBillable: TdxBarButton;
-    dxBarButton2: TdxBarButton;
     N2: TMenuItem;
     Billable1: TMenuItem;
     NotBillable1: TMenuItem;
-    oggleBillable1: TMenuItem;
     tipBillable: TdxScreenTip;
     popInvoice: TdxBarPopupMenu;
     actInvoiceItem: TAction;
@@ -247,8 +243,8 @@ type
     procedure SetButtonStatus(EditMode: Boolean);
     procedure VerifyRegistry;
     procedure ReadRegValues;
-    procedure ApproveTimesheetItem(ApprovalAction: TApprovalActions);
-    procedure BillTimesheetItem(BillableAction: TBillableActions);
+    procedure ApproveTimesheetItem(ATag: Integer);
+    procedure BillTimesheetItem(ATag: Integer);
     procedure InvoiceTimesheetItem;
     procedure UnInvoiceTimesheetItem;
   protected
@@ -280,7 +276,8 @@ uses
   TimesheetPrefrrences_Frm,
   TimesheetDetailReport_Frm,
   BillableSummary_Frm,
-  TimesheetActivitySummary_Frm, InvoiceDate_Frm;
+  TimesheetActivitySummary_Frm,
+  InvoiceDate_Frm;
 
 procedure TMainFrm.DrawCellBorder(var Msg: TMessage);
 begin
@@ -649,14 +646,16 @@ end;
 procedure TMainFrm.DoApprovalStatus(Sender: TObject);
 begin
   inherited;
-  case TAction(Sender).Tag of
-    100: ApproveTimesheetItem(apApprove);
-    101: ApproveTimesheetItem(apUnApprove);
-    102: ApproveTimesheetItem(apToggleApproval);
-  end;
+  ApproveTimesheetItem(TAction(Sender).Tag);
+
+//  case TAction(Sender).Tag of
+//    100: ApproveTimesheetItem(apApprove);
+//    101: ApproveTimesheetItem(apUnApprove);
+//    102: ApproveTimesheetItem(apToggleApproval);
+//  end;
 end;
 
-procedure TMainFrm.ApproveTimesheetItem(ApprovalAction: TApprovalActions);
+procedure TMainFrm.ApproveTimesheetItem(ATag: Integer);
 var
   DC: TcxDBDataController;
   C: TcxCustomGridTableController;
@@ -681,20 +680,9 @@ begin
 
         DC.Edit;
 
-        case ApprovalAction of
-          apApprove, apUnApprove:
-            case ApprovalAction of
-              apApprove: DC.SetEditValue(cbxApproved.Index, 1, evsValue);
-              apUnApprove: DC.SetEditValue(cbxApproved.Index, 0, evsValue);
-            end;
-
-          apToggleApproval:
-            begin
-              if DC.Values[RecIndex, cbxApproved.Index] = 0 then
-                DC.SetEditValue(cbxApproved.Index, 1, evsValue)
-              else
-                DC.SetEditValue(cbxApproved.Index, 0, evsValue);
-            end;
+        case ATag of
+          100: DC.SetEditValue(cbxApproved.Index, 1, evsValue);
+          101: DC.SetEditValue(cbxApproved.Index, 0, evsValue);
         end;
         DC.Post(True);
         inc(ChangeCount);
@@ -720,14 +708,16 @@ end;
 procedure TMainFrm.DoBillable(Sender: TObject);
 begin
   inherited;
-  case TAction(Sender).Tag of
-    110: BillTimesheetItem(abBillable);
-    111: BillTimesheetItem(abNotBillable);
-    112: BillTimesheetItem(abToggleBillable);
-  end;
+  BillTimesheetItem(TAction(Sender).Tag);
+
+//  case TAction(Sender).Tag of
+//    110: BillTimesheetItem(abBillable);
+//    111: BillTimesheetItem(abNotBillable);
+//    112: BillTimesheetItem(abToggleBillable);
+//  end;
 end;
 
-procedure TMainFrm.BillTimesheetItem(BillableAction: TBillableActions);
+procedure TMainFrm.BillTimesheetItem(ATag: Integer);
 var
   DC: TcxDBDataController;
   C: TcxCustomGridTableController;
@@ -747,20 +737,9 @@ begin
         RecIndex := C.SelectedRecords[I].RecordIndex;
         DC.FocusedRecordIndex := RecIndex;
 
-        case BillableAction of
-          abBillable, abNotBillable:
-            case BillableAction of
-              abBillable: DC.SetEditValue(cbxBillable.Index, 1, evsValue);
-              abNotBillable: DC.SetEditValue(cbxBillable.Index, 0, evsValue);
-            end;
-
-          abToggleBillable:
-            begin
-              if DC.Values[RecIndex, cbxBillable.Index] = 0 then
-                DC.SetEditValue(cbxBillable.Index, 1, evsValue)
-              else
-                DC.SetEditValue(cbxBillable.Index, 0, evsValue);
-            end;
+        case ATag of
+          110: DC.SetEditValue(cbxBillable.Index, 1, evsValue);
+          111: DC.SetEditValue(cbxBillable.Index, 0, evsValue);
         end;
 
 //        case VarAstype(lucRateUnit.EditValue, varInteger) of
@@ -881,7 +860,6 @@ var
   C: TcxCustomGridTableController;
   I, ChangeCount: Integer;
   RecIndex: Integer;
-  InvoiceDate: TDateTime;
 begin
   inherited;
   DC := viewTimesheet.DataController;
