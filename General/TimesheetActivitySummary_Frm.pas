@@ -8,7 +8,7 @@ uses
   System.ImageList, Vcl.ImgList, System.Actions, Vcl.ActnList, Vcl.Menus,
   Data.DB, Vcl.StdCtrls, System.IOUtils, WinApi.ShellApi,
 
-  BaseLayout_Frm, VBCommonValues,
+  BaseLayout_Frm, VBCommonValues, CommonValues,
 
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore,
   dxSkinsDefaultPainters, cxImageList, dxLayoutLookAndFeels, cxClasses, cxStyles,
@@ -91,7 +91,6 @@ uses
   Report_DM,
   Progress_Frm,
   CommonFunction,
-  CommonValues,
   TS_DM;
 
 procedure TTimesheetActivitySummaryFrm.FormCreate(Sender: TObject);
@@ -106,7 +105,7 @@ end;
 
 procedure TTimesheetActivitySummaryFrm.GetPeriods;
 begin
-  VBBaseDM.GetData(62, ReportDM.cdsPeriod, ReportDM.cdsPeriod.Name, '',
+  VBBaseDM.GetData(62, ReportDM.cdsPeriod, ReportDM.cdsPeriod.Name, ONE_SPACE,
     'C:\Data\Xml\Period.xml', ReportDM.cdsPeriod.UpdateOptions.Generatorname,
     ReportDM.cdsPeriod.UpdateOptions.UpdateTableName);
 

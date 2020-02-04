@@ -14,14 +14,13 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     Top = 19
     Width = 966
     Height = 647
-    LayoutLookAndFeel = lafCustomSkin
     ExplicitLeft = 15
     ExplicitTop = 19
     ExplicitWidth = 966
     ExplicitHeight = 647
     object lucDateType: TcxComboBox [0]
-      Left = 85
-      Top = 106
+      Left = 89
+      Top = 94
       Properties.DropDownListStyle = lsFixedList
       Properties.ImmediatePost = True
       Properties.ImmediateUpdateText = True
@@ -36,8 +35,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Width = 100
     end
     object lucBillable: TcxComboBox [1]
-      Left = 449
-      Top = 106
+      Left = 461
+      Top = 94
       Properties.DropDownListStyle = lsFixedList
       Properties.ImmediatePost = True
       Properties.ImmediateUpdateText = True
@@ -51,8 +50,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Width = 120
     end
     object lucWorkType: TcxComboBox [2]
-      Left = 449
-      Top = 131
+      Left = 461
+      Top = 119
       Properties.DropDownListStyle = lsFixedList
       Properties.ImmediatePost = True
       Properties.ImmediateUpdateText = True
@@ -66,8 +65,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Width = 120
     end
     object dteToDate: TcxDateEdit [3]
-      Left = 257
-      Top = 131
+      Left = 261
+      Top = 119
       Properties.DisplayFormat = 'dd/MM/yyyy'
       Properties.EditFormat = 'dd/MM/yyyy'
       Properties.ImmediatePost = True
@@ -79,8 +78,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Width = 100
     end
     object lucPeriod: TcxLookupComboBox [4]
-      Left = 85
-      Top = 131
+      Left = 89
+      Top = 119
       BeepOnEnter = False
       Properties.DropDownAutoSize = True
       Properties.DropDownListStyle = lsFixedList
@@ -91,7 +90,6 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
           FieldName = 'THE_PERIOD'
         end>
       Properties.ListOptions.SyncMode = True
-      Properties.ListSource = ReportDM.dtsPeriodListing
       Style.HotTrack = False
       Style.TransparentBorder = False
       TabOrder = 2
@@ -106,8 +104,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       BarManager = barManager
     end
     object dteFromDate: TcxDateEdit [6]
-      Left = 257
-      Top = 106
+      Left = 261
+      Top = 94
       Properties.DisplayFormat = 'dd/MM/yyyy'
       Properties.EditFormat = 'dd/MM/yyyy'
       Properties.ImmediatePost = True
@@ -119,8 +117,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Width = 100
     end
     object cbxOepnDocument: TcxCheckBox [7]
-      Left = 575
-      Top = 106
+      Left = 587
+      Top = 94
       Caption = 'Open document after export'
       State = cbsChecked
       Style.HotTrack = False
@@ -129,8 +127,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Transparent = True
     end
     object cbxRemoveZeroBillableValues: TcxCheckBox [8]
-      Left = 575
-      Top = 131
+      Left = 587
+      Top = 117
       Caption = 'Remove items with zero billable values'
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
@@ -141,10 +139,10 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Transparent = True
     end
     object grdSystemUser: TcxGrid [9]
-      Left = 25
-      Top = 205
-      Width = 913
-      Height = 414
+      Left = 22
+      Top = 192
+      Width = 922
+      Height = 433
       BorderStyle = cxcbsNone
       TabOrder = 9
       object viewSystemUser: TcxGridDBBandedTableView
@@ -229,7 +227,6 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       object viewCustomerListing: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
-        DataController.DataSource = ReportDM.dtsTSCustomer
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
@@ -625,7 +622,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       CaptionOptions.Text = 'New Item'
       CaptionOptions.Visible = False
       Control = cbxOepnDocument
-      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalHeight = 17
       ControlOptions.OriginalWidth = 183
       ControlOptions.ShowBorder = False
       Index = 0
@@ -635,7 +632,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       CaptionOptions.Text = 'New Item'
       CaptionOptions.Visible = False
       Control = cbxRemoveZeroBillableValues
-      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalHeight = 17
       ControlOptions.OriginalWidth = 244
       ControlOptions.ShowBorder = False
       Index = 1
@@ -686,7 +683,6 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     object viewTimesheet: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       ScrollbarAnnotations.CustomAnnotations = <>
-      DataController.DataSource = ReportDM.dtsTimesheet
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -1222,7 +1218,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         Properties.EditFormat = '######0'
         Properties.ReadOnly = True
         Visible = False
-        MinWidth = 74
+        MinWidth = 64
         Options.Editing = False
         Options.Filtering = False
         Options.IncSearch = False
@@ -1247,7 +1243,6 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     object viewCarryForwardDetail: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       ScrollbarAnnotations.CustomAnnotations = <>
-      DataController.DataSource = ReportDM.dtsCarryForwardDetail
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -1783,7 +1778,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         Properties.EditFormat = '######0'
         Properties.ReadOnly = True
         Visible = False
-        MinWidth = 74
+        MinWidth = 64
         Options.Editing = False
         Options.Filtering = False
         Options.IncSearch = False
@@ -1815,7 +1810,6 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     object viewTimesheetBillable: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       ScrollbarAnnotations.CustomAnnotations = <>
-      DataController.DataSource = ReportDM.dtsTSBillable
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
@@ -2193,7 +2187,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         Properties.DisplayFormat = '######'
         Properties.EditFormat = '######'
         Properties.ReadOnly = True
-        MinWidth = 74
+        MinWidth = 64
         Options.Editing = False
         Options.Filtering = False
         Options.IncSearch = False
@@ -2229,7 +2223,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         Properties.DisplayFormat = '######'
         Properties.EditFormat = '######'
         Properties.ReadOnly = True
-        MinWidth = 74
+        MinWidth = 64
         Options.Editing = False
         Options.Filtering = False
         Options.IncSearch = False

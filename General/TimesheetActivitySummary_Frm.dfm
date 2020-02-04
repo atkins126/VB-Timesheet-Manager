@@ -9,7 +9,6 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
   inherited layMain: TdxLayoutControl
     Width = 1136
     Height = 691
-    LayoutLookAndFeel = lafCustomSkin
     ExplicitWidth = 1136
     ExplicitHeight = 691
     object docToolbar: TdxBarDockControl [0]
@@ -30,7 +29,6 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
         OnCustomDrawCell = viewSummaryByActivityCustomDrawCell
-        DataController.DataSource = ReportDM.dtsTSSummaryByActivity
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -167,7 +165,7 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
           Properties.ReadOnly = True
           Visible = False
           HeaderAlignmentHorz = taRightJustify
-          MinWidth = 74
+          MinWidth = 64
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
@@ -188,7 +186,7 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
           Properties.UseLeftAlignmentOnEditing = False
           Properties.UseThousandSeparator = True
           HeaderAlignmentHorz = taRightJustify
-          MinWidth = 74
+          MinWidth = 64
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
@@ -230,7 +228,7 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
           Properties.ReadOnly = True
           Visible = False
           HeaderAlignmentHorz = taRightJustify
-          MinWidth = 74
+          MinWidth = 64
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
@@ -251,7 +249,7 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
           Properties.UseLeftAlignmentOnEditing = False
           Properties.UseThousandSeparator = True
           HeaderAlignmentHorz = taRightJustify
-          MinWidth = 74
+          MinWidth = 64
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
@@ -293,7 +291,7 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
           Properties.ReadOnly = True
           Visible = False
           HeaderAlignmentHorz = taRightJustify
-          MinWidth = 74
+          MinWidth = 64
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
@@ -314,7 +312,7 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
           Properties.UseLeftAlignmentOnEditing = False
           Properties.UseThousandSeparator = True
           HeaderAlignmentHorz = taRightJustify
-          MinWidth = 74
+          MinWidth = 64
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
@@ -356,7 +354,7 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
           Properties.ReadOnly = True
           Visible = False
           HeaderAlignmentHorz = taRightJustify
-          MinWidth = 74
+          MinWidth = 64
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
@@ -377,7 +375,7 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
           Properties.UseLeftAlignmentOnEditing = False
           Properties.UseThousandSeparator = True
           HeaderAlignmentHorz = taRightJustify
-          MinWidth = 74
+          MinWidth = 64
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
@@ -1348,7 +1346,6 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
           FieldName = 'THE_PERIOD'
         end>
       Properties.ListOptions.SyncMode = True
-      Properties.ListSource = ReportDM.dtsPeriod
       Properties.OnEditValueChanged = lucFromPeriodPropertiesEditValueChanged
     end
   end

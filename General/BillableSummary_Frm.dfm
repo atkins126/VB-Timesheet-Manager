@@ -9,7 +9,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
   inherited layMain: TdxLayoutControl
     Width = 1126
     Height = 706
-    LayoutLookAndFeel = lafCustomSkin
     ExplicitWidth = 1126
     ExplicitHeight = 706
     object docToolbar: TdxBarDockControl [0]
@@ -31,7 +30,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
         ScrollbarAnnotations.CustomAnnotations = <>
         OnCustomDrawCell = viewBillableSummaryCustomDrawCell
         OnFocusedRecordChanged = viewBillableSummaryFocusedRecordChanged
-        DataController.DataSource = ReportDM.dtsBillableSummary
         DataController.Options = [dcoCaseInsensitive, dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding]
         DataController.Summary.DefaultGroupSummaryItems = <
           item
@@ -281,7 +279,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
         OnCustomDrawCell = viewBillableSummaryCustomDrawCell
-        DataController.DataSource = ReportDM.dtsTimesheetCF
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -390,7 +387,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
             end>
           Properties.ListOptions.CaseInsensitive = True
           Properties.ListOptions.SyncMode = True
-          Properties.ListSource = ReportDM.dtsSystemUser2
           Properties.PostPopupValueOnTab = True
           Properties.ReadOnly = True
           MinWidth = 120
@@ -467,7 +463,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
               Width = 120
               FieldName = 'RATE_UNIT'
             end>
-          Properties.ListSource = ReportDM.dtsPriceList2
           Properties.PostPopupValueOnTab = True
           Properties.ReadOnly = True
           MinWidth = 300
@@ -494,7 +489,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
             item
               FieldName = 'NAME'
             end>
-          Properties.ListSource = ReportDM.dtsRateUnit2
           Properties.ReadOnly = True
           MinWidth = 60
           Options.Editing = False
@@ -521,7 +515,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
             item
               FieldName = 'NAME'
             end>
-          Properties.ListSource = ReportDM.dtsActivityType2
           Properties.PostPopupValueOnTab = True
           Properties.ReadOnly = True
           MinWidth = 300
@@ -860,7 +853,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           Properties.EditFormat = '######0'
           Properties.ReadOnly = True
           Visible = False
-          MinWidth = 74
+          MinWidth = 64
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
@@ -888,7 +881,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
         OnCustomDrawCell = viewBillableSummaryCustomDrawCell
-        DataController.DataSource = ReportDM.dtsTimesheetDetail
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -997,7 +989,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
             end>
           Properties.ListOptions.CaseInsensitive = True
           Properties.ListOptions.SyncMode = True
-          Properties.ListSource = ReportDM.dtsSystemUser1
           Properties.PostPopupValueOnTab = True
           Properties.ReadOnly = True
           MinWidth = 120
@@ -1074,7 +1065,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
               Width = 120
               FieldName = 'RATE_UNIT'
             end>
-          Properties.ListSource = ReportDM.dtsPriceList1
           Properties.PostPopupValueOnTab = True
           Properties.ReadOnly = True
           MinWidth = 300
@@ -1101,7 +1091,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
             item
               FieldName = 'NAME'
             end>
-          Properties.ListSource = ReportDM.dtsRateUnit1
           Properties.ReadOnly = True
           MinWidth = 60
           Options.Editing = False
@@ -1128,7 +1117,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
             item
               FieldName = 'NAME'
             end>
-          Properties.ListSource = ReportDM.dtsActivityType1
           Properties.PostPopupValueOnTab = True
           Properties.ReadOnly = True
           MinWidth = 300
@@ -1467,7 +1455,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           Properties.EditFormat = '######0'
           Properties.ReadOnly = True
           Visible = False
-          MinWidth = 74
+          MinWidth = 64
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
@@ -2631,7 +2619,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           FieldName = 'THE_PERIOD'
         end>
       Properties.ListOptions.SyncMode = True
-      Properties.ListSource = ReportDM.dtsPeriod
       Properties.OnEditValueChanged = lucFromPeriodPropertiesEditValueChanged
     end
     object lucToPeriod: TcxBarEditItem
@@ -2648,7 +2635,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           FieldName = 'THE_PERIOD'
         end>
       Properties.ListOptions.SyncMode = True
-      Properties.ListSource = ReportDM.dtsToPeriod
       Properties.OnEditValueChanged = lucToPeriodPropertiesEditValueChanged
       Properties.OnInitPopup = lucToPeriodPropertiesInitPopup
     end

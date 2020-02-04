@@ -79,6 +79,7 @@ type
     edtDayName: TcxTextEdit;
     edtHours: TcxCurrencyEdit;
     edtitemValue: TcxCurrencyEdit;
+    litLegend: TdxLayoutItem;
     procedure FormCreate(Sender: TObject);
     procedure dteActivityDatePropertiesEditValueChanged(Sender: TObject);
     procedure btnOKClick(Sender: TObject);

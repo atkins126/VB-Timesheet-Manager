@@ -8,7 +8,7 @@ uses
   Vcl.Dialogs, System.Actions, Vcl.ActnList, System.Win.Registry, Data.DB,
   System.DateUtils, System.IOUtils, WinApi.ShellApi, System.Types,
 
-  Base_Frm, BaseLayout_Frm, VBProxyClass, VBCommonValues, CommonFunction,
+  Base_Frm, BaseLayout_Frm, VBProxyClass, VBCommonValues, CommonFunction, CommonValues,
 
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore,
   dxSkinsDefaultPainters, cxImageList, dxLayoutLookAndFeels, cxClasses, cxStyles,
@@ -270,7 +270,6 @@ uses
   MsgDialog_Frm,
   RUtils,
   Progress_Frm,
-  CommonValues,
   Report_DM,
   TimesheetEdit_Frm,
   TimesheetPrefrrences_Frm,

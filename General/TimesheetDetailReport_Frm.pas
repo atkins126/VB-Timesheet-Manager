@@ -427,7 +427,7 @@ procedure TTimesheetDetailReportFrm.GetActivityType;
 begin
   ReportDM.cdsActivityType.Close;
 
-  VBBaseDM.GetData(39, ReportDM.cdsActivityType, ReportDM.cdsActivityType.Name, '',
+  VBBaseDM.GetData(39, ReportDM.cdsActivityType, ReportDM.cdsActivityType.Name, ONE_SPACE,
     'C:\Data\Xml\Activity Type.xml', ReportDM.cdsActivityType.UpdateOptions.Generatorname,
     ReportDM.cdsActivityType.UpdateOptions.UpdateTableName);
 end;
@@ -436,7 +436,7 @@ procedure TTimesheetDetailReportFrm.GetCustomer;
 begin
   ReportDM.cdsTSCustomer.Close;
 
-  VBBaseDM.GetData(41, ReportDM.cdsTSCustomer, ReportDM.cdsTSCustomer.Name, '',
+  VBBaseDM.GetData(41, ReportDM.cdsTSCustomer, ReportDM.cdsTSCustomer.Name, ONE_SPACE,
     'C:\Data\Xml\Customer Listing.xml', ReportDM.cdsTSCustomer.UpdateOptions.Generatorname,
     ReportDM.cdsTSCustomer.UpdateOptions.UpdateTableName);
 end;
@@ -445,7 +445,7 @@ procedure TTimesheetDetailReportFrm.GetPeriods;
 begin
   ReportDM.cdsPeriodListing.Close;
 
-  VBBaseDM.GetData(62, ReportDM.cdsPeriodListing, ReportDM.cdsPeriodListing.Name, '',
+  VBBaseDM.GetData(62, ReportDM.cdsPeriodListing, ReportDM.cdsPeriodListing.Name, ONE_SPACE,
     'C:\Data\Xml\Period.xml', ReportDM.cdsPeriodListing.UpdateOptions.Generatorname,
     ReportDM.cdsPeriodListing.UpdateOptions.UpdateTableName);
 
@@ -457,7 +457,7 @@ procedure TTimesheetDetailReportFrm.GetSystemUser;
 begin
   ReportDM.cdsSystemUser.Close;
 
-  VBBaseDM.GetData(24, ReportDM.cdsSystemUser, ReportDM.cdsSystemUser.Name, '',
+  VBBaseDM.GetData(24, ReportDM.cdsSystemUser, ReportDM.cdsSystemUser.Name, ONE_SPACE,
     'C:\Data\Xml\System User.xml', ReportDM.cdsSystemUser.UpdateOptions.Generatorname,
     ReportDM.cdsSystemUser.UpdateOptions.UpdateTableName);
 end;

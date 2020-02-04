@@ -8,7 +8,7 @@ uses
   System.ImageList, Vcl.ImgList, System.Actions, Vcl.ActnList, Vcl.Menus,
   Data.DB, Vcl.StdCtrls, System.IOUtils, WinApi.ShellApi, System.Win.Registry,
 
-  BaseLayout_Frm, VBCommonValues,
+  BaseLayout_Frm, VBCommonValues, CommonValues,
 
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore,
   dxSkinsDefaultPainters, cxImageList, dxLayoutLookAndFeels, cxClasses, cxStyles,
@@ -172,7 +172,6 @@ uses
   Report_DM,
   Progress_Frm,
   CommonFunction,
-  CommonValues,
   TS_DM,
   TimesheetEdit_Frm;
 
@@ -653,7 +652,7 @@ procedure TBillableSummaryFrm.GetPeriods;
 begin
   ReportDM.cdsToPeriod.Close;
 
-  VBBaseDM.GetData(62, ReportDM.cdsPeriod, ReportDM.cdsPeriod.Name, '',
+  VBBaseDM.GetData(62, ReportDM.cdsPeriod, ReportDM.cdsPeriod.Name, ONE_SPACE,
     'C:\Data\Xml\Period.xml', ReportDM.cdsPeriod.UpdateOptions.Generatorname,
     ReportDM.cdsPeriod.UpdateOptions.UpdateTableName);
 
@@ -670,7 +669,7 @@ procedure TBillableSummaryFrm.GetPriceList;
 begin
   ReportDM.cdsPriceList2.Close;
 
-  VBBaseDM.GetData(42, ReportDM.cdsPriceList1, ReportDM.cdsPriceList1.Name, '',
+  VBBaseDM.GetData(42, ReportDM.cdsPriceList1, ReportDM.cdsPriceList1.Name, ONE_SPACE,
     'C:\Data\Xml\Price list.xml', ReportDM.cdsPriceList1.UpdateOptions.Generatorname,
     ReportDM.cdsPriceList1.UpdateOptions.UpdateTableName);
 
@@ -681,7 +680,7 @@ procedure TBillableSummaryFrm.GetRateUnit;
 begin
   ReportDM.cdsRateUnit2.Close;
 
-  VBBaseDM.GetData(38, ReportDM.cdsRateUnit1, ReportDM.cdsRateUnit1.Name, '',
+  VBBaseDM.GetData(38, ReportDM.cdsRateUnit1, ReportDM.cdsRateUnit1.Name, ONE_SPACE,
     'C:\Data\Xml\Rate unit.xml', ReportDM.cdsRateUnit1.UpdateOptions.Generatorname,
     ReportDM.cdsRateUnit1.UpdateOptions.UpdateTableName);
 
@@ -692,7 +691,7 @@ procedure TBillableSummaryFrm.GetSystemUser;
 begin
   ReportDM.cdsSystemUser2.Close;
 
-  VBBaseDM.GetData(24, ReportDM.cdsSystemUser1, ReportDM.cdsSystemUser1.Name, '',
+  VBBaseDM.GetData(24, ReportDM.cdsSystemUser1, ReportDM.cdsSystemUser1.Name, ONE_SPACE,
     'C:\Data\Xml\System User.xml', ReportDM.cdsSystemUser1.UpdateOptions.Generatorname,
     ReportDM.cdsSystemUser1.UpdateOptions.UpdateTableName);
 
@@ -769,7 +768,7 @@ procedure TBillableSummaryFrm.GetActivityType;
 begin
   ReportDM.cdsActivityType2.Close;
 
-  VBBaseDM.GetData(39, ReportDM.cdsActivityType1, ReportDM.cdsActivityType1.Name, '',
+  VBBaseDM.GetData(39, ReportDM.cdsActivityType1, ReportDM.cdsActivityType1.Name, ONE_SPACE,
     'C:\Data\Xml\Activity Type.xml', ReportDM.cdsActivityType1.UpdateOptions.Generatorname,
     ReportDM.cdsActivityType1.UpdateOptions.UpdateTableName);
 

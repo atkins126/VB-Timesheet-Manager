@@ -15,7 +15,6 @@ inherited MainFrm: TMainFrm
     Top = 145
     Width = 1400
     Height = 576
-    LayoutLookAndFeel = lafCustomSkin
     ExplicitLeft = 0
     ExplicitTop = 145
     ExplicitWidth = 1400
