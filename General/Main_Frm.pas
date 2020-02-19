@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Forms,
   System.Classes, Vcl.Graphics, System.ImageList, Vcl.ImgList, Vcl.Controls,
   Vcl.Dialogs, System.Actions, Vcl.ActnList, System.Win.Registry, Data.DB,
-  System.DateUtils, System.IOUtils, WinApi.ShellApi, System.Types,
+  System.DateUtils, System.IOUtils, Winapi.ShellApi, System.Types,
 
   Base_Frm, BaseLayout_Frm, VBProxyClass, VBCommonValues, CommonFunction, CommonValues,
 
@@ -193,6 +193,17 @@ type
     N3: TMenuItem;
     Invoice1: TMenuItem;
     UnInvoice1: TMenuItem;
+    popCarryForward: TdxBarPopupMenu;
+    actCarryForward: TAction;
+    actClearCarryForward: TAction;
+    btnCarryForward: TdxBarButton;
+    btnClearCarryForwrd: TdxBarButton;
+    btnCarryFwd: TdxBarLargeButton;
+    N4: TMenuItem;
+    CarryForward1: TMenuItem;
+    ClearCarryForward1: TMenuItem;
+    tipInvoice: TdxScreenTip;
+    tipCarryForward: TdxScreenTip;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoEditInsertEntry(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
@@ -229,6 +240,7 @@ type
     procedure btnApproveClick(Sender: TObject);
     procedure DoBillable(Sender: TObject);
     procedure DoInvoiceItem(Sender: TObject);
+    procedure DoCarryForward(Sender: TObject);
   private
     { Private declarations }
     FTSUserID: Integer;
@@ -247,6 +259,7 @@ type
     procedure BillTimesheetItem(ATag: Integer);
     procedure InvoiceTimesheetItem;
     procedure UnInvoiceTimesheetItem;
+    procedure CarryForwardItem(ATag: Integer);
   protected
     procedure HandleStateChange(var MyMsg: TMessage); message WM_STATE_CHANGE;
     procedure DrawCellBorder(var Msg: TMessage); message CM_DRAWBORDER;
@@ -263,6 +276,7 @@ const
 implementation
 
 {$R *.dfm}
+
 
 uses
   TS_DM,
@@ -289,6 +303,7 @@ procedure TMainFrm.FormCreate(Sender: TObject);
 begin
   inherited;
   Caption := Application.Title;
+  layMain.Align :=  alClient;
   layMain.LayoutLookAndFeel := lafCustomSkin;
   ribMain.ActiveTab := tabTimesheet;
   ribMain.Update;
@@ -297,12 +312,12 @@ end;
 procedure TMainFrm.FormShow(Sender: TObject);
 var
   VBShell: string;
-{$IFDEF DEBUG}ErrorMsg, {$ENDIF}SkinResourceFileName, SkinName: string;
-//  Day, Month, Year: Word;
+  {$IFDEF DEBUG}ErrorMsg, {$ENDIF}SkinResourceFileName, SkinName: string;
+// Day, Month, Year: Word;
   RegKey: TRegistry;
-  //AComboBox: TcxComboBox;
-  //ALookupComboBox: TcxLookupComboBox;
-  //ADateEdit: TcxDateEdit;
+  // AComboBox: TcxComboBox;
+  // ALookupComboBox: TcxLookupComboBox;
+  // ADateEdit: TcxDateEdit;
 begin
   inherited;
   Screen.Cursor := crHourglass;
@@ -315,7 +330,7 @@ begin
     MsgDialogFrm := TMsgDialogFrm.Create(nil);
 
   try
-{$IFDEF DEBUG}
+    {$IFDEF DEBUG}
     Self.BorderStyle := bsSizeable;
     ErrorMsg := '';
     if not LocalDSServerIsRunning(LOCAL_VB_SHELL_DS_SERVER, ErrorMsg) then
@@ -332,8 +347,7 @@ begin
         [mbOK]
         );
     end;
-{$ENDIF}
-
+    {$ENDIF}
     if VBBaseDM = nil then
       VBBaseDM := TVBBaseDM.Create(nil);
 
@@ -371,8 +385,8 @@ begin
     TcxLookupComboBoxProperties(lucRateUnit.Properties).listSource := TSDM.dtsRateUnit;
     TcxLookupComboBoxProperties(lucActivityType.Properties).listSource := TSDM.dtsActivityType;
     TcxLookupComboBoxProperties(lucCustomerGroup.Properties).listSource := TSDM.dtsCustomerGroup;
-    TcxLookupComboBoxProperties(lucPeriod.Properties).ListSource := TSDM.dtsTSPeriod;
-    TcxLookupComboBoxProperties(lucUser.Properties).ListSource := TSDM.dtsSytemUser;
+    TcxLookupComboBoxProperties(lucPeriod.Properties).listSource := TSDM.dtsTSPeriod;
+    TcxLookupComboBoxProperties(lucUser.Properties).listSource := TSDM.dtsSytemUser;
     TcxDateEditProperties(dteFromDate.Properties).MinDate := StrToDate('01/01/2019');
     TcxDateEditProperties(dteFromDate.Properties).MaxDate := Date;
     TcxDateEditProperties(dteToDate.Properties).MinDate := StrToDate('01/01/2019');
@@ -392,12 +406,12 @@ begin
       end;
       FTSUserID := TSDM.CurrentUserID;
 
-//      lucUser.SetFocus;
-//      ALookupComboBox := TcxBarEditItemControl(lucUser.Links[0].Control).Edit as TcxLookupComboBox;
-//      ALookupComboBox.EditValue := TSDM.CurrentUserID;
-//      TcxLookupComboBox(lucUser).EditValue := TSDM.cdsSystemUser.FieldByName('LOGIN_NAME').AsString;
-//      lucUser.EditValue := TSDM.CurrentUserID;
-      lucUser.EditValue := TSDM.CurrentUserID; //TSDM.cdsSystemUser.FieldByName('LOGIN_NAME').AsString;
+// lucUser.SetFocus;
+// ALookupComboBox := TcxBarEditItemControl(lucUser.Links[0].Control).Edit as TcxLookupComboBox;
+// ALookupComboBox.EditValue := TSDM.CurrentUserID;
+// TcxLookupComboBox(lucUser).EditValue := TSDM.cdsSystemUser.FieldByName('LOGIN_NAME').AsString;
+// lucUser.EditValue := TSDM.CurrentUserID;
+      lucUser.EditValue := TSDM.CurrentUserID; // TSDM.cdsSystemUser.FieldByName('LOGIN_NAME').AsString;
       RegKey.CloseKey;
 
       VerifyRegistry;
@@ -405,47 +419,47 @@ begin
 
       RegKey.OpenKey(KEY_TIME_SHEET, True);
 
-//      dteFromDate.SetFocus;
-//      ADateEdit := TcxBarEditItemControl(dteFromDate.Links[0].Control).Edit as TcxDateEdit;
-//      ADateEdit.Date := RegKey.ReadDate('From Date');
+// dteFromDate.SetFocus;
+// ADateEdit := TcxBarEditItemControl(dteFromDate.Links[0].Control).Edit as TcxDateEdit;
+// ADateEdit.Date := RegKey.ReadDate('From Date');
       FFromDate := RegKey.ReadDate('From Date');
       dteFromDate.EditValue := FFromDate;
 
-//      dteToDate.SetFocus;
-//      ADateEdit := TcxBarEditItemControl(dteToDate.Links[0].Control).Edit as TcxDateEdit;
-//      ADateEdit.Date := RegKey.ReadDate('To Date');
+// dteToDate.SetFocus;
+// ADateEdit := TcxBarEditItemControl(dteToDate.Links[0].Control).Edit as TcxDateEdit;
+// ADateEdit.Date := RegKey.ReadDate('To Date');
       FToDate := RegKey.ReadDate('To Date');
       dteToDate.EditValue := FToDate;
 
-//      lucPeriod.SetFocus;
-//      ALookupComboBox := TcxBarEditItemControl(lucPeriod.Links[0].Control).Edit as TcxLookupComboBox;
-      FTimesheetPeriod := Regkey.ReadInteger('Period');
-//      ALookupComboBox.EditValue := FTimesheetPeriod;
+// lucPeriod.SetFocus;
+// ALookupComboBox := TcxBarEditItemControl(lucPeriod.Links[0].Control).Edit as TcxLookupComboBox;
+      FTimesheetPeriod := RegKey.ReadInteger('Period');
+// ALookupComboBox.EditValue := FTimesheetPeriod;
       lucPeriod.EditValue := FTimesheetPeriod;
 
       if not TSDM.cdsTSPeriod.Locate('THE_PERIOD', FTimesheetPeriod, []) then
       begin
-        TSDm.cdsTSPeriod.First;
+        TSDM.cdsTSPeriod.First;
         FTimesheetPeriod := TSDM.cdsTSPeriod.FieldByName('THE_PERIOD').AsInteger;
       end;
 
       GetMonthEndDate(FTimesheetPeriod);
-//      lucViewMode.SetFocus;
-//      AComboBox := TcxBarEditItemControl(lucViewMode.Links[0].Control).Edit as TcxComboBox;
-//      AComboBox.ItemIndex := RegKey.ReadInteger('View Mode Index');
+// lucViewMode.SetFocus;
+// AComboBox := TcxBarEditItemControl(lucViewMode.Links[0].Control).Edit as TcxComboBox;
+// AComboBox.ItemIndex := RegKey.ReadInteger('View Mode Index');
       lucViewMode.ItemIndex := RegKey.ReadInteger('View Mode Index');
 
-//      lucPeriod.SetFocus;
-//      ALookupComboBox := TcxBarEditItemControl(lucPeriod.Links[0].Control).Edit as TcxLookupComboBox;
-//      ALookupComboBox.EditValue := FTimesheetPeriod;
+// lucPeriod.SetFocus;
+// ALookupComboBox := TcxBarEditItemControl(lucPeriod.Links[0].Control).Edit as TcxLookupComboBox;
+// ALookupComboBox.EditValue := FTimesheetPeriod;
 //
-//      dteFromDate.SetFocus;
-//      ADateEdit := TcxBarEditItemControl(dteFromDate.Links[0].Control).Edit as TcxDateEdit;
-//      ADateEdit.Date := RegKey.ReadDate('From Date');
+// dteFromDate.SetFocus;
+// ADateEdit := TcxBarEditItemControl(dteFromDate.Links[0].Control).Edit as TcxDateEdit;
+// ADateEdit.Date := RegKey.ReadDate('From Date');
 //
-//      dteToDate.SetFocus;
-//      ADateEdit := TcxBarEditItemControl(dteToDate.Links[0].Control).Edit as TcxDateEdit;
-//      ADateEdit.Date := RegKey.ReadDate('To Date');
+// dteToDate.SetFocus;
+// ADateEdit := TcxBarEditItemControl(dteToDate.Links[0].Control).Edit as TcxDateEdit;
+// ADateEdit.Date := RegKey.ReadDate('To Date');
 //
       RegKey.CloseKey;
     finally
@@ -481,8 +495,8 @@ begin
       end;
       WindowState := wsMaximized;
     end;
-//      else
-//        WindowState := wsMaximized;
+// else
+// WindowState := wsMaximized;
   finally
     FShowingForm := False;
     Screen.Cursor := crDefault;
@@ -517,7 +531,7 @@ end;
 
 procedure TMainFrm.DoExitTimesheetManager(Sender: TObject);
 begin
-//  inherited;
+// inherited;
   MainFrm.Close;
 end;
 
@@ -536,7 +550,7 @@ begin
     TSDM.cdsTimesheet.Cancel;
 
   C := viewTimesheet.Controller;
-  if c.SelectedRecordCount = 0 then
+  if C.SelectedRecordCount = 0 then
     Exit;
 
   Beep;
@@ -635,10 +649,11 @@ begin
   APopupPoint := Point(aControl.ItemBounds.Left, aControl.ItemBounds.Bottom);
   APopupPoint := aControl.Parent.ClientToScreen(APopupPoint);
 
-  case TdxBarlargeButton(Sender).Tag of
+  case TdxBarLargeButton(Sender).Tag of
     0: popApproval.Popup(APopupPoint.X, APopupPoint.Y);
     1: popBillable.Popup(APopupPoint.X, APopupPoint.Y);
     2: popInvoice.Popup(APopupPoint.X, APopupPoint.Y);
+    3: popCarryForward.Popup(APopupPoint.X, APopupPoint.Y);
   end;
 end;
 
@@ -647,11 +662,11 @@ begin
   inherited;
   ApproveTimesheetItem(TAction(Sender).Tag);
 
-//  case TAction(Sender).Tag of
-//    100: ApproveTimesheetItem(apApprove);
-//    101: ApproveTimesheetItem(apUnApprove);
-//    102: ApproveTimesheetItem(apToggleApproval);
-//  end;
+// case TAction(Sender).Tag of
+// 100: ApproveTimesheetItem(apApprove);
+// 101: ApproveTimesheetItem(apUnApprove);
+// 102: ApproveTimesheetItem(apToggleApproval);
+// end;
 end;
 
 procedure TMainFrm.ApproveTimesheetItem(ATag: Integer);
@@ -691,14 +706,51 @@ begin
     if ChangeCount > 0 then
       TSDM.PostData(TSDM.cdsTimesheet);
 
-//      if DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 0 then
-//        DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 1
-//      else
-//        DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 0;
+// if DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 0 then
+// DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 1
+// else
+// DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 0;
 //
-//      DC.Post(True);
-//    end;
-//    TSDM.PostData(TSDM.cdsTimesheet);
+// DC.Post(True);
+// end;
+// TSDM.PostData(TSDM.cdsTimesheet);
+  finally
+    DC.EndUpdate;
+  end;
+end;
+
+procedure TMainFrm.CarryForwardItem(ATag: Integer);
+var
+  DC: TcxDBDataController;
+  C: TcxCustomGridTableController;
+  I: Integer;
+  RecIndex, ChangeCount: Integer;
+begin
+  inherited;
+  DC := viewTimesheet.DataController;
+  C := viewTimesheet.Controller;
+  DC.BeginUpdate;
+  ChangeCount := 0;
+
+  try
+    begin
+      for I := 0 to C.SelectedRecordCount - 1 do
+      begin
+        RecIndex := C.SelectedRecords[I].RecordIndex;
+        DC.FocusedRecordIndex := RecIndex;
+        DC.Edit;
+
+        case ATag of
+          130: DC.SetEditValue(cbxCarryForward.Index, 1, evsValue);
+          131: DC.SetEditValue(cbxCarryForward.Index, 0, evsValue);
+        end;
+        DC.Post(True);
+        inc(ChangeCount);
+      end;
+    end;
+
+    if ChangeCount > 0 then
+      TSDM.PostData(TSDM.cdsTimesheet);
   finally
     DC.EndUpdate;
   end;
@@ -709,11 +761,17 @@ begin
   inherited;
   BillTimesheetItem(TAction(Sender).Tag);
 
-//  case TAction(Sender).Tag of
-//    110: BillTimesheetItem(abBillable);
-//    111: BillTimesheetItem(abNotBillable);
-//    112: BillTimesheetItem(abToggleBillable);
-//  end;
+// case TAction(Sender).Tag of
+// 110: BillTimesheetItem(abBillable);
+// 111: BillTimesheetItem(abNotBillable);
+// 112: BillTimesheetItem(abToggleBillable);
+// end;
+end;
+
+procedure TMainFrm.DoCarryForward(Sender: TObject);
+begin
+  inherited;
+  CarryForwardItem(TAction(Sender).Tag);
 end;
 
 procedure TMainFrm.BillTimesheetItem(ATag: Integer);
@@ -741,25 +799,25 @@ begin
           111: DC.SetEditValue(cbxBillable.Index, 0, evsValue);
         end;
 
-//        case VarAstype(lucRateUnit.EditValue, varInteger) of
-//          1: edtitemValue.Value := edtTimeSpent.Value * edtRate.Value / 60;
-//        else
-//          edtitemValue.Value := {edtTimeSpent.Value * }edtRate.Value;
-//        end;
+// case VarAstype(lucRateUnit.EditValue, varInteger) of
+// 1: edtitemValue.Value := edtTimeSpent.Value * edtRate.Value / 60;
+// else
+// edtitemValue.Value := {edtTimeSpent.Value * }edtRate.Value;
+// end;
 
         DC.SetEditValue(edtItemValue.Index, 0, evsValue);
-//        DC.Values[RecIndex, edtItemValue.Index] := 0;
+// DC.Values[RecIndex, edtItemValue.Index] := 0;
 
         if DC.Values[RecIndex, cbxBillable.Index] = 1 then
           if DC.Values[RecIndex, lucRateUnit.Index] = 1 then
             DC.SetEditValue(edtItemValue.Index, DC.Values[RecIndex, edtTimeSpent.Index] *
               DC.Values[RecIndex, edtRate.Index] / 60, evsValue)
-//            DC.Values[RecIndex, edtItemValue.Index] := DC.Values[RecIndex, edtTimeSpent.Index] *
-//              DC.Values[RecIndex, edtRate.Index] / 60
+// DC.Values[RecIndex, edtItemValue.Index] := DC.Values[RecIndex, edtTimeSpent.Index] *
+// DC.Values[RecIndex, edtRate.Index] / 60
           else
             DC.SetEditValue(edtItemValue.Index,
               DC.Values[RecIndex, edtRate.Index], evsValue);
-//            DC.Values[RecIndex, edtItemValue.Index] := DC.Values[RecIndex, edtRate.Index];
+// DC.Values[RecIndex, edtItemValue.Index] := DC.Values[RecIndex, edtRate.Index];
 
         DC.Post(True);
       end;
@@ -767,14 +825,14 @@ begin
 
     TSDM.PostData(TSDM.cdsTimesheet);
 
-//      if DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 0 then
-//        DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 1
-//      else
-//        DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 0;
+// if DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 0 then
+// DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 1
+// else
+// DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 0;
 //
-//      DC.Post(True);
-//    end;
-//    TSDM.PostData(TSDM.cdsTimesheet);
+// DC.Post(True);
+// end;
+// TSDM.PostData(TSDM.cdsTimesheet);
   finally
     DC.EndUpdate;
   end;
@@ -827,20 +885,20 @@ begin
             end;
           end;
           DC.Post(True);
-          Inc(ChangeCount);
+          inc(ChangeCount);
         end;
 
         if ChangeCount > 0 then
           TSDM.PostData(TSDM.cdsTimesheet);
 
-//      if DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 0 then
-//        DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 1
-//      else
-//        DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 0;
+// if DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 0 then
+// DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 1
+// else
+// DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 0;
 //
-//      DC.Post(True);
-//    end;
-//    TSDM.PostData(TSDM.cdsTimesheet);
+// DC.Post(True);
+// end;
+// TSDM.PostData(TSDM.cdsTimesheet);
       finally
         DC.EndUpdate;
       end;
@@ -882,7 +940,7 @@ begin
           DC.SetEditValue(dteInvoiceDate.Index, Null, evsValue);
         end;
         DC.Post(True);
-        Inc(ChangeCount);
+        inc(ChangeCount);
       end;
     end;
 
@@ -898,11 +956,11 @@ procedure TMainFrm.cbxApprovedCustomDrawCell(Sender: TcxCustomGridTableView;
   ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
 var
   DC: TcxDBDataController;
-//  C: TcxCustomGridTableController;
+// C: TcxCustomGridTableController;
 begin
   inherited;
   DC := viewTimesheet.DataController;
-//  C := viewTimesheet.Controller;
+// C := viewTimesheet.Controller;
   if DC.Values[AViewInfo.GridRecord.Index, cbxApproved.Index] then
     ACanvas.Brush.Color := clGreen
   else
@@ -936,7 +994,7 @@ begin
     BillableSummaryFrm.Close;
     FreeAndNil(BillableSummaryFrm);
   finally
-//    ribMain.ActiveTab := tabTimesheet;
+// ribMain.ActiveTab := tabTimesheet;
     Screen.Cursor := crDefault;
   end;
 end;
@@ -949,7 +1007,7 @@ end;
 
 procedure TMainFrm.DoGetTimesheetData(Sender: TObject);
 var
-  ParamList {, WhereClause}: string;
+  ParamList { , WhereClause } : string;
   AToDateEdit: TcxDateEdit;
 begin
   inherited;
@@ -974,11 +1032,11 @@ begin
       AToDateEdit := TcxBarEditItemControl(dteToDate.Links[0].Control).Edit as TcxDateEdit;
       AToDateEdit.Date := FFromDate;
     end;
-//    raise EValidateException.Create('From date cannot be greater than To date. Please conrrect and try again.');
+// raise EValidateException.Create('From date cannot be greater than To date. Please conrrect and try again.');
 
     ParamList := ' WHERE T.USER_ID =' + FTSUserID.ToString +
       ' AND T.ACTIVITY_DATE >=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FFromDate), '''') +
-      ' AND T.ACTIVITY_DATE <=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FtODate), '''') + SEMI_COLON +
+      ' AND T.ACTIVITY_DATE <=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FToDate), '''') + SEMI_COLON +
       ONE_SPACE + SEMI_COLON + 'ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
   end;
 
@@ -987,9 +1045,9 @@ begin
     if (FIteration > 0) and (ProgressFrm <> nil) then
       SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Price List Table' + '|PROGRESS=' + FIteration.ToString)), 0);
 
-//    ParamList := ' WHERE T.USER_ID=' + FTSUserID.ToString +
-//      ' AND T.THE_PERIOD=' + FTimesheetPeriod.ToString + SEMI_COLON +
-//      ONE_SPACE + SEMI_COLON + 'ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
+// ParamList := ' WHERE T.USER_ID=' + FTSUserID.ToString +
+// ' AND T.THE_PERIOD=' + FTimesheetPeriod.ToString + SEMI_COLON +
+// ONE_SPACE + SEMI_COLON + 'ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
 
     VBBaseDM.GetData(27, TSDM.cdsTimesheet, TSDM.cdsTimesheet.Name, ParamList,
       'C:\Data\Xml\Timesheet.xml', TSDM.cdsTimesheet.UpdateOptions.Generatorname,
@@ -1042,55 +1100,55 @@ begin
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   try
     RegKey.RootKey := HKEY_CURRENT_USER;
-    Regkey.OpenKey(KEY_TIME_SHEET, True);
+    RegKey.OpenKey(KEY_TIME_SHEET, True);
 
     if not RegKey.ValueExists('View Mode Index') then
       RegKey.WriteInteger('View Mode Index', 0);
 
-    if not Regkey.ValueExists('Period') then
+    if not RegKey.ValueExists('Period') then
       RegKey.WriteInteger('Period', VBBaseDM.CurrentPeriod);
 
-    if not Regkey.ValueExists('From Date') then
-      Regkey.WriteDate('From Date', Date);
+    if not RegKey.ValueExists('From Date') then
+      RegKey.WriteDate('From Date', Date);
 
-    if not Regkey.ValueExists('To Date') then
+    if not RegKey.ValueExists('To Date') then
 
-      Regkey.WriteDate('To Date', Date);
+      RegKey.WriteDate('To Date', Date);
 
-    if not Regkey.ValueExists('Use Default Customer') then
-      Regkey.WriteBool('Use Default Customer', False);
+    if not RegKey.ValueExists('Use Default Customer') then
+      RegKey.WriteBool('Use Default Customer', False);
 
-    if not Regkey.ValueExists('Default Customer ID') then
-      Regkey.WriteInteger('Default Customer ID', 0);
+    if not RegKey.ValueExists('Default Customer ID') then
+      RegKey.WriteInteger('Default Customer ID', 0);
 
-    if not Regkey.ValueExists('Use Default Price Item') then
-      Regkey.WriteBool('Use Default Price Item', False);
+    if not RegKey.ValueExists('Use Default Price Item') then
+      RegKey.WriteBool('Use Default Price Item', False);
 
-    if not Regkey.ValueExists('Default Price Item ID') then
-      Regkey.WriteInteger('Default Price Item ID', 0);
+    if not RegKey.ValueExists('Default Price Item ID') then
+      RegKey.WriteInteger('Default Price Item ID', 0);
 
-    if not Regkey.ValueExists('Use Default Rate') then
-      Regkey.WriteBool('Use Default Rate', False);
+    if not RegKey.ValueExists('Use Default Rate') then
+      RegKey.WriteBool('Use Default Rate', False);
 
-    if not Regkey.ValueExists('Default Rate') then
-      Regkey.WriteFloat('Default Rate', 0.0);
+    if not RegKey.ValueExists('Default Rate') then
+      RegKey.WriteFloat('Default Rate', 0.0);
 
-    if not Regkey.ValueExists('Auto Date on New Timesheet Line') then
-      Regkey.WriteBool('Auto Date on New Timesheet Line', True);
+    if not RegKey.ValueExists('Auto Date on New Timesheet Line') then
+      RegKey.WriteBool('Auto Date on New Timesheet Line', True);
 
-    if not Regkey.ValueExists('Save Grid Layout') then
-      Regkey.WriteBool('Save Grid Layout', False);
+    if not RegKey.ValueExists('Save Grid Layout') then
+      RegKey.WriteBool('Save Grid Layout', False);
 
-    if not Regkey.ValueExists('Pricelist Item Action Index') then
+    if not RegKey.ValueExists('Pricelist Item Action Index') then
       RegKey.WriteInteger('Pricelist Item Action Index', 3);
 
-    if not Regkey.ValueExists('Incremental Lookup Fitlering') then
-      Regkey.WriteBool('Incremental Lookup Fitlering', True);
+    if not RegKey.ValueExists('Incremental Lookup Fitlering') then
+      RegKey.WriteBool('Incremental Lookup Fitlering', True);
 
-    if not Regkey.ValueExists('Highlight Lookup Search Match') then
+    if not RegKey.ValueExists('Highlight Lookup Search Match') then
       RegKey.WriteBool('Highlight Lookup Search Match', True);
 
-    Regkey.CloseKey;
+    RegKey.CloseKey;
   finally
     RegKey.Free
   end;
@@ -1104,17 +1162,17 @@ begin
   try
     RegKey.RootKey := HKEY_CURRENT_USER;
     RegKey.OpenKey(KEY_TIME_SHEET, True);
-    TSDM.TimesheetOption.UseDefaultCustomer := Regkey.ReadBool('Use Default Customer');
-    TSDM.TimesheetOption.UseDefaultPriceItem := Regkey.ReadBool('Use Default Price Item');
-    TSDM.TimesheetOption.UseDefaultRate := Regkey.ReadBool('Use Default Rate');
-    TSDM.TimesheetOption.UseTodaysDate := Regkey.ReadBool('Auto Date on New Timesheet Line');
-    TSDM.TimesheetOption.SaveGridLayout := Regkey.ReadBool('Save Grid Layout');
-    TSDM.TimesheetOption.DefaultCustomerID := Regkey.ReadInteger('Default Customer ID');
+    TSDM.TimesheetOption.UseDefaultCustomer := RegKey.ReadBool('Use Default Customer');
+    TSDM.TimesheetOption.UseDefaultPriceItem := RegKey.ReadBool('Use Default Price Item');
+    TSDM.TimesheetOption.UseDefaultRate := RegKey.ReadBool('Use Default Rate');
+    TSDM.TimesheetOption.UseTodaysDate := RegKey.ReadBool('Auto Date on New Timesheet Line');
+    TSDM.TimesheetOption.SaveGridLayout := RegKey.ReadBool('Save Grid Layout');
+    TSDM.TimesheetOption.DefaultCustomerID := RegKey.ReadInteger('Default Customer ID');
     TSDM.TimesheetOption.DefaultPriceItemID := RegKey.ReadInteger('Default Price Item ID');
     TSDM.TimesheetOption.DefaultRate := RegKey.ReadFloat('Default Rate');
     TSDM.TimesheetOption.RateUnitID := RegKey.ReadInteger('Rate Unit ID');
     TSDM.TimesheetOption.PriceListItemActionIndex := RegKey.ReadInteger('Pricelist Item Action Index');
-    TSDM.TimesheetOption.IncrementalLookupFitlering := Regkey.ReadBool('Incremental Lookup Fitlering');
+    TSDM.TimesheetOption.IncrementalLookupFitlering := RegKey.ReadBool('Incremental Lookup Fitlering');
     TSDM.TimesheetOption.HighlightLookupSearchMatch := RegKey.ReadBool('Highlight Lookup Search Match');
   finally
     RegKey.Free
@@ -1140,7 +1198,7 @@ begin
     if AViewInfo.Item <> nil then
       if (AViewInfo.Item <> cbxApproved) and (AViewInfo.Item.Focused) then
       begin
-      // This renders the background and border colour of the focused cell
+        // This renders the background and border colour of the focused cell
         ACanvas.Brush.Color := $B6EDFA;
         ACanvas.Font.Color := RootLookAndFeel.SkinPainter.DefaultSelectionColor;
         PostMessage(Handle, CM_DRAWBORDER, Integer(ACanvas), Integer(AViewInfo));
@@ -1160,15 +1218,15 @@ var
 begin
   inherited;
   C := viewTimesheet.Controller;
-  actInsert.Enabled := c.SelectedRecordCount <= 1;
-  actEdit.Enabled := c.SelectedRecordCount <= 1;
+  actInsert.Enabled := C.SelectedRecordCount <= 1;
+  actEdit.Enabled := C.SelectedRecordCount <= 1;
 end;
 
 procedure TMainFrm.OpenTables;
 var
   Counter: Integer;
-//  Iteration: Extended;
-//  ParamList: string;
+// Iteration: Extended;
+// ParamList: string;
 begin
   if ProgressFrm = nil then
     ProgressFrm := TProgressFrm.Create(nil);
@@ -1190,7 +1248,7 @@ begin
       TSDM.cdsCustomerLookup.CreateDataSet;
 
     // Price List
-    Inc(Counter);
+    inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
 
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Price List Table' + '|PROGRESS=' + FIteration.ToString)), 0);
@@ -1202,7 +1260,7 @@ begin
       TSDM.cdsPriceList.CreateDataSet;
 
     // Activity Type
-    Inc(Counter);
+    inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
 
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Activity Type Table' + '|PROGRESS=' + FIteration.ToString)), 0);
@@ -1214,7 +1272,7 @@ begin
       TSDM.cdsActivityType.CreateDataSet;
 
     // Customer Group
-    Inc(Counter);
+    inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
 
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Customer Group Table' + '|PROGRESS=' + FIteration.ToString)), 0);
@@ -1226,7 +1284,7 @@ begin
       TSDM.cdsCustomerGroup.CreateDataSet;
 
     // Rate Unit
-    Inc(Counter);
+    inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
 
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Rate Unit Table' + '|PROGRESS=' + FIteration.ToString)), 0);
@@ -1238,7 +1296,7 @@ begin
       TSDM.cdsRateUnit.CreateDataSet;
 
     // Period - From timesheet
-    Inc(Counter);
+    inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
 
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Timesheet Period Table' + '|PROGRESS=' + FIteration.ToString)), 0);
@@ -1249,18 +1307,18 @@ begin
     if not TSDM.cdsTSPeriod.Active then
       TSDM.cdsTSPeriod.CreateDataSet;
 
-//    // Timesheet
-//    Inc(Counter);
-//    FIteration := Counter / TABLE_COUNT * 100;
+// // Timesheet
+// Inc(Counter);
+// FIteration := Counter / TABLE_COUNT * 100;
 //
-//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Timesheet Table' + '|PROGRESS=' + FIteration.ToString)), 0);
-//    actGetTimesheetData.Execute;
+// SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Timesheet Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+// actGetTimesheetData.Execute;
 
-    Inc(Counter);
+    inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
 
     // System User
-    Inc(Counter);
+    inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
 
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening System User Table' + '|PROGRESS=' + FIteration.ToString)), 0);
@@ -1271,99 +1329,99 @@ begin
     if not TSDM.cdsSystemUser.Active then
       TSDM.cdsSystemUser.CreateDataSet;
 
-    Inc(Counter);
+    inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
-//    // Vehicle
-//    Inc(Counter);
-//    FIteration := Counter / TABLE_COUNT * 100;
+// // Vehicle
+// Inc(Counter);
+// FIteration := Counter / TABLE_COUNT * 100;
 //
-//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Vehicle Table' + '|PROGRESS=' + FIteration.ToString)), 0);
-//    VBBaseDM.GetData(49, TSDM.cdsVehicle, TSDM.cdsVehicle.Name, ONE_SPACE,
-//      'C:\Data\Xml\Vehicle.xml', TSDM.cdsVehicle.UpdateOptions.Generatorname,
-//      TSDM.cdsVehicle.UpdateOptions.UpdateTableName);
+// SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Vehicle Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+// VBBaseDM.GetData(49, TSDM.cdsVehicle, TSDM.cdsVehicle.Name, ONE_SPACE,
+// 'C:\Data\Xml\Vehicle.xml', TSDM.cdsVehicle.UpdateOptions.Generatorname,
+// TSDM.cdsVehicle.UpdateOptions.UpdateTableName);
 //
-//    if not TSDM.cdsVehicle.Active then
-//      TSDM.cdsVehicle.CreateDataSet;
+// if not TSDM.cdsVehicle.Active then
+// TSDM.cdsVehicle.CreateDataSet;
 //
-//// Open all lookup tables  -----------------------------------------------------
+/// / Open all lookup tables  -----------------------------------------------------
 //
-//    // Contact type
-//    Inc(Counter);
-//    FIteration := Counter / TABLE_COUNT * 100;
+// // Contact type
+// Inc(Counter);
+// FIteration := Counter / TABLE_COUNT * 100;
 //
-//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Contact Type Table' + '|PROGRESS=' + FIteration.ToString)), 0);
-//    VBBaseDM.GetData(11, LookupDM.cdsContactType, LookupDM.cdsContactType.Name, ONE_SPACE,
-//      'C:\Data\Xml\Contact Type.xml', LookupDM.cdsContactType.UpdateOptions.Generatorname,
-//      LookupDM.cdsContactType.UpdateOptions.UpdateTableName);
+// SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Contact Type Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+// VBBaseDM.GetData(11, LookupDM.cdsContactType, LookupDM.cdsContactType.Name, ONE_SPACE,
+// 'C:\Data\Xml\Contact Type.xml', LookupDM.cdsContactType.UpdateOptions.Generatorname,
+// LookupDM.cdsContactType.UpdateOptions.UpdateTableName);
 //
-//    // Salutation
-//    Inc(Counter);
-//    FIteration := Counter / TABLE_COUNT * 100;
+// // Salutation
+// Inc(Counter);
+// FIteration := Counter / TABLE_COUNT * 100;
 //
-//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Salutation Table' + '|PROGRESS=' + FIteration.ToString)), 0);
-//    VBBaseDM.GetData(23, LookupDM.cdsSalutation, LookupDM.cdsSalutation.Name, ONE_SPACE,
-//      'C:\Data\Xml\Slutation.xml', LookupDM.cdsSalutation.UpdateOptions.Generatorname,
-//      LookupDM.cdsSalutation.UpdateOptions.UpdateTableName);
+// SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Salutation Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+// VBBaseDM.GetData(23, LookupDM.cdsSalutation, LookupDM.cdsSalutation.Name, ONE_SPACE,
+// 'C:\Data\Xml\Slutation.xml', LookupDM.cdsSalutation.UpdateOptions.Generatorname,
+// LookupDM.cdsSalutation.UpdateOptions.UpdateTableName);
 //
-//    LookupDM.cdsBFSalutation.Close;
-//    LookupDM.cdsDirectorSalutation.Close;
+// LookupDM.cdsBFSalutation.Close;
+// LookupDM.cdsDirectorSalutation.Close;
 //
-//    LookupDM.cdsBFSalutation.Data := LookupDM.cdsSalutation.Data;
-//    LookupDM.cdsDirectorSalutation.Data := LookupDM.cdsSalutation.Data;
+// LookupDM.cdsBFSalutation.Data := LookupDM.cdsSalutation.Data;
+// LookupDM.cdsDirectorSalutation.Data := LookupDM.cdsSalutation.Data;
 //
-//   // Job function
-//    Inc(Counter);
-//    FIteration := Counter / TABLE_COUNT * 100;
+// // Job function
+// Inc(Counter);
+// FIteration := Counter / TABLE_COUNT * 100;
 //
-//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Job Function Table' + '|PROGRESS=' + FIteration.ToString)), 0);
-//    VBBaseDM.GetData(19, LookupDM.cdsJobFunction, LookupDM.cdsJobFunction.Name, ONE_SPACE,
-//      'C:\Data\Xml\Job Function.xml', LookupDM.cdsJobFunction.UpdateOptions.Generatorname,
-//      LookupDM.cdsJobFunction.UpdateOptions.UpdateTableName);
+// SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Job Function Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+// VBBaseDM.GetData(19, LookupDM.cdsJobFunction, LookupDM.cdsJobFunction.Name, ONE_SPACE,
+// 'C:\Data\Xml\Job Function.xml', LookupDM.cdsJobFunction.UpdateOptions.Generatorname,
+// LookupDM.cdsJobFunction.UpdateOptions.UpdateTableName);
 //
-//    // Bank
-//    Inc(Counter);
-//    FIteration := Counter / TABLE_COUNT * 100;
+// // Bank
+// Inc(Counter);
+// FIteration := Counter / TABLE_COUNT * 100;
 //
-//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Bank Table' + '|PROGRESS=' + FIteration.ToString)), 0);
-//    VBBaseDM.GetData(5, LookupDM.cdsBank, LookupDM.cdsBank.Name, ONE_SPACE,
-//      'C:\Data\Xml\Bank.xml', LookupDM.cdsBank.UpdateOptions.Generatorname,
-//      LookupDM.cdsBank.UpdateOptions.UpdateTableName);
+// SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Bank Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+// VBBaseDM.GetData(5, LookupDM.cdsBank, LookupDM.cdsBank.Name, ONE_SPACE,
+// 'C:\Data\Xml\Bank.xml', LookupDM.cdsBank.UpdateOptions.Generatorname,
+// LookupDM.cdsBank.UpdateOptions.UpdateTableName);
 //
-//    // Bank account type
-//    Inc(Counter);
-//    FIteration := Counter / TABLE_COUNT * 100;
+// // Bank account type
+// Inc(Counter);
+// FIteration := Counter / TABLE_COUNT * 100;
 //
-//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Bank Account Type Table' + '|PROGRESS=' + FIteration.ToString)), 0);
-//    VBBaseDM.GetData(6, LookupDM.cdsBankAccountType, LookupDM.cdsBankAccountType.Name, ONE_SPACE,
-//      'C:\Data\Xml\Bank Account Type.xml', LookupDM.cdsBankAccountType.UpdateOptions.Generatorname,
-//      LookupDM.cdsBankAccountType.UpdateOptions.UpdateTableName);
+// SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Bank Account Type Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+// VBBaseDM.GetData(6, LookupDM.cdsBankAccountType, LookupDM.cdsBankAccountType.Name, ONE_SPACE,
+// 'C:\Data\Xml\Bank Account Type.xml', LookupDM.cdsBankAccountType.UpdateOptions.Generatorname,
+// LookupDM.cdsBankAccountType.UpdateOptions.UpdateTableName);
 //
-//    // Vehicle make
-//    Inc(Counter);
-//    FIteration := Counter / TABLE_COUNT * 100;
+// // Vehicle make
+// Inc(Counter);
+// FIteration := Counter / TABLE_COUNT * 100;
 //
-//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Vehicle Make Table' + '|PROGRESS=' + FIteration.ToString)), 0);
-//    VBBaseDM.GetData(48, LookupDM.cdsVehicleMake, LookupDM.cdsVehicleMake.Name, ONE_SPACE,
-//      'C:\Data\Xml\Vehicle Make.xml', LookupDM.cdsVehicleMake.UpdateOptions.Generatorname,
-//      LookupDM.cdsVehicleMake.UpdateOptions.UpdateTableName);
+// SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Vehicle Make Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+// VBBaseDM.GetData(48, LookupDM.cdsVehicleMake, LookupDM.cdsVehicleMake.Name, ONE_SPACE,
+// 'C:\Data\Xml\Vehicle Make.xml', LookupDM.cdsVehicleMake.UpdateOptions.Generatorname,
+// LookupDM.cdsVehicleMake.UpdateOptions.UpdateTableName);
 //
-//    // Month of Year
-//    Inc(Counter);
-//    FIteration := Counter / TABLE_COUNT * 100;
+// // Month of Year
+// Inc(Counter);
+// FIteration := Counter / TABLE_COUNT * 100;
 //
-//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Month of Year Table' + '|PROGRESS=' + FIteration.ToString)), 0);
-//    VBBaseDM.GetData(20, LookupDM.cdsMonthOfYear, LookupDM.cdsMonthOfYear.Name, ONE_SPACE,
-//      'C:\Data\Xml\Month of Year.xml', LookupDM.cdsMonthOfYear.UpdateOptions.Generatorname,
-//      LookupDM.cdsMonthOfYear.UpdateOptions.UpdateTableName);
+// SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Month of Year Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+// VBBaseDM.GetData(20, LookupDM.cdsMonthOfYear, LookupDM.cdsMonthOfYear.Name, ONE_SPACE,
+// 'C:\Data\Xml\Month of Year.xml', LookupDM.cdsMonthOfYear.UpdateOptions.Generatorname,
+// LookupDM.cdsMonthOfYear.UpdateOptions.UpdateTableName);
 //
-//    LookupDM.cdsARMonthOfYear.Close;
-//    LookupDM.cdsVATMonth.Close;
+// LookupDM.cdsARMonthOfYear.Close;
+// LookupDM.cdsVATMonth.Close;
 //
-//    LookupDM.cdsARMonthOfYear.Data := LookupDM.cdsSalutation.Data;
-//    LookupDM.cdsVATMonth.Data := LookupDM.cdsSalutation.Data;
+// LookupDM.cdsARMonthOfYear.Data := LookupDM.cdsSalutation.Data;
+// LookupDM.cdsVATMonth.Data := LookupDM.cdsSalutation.Data;
   finally
-//    ProgressFrm.Close;
-//    FreeAndNil(ProgressFrm);
+// ProgressFrm.Close;
+// FreeAndNil(ProgressFrm);
   end;
 end;
 
@@ -1382,12 +1440,12 @@ begin
   EditMode := StringToBoolean(PChar(MyMsg.WParam));
   SetButtonStatus(EditMode);
 //
-//  try
-//    if SL.Values['REQUEST'] = 'REFRESH_DATA' then
-//      SendMessage(CustomerFrm.Handle, WM_RECORD_ID, DWORD(PChar(SL.DelimitedText)), 0);
-//  finally
-//    MyMsg.Result := -1;
-//  end;
+// try
+// if SL.Values['REQUEST'] = 'REFRESH_DATA' then
+// SendMessage(CustomerFrm.Handle, WM_RECORD_ID, DWORD(PChar(SL.DelimitedText)), 0);
+// finally
+// MyMsg.Result := -1;
+// end;
 end;
 
 procedure TMainFrm.lucPeriodPropertiesEditValueChanged(Sender: TObject);
@@ -1399,8 +1457,8 @@ begin
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   try
     RegKey.RootKey := HKEY_CURRENT_USER;
-    Regkey.OpenKey(KEY_TIME_SHEET, True);
-    Regkey.WriteInteger('Period', FTimesheetPeriod);
+    RegKey.OpenKey(KEY_TIME_SHEET, True);
+    RegKey.WriteInteger('Period', FTimesheetPeriod);
     RegKey.CloseKey;
   finally
     RegKey.Free
@@ -1422,7 +1480,7 @@ procedure TMainFrm.dteFromDatePropertiesEditValueChanged(Sender: TObject);
 var
   AFromDateEdit: TcxDateEdit;
   RegKey: TRegistry;
-  //ATag: integer;
+  // ATag: integer;
 begin
   inherited;
   dteFromDate.SetFocus;
@@ -1431,11 +1489,11 @@ begin
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   try
     RegKey.RootKey := HKEY_CURRENT_USER;
-    Regkey.OpenKey(KEY_TIME_SHEET, True);
+    RegKey.OpenKey(KEY_TIME_SHEET, True);
 
     if not FShowingForm then
     begin
-      Regkey.WriteDate('From Date', FFromDate);
+      RegKey.WriteDate('From Date', FFromDate);
       actGetTimesheetData.Execute;
     end;
 
@@ -1449,7 +1507,7 @@ procedure TMainFrm.dteToDatePropertiesEditValueChanged(Sender: TObject);
 var
   AToDateEdit: TcxDateEdit;
   RegKey: TRegistry;
-  //ATag: integer;
+  // ATag: integer;
 begin
   inherited;
   dteToDate.SetFocus;
@@ -1458,11 +1516,11 @@ begin
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   try
     RegKey.RootKey := HKEY_CURRENT_USER;
-    Regkey.OpenKey(KEY_TIME_SHEET, True);
+    RegKey.OpenKey(KEY_TIME_SHEET, True);
 
     if not FShowingForm then
     begin
-      Regkey.WriteDate('To Date', FToDate);
+      RegKey.WriteDate('To Date', FToDate);
       actGetTimesheetData.Execute;
     end;
 
@@ -1474,19 +1532,19 @@ end;
 
 procedure TMainFrm.lucViewModeChange(Sender: TObject);
 var
-//  AComboBox: TcxComboBox;
-//  ALookupComboBox: TcxLookupComboBox;
-//  AFromDateEdit, AToDateEdit: TcxDateEdit;
+// AComboBox: TcxComboBox;
+// ALookupComboBox: TcxLookupComboBox;
+// AFromDateEdit, AToDateEdit: TcxDateEdit;
   RegKey: TRegistry;
-//  MonthEndDate: TDateTime;
+// MonthEndDate: TDateTime;
 begin
   inherited;
   ribMain.BeginUpdate;
-//  AComboBox := TcxBarEditItemControl(lucViewMode.Links[0].Control).Edit as TcxComboBox;
+// AComboBox := TcxBarEditItemControl(lucViewMode.Links[0].Control).Edit as TcxComboBox;
   lucPeriod.Enabled := lucViewMode.ItemIndex = 0;
   dteFromDate.Enabled := not lucPeriod.Enabled;
   dteToDate.Enabled := not lucPeriod.Enabled;
-//  MonthEndDate := GetMonthEndDate(FTimesheetPeriod);
+// MonthEndDate := GetMonthEndDate(FTimesheetPeriod);
 
   try
     case lucViewMode.ItemIndex of
@@ -1508,13 +1566,13 @@ begin
     ribMain.EndUpdate;
   end;
 
-  Regkey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   try
-    Regkey.RootKey := HKEY_CURRENT_USER;
+    RegKey.RootKey := HKEY_CURRENT_USER;
     RegKey.OpenKey(KEY_TIME_SHEET, True);
     RegKey.WriteInteger('View Mode Index', lucViewMode.ItemIndex);
   finally
-    Regkey.Free
+    RegKey.Free
   end;
 
   if not FShowingForm then
@@ -1523,56 +1581,56 @@ end;
 
 procedure TMainFrm.lucViewModePropertiesEditValueChanged(Sender: TObject);
 var
-//  AComboBox: TcxComboBox;
-//  ALookupComboBox: TcxLookupComboBox;
-//  AFromDateEdit, AToDateEdit: TcxDateEdit;
+// AComboBox: TcxComboBox;
+// ALookupComboBox: TcxLookupComboBox;
+// AFromDateEdit, AToDateEdit: TcxDateEdit;
   RegKey: TRegistry;
-//  MonthEndDate: TDateTime;
+// MonthEndDate: TDateTime;
 begin
   inherited;
-//  barToolbar.Bars.BeginUpdate;
-//  AComboBox := TcxBarEditItemControl(lucViewMode.Links[0].Control).Edit as TcxComboBox;
+// barToolbar.Bars.BeginUpdate;
+// AComboBox := TcxBarEditItemControl(lucViewMode.Links[0].Control).Edit as TcxComboBox;
   lucPeriod.Enabled := lucViewMode.ItemIndex = 0;
   dteFromDate.Enabled := not lucPeriod.Enabled;
   dteToDate.Enabled := not lucPeriod.Enabled;
-//  MonthEndDate := GetMonthEndDate(FTimesheetPeriod);
+// MonthEndDate := GetMonthEndDate(FTimesheetPeriod);
 
-//  try
-//    case AComboBox.ItemIndex of
-//      0:
-//        begin
-//          lucPeriod.Visible := ivAlways;
-//          lblPeriod.Visible := ivAlways;
-//          lblFromDate.Visible := ivNever;
-//          dteFromDate.Visible := ivNever;
-//          lblToDate.Visible := ivNever;
-//          dteToDate.Visible := ivNever;
-//        end;
+// try
+// case AComboBox.ItemIndex of
+// 0:
+// begin
+// lucPeriod.Visible := ivAlways;
+// lblPeriod.Visible := ivAlways;
+// lblFromDate.Visible := ivNever;
+// dteFromDate.Visible := ivNever;
+// lblToDate.Visible := ivNever;
+// dteToDate.Visible := ivNever;
+// end;
 //
-//      1:
-//        begin
-//          lucPeriod.Visible := ivNever;
-//          lblPeriod.Visible := ivNever;
-//          lblFromDate.Visible := ivAlways;
-//          dteFromDate.Visible := ivAlways;
-//          lblToDate.Visible := ivAlways;
-//          dteToDate.Visible := ivAlways;
-//        end;
-//    end;
-//  finally
-//    barToolbar.Bars.EndUpdate(True);
-//  end;
+// 1:
+// begin
+// lucPeriod.Visible := ivNever;
+// lblPeriod.Visible := ivNever;
+// lblFromDate.Visible := ivAlways;
+// dteFromDate.Visible := ivAlways;
+// lblToDate.Visible := ivAlways;
+// dteToDate.Visible := ivAlways;
+// end;
+// end;
+// finally
+// barToolbar.Bars.EndUpdate(True);
+// end;
 
-  Regkey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   try
-    Regkey.RootKey := HKEY_CURRENT_USER;
+    RegKey.RootKey := HKEY_CURRENT_USER;
     RegKey.OpenKey(KEY_TIME_SHEET, True);
     RegKey.WriteInteger('View Mode Index', lucViewMode.ItemIndex);
   finally
-    Regkey.Free
+    RegKey.Free
   end;
-//  if not FShowingForm then
-//    actGetTimesheetData.Execute;
+// if not FShowingForm then
+// actGetTimesheetData.Execute;
 end;
 
 procedure TMainFrm.DoEditInsertEntry(Sender: TObject);
@@ -1668,7 +1726,7 @@ var
 begin
   inherited;
   FolderPath := EXCEL_DOCS;
-//  FolderPath := MainFrm.FShellResource.RootFolder + '\' + FSHIFT_FOLDER + 'Export\';
+// FolderPath := MainFrm.FShellResource.RootFolder + '\' + FSHIFT_FOLDER + 'Export\';
   TDirectory.CreateDirectory(FolderPath);
   dlgFileSave.DefaultExt := 'xlsx';
   dlgFileSave.InitialDir := FolderPath;
@@ -1678,7 +1736,7 @@ begin
   if not FileSaved then
     Exit;
 
-//  if dlgFileSave.Execute then
+// if dlgFileSave.Execute then
   if TFile.Exists(dlgFileSave.FileName) then
   begin
     Beep;
@@ -1730,7 +1788,7 @@ begin
       True, // Use native format
       'xlsx');
 
-//    if cbxOepnDocument.Checked then
+// if cbxOepnDocument.Checked then
     ShellExecute(0, 'open', PChar('Excel.exe'), PChar('"' + ExportFileName + '"'), nil, SW_SHOWNORMAL)
   finally
     viewTimesheetBillable.OptionsView.BandHeaders := True;
@@ -1806,4 +1864,3 @@ begin
 end;
 
 end.
-
