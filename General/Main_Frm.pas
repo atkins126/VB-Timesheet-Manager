@@ -234,13 +234,14 @@ type
     procedure DoBillableSummary(Sender: TObject);
     procedure ribMainTabChanged(Sender: TdxCustomRibbon);
     procedure DoActivitySummary(Sender: TObject);
-    procedure cbxApprovedCustomDrawCell(Sender: TcxCustomGridTableView;
-      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
     procedure DoApprovalStatus(Sender: TObject);
     procedure btnApproveClick(Sender: TObject);
     procedure DoBillable(Sender: TObject);
     procedure DoInvoiceItem(Sender: TObject);
     procedure DoCarryForward(Sender: TObject);
+
+    procedure cbxApprovedCustomDrawCell(Sender: TcxCustomGridTableView;
+      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
   private
     { Private declarations }
     FTSUserID: Integer;
@@ -260,6 +261,7 @@ type
     procedure InvoiceTimesheetItem;
     procedure UnInvoiceTimesheetItem;
     procedure CarryForwardItem(ATag: Integer);
+    procedure UpdateReports;
   protected
     procedure HandleStateChange(var MyMsg: TMessage); message WM_STATE_CHANGE;
     procedure DrawCellBorder(var Msg: TMessage); message CM_DRAWBORDER;
@@ -276,7 +278,6 @@ const
 implementation
 
 {$R *.dfm}
-
 
 uses
   TS_DM,
@@ -303,7 +304,7 @@ procedure TMainFrm.FormCreate(Sender: TObject);
 begin
   inherited;
   Caption := Application.Title;
-  layMain.Align :=  alClient;
+  layMain.Align := alClient;
   layMain.LayoutLookAndFeel := lafCustomSkin;
   ribMain.ActiveTab := tabTimesheet;
   ribMain.Update;
@@ -312,7 +313,7 @@ end;
 procedure TMainFrm.FormShow(Sender: TObject);
 var
   VBShell: string;
-  {$IFDEF DEBUG}ErrorMsg, {$ENDIF}SkinResourceFileName, SkinName: string;
+{$IFDEF DEBUG}ErrorMsg, {$ENDIF}SkinResourceFileName, SkinName: string;
 // Day, Month, Year: Word;
   RegKey: TRegistry;
   // AComboBox: TcxComboBox;
@@ -330,7 +331,7 @@ begin
     MsgDialogFrm := TMsgDialogFrm.Create(nil);
 
   try
-    {$IFDEF DEBUG}
+{$IFDEF DEBUG}
     Self.BorderStyle := bsSizeable;
     ErrorMsg := '';
     if not LocalDSServerIsRunning(LOCAL_VB_SHELL_DS_SERVER, ErrorMsg) then
@@ -347,7 +348,7 @@ begin
         [mbOK]
         );
     end;
-    {$ENDIF}
+{$ENDIF}
     if VBBaseDM = nil then
       VBBaseDM := TVBBaseDM.Create(nil);
 
@@ -1007,7 +1008,7 @@ end;
 
 procedure TMainFrm.DoGetTimesheetData(Sender: TObject);
 var
-  ParamList { , WhereClause } : string;
+  ParamList { , WhereClause }: string;
   AToDateEdit: TcxDateEdit;
 begin
   inherited;
@@ -1090,6 +1091,32 @@ begin
   finally
     sknController.Refresh;
     sknController.EndUpdate;
+  end;
+end;
+
+procedure TMainFrm.UpdateReports;
+var
+  Counter: Integer;
+
+const
+  REPORT_COUNT = 3;
+begin
+  if ProgressFrm = nil then
+    ProgressFrm := TProgressFrm.Create(nil);
+  try
+    ProgressFrm.FormStyle := fsStayOnTop;
+    ProgressFrm.Show;
+    Counter := 1;
+    FIteration := Counter / TABLE_COUNT * 100;
+
+//    MasterGenericReport.fr3
+//      Priceist.fr3
+//      PriceHistory.fr3
+
+    // Customer Lookup
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Customer Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+  finally
+    FreeAndNil(ProgressFrm);
   end;
 end;
 
@@ -1864,3 +1891,4 @@ begin
 end;
 
 end.
+

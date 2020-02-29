@@ -30,6 +30,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
         ScrollbarAnnotations.CustomAnnotations = <>
         OnCustomDrawCell = viewBillableSummaryCustomDrawCell
         OnFocusedRecordChanged = viewBillableSummaryFocusedRecordChanged
+        DataController.DataSource = ReportDM.dtsBillableSummary
         DataController.Options = [dcoCaseInsensitive, dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding]
         DataController.Summary.DefaultGroupSummaryItems = <
           item
@@ -279,6 +280,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
         OnCustomDrawCell = viewBillableSummaryCustomDrawCell
+        DataController.DataSource = ReportDM.dtsCarryForwardDetail
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -853,7 +855,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           Properties.EditFormat = '######0'
           Properties.ReadOnly = True
           Visible = False
-          MinWidth = 64
+          MinWidth = 74
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
@@ -881,6 +883,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
         OnCustomDrawCell = viewBillableSummaryCustomDrawCell
+        DataController.DataSource = ReportDM.dtsTimesheet
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -1455,7 +1458,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           Properties.EditFormat = '######0'
           Properties.ReadOnly = True
           Visible = False
-          MinWidth = 64
+          MinWidth = 74
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
