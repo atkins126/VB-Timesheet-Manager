@@ -217,6 +217,7 @@ begin
   cdsTimesheet.FieldByName('TIME_SPENT').AsFloat := 0.0;
   cdsTimesheet.FieldByName('BILLABLE').AsInteger := 0;
   cdsTimesheet.FieldByName('CARRY_FORWARD').AsInteger := 0;
+  cdsTimesheet.FieldByName('INVOICE_ID').AsInteger := -1;
   cdsTimesheet.FieldByName('APPROVED').AsInteger := 0;
   cdsTimesheet.FieldByName('IS_ADDITIONAL_WORK').AsInteger := 0;
   cdsTimesheet.FieldByName('LOCKED').AsInteger := 0;

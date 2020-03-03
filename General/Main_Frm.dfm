@@ -17,9 +17,9 @@ inherited MainFrm: TMainFrm
     Height = 616
     Align = alClient
     ExplicitLeft = 0
-    ExplicitTop = 145
-    ExplicitWidth = 1400
-    ExplicitHeight = 576
+    ExplicitTop = 116
+    ExplicitWidth = 1455
+    ExplicitHeight = 616
     object grdTimesheet: TcxGrid [0]
       Left = 11
       Top = 11
@@ -30,6 +30,7 @@ inherited MainFrm: TMainFrm
         PopupMenu = popTimesheet
         OnDblClick = viewTimesheetDblClick
         Navigator.Buttons.CustomButtons = <>
+        FilterBox.CustomizeButtonAlignment = fbaLeft
         ScrollbarAnnotations.CustomAnnotations = <>
         OnCustomDrawCell = viewTimesheetCustomDrawCell
         OnSelectionChanged = viewTimesheetSelectionChanged
@@ -135,7 +136,6 @@ inherited MainFrm: TMainFrm
           HeaderHint = 'Approved status'
           MinWidth = 35
           Options.Editing = False
-          Options.Filtering = False
           Options.IncSearch = False
           Options.HorzSizing = False
           Options.Sorting = False
@@ -155,7 +155,6 @@ inherited MainFrm: TMainFrm
           HeaderHint = 'Carry forward status'
           MinWidth = 40
           Options.Editing = False
-          Options.Filtering = False
           Options.IncSearch = False
           Options.HorzSizing = False
           Options.Sorting = False
@@ -8973,7 +8972,7 @@ inherited MainFrm: TMainFrm
   object popTimesheet: TPopupMenu
     Images = img16
     Left = 500
-    Top = 280
+    Top = 283
     object Insert1: TMenuItem
       Action = actInsert
       ImageIndex = 0
@@ -9038,7 +9037,7 @@ inherited MainFrm: TMainFrm
     end
     object ClearCarryForward1: TMenuItem
       Action = actClearCarryForward
-      ImageIndex = 14
+      ImageIndex = 15
     end
   end
   object dlgPrint: TdxPrintDialog

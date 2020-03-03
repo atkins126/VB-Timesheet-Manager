@@ -262,7 +262,7 @@ end;
 
 procedure TTimesheetActivitySummaryFrm.DoExcel(Sender: TObject);
 var
-  DestFolder, FolderPath, ExportFileName: string;
+  {DestFolder, }FolderPath, ExportFileName: string;
   FileSaved: Boolean;
 //  ProgressDialog: TExcelExportProgressFrm;
 begin

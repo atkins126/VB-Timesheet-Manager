@@ -184,9 +184,9 @@ end;
 
 procedure TBillableSummaryFrm.DoExcel(Sender: TObject);
 var
-  DestFolder, FolderPath, ExportFileName: string;
+  {DestFolder, }FolderPath, ExportFileName: string;
   FileSaved: Boolean;
-  RepFileName: string;
+//  RepFileName: string;
   CustomerID: Integer;
 //  ProgressDialog: TExcelExportProgressFrm;
 begin
@@ -437,7 +437,7 @@ begin
   viewCarryForwardDetail.DataController.DataSource := ReportDM.dtsTimesheetCF;
   grpData.ItemIndex := 0;
   litTimesheet.CaptionOptions.Text := 'Timesheet Details (0 Items)';
-  litCarryForward.CaptionOptions.Text := 'Carry Forwad Details (0 Items)';
+  litCarryForward.CaptionOptions.Text := 'Carry Forward Details (0 Items)';
   OpenTables;
 //  GetPeriods;
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
@@ -481,7 +481,7 @@ end;
 procedure TBillableSummaryFrm.GetBillableSummary;
 var
   SL: TStringList;
-  FromPeriod, ToPeriod, I, Period: Integer;
+  FromPeriod, ToPeriod, Period: Integer;
   OrderByClause, FileName: string;
   AComboBox: TcxComboBox;
   SamePeriod: Boolean;
@@ -640,9 +640,9 @@ begin
       litTimesheet.CaptionOptions.Text := 'Timesheet Details (' + ReportDM.cdsTimesheetDetail.RecordCount.ToString + ' Items)';
 
     if ReportDM.cdsTimesheetCF.IsEmpty then
-      litCarryForward.CaptionOptions.Text := 'Carry Forwad Details (0 Items)'
+      litCarryForward.CaptionOptions.Text := 'Carry Forward Details (0 Items)'
     else
-      litCarryForward.CaptionOptions.Text := 'Timesheet Details (' + ReportDM.cdsTimesheetCF.RecordCount.ToString + ' Items)';
+      litCarryForward.CaptionOptions.Text := 'Carry Forward Details (' + ReportDM.cdsTimesheetCF.RecordCount.ToString + ' Items)';
   finally
     Screen.Cursor := crDefault;
   end;
@@ -783,42 +783,56 @@ var
 begin
   if ProgressFrm = nil then
     ProgressFrm := TProgressFrm.Create(nil);
-  ProgressFrm.lblAppTitle.Caption := 'Getting Data...';
+//  ProgressFrm.lblAppTitle.Caption := 'Getting Data...';
+  SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('Getting Data...')), 0);
   ProgressFrm.Update;
   ProgressFrm.Show;
   ProgressFrm.Update;
   I := 1;
 
   try
-    DownloadCaption := 'Opening_Period_Table';
+    DownloadCaption := 'Opening Period Table';
     Progress := StrToFloat(I.ToString) / StrToFloat(TABLE_COUNT.ToString) * 100;
-    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
+//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(DownloadCaption)), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FloatToStr(Progress))), 0);
     GetPeriods;
 
     Inc(I);
-    DownloadCaption := 'Opening_System_User_Table';
+    DownloadCaption := 'Opening System User Table';
     Progress := StrToFloat(I.ToString) / StrToFloat(TABLE_COUNT.ToString) * 100;
-    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
+//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(DownloadCaption)), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FloatToStr(Progress))), 0);
     GetSystemUser;
 
     Inc(I);
     Progress := StrToFloat(I.ToString) / StrToFloat(TABLE_COUNT.ToString) * 100;
-    DownloadCaption := 'Opening_Activity_Type_Table';
-    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
+    DownloadCaption := 'Opening Activity Type Table';
+//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(DownloadCaption)), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FloatToStr(Progress))), 0);
     GetActivityType;
 
     Inc(I);
     Progress := StrToFloat(I.ToString) / StrToFloat(TABLE_COUNT.ToString) * 100;
-    DownloadCaption := 'Opening_Customer_Table';
-    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
+    DownloadCaption := 'Opening Customer Table';
+//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(DownloadCaption)), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FloatToStr(Progress))), 0);
     GetPriceList;
 
     Inc(I);
     Progress := StrToFloat(I.ToString) / StrToFloat(TABLE_COUNT.ToString) * 100;
-    DownloadCaption := 'Opening_Rate_Unit_Table';
-    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
+    DownloadCaption := 'Opening Rate Unit Table';
+//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(DownloadCaption)), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FloatToStr(Progress))), 0);
     GetRateUnit;
-    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=100' + '|CAPTION=All_tables_opened')), 0);
+//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=100' + '|CAPTION=All_tables_opened')), 0);
+    Progress := 0;
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('All tables opened')), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FloatToStr(Progress))), 0);
   finally
     ProgressFrm.Close;
     FreeAndNil(ProgressFrm);

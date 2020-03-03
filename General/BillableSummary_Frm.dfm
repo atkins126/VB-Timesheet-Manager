@@ -280,7 +280,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
         OnCustomDrawCell = viewBillableSummaryCustomDrawCell
-        DataController.DataSource = ReportDM.dtsCarryForwardDetail
+        DataController.DataSource = ReportDM.dtsTimesheetCF
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -883,7 +883,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
         OnCustomDrawCell = viewBillableSummaryCustomDrawCell
-        DataController.DataSource = ReportDM.dtsTimesheet
+        DataController.DataSource = ReportDM.dtsTimesheetDetail
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <
           item

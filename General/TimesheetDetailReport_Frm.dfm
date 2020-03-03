@@ -19,8 +19,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     ExplicitWidth = 966
     ExplicitHeight = 647
     object lucDateType: TcxComboBox [0]
-      Left = 89
-      Top = 94
+      Left = 85
+      Top = 106
       Properties.DropDownListStyle = lsFixedList
       Properties.ImmediatePost = True
       Properties.ImmediateUpdateText = True
@@ -35,8 +35,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Width = 100
     end
     object lucBillable: TcxComboBox [1]
-      Left = 461
-      Top = 94
+      Left = 449
+      Top = 106
       Properties.DropDownListStyle = lsFixedList
       Properties.ImmediatePost = True
       Properties.ImmediateUpdateText = True
@@ -50,8 +50,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Width = 120
     end
     object lucWorkType: TcxComboBox [2]
-      Left = 461
-      Top = 119
+      Left = 449
+      Top = 131
       Properties.DropDownListStyle = lsFixedList
       Properties.ImmediatePost = True
       Properties.ImmediateUpdateText = True
@@ -65,8 +65,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Width = 120
     end
     object dteToDate: TcxDateEdit [3]
-      Left = 261
-      Top = 119
+      Left = 257
+      Top = 131
       Properties.DisplayFormat = 'dd/MM/yyyy'
       Properties.EditFormat = 'dd/MM/yyyy'
       Properties.ImmediatePost = True
@@ -78,8 +78,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Width = 100
     end
     object lucPeriod: TcxLookupComboBox [4]
-      Left = 89
-      Top = 119
+      Left = 85
+      Top = 131
       BeepOnEnter = False
       Properties.DropDownAutoSize = True
       Properties.DropDownListStyle = lsFixedList
@@ -104,8 +104,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       BarManager = barManager
     end
     object dteFromDate: TcxDateEdit [6]
-      Left = 261
-      Top = 94
+      Left = 257
+      Top = 106
       Properties.DisplayFormat = 'dd/MM/yyyy'
       Properties.EditFormat = 'dd/MM/yyyy'
       Properties.ImmediatePost = True
@@ -117,8 +117,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Width = 100
     end
     object cbxOepnDocument: TcxCheckBox [7]
-      Left = 587
-      Top = 94
+      Left = 575
+      Top = 106
       Caption = 'Open document after export'
       State = cbsChecked
       Style.HotTrack = False
@@ -127,8 +127,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Transparent = True
     end
     object cbxRemoveZeroBillableValues: TcxCheckBox [8]
-      Left = 587
-      Top = 117
+      Left = 575
+      Top = 131
       Caption = 'Remove items with zero billable values'
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
@@ -139,10 +139,10 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Transparent = True
     end
     object grdSystemUser: TcxGrid [9]
-      Left = 22
-      Top = 192
-      Width = 922
-      Height = 433
+      Left = 25
+      Top = 205
+      Width = 913
+      Height = 414
       BorderStyle = cxcbsNone
       TabOrder = 9
       object viewSystemUser: TcxGridDBBandedTableView
@@ -622,7 +622,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       CaptionOptions.Text = 'New Item'
       CaptionOptions.Visible = False
       Control = cbxOepnDocument
-      ControlOptions.OriginalHeight = 17
+      ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 183
       ControlOptions.ShowBorder = False
       Index = 0
@@ -632,7 +632,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       CaptionOptions.Text = 'New Item'
       CaptionOptions.Visible = False
       Control = cbxRemoveZeroBillableValues
-      ControlOptions.OriginalHeight = 17
+      ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 244
       ControlOptions.ShowBorder = False
       Index = 1

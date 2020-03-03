@@ -208,12 +208,7 @@ type
     procedure lucReportTypePropertiesEditValueChanged(Sender: TObject);
   private
     { Private declarations }
-    FGridIndex: Integer;
     FReportFileName: TReportFileName;
-
-    property ReportFileName: TReportFileName read FReportFileName write FReportFileName;
-//    property NodeIndex: Integer read FNodeIndex write FNodeIndex;
-    property GridIndex: Integer read FGridIndex write FGridIndex;
   public
     { Public declarations }
   end;
@@ -629,9 +624,9 @@ end;
 
 procedure TTimesheetDetailReportFrm.DoExcel(Sender: TObject);
 var
-  DestFolder, FolderPath, ExportFileName: string;
+  {DestFolder, }FolderPath, ExportFileName: string;
   FileSaved: Boolean;
-  RepFileName: string;
+//  RepFileName: string;
 //  ProgressDialog: TExcelExportProgressFrm;
 begin
   inherited;
@@ -731,7 +726,7 @@ procedure TTimesheetDetailReportFrm.DoPDF(Sender: TObject);
 var
   FileSaved: Boolean;
   DC: TcxCustomDataController;
-  RepFileName: string;
+//  RepFileName: string;
 begin
   inherited;
   ReportDM.frxPDFExport.ShowDialog := False;

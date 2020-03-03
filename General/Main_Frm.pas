@@ -261,7 +261,6 @@ type
     procedure InvoiceTimesheetItem;
     procedure UnInvoiceTimesheetItem;
     procedure CarryForwardItem(ATag: Integer);
-    procedure UpdateReports;
   protected
     procedure HandleStateChange(var MyMsg: TMessage); message WM_STATE_CHANGE;
     procedure DrawCellBorder(var Msg: TMessage); message CM_DRAWBORDER;
@@ -313,7 +312,7 @@ end;
 procedure TMainFrm.FormShow(Sender: TObject);
 var
   VBShell: string;
-{$IFDEF DEBUG}ErrorMsg, {$ENDIF}SkinResourceFileName, SkinName: string;
+  {$IFDEF DEBUG}ErrorMsg, {$ENDIF}SkinResourceFileName, SkinName: string;
 // Day, Month, Year: Word;
   RegKey: TRegistry;
   // AComboBox: TcxComboBox;
@@ -331,7 +330,7 @@ begin
     MsgDialogFrm := TMsgDialogFrm.Create(nil);
 
   try
-{$IFDEF DEBUG}
+    {$IFDEF DEBUG}
     Self.BorderStyle := bsSizeable;
     ErrorMsg := '';
     if not LocalDSServerIsRunning(LOCAL_VB_SHELL_DS_SERVER, ErrorMsg) then
@@ -348,7 +347,7 @@ begin
         [mbOK]
         );
     end;
-{$ENDIF}
+    {$ENDIF}
     if VBBaseDM = nil then
       VBBaseDM := TVBBaseDM.Create(nil);
 
@@ -359,11 +358,11 @@ begin
       ReportDM := TReportDM.Create(nil);
 
     VBBaseDM.PopulateUserData;
-
     sbrMain.Panels[1].Text := 'User: ' + VBBaseDM.FUserData.UserName;
     VBBaseDM.SetConnectionProperties;
     VBBaseDM.sqlConnection.Open;
     VBBaseDM.Client := TVBServerMethodsClient.Create(VBBaseDM.sqlConnection.DBXConnection);
+    VBBaseDM.CheckForUpdates(3, '');
     TSDM.ShellResource := VBBaseDM.GetShellResource;
     SkinResourceFileName := RESOURCE_FOLDER + SKIN_RESOURCE_FILE;
     SkinName := TSDM.ShellResource.SkinName;
@@ -742,8 +741,17 @@ begin
         DC.Edit;
 
         case ATag of
-          130: DC.SetEditValue(cbxCarryForward.Index, 1, evsValue);
-          131: DC.SetEditValue(cbxCarryForward.Index, 0, evsValue);
+          130:
+            begin
+              DC.SetEditValue(cbxCarryForward.Index, 1, evsValue);
+              DC.SetEditValue(edtInvoiceID.Index, 0, evsValue);
+            end;
+
+          131:
+            begin
+              DC.SetEditValue(cbxCarryForward.Index, 0, evsValue);
+              DC.SetEditValue(edtInvoiceID.Index, -1, evsValue);
+            end;
         end;
         DC.Post(True);
         inc(ChangeCount);
@@ -1033,7 +1041,6 @@ begin
       AToDateEdit := TcxBarEditItemControl(dteToDate.Links[0].Control).Edit as TcxDateEdit;
       AToDateEdit.Date := FFromDate;
     end;
-// raise EValidateException.Create('From date cannot be greater than To date. Please conrrect and try again.');
 
     ParamList := ' WHERE T.USER_ID =' + FTSUserID.ToString +
       ' AND T.ACTIVITY_DATE >=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FFromDate), '''') +
@@ -1044,7 +1051,11 @@ begin
   viewTimesheet.DataController.BeginUpdate;
   try
     if (FIteration > 0) and (ProgressFrm <> nil) then
-      SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Price List Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+    begin
+//      SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Price List Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+      SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('Opening Pricelist Table')), 0);
+      SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FIteration.ToString)), 0);
+    end;
 
 // ParamList := ' WHERE T.USER_ID=' + FTSUserID.ToString +
 // ' AND T.THE_PERIOD=' + FTimesheetPeriod.ToString + SEMI_COLON +
@@ -1091,32 +1102,6 @@ begin
   finally
     sknController.Refresh;
     sknController.EndUpdate;
-  end;
-end;
-
-procedure TMainFrm.UpdateReports;
-var
-  Counter: Integer;
-
-const
-  REPORT_COUNT = 3;
-begin
-  if ProgressFrm = nil then
-    ProgressFrm := TProgressFrm.Create(nil);
-  try
-    ProgressFrm.FormStyle := fsStayOnTop;
-    ProgressFrm.Show;
-    Counter := 1;
-    FIteration := Counter / TABLE_COUNT * 100;
-
-//    MasterGenericReport.fr3
-//      Priceist.fr3
-//      PriceHistory.fr3
-
-    // Customer Lookup
-    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Customer Table' + '|PROGRESS=' + FIteration.ToString)), 0);
-  finally
-    FreeAndNil(ProgressFrm);
   end;
 end;
 
@@ -1266,7 +1251,9 @@ begin
     FIteration := Counter / TABLE_COUNT * 100;
 
     // Customer Lookup
-    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Customer Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('Opening Customer Table')), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FIteration.ToString)), 0);
+
     VBBaseDM.GetData(58, TSDM.cdsCustomerLookup, TSDM.cdsCustomerLookup.Name, ONE_SPACE,
       'C:\Data\Xml\Customer Lookup.xml', TSDM.cdsCustomerLookup.UpdateOptions.Generatorname,
       TSDM.cdsCustomerLookup.UpdateOptions.UpdateTableName);
@@ -1278,7 +1265,9 @@ begin
     inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
 
-    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Price List Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Price List Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('Opening Pricelist Table Table')), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FIteration.ToString)), 0);
     VBBaseDM.GetData(42, TSDM.cdsPriceList, TSDM.cdsPriceList.Name, ONE_SPACE,
       'C:\Data\Xml\Price List.xml', TSDM.cdsPriceList.UpdateOptions.Generatorname,
       TSDM.cdsPriceList.UpdateOptions.UpdateTableName);
@@ -1290,7 +1279,9 @@ begin
     inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
 
-    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Activity Type Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Activity Type Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('Opening Activity Type Table')), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FIteration.ToString)), 0);
     VBBaseDM.GetData(39, TSDM.cdsActivityType, TSDM.cdsActivityType.Name, ONE_SPACE,
       'C:\Data\Xml\Activity Type.xml', TSDM.cdsActivityType.UpdateOptions.Generatorname,
       TSDM.cdsActivityType.UpdateOptions.UpdateTableName);
@@ -1302,7 +1293,9 @@ begin
     inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
 
-    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Customer Group Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Customer Group Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('Opening Customer Group Table')), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FIteration.ToString)), 0);
     VBBaseDM.GetData(56, TSDM.cdsCustomerGroup, TSDM.cdsCustomerGroup.Name, ONE_SPACE,
       'C:\Data\Xml\Customer Group.xml', TSDM.cdsCustomerGroup.UpdateOptions.Generatorname,
       TSDM.cdsCustomerGroup.UpdateOptions.UpdateTableName);
@@ -1314,7 +1307,9 @@ begin
     inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
 
-    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Rate Unit Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Rate Unit Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('Opening Rate Unit Table')), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FIteration.ToString)), 0);
     VBBaseDM.GetData(38, TSDM.cdsRateUnit, TSDM.cdsRateUnit.Name, ONE_SPACE,
       'C:\Data\Xml\Rate Unit.xml', TSDM.cdsRateUnit.UpdateOptions.Generatorname,
       TSDM.cdsRateUnit.UpdateOptions.UpdateTableName);
@@ -1326,7 +1321,9 @@ begin
     inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
 
-    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Timesheet Period Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Timesheet Period Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('Opening Timesheet Period Table')), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FIteration.ToString)), 0);
     VBBaseDM.GetData(62, TSDM.cdsTSPeriod, TSDM.cdsTSPeriod.Name, ONE_SPACE,
       'C:\Data\Xml\Timesheet Period.xml', TSDM.cdsTSPeriod.UpdateOptions.Generatorname,
       TSDM.cdsTSPeriod.UpdateOptions.UpdateTableName);
@@ -1348,7 +1345,9 @@ begin
     inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
 
-    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening System User Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening System User Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('Opening System User Table')), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FIteration.ToString)), 0);
     VBBaseDM.GetData(24, TSDM.cdsSystemUser, TSDM.cdsSystemUser.Name, ONE_SPACE,
       'C:\Data\Xml\System User.xml', TSDM.cdsSystemUser.UpdateOptions.Generatorname,
       TSDM.cdsSystemUser.UpdateOptions.UpdateTableName);

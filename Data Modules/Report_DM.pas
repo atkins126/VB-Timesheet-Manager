@@ -403,8 +403,6 @@ type
   private
     { Private declarations }
     FID: Integer;
-
-    property ID: Integer read FID write FID;
   public
     { Public declarations }
     FReport: TfrxReport;
@@ -427,11 +425,8 @@ uses VBBase_DM, VBCommonValues, RUtils;
 {$R *.dfm}
 
 procedure TReportDM.cdsTimesheetAfterPost(DataSet: TDataSet);
-var
-  DataSetState: TDatasetState;
 begin
   inherited;
-  DataSetState := DataSet.State;
   DataSet := cdsTimesheet;
   SetLength(VBBaseDM.FDataSetArray, 1);
   VBBaseDM.FDataSetArray[0] := TFDMemTable(DataSet);
