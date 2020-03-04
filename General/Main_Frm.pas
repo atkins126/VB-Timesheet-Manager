@@ -704,7 +704,10 @@ begin
     end;
 
     if ChangeCount > 0 then
+    begin
       TSDM.PostData(TSDM.cdsTimesheet);
+      actRefresh.Execute;
+    end;
 
 // if DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 0 then
 // DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 1
@@ -723,16 +726,15 @@ procedure TMainFrm.CarryForwardItem(ATag: Integer);
 var
   DC: TcxDBDataController;
   C: TcxCustomGridTableController;
-  I: Integer;
-  RecIndex, ChangeCount: Integer;
+  I, RecIndex, ChangeCount: Integer;
 begin
   inherited;
   DC := viewTimesheet.DataController;
   C := viewTimesheet.Controller;
-  DC.BeginUpdate;
+//  DC.BeginUpdate;
   ChangeCount := 0;
 
-  try
+//  try
     begin
       for I := 0 to C.SelectedRecordCount - 1 do
       begin
@@ -754,15 +756,18 @@ begin
             end;
         end;
         DC.Post(True);
-        inc(ChangeCount);
+        Inc(ChangeCount);
       end;
     end;
 
     if ChangeCount > 0 then
+    begin
       TSDM.PostData(TSDM.cdsTimesheet);
-  finally
-    DC.EndUpdate;
-  end;
+      actRefresh.Execute;
+    end;
+//  finally
+//    DC.EndUpdate;
+//  end;
 end;
 
 procedure TMainFrm.DoBillable(Sender: TObject);
@@ -833,6 +838,7 @@ begin
     end;
 
     TSDM.PostData(TSDM.cdsTimesheet);
+    actRefresh.Execute;
 
 // if DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 0 then
 // DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 1
@@ -898,7 +904,10 @@ begin
         end;
 
         if ChangeCount > 0 then
+        begin
           TSDM.PostData(TSDM.cdsTimesheet);
+          actRefresh.Execute;
+        end;
 
 // if DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 0 then
 // DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 1
@@ -954,7 +963,10 @@ begin
     end;
 
     if ChangeCount > 0 then
+    begin
       TSDM.PostData(TSDM.cdsTimesheet);
+      actRefresh.Execute;
+    end;
   finally
     DC.EndUpdate;
     Screen.Cursor := crDefault;
