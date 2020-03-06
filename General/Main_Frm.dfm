@@ -128,6 +128,8 @@ inherited MainFrm: TMainFrm
           DataBinding.FieldName = 'APPROVED'
           PropertiesClassName = 'TcxCheckBoxProperties'
           Properties.Alignment = taCenter
+          Properties.DisplayChecked = 'Yes'
+          Properties.DisplayUnchecked = 'No'
           Properties.ReadOnly = True
           Properties.ValueChecked = 1
           Properties.ValueUnchecked = 0
@@ -148,6 +150,8 @@ inherited MainFrm: TMainFrm
           DataBinding.FieldName = 'CARRY_FORWARD'
           PropertiesClassName = 'TcxCheckBoxProperties'
           Properties.Alignment = taCenter
+          Properties.DisplayChecked = 'Yes'
+          Properties.DisplayUnchecked = 'No'
           Properties.ReadOnly = True
           Properties.ValueChecked = 1
           Properties.ValueUnchecked = 0
@@ -298,6 +302,8 @@ inherited MainFrm: TMainFrm
           DataBinding.FieldName = 'BILLABLE'
           PropertiesClassName = 'TcxCheckBoxProperties'
           Properties.Alignment = taCenter
+          Properties.DisplayChecked = 'Yes'
+          Properties.DisplayUnchecked = 'No'
           Properties.ReadOnly = True
           Properties.ValueChecked = 1
           Properties.ValueUnchecked = 0
@@ -361,6 +367,8 @@ inherited MainFrm: TMainFrm
           DataBinding.FieldName = 'IS_ADDITIONAL_WORK'
           PropertiesClassName = 'TcxCheckBoxProperties'
           Properties.Alignment = taCenter
+          Properties.DisplayChecked = 'Yes'
+          Properties.DisplayUnchecked = 'No'
           Properties.ImmediatePost = True
           Properties.ReadOnly = True
           Properties.ValueChecked = 1
@@ -550,6 +558,8 @@ inherited MainFrm: TMainFrm
           DataBinding.FieldName = 'LOCKED'
           PropertiesClassName = 'TcxCheckBoxProperties'
           Properties.Alignment = taCenter
+          Properties.DisplayChecked = 'Yes'
+          Properties.DisplayUnchecked = 'No'
           Properties.ImmediatePost = True
           Properties.ReadOnly = True
           Properties.UseAlignmentWhenInplace = True

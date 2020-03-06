@@ -1,5 +1,6 @@
 inherited TSDM: TTSDM
-  Width = 864
+  Height = 543
+  Width = 1007
   object cdsCustomerLookup: TFDMemTable
     ActiveStoredUsage = [auDesignTime]
     OnCalcFields = cdsCustomerLookupCalcFields
@@ -383,8 +384,8 @@ inherited TSDM: TTSDM
     ResourceOptions.AssignedValues = [rvAutoReconnect]
     ResourceOptions.AutoReconnect = True
     LoginPrompt = False
-    Left = 30
-    Top = 63
+    Left = 835
+    Top = 73
   end
   object cdsCustomerGroup: TFDMemTable
     ActiveStoredUsage = [auDesignTime]
@@ -652,7 +653,6 @@ inherited TSDM: TTSDM
     FieldDefs = <>
     CachedUpdates = True
     IndexDefs = <>
-    ConstraintsEnabled = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
     FetchOptions.RecordCountMode = cmTotal
@@ -664,9 +664,9 @@ inherited TSDM: TTSDM
     ResourceOptions.SilentMode = True
     UpdateOptions.AssignedValues = [uvGeneratorName, uvCheckRequired, uvAutoCommitUpdates]
     UpdateOptions.GeneratorName = 'TIMESHEET_ID_GEN'
-    UpdateOptions.CheckRequired = False
     UpdateOptions.AutoCommitUpdates = True
     UpdateOptions.UpdateTableName = 'TIMESHEET'
+    UpdateOptions.KeyFields = 'ID'
     StoreDefs = True
     Left = 125
     Top = 10
@@ -766,7 +766,7 @@ inherited TSDM: TTSDM
       Origin = 'ITEM_VALUE'
     end
     object cdsTimesheetEditLOCKED: TIntegerField
-      Alignment = taCenter
+      Alignment = taLeftJustify
       DisplayLabel = 'Lck'
       FieldName = 'LOCKED'
       Origin = 'LOCKED'
@@ -831,7 +831,7 @@ inherited TSDM: TTSDM
       Required = True
     end
     object cdsTimesheetEditIS_ADDITIONAL_WORK: TIntegerField
-      Alignment = taCenter
+      Alignment = taLeftJustify
       DisplayLabel = 'Ad Wk'
       FieldName = 'IS_ADDITIONAL_WORK'
       Origin = 'IS_ADDITIONAL_WORK'
@@ -841,6 +841,71 @@ inherited TSDM: TTSDM
   object dtsTimesheet: TDataSource
     DataSet = cdsTimesheet
     Left = 125
+    Top = 65
+  end
+  object VbdevConnection: TFDConnection
+    Params.Strings = (
+      'Database=C:\Data\Firebird\VB\VB.FDB'
+      'ConnectionDef=VB Live')
+    FormatOptions.AssignedValues = [fvMapRules]
+    FormatOptions.OwnMapRules = True
+    FormatOptions.MapRules = <
+      item
+        SourceDataType = dtWideString
+        TargetDataType = dtAnsiString
+      end
+      item
+        SourceDataType = dtFmtBCD
+        TargetDataType = dtCurrency
+      end
+      item
+        SourceDataType = dtSingle
+        TargetDataType = dtDouble
+      end>
+    ResourceOptions.AssignedValues = [rvAutoReconnect]
+    ResourceOptions.AutoReconnect = True
+    LoginPrompt = False
+    Left = 832
+    Top = 17
+  end
+  object cdsStdActivity: TFDMemTable
+    ActiveStoredUsage = [auDesignTime]
+    FilterOptions = [foCaseInsensitive]
+    CachedUpdates = True
+    ConstraintsEnabled = True
+    FetchOptions.AssignedValues = [evMode, evRecordCountMode]
+    FetchOptions.Mode = fmAll
+    FetchOptions.RecordCountMode = cmTotal
+    FormatOptions.AssignedValues = [fvDataSnapCompatibility]
+    FormatOptions.DataSnapCompatibility = True
+    ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
+    ResourceOptions.StorePrettyPrint = True
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvGeneratorName, uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.GeneratorName = 'STD_ACTIVITY_ID_GEN'
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    UpdateOptions.UpdateTableName = 'STD_ACTIVITY'
+    Left = 505
+    Top = 10
+    object cdsStdActivityID: TIntegerField
+      Alignment = taLeftJustify
+      FieldName = 'ID'
+      Origin = 'ID'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+    object cdsStdActivityNAME: TStringField
+      DisplayLabel = 'Activity'
+      FieldName = 'NAME'
+      Origin = 'NAME'
+      Required = True
+      Size = 100
+    end
+  end
+  object dtsStdActivity: TDataSource
+    DataSet = cdsStdActivity
+    Left = 505
     Top = 65
   end
 end

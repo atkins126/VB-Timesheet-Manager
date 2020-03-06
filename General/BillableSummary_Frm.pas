@@ -10,6 +10,8 @@ uses
 
   BaseLayout_Frm, VBCommonValues, CommonValues,
 
+  FireDAC.Comp.Client,
+
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore,
   dxSkinsDefaultPainters, cxImageList, dxLayoutLookAndFeels, cxClasses, cxStyles,
   dxLayoutContainer, dxLayoutControl, dxBar, dxBarExtItems, cxContainer, cxEdit,
@@ -152,6 +154,7 @@ type
     procedure GetPriceList;
     procedure GetRateUnit;
     procedure CloseDataSets;
+    procedure EditTimesheet(ItemIndex: integer);
   protected
     procedure DrawCellBorder(var Msg: TMessage); message CM_DRAWBORDER;
   public
@@ -942,7 +945,7 @@ begin
     GetBillableTimesheet;
 end;
 
-procedure TBillableSummaryFrm.viewTimesheetDblClick(Sender: TObject);
+procedure TBillableSummaryFrm.EditTimesheet(ItemIndex: integer);
 var
   TSID, ID: Integer;
 begin
@@ -950,29 +953,29 @@ begin
   Screen.Cursor := crHourglass;
 
   try
-    if TimesheetEditFrm = nil then
-      TimesheetEditFrm := TTimesheetEditFrm.Create(nil);
-
-    case TcxGridDBBandedTableView(Sender).Tag of
+    case ItemIndex of
       0: // Timesheet details
         begin
-          TimesheetEditFrm.MyDataSet := ReportDM.cdsTimesheetDetail;
-          TimesheetEditFrm.MyDataSource := ReportDM.dtsTimesheetDetail;
+          VBBaseDM.MyDataSet := ReportDM.cdsTimesheetDetail;
+          VBBaseDM.MyDataSource := ReportDM.dtsTimesheetDetail;
         end;
 
       1: // Carry Forward details
         begin
-          TimesheetEditFrm.MyDataSet := ReportDM.cdsTimesheetCF;
-          TimesheetEditFrm.MyDataSource := ReportDM.dtsTimesheetCF;
+          VBBaseDM.MyDataSet := ReportDM.cdsTimesheetCF;
+          VBBaseDM.MyDataSource := ReportDM.dtsTimesheetCF;
         end;
     end;
 
-    TimesheetEditFrm.MyDataSet.Edit;
+    VBBaseDM.MyDataSet.Edit;
+
+    if TimesheetEditFrm = nil then
+      TimesheetEditFrm := TTimesheetEditFrm.Create(nil);
 
     if TimesheetEditFrm.ShowModal = mrCancel then
     begin
-      if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
-        TSDM.cdsTimesheet.Cancel;
+      if VBBaseDM.MyDataSet.State in [dsEdit, dsInsert] then
+        VBBaseDM.MyDataSet.Cancel;
     end
     else
     begin
@@ -980,29 +983,30 @@ begin
 //        0: // Timesheet details
 //          begin
             // Get the ID of the current recored that was modified
-      ID := TimesheetEditFrm.MyDataSet.FieldByName('ID').AsInteger;
+      ID := VBBaseDM.MyDataSet.FieldByName('ID').AsInteger;
 
-            // We need to update the Tiemsheet record if it is in the current
-            // Timesheet dataset.
-      if (TSDM.cdsTimesheet.Active) and not (TSDM.cdsTimesheet.IsEmpty) then
+      // We need to update the Timesheet record if it is in the current
+      // Timesheet dataset.
+      if (VBBaseDM.MyDataSet.Active) and not (VBBaseDM.MyDataSet.IsEmpty) then
       begin
-              // Get the ID of the currently selected/focused Timesheet
-              // record.
-        TSID := TSDM.cdsTimesheet.FieldByName('ID').AsInteger;
+        // Get the ID of the currently selected/focused Timesheet
+        // record.
+        TSID := VBBaseDM.MyDataSet.FieldByName('ID').AsInteger;
 
-              // If we find the modified billable summary record in the
-              // current Timesheet dataset then update its values.
-        if TSDM.cdsTimesheet.Locate('ID', ID, []) then
+        // If we find the modified billable summary record in the
+        // current Timesheet dataset then update its values.
         begin
-          if not (TSDM.cdsTimesheet.State in [dsEdit, dsInsert]) then
-            TSDM.cdsTimesheet.Edit;
+          if not (VBBaseDM.MyDataSet.State in [dsEdit, dsInsert]) then
+            VBBaseDM.MyDataSet.Edit;
 
-                // Copy the modified recored to the corresponding Timesheet
-                // datset record.
-          TSDM.cdsTimesheet.CopyRecord(TimesheetEditFrm.MyDataSet);
-          TSDM.cdsTimesheet.Post;
-                // Relocated the original Timesheet selected/focused record.
-          TSDM.cdsTimesheet.Locate('ID', TSID, []);
+          // Copy the modified recored to the corresponding Timesheet datset record.
+          VBBaseDM.MyDataSet.CopyRecord(VBBaseDM.MyDataSet);
+          VBBaseDM.MyDataSet.Post;
+          TSDM.PostData(VBBaseDM.MyDataSet);
+//          actRefresh.Execute;
+
+          // Relocated the original Timesheet selected/focused record.
+          VBBaseDM.MyDataSet.Locate('ID', TSID, []);
         end;
       end;
 //          end;
@@ -1019,6 +1023,12 @@ begin
   finally
     Screen.Cursor := crDefault;
   end;
+end;
+
+procedure TBillableSummaryFrm.viewTimesheetDblClick(Sender: TObject);
+begin
+  inherited;
+  EditTimesheet(grpData.ItemIndex);
 end;
 
 end.

@@ -1295,7 +1295,7 @@ inherited ReportDM: TReportDM
         end
         object Memo26: TfrxMemoView
           AllowVectorExport = True
-          Left = 925.984251968504000000
+          Left = 925.984251968503900000
           Top = 90.708720000000000000
           Width = 56.692913390000000000
           Height = 18.897650000000000000
@@ -2613,7 +2613,7 @@ inherited ReportDM: TReportDM
         object TimesheetTIME_SPENT: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 971.339258818897600000
+          Left = 971.339258818897700000
           Width = 75.590551181102360000
           Height = 18.897650000000000000
           StretchMode = smMaxHeight
@@ -2719,7 +2719,7 @@ inherited ReportDM: TReportDM
         object Memo13: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 971.339258818897600000
+          Left = 971.339258818897700000
           Width = 75.590551181102360000
           Height = 18.897650000000000000
           DisplayFormat.FormatStr = '###,##0.00'
@@ -2993,7 +2993,7 @@ inherited ReportDM: TReportDM
         object Memo4: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 971.339258818897600000
+          Left = 971.339258818897700000
           Width = 75.590551181102360000
           Height = 18.897650000000000000
           DisplayFormat.FormatStr = '###,##0.00'
@@ -5109,7 +5109,7 @@ inherited ReportDM: TReportDM
         object TimesheetTIME_SPENT: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 971.339258818897600000
+          Left = 971.339258818897700000
           Width = 75.590551181102400000
           Height = 18.897650000000000000
           StretchMode = smMaxHeight
@@ -5219,7 +5219,7 @@ inherited ReportDM: TReportDM
         object Memo13: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 971.339258818897600000
+          Left = 971.339258818897700000
           Width = 75.590551181102400000
           Height = 18.897650000000000000
           DataSet = fdsTimesheetByActivity
@@ -5385,7 +5385,7 @@ inherited ReportDM: TReportDM
         object Memo25: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 971.339258818897600000
+          Left = 971.339258818897700000
           Top = 49.133890000000000000
           Width = 75.590551181102400000
           Height = 18.897650000000000000
@@ -5501,7 +5501,7 @@ inherited ReportDM: TReportDM
         object Memo4: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 971.339258818897600000
+          Left = 971.339258818897700000
           Width = 75.590551181102400000
           Height = 18.897650000000000000
           DataSet = fdsTimesheetByActivity

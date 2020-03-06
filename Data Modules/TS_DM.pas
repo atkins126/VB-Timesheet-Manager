@@ -14,7 +14,8 @@ uses
   FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client, FireDAC.UI.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool,
   FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.FB, FireDAC.Phys.FBDef,
-  FireDAC.VCLUI.Wait, FireDAC.DApt, FireDAC.Stan.StorageBin;
+  FireDAC.VCLUI.Wait, FireDAC.DApt, FireDAC.Stan.StorageBin, FireDAC.Comp.UI,
+  FireDAC.Stan.ExprFuncs, FireDAC.Phys.SQLiteDef, FireDAC.Phys.IBBase;
 
 type
   TTimesheetOptions = record
@@ -139,6 +140,11 @@ type
     cdsTimesheetEditAPPROVED: TIntegerField;
     cdsTimesheetEditIS_ADDITIONAL_WORK: TIntegerField;
     dtsTimesheet: TDataSource;
+    VbdevConnection: TFDConnection;
+    cdsStdActivity: TFDMemTable;
+    dtsStdActivity: TDataSource;
+    cdsStdActivityID: TIntegerField;
+    cdsStdActivityNAME: TStringField;
     procedure dtsTimesheetStateChange(Sender: TObject);
     procedure cdsCustomerLookupCalcFields(DataSet: TDataSet);
     procedure cdsTimesheetNewRecord(DataSet: TDataSet);

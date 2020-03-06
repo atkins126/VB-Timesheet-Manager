@@ -679,35 +679,32 @@ begin
   inherited;
   DC := viewTimesheet.DataController;
   C := viewTimesheet.Controller;
-  DC.BeginUpdate;
+//  DC.BeginUpdate;
   ChangeCount := 0;
 
-  try
+//  try
+  begin
+    for I := 0 to C.SelectedRecordCount - 1 do
     begin
-      for I := 0 to C.SelectedRecordCount - 1 do
-      begin
-        RecIndex := C.SelectedRecords[I].RecordIndex;
-        DC.FocusedRecordIndex := RecIndex;
+      RecIndex := C.SelectedRecords[I].RecordIndex;
+      DC.FocusedRecordIndex := RecIndex;
 
-        if DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] <> 0 then
-          Continue;
+      if DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] <> 0 then
+        Continue;
 
-        DC.Edit;
+      DC.Edit;
 
-        case ATag of
-          100: DC.SetEditValue(cbxApproved.Index, 1, evsValue);
-          101: DC.SetEditValue(cbxApproved.Index, 0, evsValue);
-        end;
-        DC.Post(True);
-        inc(ChangeCount);
+      case ATag of
+        100: DC.SetEditValue(cbxApproved.Index, 1, evsValue);
+        101: DC.SetEditValue(cbxApproved.Index, 0, evsValue);
       end;
+      DC.Post(True);
+      inc(ChangeCount);
     end;
+  end;
 
-    if ChangeCount > 0 then
-    begin
-      TSDM.PostData(TSDM.cdsTimesheet);
-      actRefresh.Execute;
-    end;
+  if ChangeCount > 0 then
+    TSDM.PostData(TSDM.cdsTimesheet);
 
 // if DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 0 then
 // DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 1
@@ -717,9 +714,9 @@ begin
 // DC.Post(True);
 // end;
 // TSDM.PostData(TSDM.cdsTimesheet);
-  finally
-    DC.EndUpdate;
-  end;
+//  finally
+//    DC.EndUpdate;
+//  end;
 end;
 
 procedure TMainFrm.CarryForwardItem(ATag: Integer);
@@ -735,36 +732,40 @@ begin
   ChangeCount := 0;
 
 //  try
+  begin
+    for I := 0 to C.SelectedRecordCount - 1 do
     begin
-      for I := 0 to C.SelectedRecordCount - 1 do
-      begin
-        RecIndex := C.SelectedRecords[I].RecordIndex;
-        DC.FocusedRecordIndex := RecIndex;
-        DC.Edit;
+      RecIndex := C.SelectedRecords[I].RecordIndex;
+      DC.FocusedRecordIndex := RecIndex;
+      DC.Edit;
 
-        case ATag of
-          130:
-            begin
-              DC.SetEditValue(cbxCarryForward.Index, 1, evsValue);
-              DC.SetEditValue(edtInvoiceID.Index, 0, evsValue);
-            end;
+      case ATag of
+        130:
+          begin
+//            DC.Values[C.SelectedRecords[I].RecordIndex, cbxCarryForward.Index] := 1;
+//            DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] := 0;
 
-          131:
-            begin
-              DC.SetEditValue(cbxCarryForward.Index, 0, evsValue);
-              DC.SetEditValue(edtInvoiceID.Index, -1, evsValue);
-            end;
-        end;
-        DC.Post(True);
-        Inc(ChangeCount);
+            DC.SetEditValue(cbxCarryForward.Index, 1, evsValue);
+            DC.SetEditValue(edtInvoiceID.Index, 0, evsValue);
+          end;
+
+        131:
+          begin
+//            DC.Values[RecIndex, cbxCarryForward.Index] := 0;
+//            DC.Values[RecIndex, edtInvoiceID.Index] := -1;
+
+            DC.SetEditValue(cbxCarryForward.Index, 0, evsValue);
+            DC.SetEditValue(edtInvoiceID.Index, -1, evsValue);
+          end;
       end;
+//        DC.Post(True);
+      DC.PostEditingData;
+      Inc(ChangeCount);
     end;
+  end;
 
-    if ChangeCount > 0 then
-    begin
-      TSDM.PostData(TSDM.cdsTimesheet);
-      actRefresh.Execute;
-    end;
+  if ChangeCount > 0 then
+    TSDM.PostData(TSDM.cdsTimesheet);
 //  finally
 //    DC.EndUpdate;
 //  end;
@@ -798,20 +799,20 @@ begin
   inherited;
   DC := viewTimesheet.DataController;
   C := viewTimesheet.Controller;
-  DC.BeginUpdate;
+//  DC.BeginUpdate;
 
-  try
+//  try
+  begin
+    for I := 0 to C.SelectedRecordCount - 1 do
     begin
-      for I := 0 to C.SelectedRecordCount - 1 do
-      begin
-        DC.Edit;
-        RecIndex := C.SelectedRecords[I].RecordIndex;
-        DC.FocusedRecordIndex := RecIndex;
+      DC.Edit;
+      RecIndex := C.SelectedRecords[I].RecordIndex;
+      DC.FocusedRecordIndex := RecIndex;
 
-        case ATag of
-          110: DC.SetEditValue(cbxBillable.Index, 1, evsValue);
-          111: DC.SetEditValue(cbxBillable.Index, 0, evsValue);
-        end;
+      case ATag of
+        110: DC.SetEditValue(cbxBillable.Index, 1, evsValue);
+        111: DC.SetEditValue(cbxBillable.Index, 0, evsValue);
+      end;
 
 // case VarAstype(lucRateUnit.EditValue, varInteger) of
 // 1: edtitemValue.Value := edtTimeSpent.Value * edtRate.Value / 60;
@@ -819,26 +820,26 @@ begin
 // edtitemValue.Value := {edtTimeSpent.Value * }edtRate.Value;
 // end;
 
-        DC.SetEditValue(edtItemValue.Index, 0, evsValue);
+      DC.SetEditValue(edtItemValue.Index, 0, evsValue);
 // DC.Values[RecIndex, edtItemValue.Index] := 0;
 
-        if DC.Values[RecIndex, cbxBillable.Index] = 1 then
-          if DC.Values[RecIndex, lucRateUnit.Index] = 1 then
-            DC.SetEditValue(edtItemValue.Index, DC.Values[RecIndex, edtTimeSpent.Index] *
-              DC.Values[RecIndex, edtRate.Index] / 60, evsValue)
+      if DC.Values[RecIndex, cbxBillable.Index] = 1 then
+        if DC.Values[RecIndex, lucRateUnit.Index] = 1 then
+          DC.SetEditValue(edtItemValue.Index, DC.Values[RecIndex, edtTimeSpent.Index] *
+            DC.Values[RecIndex, edtRate.Index] / 60, evsValue)
 // DC.Values[RecIndex, edtItemValue.Index] := DC.Values[RecIndex, edtTimeSpent.Index] *
 // DC.Values[RecIndex, edtRate.Index] / 60
-          else
-            DC.SetEditValue(edtItemValue.Index,
-              DC.Values[RecIndex, edtRate.Index], evsValue);
+        else
+          DC.SetEditValue(edtItemValue.Index,
+            DC.Values[RecIndex, edtRate.Index], evsValue);
 // DC.Values[RecIndex, edtItemValue.Index] := DC.Values[RecIndex, edtRate.Index];
 
-        DC.Post(True);
-      end;
+      DC.Post(True);
     end;
+  end;
 
-    TSDM.PostData(TSDM.cdsTimesheet);
-    actRefresh.Execute;
+  TSDM.PostData(TSDM.cdsTimesheet);
+  actRefresh.Execute;
 
 // if DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 0 then
 // DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 1
@@ -848,9 +849,9 @@ begin
 // DC.Post(True);
 // end;
 // TSDM.PostData(TSDM.cdsTimesheet);
-  finally
-    DC.EndUpdate;
-  end;
+//  finally
+//    DC.EndUpdate;
+//  end;
 end;
 
 procedure TMainFrm.DoInvoiceItem(Sender: TObject);
@@ -882,32 +883,32 @@ begin
       C := viewTimesheet.Controller;
       ChangeCount := 0;
 
-      DC.BeginUpdate;
-      try
-        for I := 0 to C.SelectedRecordCount - 1 do
+//      DC.BeginUpdate;
+//      try
+      for I := 0 to C.SelectedRecordCount - 1 do
+      begin
+        if DC.Values[C.SelectedRecords[I].RecordIndex, cbxLocked.Index] = 0 then
         begin
-          if DC.Values[C.SelectedRecords[I].RecordIndex, cbxLocked.Index] = 0 then
+          DC.Edit;
+          RecIndex := C.SelectedRecords[I].RecordIndex;
+          DC.FocusedRecordIndex := RecIndex;
+
+          if DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] = 0 then
           begin
-            DC.Edit;
-            RecIndex := C.SelectedRecords[I].RecordIndex;
-            DC.FocusedRecordIndex := RecIndex;
-
-            if DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] = 0 then
-            begin
-              DC.SetEditValue(edtInvoiceID.Index, 1, evsValue);
-              DC.SetEditValue(cbxLocked.Index, 1, evsValue);
-              DC.SetEditValue(dteInvoiceDate.Index, InvoiceDate, evsValue);
-            end;
+            DC.SetEditValue(edtInvoiceID.Index, 1, evsValue);
+            DC.SetEditValue(cbxLocked.Index, 1, evsValue);
+            DC.SetEditValue(dteInvoiceDate.Index, InvoiceDate, evsValue);
           end;
-          DC.Post(True);
-          inc(ChangeCount);
         end;
+        DC.Post(True);
+        inc(ChangeCount);
+      end;
 
-        if ChangeCount > 0 then
-        begin
-          TSDM.PostData(TSDM.cdsTimesheet);
-          actRefresh.Execute;
-        end;
+      if ChangeCount > 0 then
+      begin
+        TSDM.PostData(TSDM.cdsTimesheet);
+        actRefresh.Execute;
+      end;
 
 // if DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 0 then
 // DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 1
@@ -917,9 +918,9 @@ begin
 // DC.Post(True);
 // end;
 // TSDM.PostData(TSDM.cdsTimesheet);
-      finally
-        DC.EndUpdate;
-      end;
+//      finally
+//        DC.EndUpdate;
+//      end;
     finally
       if Assigned(InvoiceDateFrm) then
       begin
@@ -941,7 +942,7 @@ begin
   C := viewTimesheet.Controller;
   ChangeCount := 0;
 
-  DC.BeginUpdate;
+//  DC.BeginUpdate;
   try
     for I := 0 to C.SelectedRecordCount - 1 do
     begin
@@ -968,7 +969,7 @@ begin
       actRefresh.Execute;
     end;
   finally
-    DC.EndUpdate;
+//    DC.EndUpdate;
     Screen.Cursor := crDefault;
   end;
 end;
@@ -1684,12 +1685,14 @@ begin
     if TimesheetEditFrm = nil then
       TimesheetEditFrm := TTimesheetEditFrm.Create(nil);
 
-    TimesheetEditFrm.MyDataSet := TSDM.cdsTimesheet;
-    TimesheetEditFrm.MyDataSource := TSDM.dtsTimesheet;
+    VBBaseDM.MyDataSet := TSDM.cdsTimesheet;
+    VBBaseDM.MyDataSource := TSDM.dtsTimesheet;
 
     if TimesheetEditFrm.ShowModal = mrCancel then
       if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
         TSDM.cdsTimesheet.Cancel;
+
+    actRefresh.Execute;
 
     TimesheetEditFrm.Close;
     FreeAndNil(TimesheetEditFrm);
@@ -1719,14 +1722,14 @@ var
 begin
   inherited;
   Screen.Cursor := crHourglass;
-  try
-    FileName := 'Timesheet Detail by User';
-    DateClause := 'WHERE T.THE_PERIOD = ' + FTimesheetPeriod.ToString;
-    UserClause := ' AND T.USER_ID IN (' + FTSUserID.ToString + ')';
-    OrderByClause := 'ORDER BY T.ACTIVITY_DATE';
-    WhereClause := DateClause + UserClause + ' ';
-    ReportDM.FReport := ReportDM.rptTimesheetByUser;
+  FileName := 'Timesheet Detail by User';
+  DateClause := 'WHERE T.THE_PERIOD = ' + FTimesheetPeriod.ToString;
+  UserClause := ' AND T.USER_ID IN (' + FTSUserID.ToString + ')';
+  OrderByClause := 'ORDER BY T.ACTIVITY_DATE';
+  WhereClause := DateClause + UserClause + ' ';
+  ReportDM.FReport := ReportDM.rptTimesheetByUser;
 
+  try
     VBBaseDM.GetData(45, ReportDM.cdsTSBillable, ReportDM.cdsTSBillable.Name, WhereClause + ';' + OrderByClause,
       'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsTSBillable.UpdateOptions.Generatorname,
       ReportDM.cdsTSBillable.UpdateOptions.UpdateTableName);
