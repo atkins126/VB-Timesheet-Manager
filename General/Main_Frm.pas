@@ -290,7 +290,7 @@ uses
   TimesheetDetailReport_Frm,
   BillableSummary_Frm,
   TimesheetActivitySummary_Frm,
-  InvoiceDate_Frm;
+  InvoiceItem_Frm;
 
 procedure TMainFrm.DrawCellBorder(var Msg: TMessage);
 begin
@@ -333,6 +333,7 @@ begin
     {$IFDEF DEBUG}
     Self.BorderStyle := bsSizeable;
     ErrorMsg := '';
+    // Sart the local debug web server if not already running.
     if not LocalDSServerIsRunning(LOCAL_VB_SHELL_DS_SERVER, ErrorMsg) then
     begin
       Beep;
@@ -348,6 +349,7 @@ begin
         );
     end;
     {$ENDIF}
+
     if VBBaseDM = nil then
       VBBaseDM := TVBBaseDM.Create(nil);
 
@@ -357,6 +359,7 @@ begin
     if ReportDM = nil then
       ReportDM := TReportDM.Create(nil);
 
+    TSDM.DefaultInvoiceDate := TSDM.GetDefaulttInvoiceDate;
     VBBaseDM.PopulateUserData;
     sbrMain.Panels[1].Text := 'User: ' + VBBaseDM.FUserData.UserName;
     VBBaseDM.SetConnectionProperties;
@@ -689,20 +692,47 @@ begin
       RecIndex := C.SelectedRecords[I].RecordIndex;
       DC.FocusedRecordIndex := RecIndex;
 
-      if DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] <> 0 then
-        Continue;
+      if DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] <= 0 then
+      begin
+        DC.Edit;
 
-      DC.Edit;
+        case ATag of
+          100: // Approve
+            if DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 0 then
+            begin
+              DC.SetEditValue(cbxApproved.Index, 1, evsValue);
+              DC.Post(True);
+              Inc(ChangeCount);
+            end;
 
-      case ATag of
-        100: DC.SetEditValue(cbxApproved.Index, 1, evsValue);
-        101: DC.SetEditValue(cbxApproved.Index, 0, evsValue);
+          101: // Un-approve
+            if DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 1 then
+            begin
+              DC.SetEditValue(cbxApproved.Index, 0, evsValue);
+              DC.Post(True);
+              Inc(ChangeCount);
+            end;
+        end;
       end;
-      DC.Post(True);
-      inc(ChangeCount);
     end;
   end;
 
+//      if ChangeCount = 0 then
+//      begin
+//        Beep;
+//        DisplayMsg(
+//          Application.Title,
+//          'Data Validation Error',
+//          'One or more items could not be invoiced.' + CRLF + CRLF +
+//          'Possible reason(s):' + CRLF +
+//          'Item is locked.' + CRLF +
+//          'Item has not yet been approved.' + CRLF +
+//          'Item is carried forward.',
+//          mtError,
+//          [mbOK]
+//          );
+//      end
+//      else
   if ChangeCount > 0 then
     TSDM.PostData(TSDM.cdsTimesheet);
 
@@ -719,6 +749,12 @@ begin
 //  end;
 end;
 
+procedure TMainFrm.DoCarryForward(Sender: TObject);
+begin
+  inherited;
+  CarryForwardItem(TAction(Sender).Tag);
+end;
+
 procedure TMainFrm.CarryForwardItem(ATag: Integer);
 var
   DC: TcxDBDataController;
@@ -732,37 +768,46 @@ begin
   ChangeCount := 0;
 
 //  try
+//  begin
+  for I := 0 to C.SelectedRecordCount - 1 do
   begin
-    for I := 0 to C.SelectedRecordCount - 1 do
-    begin
-      RecIndex := C.SelectedRecords[I].RecordIndex;
-      DC.FocusedRecordIndex := RecIndex;
-      DC.Edit;
+    RecIndex := C.SelectedRecords[I].RecordIndex;
+    DC.FocusedRecordIndex := RecIndex;
+    DC.Edit;
 
-      case ATag of
-        130:
-          begin
+    case ATag of
+      130: // Carry forward
+        begin
 //            DC.Values[C.SelectedRecords[I].RecordIndex, cbxCarryForward.Index] := 1;
 //            DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] := 0;
 
+          if DC.Values[C.SelectedRecords[I].RecordIndex, cbxCarryForward.Index] = 0 then
+          begin
             DC.SetEditValue(cbxCarryForward.Index, 1, evsValue);
             DC.SetEditValue(edtInvoiceID.Index, 0, evsValue);
+            DC.Post(True);
+//      DC.PostEditingData;
+            Inc(ChangeCount);
           end;
+        end;
 
-        131:
-          begin
+      131: // Release carry forward
+        begin
 //            DC.Values[RecIndex, cbxCarryForward.Index] := 0;
 //            DC.Values[RecIndex, edtInvoiceID.Index] := -1;
 
+          if DC.Values[C.SelectedRecords[I].RecordIndex, cbxCarryForward.Index] = 1 then
+          begin
             DC.SetEditValue(cbxCarryForward.Index, 0, evsValue);
             DC.SetEditValue(edtInvoiceID.Index, -1, evsValue);
+            DC.Post(True);
+//      DC.PostEditingData;
+            Inc(ChangeCount);
           end;
-      end;
-//        DC.Post(True);
-      DC.PostEditingData;
-      Inc(ChangeCount);
+        end;
     end;
   end;
+//  end;
 
   if ChangeCount > 0 then
     TSDM.PostData(TSDM.cdsTimesheet);
@@ -783,18 +828,13 @@ begin
 // end;
 end;
 
-procedure TMainFrm.DoCarryForward(Sender: TObject);
-begin
-  inherited;
-  CarryForwardItem(TAction(Sender).Tag);
-end;
-
 procedure TMainFrm.BillTimesheetItem(ATag: Integer);
 var
   DC: TcxDBDataController;
   C: TcxCustomGridTableController;
   I: Integer;
   RecIndex: Integer;
+  ChangeCount: Integer;
 begin
   inherited;
   DC := viewTimesheet.DataController;
@@ -802,16 +842,30 @@ begin
 //  DC.BeginUpdate;
 
 //  try
+//  begin
+  for I := 0 to C.SelectedRecordCount - 1 do
   begin
-    for I := 0 to C.SelectedRecordCount - 1 do
-    begin
-      DC.Edit;
-      RecIndex := C.SelectedRecords[I].RecordIndex;
-      DC.FocusedRecordIndex := RecIndex;
+    DC.Edit;
+    RecIndex := C.SelectedRecords[I].RecordIndex;
+    DC.FocusedRecordIndex := RecIndex;
 
+    if DC.Values[C.SelectedRecords[I].RecordIndex, cbxLocked.Index] = 0 then
+    begin
       case ATag of
-        110: DC.SetEditValue(cbxBillable.Index, 1, evsValue);
-        111: DC.SetEditValue(cbxBillable.Index, 0, evsValue);
+        110:
+          begin
+            if (DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 0)
+              and (DC.Values[C.SelectedRecords[I].RecordIndex, cbxCarryForward.Index] = 0) then
+              DC.SetEditValue(cbxBillable.Index, 1, evsValue);
+            DC.Post(True);
+            Inc(ChangeCount);
+          end;
+        111:
+          begin
+            DC.SetEditValue(cbxBillable.Index, 0, evsValue);
+            DC.Post(True);
+            Inc(ChangeCount);
+          end;
       end;
 
 // case VarAstype(lucRateUnit.EditValue, varInteger) of
@@ -834,12 +888,12 @@ begin
             DC.Values[RecIndex, edtRate.Index], evsValue);
 // DC.Values[RecIndex, edtItemValue.Index] := DC.Values[RecIndex, edtRate.Index];
 
-      DC.Post(True);
     end;
   end;
-
-  TSDM.PostData(TSDM.cdsTimesheet);
-  actRefresh.Execute;
+//  end;
+  if ChangeCount > 0 then
+    TSDM.PostData(TSDM.cdsTimesheet);
+//  actRefresh.Execute;
 
 // if DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 0 then
 // DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 1
@@ -872,60 +926,66 @@ var
   InvoiceDate: TDateTime;
 begin
   inherited;
-  if InvoiceDateFrm = nil then
-    InvoiceDateFrm := TInvoiceDateFrm.Create(nil);
+  if InvoiceItemFrm = nil then
+    InvoiceItemFrm := TInvoiceItemFrm.Create(nil);
 
-  if InvoiceDateFrm.ShowModal = mrOK then
+  if InvoiceItemFrm.ShowModal = mrOK then
     try
-      InvoiceDate := VarAsType(InvoiceDateFrm.dteInvoiceDate.EditValue, varDate);
-
+//      InvoiceDate := VarAsType(InvoiceItemFrm.dteInvoiceDate.EditValue, varDate);
+      InvoiceDate := TSDM.DefaultInvoiceDate;
       DC := viewTimesheet.DataController;
       C := viewTimesheet.Controller;
       ChangeCount := 0;
 
-//      DC.BeginUpdate;
-//      try
       for I := 0 to C.SelectedRecordCount - 1 do
       begin
+        // If item is NOT locked...
         if DC.Values[C.SelectedRecords[I].RecordIndex, cbxLocked.Index] = 0 then
         begin
           DC.Edit;
           RecIndex := C.SelectedRecords[I].RecordIndex;
           DC.FocusedRecordIndex := RecIndex;
 
-          if DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] = 0 then
-          begin
-            DC.SetEditValue(edtInvoiceID.Index, 1, evsValue);
-            DC.SetEditValue(cbxLocked.Index, 1, evsValue);
-            DC.SetEditValue(dteInvoiceDate.Index, InvoiceDate, evsValue);
-          end;
+          // If item is approved AND it is NOT carried forward...
+          if (DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 1)
+            and (DC.Values[C.SelectedRecords[I].RecordIndex, cbxCarryForward.Index] = 0) then
+            if DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] <= 0 then
+            begin
+              DC.SetEditValue(edtInvoiceID.Index, 1, evsValue);
+              DC.SetEditValue(cbxLocked.Index, 1, evsValue);
+              DC.SetEditValue(dteInvoiceDate.Index, InvoiceDate, evsValue);
+              Inc(ChangeCount);
+            end;
         end;
         DC.Post(True);
-        inc(ChangeCount);
       end;
 
+//      if ChangeCount = 0 then
+//      begin
+//        Beep;
+//        DisplayMsg(
+//          Application.Title,
+//          'Data Validation Error',
+//          'One or more items could not be invoiced.' + CRLF + CRLF +
+//          'Possible reason(s):' + CRLF +
+//          'Item is locked.' + CRLF +
+//          'Item has not yet been approved.' + CRLF +
+//          'Item is carried forward.',
+//          mtError,
+//          [mbOK]
+//          );
+//      end
+//      else
+//      begin
       if ChangeCount > 0 then
-      begin
         TSDM.PostData(TSDM.cdsTimesheet);
-        actRefresh.Execute;
-      end;
-
-// if DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 0 then
-// DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 1
-// else
-// DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 0;
-//
-// DC.Post(True);
-// end;
-// TSDM.PostData(TSDM.cdsTimesheet);
-//      finally
-//        DC.EndUpdate;
+//        actRefresh.Execute;
 //      end;
     finally
-      if Assigned(InvoiceDateFrm) then
+      if Assigned(InvoiceItemFrm) then
       begin
-        InvoiceDateFrm.Close;
-        FreeAndNil(InvoiceDateFrm);
+        InvoiceItemFrm.Close;
+        FreeAndNil(InvoiceItemFrm);
       end;
     end;
 end;
@@ -946,28 +1006,45 @@ begin
   try
     for I := 0 to C.SelectedRecordCount - 1 do
     begin
-      if DC.Values[C.SelectedRecords[I].RecordIndex, cbxLocked.Index] = 1 then
+      // Can only un-invoice item if it is NOT locked.
+//      if DC.Values[C.SelectedRecords[I].RecordIndex, cbxLocked.Index] = 0 then
+//      begin
+      DC.Edit;
+      RecIndex := C.SelectedRecords[I].RecordIndex;
+      DC.FocusedRecordIndex := RecIndex;
+
+      if DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] >= 0 then
       begin
-        DC.Edit;
-        RecIndex := C.SelectedRecords[I].RecordIndex;
-        DC.FocusedRecordIndex := RecIndex;
-
-        if DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] = 1 then
-        begin
-          DC.SetEditValue(edtInvoiceID.Index, 0, evsValue);
-          DC.SetEditValue(cbxLocked.Index, 0, evsValue);
-          DC.SetEditValue(dteInvoiceDate.Index, Null, evsValue);
-        end;
-        DC.Post(True);
-        inc(ChangeCount);
+        DC.SetEditValue(edtInvoiceID.Index, 0, evsValue);
+        DC.SetEditValue(cbxLocked.Index, 0, evsValue);
+        DC.SetEditValue(dteInvoiceDate.Index, Null, evsValue);
+        Inc(ChangeCount);
       end;
+      DC.Post(True);
+//      end;
     end;
 
+//    if ChangeCount = 0 then
+//    begin
+//      Beep;
+//      DisplayMsg(
+//        Application.Title,
+//        'Data Validation Error',
+//        'One or more items could not be un-invoiced.' + CRLF + CRLF +
+//        'Possible reason(s):' + CRLF +
+//        'Item is locked.' + CRLF +
+//        'Item has already been invoiced.' + CRLF +
+//        'Item is carried forward.',
+//        mtError,
+//        [mbOK]
+//        );
+//    end
+//    else
+//    begin
     if ChangeCount > 0 then
-    begin
       TSDM.PostData(TSDM.cdsTimesheet);
-      actRefresh.Execute;
-    end;
+//      actRefresh.Execute;
+//    end;
   finally
 //    DC.EndUpdate;
     Screen.Cursor := crDefault;

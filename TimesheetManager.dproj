@@ -183,8 +183,8 @@
             <Form>TimesheetActivitySummaryFrm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="General\InvoiceDate_Frm.pas">
-            <Form>InvoiceDateFrm</Form>
+        <DCCReference Include="General\InvoiceItem_Frm.pas">
+            <Form>InvoiceItemFrm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="General\StdActivity_Frm.pas">

@@ -154,11 +154,16 @@ type
     procedure cdsTimesheetAfterPost(DataSet: TDataSet);
   private
     FCurrentUserID: Integer;
+    FDefaultInvoiceDate: TDateTime;
     { Private declarations }
   public
     { Public declarations }
     TimesheetOption: TTimesheetOptions;
     property CurrentUserID: Integer read FCurrentUserID write FCurrentUserID;
+    property DefaultInvoiceDate: TDateTime read FDefaultInvoiceDate write FDefaultInvoiceDate;
+
+        function GetDefaulttInvoiceDate: TDateTime;
+
   end;
 
 var
@@ -251,6 +256,14 @@ var
 begin
   EditMode := BooleanToString(cdsTimesheet.State in [dsEdit, dsInsert]);
   SendMessage(Application.MainForm.Handle, WM_STATE_CHANGE, DWORD(PChar(EditMode)), 0);
+end;
+
+function TTSDM.GetDefaulttInvoiceDate: TDateTime;
+var
+  aYear, aMonth, aDay, aHour, aMin, aSec, aMSec: Word;
+begin
+  DecodeDate(Date, aYear, aMonth, Aday);
+  Result := EncodeDate(Ayear, Amonth, 1);
 end;
 
 procedure TTSDM.PostData(DataSet: TFDMemTable);

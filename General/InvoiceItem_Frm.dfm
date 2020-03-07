@@ -1,7 +1,7 @@
-inherited InvoiceDateFrm: TInvoiceDateFrm
+inherited InvoiceItemFrm: TInvoiceItemFrm
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
-  Caption = 'InvoiceDateFrm'
+  Caption = 'InvoiceItemFrm'
   ClientHeight = 429
   ClientWidth = 816
   PixelsPerInch = 96
@@ -10,48 +10,43 @@ inherited InvoiceDateFrm: TInvoiceDateFrm
     Left = 0
     Top = 0
     Width = 240
-    Height = 170
+    Height = 251
     ExplicitLeft = 0
     ExplicitTop = 0
     ExplicitWidth = 240
-    ExplicitHeight = 170
+    ExplicitHeight = 251
     object dteInvoiceDate: TcxDateEdit [0]
       Left = 90
-      Top = 11
+      Top = 36
       Properties.DisplayFormat = 'dd/MM/yyyy'
       Properties.EditFormat = 'dd/MM/yyyy'
       Properties.ImmediatePost = True
       Properties.PostPopupValueOnTab = True
       Properties.SaveTime = False
       Properties.ShowTime = False
-      Style.BorderColor = clWindowFrame
-      Style.BorderStyle = ebs3D
+      Properties.OnEditValueChanged = dteInvoiceDatePropertiesEditValueChanged
       Style.HotTrack = False
       Style.TransparentBorder = False
-      Style.ButtonStyle = bts3D
-      Style.PopupBorderStyle = epbsFrame3D
-      TabOrder = 0
+      TabOrder = 1
       Width = 139
     end
     object memDescription: TcxMemo [1]
       Left = 11
-      Top = 38
+      Top = 92
       Lines.Strings = (
         'Please select the date to use for '
         'invoicing the selected timesheet '
         'items.')
       Properties.ReadOnly = True
-      Style.BorderColor = clWindowFrame
-      Style.BorderStyle = ebs3D
       Style.HotTrack = False
       Style.TransparentBorder = False
-      TabOrder = 1
-      Height = 90
+      TabOrder = 3
+      Height = 117
       Width = 218
     end
     object btnOK: TcxButton [2]
       Left = 73
-      Top = 134
+      Top = 215
       Width = 75
       Height = 25
       Caption = 'OK'
@@ -59,11 +54,11 @@ inherited InvoiceDateFrm: TInvoiceDateFrm
       ModalResult = 1
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 2
+      TabOrder = 4
     end
     object btnCancel: TcxButton [3]
       Left = 154
-      Top = 134
+      Top = 215
       Width = 75
       Height = 25
       Cancel = True
@@ -71,19 +66,43 @@ inherited InvoiceDateFrm: TInvoiceDateFrm
       ModalResult = 2
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 3
+      TabOrder = 5
+    end
+    object edtInvoicNo: TcxCurrencyEdit [4]
+      Left = 90
+      Top = 11
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '####0'
+      Properties.EditFormat = '####0'
+      Properties.UseDisplayFormatWhenEditing = True
+      Properties.UseThousandSeparator = True
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 0
+      Width = 139
+    end
+    object btnSetDefaultDate: TcxButton [5]
+      Left = 11
+      Top = 61
+      Width = 218
+      Height = 25
+      Caption = 'Set date to first of month'
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 2
+      OnClick = btnSetDefaultDateClick
     end
     inherited layMainGroup_Root: TdxLayoutGroup
-      ItemIndex = 1
+      ItemIndex = 2
     end
     object litInvoiceDate: TdxLayoutItem
       Parent = layMainGroup_Root
       CaptionOptions.Text = 'Invoice Date'
       Control = dteInvoiceDate
-      ControlOptions.OriginalHeight = 21
+      ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 121
       ControlOptions.ShowBorder = False
-      Index = 0
+      Index = 1
     end
     object litDescription: TdxLayoutItem
       Parent = layMainGroup_Root
@@ -94,7 +113,7 @@ inherited InvoiceDateFrm: TInvoiceDateFrm
       ControlOptions.OriginalHeight = 86
       ControlOptions.OriginalWidth = 291
       ControlOptions.ShowBorder = False
-      Index = 1
+      Index = 3
     end
     object grpButtons: TdxLayoutGroup
       Parent = layMainGroup_Root
@@ -103,7 +122,7 @@ inherited InvoiceDateFrm: TInvoiceDateFrm
       ButtonOptions.Buttons = <>
       LayoutDirection = ldHorizontal
       ShowBorder = False
-      Index = 2
+      Index = 4
     end
     object litOK: TdxLayoutItem
       Parent = grpButtons
@@ -124,6 +143,25 @@ inherited InvoiceDateFrm: TInvoiceDateFrm
       ControlOptions.OriginalWidth = 75
       ControlOptions.ShowBorder = False
       Index = 1
+    end
+    object litInvoiceNo: TdxLayoutItem
+      Parent = layMainGroup_Root
+      CaptionOptions.Text = 'Invoice No'
+      Control = edtInvoicNo
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 140
+      ControlOptions.ShowBorder = False
+      Index = 0
+    end
+    object litSetSessionDate: TdxLayoutItem
+      Parent = layMainGroup_Root
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = btnSetDefaultDate
+      ControlOptions.OriginalHeight = 25
+      ControlOptions.OriginalWidth = 165
+      ControlOptions.ShowBorder = False
+      Index = 2
     end
   end
   inherited styRepository: TcxStyleRepository

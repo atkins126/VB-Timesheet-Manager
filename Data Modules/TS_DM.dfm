@@ -664,6 +664,7 @@ inherited TSDM: TTSDM
     ResourceOptions.SilentMode = True
     UpdateOptions.AssignedValues = [uvGeneratorName, uvCheckRequired, uvAutoCommitUpdates]
     UpdateOptions.GeneratorName = 'TIMESHEET_ID_GEN'
+    UpdateOptions.CheckRequired = False
     UpdateOptions.AutoCommitUpdates = True
     UpdateOptions.UpdateTableName = 'TIMESHEET'
     UpdateOptions.KeyFields = 'ID'
