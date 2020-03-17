@@ -7,7 +7,7 @@ uses
   System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Dialogs, System.ImageList,
   Vcl.ImgList, System.Actions, Vcl.ActnList,
 
-  BaseLayout_Frm, VBBase_DM, CommonValues, Data.DB, CommonFunction,
+  BaseLayout_Frm, VBBase_DM, CommonValues, Data.DB, CommonFunctions,
 
   FireDAC.Comp.Client,
 

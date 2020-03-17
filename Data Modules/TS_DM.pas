@@ -162,7 +162,7 @@ type
     property CurrentUserID: Integer read FCurrentUserID write FCurrentUserID;
     property DefaultInvoiceDate: TDateTime read FDefaultInvoiceDate write FDefaultInvoiceDate;
 
-        function GetDefaulttInvoiceDate: TDateTime;
+    function GetDefaulttInvoiceDate: TDateTime;
 
   end;
 
@@ -268,9 +268,11 @@ end;
 
 procedure TTSDM.PostData(DataSet: TFDMemTable);
 begin
-  SetLength(VBBaseDM.FDataSetArray, 1);
-  VBBaseDM.FDataSetArray[0] := TFDMemTable(DataSet);
-  VBBaseDM.ApplyUpdates(VBBaseDM.FDataSetArray, TFDMemTable(DataSet).UpdateOptions.Generatorname, TFDMemTable(DataSet).UpdateOptions.UpdateTableName);
+//  SetLength(VBBaseDM.FDataSetArray, 1);
+//  VBBaseDM.FDataSetArray[0] := TFDMemTable(DataSet);
+//  VBBaseDM.ApplyUpdates(VBBaseDM.FDataSetArray, TFDMemTable(DataSet).UpdateOptions.Generatorname,
+//    TFDMemTable(DataSet).UpdateOptions.UpdateTableName,
+//    TFDMemTable(DataSet).Tag);
 end;
 
 end.

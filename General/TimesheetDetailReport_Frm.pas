@@ -10,7 +10,7 @@ uses
 
   frxClass,
 
-  BaseLayout_Frm, VBCommonValues, Base_DM, CommonFunction, CommonValues,
+  BaseLayout_Frm, VBCommonValues, Base_DM, CommonFunctions, CommonValues,
 
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore,
   dxSkinsDefaultPainters, cxImageList, dxLayoutLookAndFeels, cxClasses, cxStyles,
@@ -134,7 +134,7 @@ type
     edtUFirstname: TcxGridDBBandedColumn;
     edtULastName: TcxGridDBBandedColumn;
     lvlSystemUser: TcxGridLevel;
-    litDetailByCustomer: TdxLayoutItem;
+    litDCustomerListing: TdxLayoutItem;
     grdCustomerListing: TcxGrid;
     viewCustomerListing: TcxGridDBBandedTableView;
     edtCID: TcxGridDBBandedColumn;
@@ -148,7 +148,7 @@ type
     edtCCustID: TcxGridDBBandedColumn;
     edtCCustGrpLinkName: TcxGridDBBandedColumn;
     lvlCustomerListing: TcxGridLevel;
-    litDetailByActivity: TdxLayoutItem;
+    litActivityListing: TdxLayoutItem;
     grdActivityType: TcxGrid;
     viewActivityType: TcxGridDBBandedTableView;
     edtAID: TcxGridDBBandedColumn;
@@ -188,27 +188,32 @@ type
     edtTAddWorkStr: TcxGridDBBandedColumn;
     lvlTimesheetBillable: TcxGridLevel;
     cbxSamePeriod: TcxBarEditItem;
+    litBillCfComparison: TdxLayoutItem;
+    litBillCfComparisonDescription: TdxLayoutLabeledItem;
+    lucBillCfComparison: TcxComboBox;
+    litBillCfwd: TdxLayoutItem;
     procedure FormCreate(Sender: TObject);
     procedure DoCloseForm(Sender: TObject);
-    procedure DoGetData(Sender: TObject);
-    procedure DoPreview(Sender: TObject);
     procedure DoPrint(Sender: TObject);
     procedure DoExcel(Sender: TObject);
     procedure DoPDF(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure lucDateTypePropertiesEditValueChanged(Sender: TObject);
+    procedure lucReportTypePropertiesEditValueChanged(Sender: TObject);
+    procedure lucBillCfComparisonPropertiesEditValueChanged(Sender: TObject);
+  private
+    { Private declarations }
+    FReportFileName: TReportFileName;
+
     procedure GetPeriods;
     procedure GetSystemUser;
     procedure GetCustomer;
     procedure GetActivityType;
     procedure CloseDataSets;
     procedure GetTimesheetDetail;
-    procedure FormDestroy(Sender: TObject);
-    procedure FormShow(Sender: TObject);
-    procedure lucDateTypePropertiesEditValueChanged(Sender: TObject);
+    procedure GetBillCfwd;
     procedure HideTabs;
-    procedure lucReportTypePropertiesEditValueChanged(Sender: TObject);
-  private
-    { Private declarations }
-    FReportFileName: TReportFileName;
   public
     { Public declarations }
   end;
@@ -240,7 +245,7 @@ var
   AComboBox: TcxComboBox;
 begin
   inherited;
-  Width := 930;
+  Width := 950;
   Height := 800;
   layMain.Align := alClient;
   layMain.LayoutLookAndFeel := lafCustomSkin;
@@ -264,6 +269,8 @@ begin
   FReportFileName[0] := 'TimesheetUser.fr3';
   FReportFileName[1] := 'TimesheetCustomer.fr3';
   FReportFileName[2] := 'TimesheetActivityType.fr3';
+  FReportFileName[3] := 'TimesheetBillCfwdByUser.fr3';
+  FReportFileName[4] := 'TimesheetBillCfwdByCustomer.fr3';
 
   lucPeriod.Properties.ListSource := ReportDM.dtsPeriodListing;
   viewSystemUser.DataController.DataSource := ReportDM.dtsSystemUser;
@@ -286,7 +293,9 @@ begin
   TcxLookupComboBoxProperties(lucActivityType.Properties).ListSource := ReportDM.dtsActivityType;
   TcxLookupComboBoxProperties(lucCFActivityType.Properties).ListSource := ReportDM.dtsActivityType;
 
+  lucBillCfComparison.ItemIndex := 0;
   GetPeriods;
+
   if not ReportDM.cdsPeriodListing.Locate('THE_PERIOD', VBBaseDM.CurrentPeriod, []) then
     ReportDM.cdsPeriodListing.Last;
 
@@ -317,21 +326,29 @@ begin
   I := 1;
 
   try
-    DownloadCaption := 'Opening_System_User_Table';
+    DownloadCaption := 'Opening System User Table';
     Progress := StrToFloat(I.ToString) / StrToFloat(TABLE_COUNT.ToString) * 100;
-    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
+//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
+//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=' + DownloadCaption + '|PROGRESS=' + FloatToStr(progress))), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(DownloadCaption)), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FloatToStr(Progress))), 0);
     GetSystemUser;
 
     Inc(I);
     Progress := StrToFloat(I.ToString) / StrToFloat(TABLE_COUNT.ToString) * 100;
-    DownloadCaption := 'Opening_Customer_Table';
-    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
+    DownloadCaption := 'Opening Customer Table';
+//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(DownloadCaption)), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FloatToStr(Progress))), 0);
     GetCustomer;
 
     Inc(I);
     Progress := StrToFloat(I.ToString) / StrToFloat(TABLE_COUNT.ToString) * 100;
-    DownloadCaption := 'Opening_Activity_Type_Table';
-    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
+    DownloadCaption := 'Opening Activity Type Table';
+//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
+//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=' + DownloadCaption + '|PROGRESS=' + FloatToStr(progress))), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(DownloadCaption)), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FloatToStr(Progress))), 0);
     GetActivityType;
 
     HideTabs;
@@ -488,7 +505,6 @@ begin
   lucReportType.SetFocus;
   AComboBox := TcxBarEditItemControl(lucReportType.Links[0].Control).Edit as TcxComboBox;
 
-//  case lucReportType.EditValue of
   case AComboBox.ItemIndex of
     0:
       begin
@@ -578,9 +594,142 @@ begin
         WhereClause := DateClause + ActivityClause + BillableClause + WorkTypeClause + ' ';
       end;
   end;
+
   VBBaseDM.GetData(45, ReportDM.cdsTSBillable, ReportDM.cdsTSBillable.Name, WhereClause + ';' + OrderByClause,
     'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsTSBillable.UpdateOptions.Generatorname,
     ReportDM.cdsTSBillable.UpdateOptions.UpdateTableName);
+end;
+
+procedure TTimesheetDetailReportFrm.GetBillCfwd;
+var
+  DC: TcxCustomDataController;
+  C: TcxGridBandedTableController;
+  I: Integer;
+  WhereClause, OrderByClause, UserClause, DateClause, CustomerClause: string;
+  ActivityClause, BillableClause, WorkTypeClause, FileName: string;
+  AComboBox: TcxComboBox;
+begin
+  WhereClause := '';
+  OrderByClause := '';
+  UserClause := '';
+  DateClause := '';
+  CustomerClause := '';
+  ActivityClause := '';
+  BillableClause := '';
+  WorkTypeClause := '';
+
+//  case lucBillable.ItemIndex of
+//    0: BillableClause := ' AND T.BILLABLE = 1';
+//    1: BillableClause := ' AND T.BILLABLE = 0';
+//  end;
+//
+//  case lucWorkType.ItemIndex of
+//    0: WorkTypeClause := ' AND T.IS_ADDITIONAL_WORK = 0';
+//    1: WorkTypeClause := ' AND T.IS_ADDITIONAL_WORK = 1';
+//  end;
+
+  lucReportType.SetFocus;
+  AComboBox := TcxBarEditItemControl(lucReportType.Links[0].Control).Edit as TcxComboBox;
+
+//  case lucReportType.EditValue of
+  case AComboBox.ItemIndex of
+    0:
+      begin
+        FileName := 'Timesheet Detail BillCfwd by User';
+        ReportDM.FReport := ReportDM.rptTimesheetByUser;
+        DC := viewSystemUser.DataController;
+        C := viewSystemUser.Controller;
+
+        case lucDateType.ItemIndex of
+          0: DateClause := 'WHERE T.THE_PERIOD = ' + IntToStr(ReportDM.cdsPeriodListing.FieldByName('THE_PERIOD').AsInteger);
+
+          1: DateClause := 'WHERE T.ACTIVITY_DATE >= ' + AnsiQuotedStr(FormatDateTime('yyyy-mm-dd', dteFromDate.Date), '''') +
+            ' AND T.ACTIVITY_DATE <= ' + AnsiQuotedStr(FormatDateTime('yyyy-mm-dd', dteToDate.Date), '''');
+        end;
+
+        if C.SelectedRecordCount <> DC.RecordCount then
+        begin
+          UserClause := ' AND T.USER_ID IN (';
+          for I := 0 to C.SelectedRecordCount - 1 do
+          begin
+            UserClause := UserClause + IntToStr(DC.Values[C.SelectedRecords[I].RecordIndex, edtUID.Index]);
+            if I < C.SelectedRecordCount - 1 then
+              UserClause := UserClause + ',';
+          end;
+          UserClause := UserClause + ')';
+        end;
+
+//        OrderByClause := 'ORDER BY T.LOGIN_NAME, T.THE_PERIOD, T.ACTIVITY_DATE';
+//               Field index order =   5             18            6
+        OrderByClause := ' ORDER BY 5, 18, 6 ';
+        WhereClause := DateClause + UserClause + BillableClause + WorkTypeClause + OrderByClause;
+      end;
+
+    1:
+      begin
+        FileName := 'Timesheet Detail BillFwd by Customer';
+        ReportDM.FReport := ReportDM.rptTimesheetByCustomer;
+        DC := viewCustomerListing.DataController;
+        C := viewCustomerListing.Controller;
+
+        case lucDateType.ItemIndex of
+          0: DateClause := 'WHERE T.THE_PERIOD = ' + IntToStr(ReportDM.cdsPeriodListing.FieldByName('THE_PERIOD').AsInteger);
+          1: DateClause := 'WHERE T.ACTIVITY_DATE >= ' + FormatDateTime('yyyy-MM-dd', dteFromDate.Date) +
+            ' AND T.ACTIVITY_DATE <= ' + FormatDateTime('yyyy-MM-dd', dteToDate.Date);
+        end;
+
+        if C.SelectedRecordCount <> DC.RecordCount then
+        begin
+          CustomerClause := ' AND T.CUSTOMER_ID IN (';
+          for I := 0 to C.SelectedRecordCount - 1 do
+          begin
+            CustomerClause := CustomerClause + IntToStr(DC.Values[C.SelectedRecords[I].RecordIndex, edtCID.Index]);
+            if I < C.SelectedRecordCount - 1 then
+              CustomerClause := CustomerClause + ',';
+          end;
+          CustomerClause := CustomerClause + ')';
+        end;
+
+//        OrderByClause := 'ORDER BY T.CUSTOMER_NAME, T.THE_PERIOD, T.LOGIN_NAME, T.ACTIVITY_DATE';
+//               Field index order =   8                18                          6
+        OrderByClause := ' ORDER BY 8, 18, 6 ';
+        WhereClause := DateClause + CustomerClause + BillableClause + WorkTypeClause + OrderByClause;
+      end;
+
+    2:
+      begin
+        FileName := 'Timesheet Detail by Activity';
+        ReportDM.FReport := ReportDM.rptTimesheetByActivity;
+        DC := viewActivityType.DataController;
+        C := viewActivityType.Controller;
+
+        case lucDateType.ItemIndex of
+          0: DateClause := 'WHERE T.THE_PERIOD = ' + IntToStr(ReportDM.cdsPeriodListing.FieldByName('THE_PERIOD').AsInteger);
+          1: DateClause := 'WHERE T.ACTIVITY_DATE >= ' + FormatDateTime('yyyy-MM-dd', dteFromDate.Date) +
+            ' AND T.ACTIVITY_DATE <= ' + FormatDateTime('yyyy-MM-dd', dteToDate.Date);
+        end;
+
+        if C.SelectedRecordCount <> DC.RecordCount then
+        begin
+          ActivityClause := ' AND T.ACTIVITY_TYPE_ID IN (';
+          for I := 0 to C.SelectedRecordCount - 1 do
+          begin
+            ActivityClause := ActivityClause + IntToStr(DC.Values[C.SelectedRecords[I].RecordIndex, edtAID.Index]);
+            if I < C.SelectedRecordCount - 1 then
+              ActivityClause := ActivityClause + ',';
+          end;
+          ActivityClause := ActivityClause + ')';
+        end;
+
+//        OrderByClause := 'ORDER BY T.ACTIVITY_TYPE, T.THE_PERIOD, T.LOGIN_NAME, T.ACTIVITY_DATE';
+//               Field index order =   9                18                          6
+        OrderByClause := ' ORDER BY 9, 18, 6 ';
+        WhereClause := DateClause + ActivityClause + BillableClause + WorkTypeClause + OrderByClause;
+      end;
+  end;
+  VBBaseDM.GetData(83, ReportDM.cdsBillCfwd, ReportDM.cdsBillCfwd.Name, WhereClause + ';' + OrderByClause,
+    'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsBillCfwd.UpdateOptions.Generatorname,
+    ReportDM.cdsBillCfwd.UpdateOptions.UpdateTableName);
 end;
 
 procedure TTimesheetDetailReportFrm.HideTabs;
@@ -589,6 +738,18 @@ var
 begin
   for I := 0 to 2 do
     grpData.Items[I].Visible := False;
+end;
+
+procedure TTimesheetDetailReportFrm.lucBillCfComparisonPropertiesEditValueChanged(Sender: TObject);
+begin
+  inherited;
+  lucBillable.Enabled := lucBillCfComparison.ItemIndex = 0;
+  lucWorkType.Enabled := lucBillCfComparison.ItemIndex = 0;
+
+  case lucBillCfComparison.ItemIndex of
+    0: litBillCfComparisonDescription.CaptionOptions.Text := 'Timesheet details';
+    1: litBillCfComparisonDescription.CaptionOptions.Text := 'Timesheets grouped by billable/Cfwd with summary totals';
+  end;
 end;
 
 procedure TTimesheetDetailReportFrm.lucDateTypePropertiesEditValueChanged(Sender: TObject);
@@ -716,12 +877,6 @@ begin
   Self.ModalResult := mrOK;
 end;
 
-procedure TTimesheetDetailReportFrm.DoGetData(Sender: TObject);
-begin
-  inherited;
-//
-end;
-
 procedure TTimesheetDetailReportFrm.DoPDF(Sender: TObject);
 var
   FileSaved: Boolean;
@@ -777,9 +932,10 @@ begin
   end;
 end;
 
-procedure TTimesheetDetailReportFrm.DoPreview(Sender: TObject);
+procedure TTimesheetDetailReportFrm.DoPrint(Sender: TObject);
 var
   RepFileName: string;
+  AFocusedItem: TdxCustomLayoutItem;
 begin
   inherited;
   try
@@ -822,36 +978,59 @@ begin
           raise ESelectionException.Create('No Activity Type selected. Please select at least one Activity Type.');
     end;
 
-    GetTimesheetDetail;
-    RepFileName := TSDM.ShellResource.ReportFolder + FReportFileName[grpData.ItemIndex];
-
-    if not TFile.Exists(RepFileName) then
-      raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
-
-    ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + FReportFileName[grpData.ItemIndex]);
-
-    if ReportDM.FReport.PrepareReport then
-      if TAction(Sender).Tag = 0 then
-        ReportDM.FReport.ShowPreparedReport
-      else
-      begin
-        if dlgPrint.Execute then
+    case lucBillCfComparison.ItemIndex of
+      0:
         begin
-          ReportDM.FReport.PrintOptions.Copies :=
-            dlgPrint.DialogData.Copies;
+          GetTimesheetDetail;
+          RepFileName := TSDM.ShellResource.ReportFolder + FReportFileName[3];
 
-          ReportDM.FReport.Print;
+          if not TFile.Exists(RepFileName) then
+            raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
+
+          ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + FReportFileName[3]);
         end;
-      end;
+
+      1:
+        begin
+          GetBillCfwd;
+          RepFileName := TSDM.ShellResource.ReportFolder + FReportFileName[4];
+
+          if not TFile.Exists(RepFileName) then
+            raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
+
+          ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + FReportFileName[4]);
+        end;
+    end;
+
+    case TAction(Sender).Tag of
+      0, 1: // Previewing or printing
+        begin
+          if ReportDM.FReport.PrepareReport then
+            if TAction(Sender).Tag = 0 then
+              ReportDM.FReport.ShowPreparedReport
+            else
+            begin
+              if dlgPrint.Execute then
+              begin
+                ReportDM.FReport.PrintOptions.Copies :=
+                  dlgPrint.DialogData.Copies;
+
+                ReportDM.FReport.Print;
+              end;
+            end;
+        end;
+
+      2: // Display data in grid
+        begin
+          litBillCfwd.Visible := True;
+          AFocusedItem := layMain.FindItem(litBillCfComparison);
+          if AFocusedItem <> nil then
+            grpData.items ItemIndex := AFocusedItem.Index;
+        end;
+    end;
   finally
     Screen.Cursor := crDefault;
   end;
-end;
-
-procedure TTimesheetDetailReportFrm.DoPrint(Sender: TObject);
-begin
-  inherited;
-//
 end;
 
 end.

@@ -8,7 +8,7 @@ uses
   Vcl.ImgList, System.Actions, Vcl.ActnList, Vcl.Menus, Vcl.StdCtrls,
   System.Win.Registry,
 
-  BaseLayout_Frm, CommonFunction,
+  BaseLayout_Frm, CommonFunctions,
 
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore,
   dxSkinsDefaultPainters, cxImageList, dxLayoutLookAndFeels, cxClasses, cxStyles,

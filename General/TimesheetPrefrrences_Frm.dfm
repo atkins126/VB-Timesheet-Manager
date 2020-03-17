@@ -14,7 +14,6 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
     Top = -2
     Width = 800
     Height = 518
-    LayoutLookAndFeel = lafCustomSkin
     ExplicitLeft = -2
     ExplicitTop = -2
     ExplicitWidth = 800

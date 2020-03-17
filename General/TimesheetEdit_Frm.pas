@@ -252,7 +252,7 @@ begin
   end;
 
   VBBaseDM.MyDataSet.Post;
-  TSDM.PostData(VBBaseDM.MyDataSet);
+  VBBaseDM.PostData(VBBaseDM.MyDataSet);
 
   if not (VBBaseDM.MyDataSet.State in [dsEdit, dsInsert]) then
     VBBaseDM.MyDataSet.Edit;
@@ -262,6 +262,7 @@ begin
   VBBaseDM.MyDataSet.FieldByName('DAY_NAME').AsString := edtDayName.Text;
   VBBaseDM.MyDataSet.FieldByName('DAY_ORDER').Asinteger := DayOfTheWeek(VBBaseDM.MyDataSet.FieldByName('ACTIVITY_DATE').AsDateTime);
   VBBaseDM.MyDataSet.Post;
+  VBBaseDM.MyDataSet.CommitUpdates;
   Self.ModalResult := mrOK;
 end;
 

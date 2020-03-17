@@ -11,12 +11,10 @@ inherited MainFrm: TMainFrm
   PixelsPerInch = 96
   TextHeight = 13
   inherited layMain: TdxLayoutControl
-    Left = 0
     Top = 116
     Width = 1455
     Height = 616
     Align = alClient
-    ExplicitLeft = 0
     ExplicitTop = 116
     ExplicitWidth = 1455
     ExplicitHeight = 616
@@ -692,7 +690,6 @@ inherited MainFrm: TMainFrm
     TabStop = False
     OnTabChanged = ribMainTabChanged
     object tabTimesheet: TdxRibbonTab
-      Active = True
       Caption = 'Timesheet'
       Groups = <
         item
@@ -701,6 +698,7 @@ inherited MainFrm: TMainFrm
       Index = 0
     end
     object tabReports: TdxRibbonTab
+      Active = True
       Caption = 'Reports'
       Groups = <
         item

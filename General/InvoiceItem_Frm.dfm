@@ -23,6 +23,7 @@ inherited InvoiceItemFrm: TInvoiceItemFrm
       Properties.ImmediatePost = True
       Properties.PostPopupValueOnTab = True
       Properties.SaveTime = False
+      Properties.ShowOnlyValidDates = True
       Properties.ShowTime = False
       Properties.OnEditValueChanged = dteInvoiceDatePropertiesEditValueChanged
       Style.HotTrack = False
@@ -51,10 +52,10 @@ inherited InvoiceItemFrm: TInvoiceItemFrm
       Height = 25
       Caption = 'OK'
       Default = True
-      ModalResult = 1
       ParentShowHint = False
       ShowHint = True
       TabOrder = 4
+      OnClick = btnOKClick
     end
     object btnCancel: TcxButton [3]
       Left = 154

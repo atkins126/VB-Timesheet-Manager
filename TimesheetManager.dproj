@@ -130,7 +130,7 @@
             <Form>BaseLayoutFrm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\..\..\..\Lib\CommonFunction.pas"/>
+        <DCCReference Include="..\..\..\..\Lib\CommonFunctions.pas"/>
         <DCCReference Include="..\..\..\..\Lib\CommonMethods.pas"/>
         <DCCReference Include="..\..\..\..\Lib\CommonValues.pas"/>
         <DCCReference Include="..\..\..\..\Lib\MsgDialog_Frm.pas">

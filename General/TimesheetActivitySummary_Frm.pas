@@ -90,7 +90,7 @@ uses
   RUtils,
   Report_DM,
   Progress_Frm,
-  CommonFunction,
+  CommonFunctions,
   TS_DM;
 
 procedure TTimesheetActivitySummaryFrm.FormCreate(Sender: TObject);

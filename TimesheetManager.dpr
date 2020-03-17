@@ -19,7 +19,7 @@ uses
   Base_DM in '..\..\..\..\Lib\Base_DM.pas' {BaseDM: TDataModule},
   Base_Frm in '..\..\..\..\Lib\Base_Frm.pas' {BaseFrm},
   BaseLayout_Frm in '..\..\..\..\Lib\BaseLayout_Frm.pas' {BaseLayoutFrm},
-  CommonFunction in '..\..\..\..\Lib\CommonFunction.pas',
+  CommonFunctions in '..\..\..\..\Lib\CommonFunctions.pas',
   CommonMethods in '..\..\..\..\Lib\CommonMethods.pas',
   CommonValues in '..\..\..\..\Lib\CommonValues.pas',
   MsgDialog_Frm in '..\..\..\..\Lib\MsgDialog_Frm.pas' {msgDialogFrm},

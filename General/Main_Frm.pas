@@ -8,7 +8,7 @@ uses
   Vcl.Dialogs, System.Actions, Vcl.ActnList, System.Win.Registry, Data.DB,
   System.DateUtils, System.IOUtils, Winapi.ShellApi, System.Types,
 
-  Base_Frm, BaseLayout_Frm, VBProxyClass, VBCommonValues, CommonFunction, CommonValues,
+  Base_Frm, BaseLayout_Frm, VBProxyClass, VBCommonValues, CommonFunctions, CommonValues,
 
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore,
   dxSkinsDefaultPainters, cxImageList, dxLayoutLookAndFeels, cxClasses, cxStyles,
@@ -361,7 +361,7 @@ begin
 
     TSDM.DefaultInvoiceDate := TSDM.GetDefaulttInvoiceDate;
     VBBaseDM.PopulateUserData;
-    sbrMain.Panels[1].Text := 'User: ' + VBBaseDM.FUserData.UserName;
+    sbrMain.Panels[1].Text := 'User: ' + VBBaseDM.UserData.UserName;
     VBBaseDM.SetConnectionProperties;
     VBBaseDM.sqlConnection.Open;
     VBBaseDM.Client := TVBServerMethodsClient.Create(VBBaseDM.sqlConnection.DBXConnection);
@@ -1767,9 +1767,9 @@ begin
 
     if TimesheetEditFrm.ShowModal = mrCancel then
       if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
-        TSDM.cdsTimesheet.Cancel;
-
-    actRefresh.Execute;
+        TSDM.cdsTimesheet.Cancel
+      else
+        actRefresh.Execute;
 
     TimesheetEditFrm.Close;
     FreeAndNil(TimesheetEditFrm);
@@ -1795,15 +1795,18 @@ end;
 
 procedure TMainFrm.DoPrint(Sender: TObject);
 var
-  WhereClause, UserClause, OrderByClause, DateClause, FileName, RepFileName: string;
+  WhereClause, UserClause, OrderByClause, DateClause, FileName,
+  RepFileName{, CarryForwardClause}: string;
 begin
   inherited;
   Screen.Cursor := crHourglass;
   FileName := 'Timesheet Detail by User';
   DateClause := 'WHERE T.THE_PERIOD = ' + FTimesheetPeriod.ToString;
   UserClause := ' AND T.USER_ID IN (' + FTSUserID.ToString + ')';
+//  CarryForwardClause = ' AND T.CARRY_FORWARD = 1 ';
+
   OrderByClause := 'ORDER BY T.ACTIVITY_DATE';
-  WhereClause := DateClause + UserClause + ' ';
+  WhereClause := DateClause + {CarryForwardClause + }UserClause + ' ';
   ReportDM.FReport := ReportDM.rptTimesheetByUser;
 
   try

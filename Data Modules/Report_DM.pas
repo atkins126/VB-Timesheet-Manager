@@ -254,7 +254,7 @@ type
     cdsSystemUserPASSWORD: TStringField;
     cdsSystemUserACCOUNT_ENABLED: TIntegerField;
     dtsSystemUser: TDataSource;
-    rpt1: TfrxReport;
+    rptBillCfwdByUser: TfrxReport;
     cdsTimesheetDetail: TFDMemTable;
     dtsTimesheetDetail: TDataSource;
     cdsTimesheetCF: TFDMemTable;
@@ -393,6 +393,38 @@ type
     IntegerField26: TIntegerField;
     StringField21: TStringField;
     dtsActivityType2: TDataSource;
+    cdsBillCfwd: TFDMemTable;
+    dtsBillCfwd: TDataSource;
+    cdsBillCfwdID: TIntegerField;
+    cdsBillCfwdFIRST_NAME: TStringField;
+    cdsBillCfwdLAST_NAME: TStringField;
+    cdsBillCfwdLOGIN_NAME: TStringField;
+    cdsBillCfwdACTIVITY_DATE: TDateField;
+    cdsBillCfwdCUSTOMER_TYPE: TStringField;
+    cdsBillCfwdCUSTOMER_NAME: TStringField;
+    cdsBillCfwdACTIVITY_TYPE: TStringField;
+    cdsBillCfwdACTIVITY: TStringField;
+    cdsBillCfwdPRICE_LIST_ITEM: TStringField;
+    cdsBillCfwdTIME_SPENT: TFloatField;
+    cdsBillCfwdTIME_HOURS: TFloatField;
+    cdsBillCfwdACTUAL_RATE: TFloatField;
+    cdsBillCfwdSTD_RATE: TFloatField;
+    cdsBillCfwdITEM_VALUE: TFloatField;
+    cdsBillCfwdTHE_PERIOD: TIntegerField;
+    cdsBillCfwdBILLABLE: TIntegerField;
+    cdsBillCfwdBILLABLE_STR: TStringField;
+    cdsBillCfwdINVOICE_ID: TIntegerField;
+    cdsBillCfwdCN_ID: TIntegerField;
+    cdsBillCfwdLOCKED: TIntegerField;
+    cdsBillCfwdLOCKED_STR: TStringField;
+    cdsBillCfwdINVOICE_DATE: TDateField;
+    cdsBillCfwdCARRY_FORWARD: TIntegerField;
+    cdsBillCfwdCARRY_FORWARD_STR: TStringField;
+    cdsBillCfwdIS_ADDITIONAL_WORK: TIntegerField;
+    cdsBillCfwdIS_ADDITIONAL_WORK_STR: TStringField;
+    cdsBillCfwdTOTAL_CARRY_FORWARD: TFloatField;
+    cdsBillCfwdBILL_CFWD: TStringField;
+    fdsBillCfwd: TfrxDBDataset;
     procedure cdsTimesheetCalcFields(DataSet: TDataSet);
     procedure cdsTimesheetAfterPost(DataSet: TDataSet);
     procedure cdsTimesheetBeforePost(DataSet: TDataSet);
@@ -428,10 +460,13 @@ procedure TReportDM.cdsTimesheetAfterPost(DataSet: TDataSet);
 begin
   inherited;
   DataSet := cdsTimesheet;
-  SetLength(VBBaseDM.FDataSetArray, 1);
-  VBBaseDM.FDataSetArray[0] := TFDMemTable(DataSet);
+  SetLength(VBBaseDM.DataSetArray, 1);
+  VBBaseDM.DataSetArray[0] := TFDMemTable(DataSet);
 
-  VBBaseDM.ApplyUpdates(VBBaseDM.FDataSetArray, TFDMemTable(DataSet).UpdateOptions.GeneratorName, TFDMemTable(DataSet).UpdateOptions.UpdateTableName);
+  VBBaseDM.ApplyUpdates(VBBaseDM.DataSetArray, TFDMemTable(DataSet).UpdateOptions.GeneratorName,
+    TFDMemTable(DataSet).UpdateOptions.UpdateTableName,
+    TFDMemTable(DataSet).Tag);
+
   SendMessage(Application.MainForm.Handle, WM_RECORD_ID, DWORD(PChar('REQUEST=REFRESH_DATA' + '|ID=' + FID.ToString)), 0);
 end;
 

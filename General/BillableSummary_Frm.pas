@@ -174,7 +174,7 @@ uses
   RUtils,
   Report_DM,
   Progress_Frm,
-  CommonFunction,
+  CommonFunctions,
   TS_DM,
   TimesheetEdit_Frm;
 
@@ -540,19 +540,19 @@ begin
     ReportDM.qryPeriod.Open(Format(SQL_PERIOD, [FromPeriod, ToPeriod]));
     ReportDM.qryPeriod.First;
 
-    VBBaseDM.ExecuteSQLCommand('REQUEST=' + Format(SQL_DELETE_SUMMARY_DATA, [VBBaseDM.FUserData.UserID]));
+    VBBaseDM.ExecuteSQLCommand('REQUEST=' + Format(SQL_DELETE_SUMMARY_DATA, [VBBaseDM.UserData.UserID]));
 
     while not ReportDM.qryPeriod.EOF do
     begin
       Period := ReportDM.qryPeriod.FieldByName('THE_PERIOD').AsInteger;
-      VBBaseDM.ExecuteStoredProcedure('SP_GEN_BILLABLE_SUMMARY_TABLE', VBBaseDM.FUserData.UserID.ToString + ',' + Period.ToString);
+      VBBaseDM.ExecuteStoredProcedure('SP_GEN_BILLABLE_SUMMARY_TABLE', VBBaseDM.UserData.UserID.ToString + ',' + Period.ToString);
       ReportDM.qryPeriod.Next;
     end;
 
           // Suppress customers that have no transaactions for billable summary
           // report
     if cbxRemoveZeroValues.EditValue then
-      VBBaseDM.ExecuteStoredProcedure('SP_DELETE_ZERO_BILLABLE_VALUES', VBBaseDM.FUserData.UserID.ToString);
+      VBBaseDM.ExecuteStoredProcedure('SP_DELETE_ZERO_BILLABLE_VALUES', VBBaseDM.UserData.UserID.ToString);
 
     lucGroupBy.SetFocus;
     AComboBox := TcxBarEditItemControl(lucGroupBy.Links[0].Control).Edit as TcxComboBox;
@@ -571,7 +571,7 @@ begin
     end;
 
 //    VBBaseDM.GetData(61, ReportDM.cdsBillableSummary, ReportDM.cdsBillableSummary.Name,
-//      'B.USER_ID = ' + VBBaseDM.FUserData.UserID.ToString + ';' + OrderByClause,
+//      'B.USER_ID = ' + VBBaseDM.UserData.UserID.ToString + ';' + OrderByClause,
 //      'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsBillableSummary.UpdateOptions.Generatorname,
 //      ReportDM.cdsBillableSummary.UpdateOptions.UpdateTableName);
 
@@ -587,7 +587,7 @@ begin
       edtBName.GroupIndex := 0;
 //      viewBillable.ViewData.Expand(True);
     VBBaseDM.GetData(61, ReportDM.cdsBillableSummary, ReportDM.cdsBillableSummary.Name,
-      'B.USER_ID = ' + VBBaseDM.FUserData.UserID.ToString + ';' + OrderByClause,
+      'B.USER_ID = ' + VBBaseDM.UserData.UserID.ToString + ';' + OrderByClause,
       'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsBillableSummary.UpdateOptions.Generatorname,
       ReportDM.cdsBillableSummary.UpdateOptions.UpdateTableName);
   finally

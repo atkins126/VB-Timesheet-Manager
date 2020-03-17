@@ -269,19 +269,18 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       end
     end
     object grdCarryForwardDetail: TcxGrid [2]
-      Left = 10000
-      Top = 10000
+      Left = 25
+      Top = 468
       Width = 1073
       Height = 210
       TabOrder = 3
-      Visible = False
       object viewCarryForwardDetail: TcxGridDBBandedTableView
         Tag = 1
         OnDblClick = viewTimesheetDblClick
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
         OnCustomDrawCell = viewBillableSummaryCustomDrawCell
-        DataController.DataSource = ReportDM.dtsTimesheetCF
+        DataController.DataSource = ReportDM.dtsCarryForwardDetail
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -446,7 +445,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           Position.RowIndex = 0
         end
         object lucCFPriceList: TcxGridDBBandedColumn
-          Caption = 'Price Item'
           DataBinding.FieldName = 'PRICE_LIST_ITEM_ID'
           PropertiesClassName = 'TcxLookupComboBoxProperties'
           Properties.Alignment.Vert = taTopJustify
@@ -874,17 +872,18 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       end
     end
     object grdTimesheet: TcxGrid [3]
-      Left = 25
-      Top = 468
+      Left = 10000
+      Top = 10000
       Width = 1073
       Height = 210
       TabOrder = 2
+      Visible = False
       object viewTimesheet: TcxGridDBBandedTableView
         OnDblClick = viewTimesheetDblClick
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
         OnCustomDrawCell = viewBillableSummaryCustomDrawCell
-        DataController.DataSource = ReportDM.dtsTimesheetDetail
+        DataController.DataSource = ReportDM.dtsTimesheet
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -1049,7 +1048,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           Position.RowIndex = 0
         end
         object lucPriceList: TcxGridDBBandedColumn
-          Caption = 'Price Item'
           DataBinding.FieldName = 'PRICE_LIST_ITEM_ID'
           PropertiesClassName = 'TcxLookupComboBoxProperties'
           Properties.Alignment.Vert = taTopJustify
@@ -1476,9 +1474,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
         GridView = viewTimesheet
       end
     end
-    inherited layMainGroup_Root: TdxLayoutGroup
-      ItemIndex = 2
-    end
     object grpToolbar: TdxLayoutGroup
       Parent = layMainGroup_Root
       CaptionOptions.Text = 'New Group'
@@ -1492,6 +1487,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       AlignVert = avClient
       CaptionOptions.Text = 'New Group'
       ButtonOptions.Buttons = <>
+      ItemIndex = 1
       LayoutDirection = ldTabbed
       ShowBorder = False
       Index = 2

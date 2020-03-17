@@ -9,12 +9,8 @@ inherited StdActivityFrm: TStdActivityFrm
   PixelsPerInch = 96
   TextHeight = 13
   inherited layMain: TdxLayoutControl
-    Left = 0
-    Top = 0
     Width = 688
     Height = 513
-    ExplicitLeft = 0
-    ExplicitTop = 0
     ExplicitWidth = 688
     ExplicitHeight = 513
     object grdStdActivity: TcxGrid [0]
