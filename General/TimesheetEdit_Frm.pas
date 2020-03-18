@@ -25,7 +25,10 @@ uses
   cxDropDownEdit, cxCalendar, cxDBEdit, cxCheckBox, dxLayoutcxEditAdapters,
   cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox, dxLayoutControlAdapters,
   cxButtons, cxMemo, cxCurrencyEdit, dxFormattedLabel,
-  dxCore, cxDateUtils, Report_DM;
+  dxCore, cxDateUtils, cxCustomData, cxFilter, cxData, cxDataStorage,
+  cxNavigator, dxDateRanges, dxScrollbarAnnotations, cxDBData, cxGridLevel,
+  cxGridCustomTableView, cxGridTableView, cxGridBandedTableView,
+  cxGridDBBandedTableView, cxGridCustomView, cxGrid;
 
 type
   TTimesheetEditFrm = class(TBaseLayoutFrm)
@@ -120,7 +123,8 @@ implementation
 uses
   TS_DM,
   RUtils,
-  StdActivity_Frm;
+  StdActivity_Frm,
+  Report_DM;
 
 procedure TTimesheetEditFrm.FormCreate(Sender: TObject);
 begin

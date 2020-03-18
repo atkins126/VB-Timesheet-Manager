@@ -21,7 +21,7 @@ uses
   cxNavigator, dxDateRanges, dxScrollbarAnnotations, cxCurrencyEdit, cxMemo,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridBandedTableView,
   cxGridDBBandedTableView, cxGridCustomView, cxGrid, cxBarEditItem,
-  cxGridExportLink;
+  cxGridExportLink, dxScreenTip, dxCustomHint, cxHint;
 
 type
   TReportFileName = array of string;
@@ -60,7 +60,7 @@ type
     grpData: TdxLayoutGroup;
     grp1: TdxLayoutGroup;
     grp2: TdxLayoutGroup;
-    grp3: TdxLayoutGroup;
+    grpDate: TdxLayoutGroup;
     grp4: TdxLayoutGroup;
     dteFromDate: TcxDateEdit;
     dlgPrint: TdxPrintDialog;
@@ -154,7 +154,6 @@ type
     edtAID: TcxGridDBBandedColumn;
     edtAName: TcxGridDBBandedColumn;
     lvlActivityType: TcxGridLevel;
-    lucReportType: TcxBarEditItem;
     grdTimesheetBillable: TcxGrid;
     viewTimesheetBillable: TcxGridDBBandedTableView;
     edtTID: TcxGridDBBandedColumn;
@@ -187,11 +186,56 @@ type
     edtTAddWork: TcxGridDBBandedColumn;
     edtTAddWorkStr: TcxGridDBBandedColumn;
     lvlTimesheetBillable: TcxGridLevel;
-    cbxSamePeriod: TcxBarEditItem;
     litBillCfComparison: TdxLayoutItem;
     litBillCfComparisonDescription: TdxLayoutLabeledItem;
     lucBillCfComparison: TcxComboBox;
     litBillCfwd: TdxLayoutItem;
+    lucReportType: TcxComboBox;
+    litGetDataBy: TdxLayoutItem;
+    grdBillCfwd: TcxGrid;
+    viewBillCfwd: TcxGridDBBandedTableView;
+    edtBCID: TcxGridDBBandedColumn;
+    edtBCFirstName: TcxGridDBBandedColumn;
+    edtBCLastName: TcxGridDBBandedColumn;
+    edtBCThePeriod: TcxGridDBBandedColumn;
+    edtBCLoginName: TcxGridDBBandedColumn;
+    edtBCActivityDate: TcxGridDBBandedColumn;
+    edtBCCustomerType: TcxGridDBBandedColumn;
+    edtBCCustomerName: TcxGridDBBandedColumn;
+    edtBCActivtyType: TcxGridDBBandedColumn;
+    edtBCAActivty: TcxGridDBBandedColumn;
+    edtBCPriceItem: TcxGridDBBandedColumn;
+    edtBCTimeSpent: TcxGridDBBandedColumn;
+    edtBCHours: TcxGridDBBandedColumn;
+    edtBCRate: TcxGridDBBandedColumn;
+    edtBCStdRate: TcxGridDBBandedColumn;
+    edtBCItemValue: TcxGridDBBandedColumn;
+    edtBCTotalCFwd: TcxGridDBBandedColumn;
+    edtBCWeekEnding: TcxGridDBBandedColumn;
+    edtBCBillable: TcxGridDBBandedColumn;
+    edtBCBillableStr: TcxGridDBBandedColumn;
+    edtBCInvoiceNo: TcxGridDBBandedColumn;
+    edtBCInvDate: TcxGridDBBandedColumn;
+    edtBCCreditNoteNo: TcxGridDBBandedColumn;
+    edtBCLocked: TcxGridDBBandedColumn;
+    edtBCLockedStr: TcxGridDBBandedColumn;
+    edtBCCFwd: TcxGridDBBandedColumn;
+    edtBCCFwdStr: TcxGridDBBandedColumn;
+    edtBCAddWork: TcxGridDBBandedColumn;
+    edtBCAddWorkStr: TcxGridDBBandedColumn;
+    lvlBillCfwd: TcxGridLevel;
+    edtBillCfwd: TcxGridDBBandedColumn;
+    repScreenTip: TdxScreenTipRepository;
+    tipClose: TdxScreenTip;
+    tipPreview: TdxScreenTip;
+    tipPrint: TdxScreenTip;
+    tipPDF: TdxScreenTip;
+    tipExcel: TdxScreenTip;
+    tipToGrid: TdxScreenTip;
+    styHintController: TcxHintStyleController;
+    lucSortOptions: TcxComboBox;
+    litSortOptions: TdxLayoutItem;
+    grpSortOptions: TdxLayoutGroup;
     procedure FormCreate(Sender: TObject);
     procedure DoCloseForm(Sender: TObject);
     procedure DoPrint(Sender: TObject);
@@ -202,9 +246,14 @@ type
     procedure lucDateTypePropertiesEditValueChanged(Sender: TObject);
     procedure lucReportTypePropertiesEditValueChanged(Sender: TObject);
     procedure lucBillCfComparisonPropertiesEditValueChanged(Sender: TObject);
+    procedure lucUserSortOptionsPropertiesChange(Sender: TObject);
+    procedure viewSystemUserCustomDrawCell(Sender: TcxCustomGridTableView;
+      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
+      var ADone: Boolean);
   private
     { Private declarations }
     FReportFileName: TReportFileName;
+    FOrderByClause: string;
 
     procedure GetPeriods;
     procedure GetSystemUser;
@@ -214,6 +263,7 @@ type
     procedure GetTimesheetDetail;
     procedure GetBillCfwd;
     procedure HideTabs;
+    procedure DrawCellBorder(var Msg: TMessage); message CM_DRAWBORDER;
   public
     { Public declarations }
   end;
@@ -223,7 +273,7 @@ var
 
 const
   ARRAY_COUNT = 4;
-  REPORT_COUNT = 3;
+  REPORT_COUNT = 5;
 
 implementation
 
@@ -236,16 +286,23 @@ uses
   Report_DM,
   Progress_Frm;
 
+procedure TTimesheetDetailReportFrm.DrawCellBorder(var Msg: TMessage);
+begin
+  if (TObject(Msg.WParam) is TcxCanvas)
+    and (TObject(Msg.LParam) is TcxGridTableDataCellViewInfo) then
+    TcxCanvas(Msg.WParam).DrawComplexFrame(TcxGridTableDataCellViewInfo(Msg.LParam).ClientBounds, clRed, clRed, cxBordersAll, 1);
+end;
+
 procedure TTimesheetDetailReportFrm.FormCreate(Sender: TObject);
 var
   I: Integer;
   Progress: Extended;
   RegKey: TRegistry;
   DownloadCaption: string;
-  AComboBox: TcxComboBox;
+//  AComboBox: TcxComboBox;
 begin
   inherited;
-  Width := 950;
+  Width := 1300;
   Height := 800;
   layMain.Align := alClient;
   layMain.LayoutLookAndFeel := lafCustomSkin;
@@ -280,6 +337,7 @@ begin
 //  viewSummaryByActivity.DataController.DataSource := ReportDM.dtsTSSummaryByActivity;
   viewTimesheet.DataController.DataSource := ReportDM.dtsTimesheet;
   viewCarryForwardDetail.DataController.DataSource := ReportDM.dtsCarryForwardDetail;
+  viewBillCfwd.DataController.DataSource := ReportDM.dtsBillCfwd;
 
   TcxLookupComboBoxProperties(lucSystemUser.Properties).ListSource := ReportDM.dtsSystemUser;
   TcxLookupComboBoxProperties(lucCFSystemuser.Properties).ListSource := ReportDM.dtsSystemUser;
@@ -293,6 +351,7 @@ begin
   TcxLookupComboBoxProperties(lucActivityType.Properties).ListSource := ReportDM.dtsActivityType;
   TcxLookupComboBoxProperties(lucCFActivityType.Properties).ListSource := ReportDM.dtsActivityType;
 
+  FOrderByClause := ' ORDER BY 1, 6, 5, 8 ';
   lucBillCfComparison.ItemIndex := 0;
   GetPeriods;
 
@@ -351,12 +410,14 @@ begin
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FloatToStr(Progress))), 0);
     GetActivityType;
 
+    lucReportType.ItemIndex := 0;
     HideTabs;
-    lucReportType.SetFocus;
-    AComboBox := TcxBarEditItemControl(lucReportType.Links[0].Control).Edit as TcxComboBox;
-    AComboBox.ItemIndex := 0;
-//    lucReportType.EditValue := 0;
+//    lucReportType.SetFocus;
+//    AComboBox := TcxBarEditItemControl(lucReportType.Links[0].Control).Edit as TcxComboBox;
+//    AComboBox.ItemIndex := 0;
+
     grpData.Items[0].Visible := True;
+    grpData.Items[3].Visible := False;
 
 //    Inc(I);
 //    Progress := StrToFloat(I.ToString) / StrToFloat(TABLE_COUNT.ToString) * 100;
@@ -416,6 +477,7 @@ begin
       dteFromDate.SetFocus;
   end;
 
+  WindowState :=  wsMaximized;
   Screen.Cursor := crDefault;
 end;
 
@@ -479,12 +541,11 @@ var
   DC: TcxCustomDataController;
   C: TcxGridBandedTableController;
   I: Integer;
-  WhereClause, OrderByClause, UserClause, DateClause, CustomerClause: string;
+  WhereClause, UserClause, DateClause, CustomerClause: string;
   ActivityClause, BillableClause, WorkTypeClause, FileName: string;
-  AComboBox: TcxComboBox;
+//  AComboBox: TcxComboBox;
 begin
   WhereClause := '';
-  OrderByClause := '';
   UserClause := '';
   DateClause := '';
   CustomerClause := '';
@@ -502,10 +563,10 @@ begin
     1: WorkTypeClause := ' AND T.IS_ADDITIONAL_WORK = 1';
   end;
 
-  lucReportType.SetFocus;
-  AComboBox := TcxBarEditItemControl(lucReportType.Links[0].Control).Edit as TcxComboBox;
+//  lucReportType.SetFocus;
+//  AComboBox := TcxBarEditItemControl(lucReportType.Links[0].Control).Edit as TcxComboBox;
 
-  case AComboBox.ItemIndex of
+  case lucReportType.ItemIndex of
     0:
       begin
         FileName := 'Timesheet Detail by User';
@@ -532,7 +593,7 @@ begin
           UserClause := UserClause + ')';
         end;
 
-        OrderByClause := 'ORDER BY T.LOGIN_NAME, T.THE_PERIOD, T.ACTIVITY_DATE';
+//        OrderByClause:= 'ORDER BY T.LOGIN_NAME, T.THE_PERIOD, T.ACTIVITY_DATE';
         WhereClause := DateClause + UserClause + BillableClause + WorkTypeClause + ' ';
       end;
 
@@ -561,7 +622,7 @@ begin
           CustomerClause := CustomerClause + ')';
         end;
 
-        OrderByClause := 'ORDER BY T.CUSTOMER_NAME, T.THE_PERIOD, T.LOGIN_NAME, T.ACTIVITY_DATE';
+//        OrderByClause := 'ORDER BY T.CUSTOMER_NAME, T.THE_PERIOD, T.LOGIN_NAME, T.ACTIVITY_DATE';
         WhereClause := DateClause + CustomerClause + BillableClause + WorkTypeClause + ' ';
       end;
 
@@ -590,12 +651,12 @@ begin
           ActivityClause := ActivityClause + ')';
         end;
 
-        OrderByClause := 'ORDER BY T.ACTIVITY_TYPE, T.THE_PERIOD, T.LOGIN_NAME, T.ACTIVITY_DATE';
+//        OrderByClause := 'ORDER BY T.ACTIVITY_TYPE, T.THE_PERIOD, T.LOGIN_NAME, T.ACTIVITY_DATE';
         WhereClause := DateClause + ActivityClause + BillableClause + WorkTypeClause + ' ';
       end;
   end;
 
-  VBBaseDM.GetData(45, ReportDM.cdsTSBillable, ReportDM.cdsTSBillable.Name, WhereClause + ';' + OrderByClause,
+  VBBaseDM.GetData(45, ReportDM.cdsTSBillable, ReportDM.cdsTSBillable.Name, WhereClause + ';' + FOrderByClause,
     'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsTSBillable.UpdateOptions.Generatorname,
     ReportDM.cdsTSBillable.UpdateOptions.UpdateTableName);
 end;
@@ -605,18 +666,18 @@ var
   DC: TcxCustomDataController;
   C: TcxGridBandedTableController;
   I: Integer;
-  WhereClause, OrderByClause, UserClause, DateClause, CustomerClause: string;
-  ActivityClause, BillableClause, WorkTypeClause, FileName: string;
-  AComboBox: TcxComboBox;
+  WhereClause1, WhereClause2, UserClause, DateClause, CustomerClause: string;
+  ActivityClause, BillCfwdClause1, BillCfwdClause2, FileName: string;
+//  AComboBox: TcxComboBox;
 begin
-  WhereClause := '';
-  OrderByClause := '';
+  WhereClause1 := '';
+  WhereClause2 := '';
   UserClause := '';
   DateClause := '';
   CustomerClause := '';
   ActivityClause := '';
-  BillableClause := '';
-  WorkTypeClause := '';
+  BillCfwdClause1 := ' AND T.CARRY_FORWARD = 0 ';
+  BillCfwdClause2 := ' AND T.CARRY_FORWARD = 1 ';
 
 //  case lucBillable.ItemIndex of
 //    0: BillableClause := ' AND T.BILLABLE = 1';
@@ -628,11 +689,11 @@ begin
 //    1: WorkTypeClause := ' AND T.IS_ADDITIONAL_WORK = 1';
 //  end;
 
-  lucReportType.SetFocus;
-  AComboBox := TcxBarEditItemControl(lucReportType.Links[0].Control).Edit as TcxComboBox;
+//  lucReportType.SetFocus;
+//  AComboBox := TcxBarEditItemControl(lucReportType.Links[0].Control).Edit as TcxComboBox;
 
 //  case lucReportType.EditValue of
-  case AComboBox.ItemIndex of
+  case lucReportType.ItemIndex of
     0:
       begin
         FileName := 'Timesheet Detail BillCfwd by User';
@@ -661,8 +722,9 @@ begin
 
 //        OrderByClause := 'ORDER BY T.LOGIN_NAME, T.THE_PERIOD, T.ACTIVITY_DATE';
 //               Field index order =   5             18            6
-        OrderByClause := ' ORDER BY 5, 18, 6 ';
-        WhereClause := DateClause + UserClause + BillableClause + WorkTypeClause + OrderByClause;
+//        OrderByClause := ' ORDER BY 1, 6 ';
+        WhereClause1 := DateClause + UserClause + BillCfwdClause1;
+        WhereClause2 := DateClause + UserClause + BillCfwdClause2 + FOrderByClause;
       end;
 
     1:
@@ -692,8 +754,9 @@ begin
 
 //        OrderByClause := 'ORDER BY T.CUSTOMER_NAME, T.THE_PERIOD, T.LOGIN_NAME, T.ACTIVITY_DATE';
 //               Field index order =   8                18                          6
-        OrderByClause := ' ORDER BY 8, 18, 6 ';
-        WhereClause := DateClause + CustomerClause + BillableClause + WorkTypeClause + OrderByClause;
+//        OrderByClause := ' ORDER BY 1, 8, 18, 6 ';
+        WhereClause1 := DateClause + UserClause + BillCfwdClause1;
+        WhereClause2 := DateClause + UserClause + BillCfwdClause2 + FOrderByClause;
       end;
 
     2:
@@ -723,11 +786,13 @@ begin
 
 //        OrderByClause := 'ORDER BY T.ACTIVITY_TYPE, T.THE_PERIOD, T.LOGIN_NAME, T.ACTIVITY_DATE';
 //               Field index order =   9                18                          6
-        OrderByClause := ' ORDER BY 9, 18, 6 ';
-        WhereClause := DateClause + ActivityClause + BillableClause + WorkTypeClause + OrderByClause;
+//        OrderByClause := ' ORDER BY 1, 9, 18, 6 ';
+        WhereClause1 := DateClause + UserClause + BillCfwdClause1;
+        WhereClause2 := DateClause + UserClause + BillCfwdClause2 + FOrderByClause;
       end;
   end;
-  VBBaseDM.GetData(83, ReportDM.cdsBillCfwd, ReportDM.cdsBillCfwd.Name, WhereClause + ';' + OrderByClause,
+
+  VBBaseDM.GetData(83, ReportDM.cdsBillCfwd, ReportDM.cdsBillCfwd.Name, WhereClause1 + ';' + WhereClause2,
     'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsBillCfwd.UpdateOptions.Generatorname,
     ReportDM.cdsBillCfwd.UpdateOptions.UpdateTableName);
 end;
@@ -772,15 +837,64 @@ begin
 end;
 
 procedure TTimesheetDetailReportFrm.lucReportTypePropertiesEditValueChanged(Sender: TObject);
-var
-  AComboBox: TcxComboBox;
+//var
+//  AComboBox: TcxComboBox;
 begin
   inherited;
   HideTabs;
-  lucReportType.SetFocus;
-  AComboBox := TcxBarEditItemControl(lucReportType.Links[0].Control).Edit as TcxComboBox;
-  grpData.Items[AComboBox.ItemIndex].Visible := True;
+//  lucReportType.SetFocus;
+//  AComboBox := TcxBarEditItemControl(lucReportType.Links[0].Control).Edit as TcxComboBox;
+//  grpData.Items[AComboBox.ItemIndex].Visible := True;
+  grpData.Items[lucReportType.ItemIndex].Visible := True;
+
+  case grpData.ItemIndex of
+    0: lucSortOptions.ItemIndex := 0;
+    1: lucSortOptions.ItemIndex := 1;
+    2: lucSortOptions.ItemIndex := 2;
+  end;
 //  grpData.Items[lucReportType.EditValue].Visible := True;
+end;
+
+procedure TTimesheetDetailReportFrm.lucUserSortOptionsPropertiesChange(Sender: TObject);
+begin
+  inherited;
+  // Union field order
+  // 1 = BILL_CFWD
+  // 5 = User Name
+  // 6 = Activity Date
+  // 8 = Customer Name
+  // 9 = Activity Type
+
+  case lucSortOptions.ItemIndex of
+    0: FOrderByClause := ' ORDER BY 1, 6, 5, 8 ';
+    1: FOrderByClause := ' ORDER BY 1, 6, 8, 5 ';
+    2: FOrderByClause := ' ORDER BY 1, 6, 9, 8 ';
+    3: FOrderByClause := ' ORDER BY 1, 5, 6, 8 ';
+    4: FOrderByClause := ' ORDER BY 1, 8, 6, 5 ';
+    5: FOrderByClause := ' ORDER BY 1, 9, 6, 8 ';
+  end;
+end;
+
+procedure TTimesheetDetailReportFrm.viewSystemUserCustomDrawCell(
+  Sender: TcxCustomGridTableView; ACanvas: TcxCanvas;
+  AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
+begin
+  inherited;
+  if AViewInfo.GridRecord = nil then
+    Exit;
+
+  if AViewInfo.GridRecord.Focused then
+  // This renders the background and font colours of the focused record
+  begin
+    if AViewInfo.Item <> nil then
+      if AViewInfo.Item.Focused then
+    begin
+        // This renders the background and border colour of the focused cell
+      ACanvas.Brush.Color := $B6EDFA;
+      ACanvas.Font.Color := RootLookAndFeel.SkinPainter.DefaultSelectionColor;
+      PostMessage(Handle, CM_DRAWBORDER, Integer(ACanvas), Integer(AViewInfo));
+    end;
+  end;
 end;
 
 procedure TTimesheetDetailReportFrm.DoExcel(Sender: TObject);
@@ -935,7 +1049,7 @@ end;
 procedure TTimesheetDetailReportFrm.DoPrint(Sender: TObject);
 var
   RepFileName: string;
-  AFocusedItem: TdxCustomLayoutItem;
+//  AFocusedItem: TdxCustomLayoutItem;
 begin
   inherited;
   try
@@ -982,7 +1096,7 @@ begin
       0:
         begin
           GetTimesheetDetail;
-          RepFileName := TSDM.ShellResource.ReportFolder + FReportFileName[3];
+          RepFileName := TSDM.ShellResource.ReportFolder + FReportFileName[grpData.ItemIndex];
 
           if not TFile.Exists(RepFileName) then
             raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
@@ -993,12 +1107,21 @@ begin
       1:
         begin
           GetBillCfwd;
-          RepFileName := TSDM.ShellResource.ReportFolder + FReportFileName[4];
 
-          if not TFile.Exists(RepFileName) then
-            raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
+          case TAction(Sender).Tag of
+            0, 1: // Previewing or printing
+              begin
+                case lucReportType.ItemIndex of
+                  0: RepFileName := TSDM.ShellResource.ReportFolder + FReportFileName[3];
+                  1: RepFileName := TSDM.ShellResource.ReportFolder + FReportFileName[4];
+                end;
 
-          ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + FReportFileName[4]);
+                if not TFile.Exists(RepFileName) then
+                  raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
+
+                ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + FReportFileName[4]);
+              end;
+          end;
         end;
     end;
 
@@ -1023,9 +1146,11 @@ begin
       2: // Display data in grid
         begin
           litBillCfwd.Visible := True;
-          AFocusedItem := layMain.FindItem(litBillCfComparison);
-          if AFocusedItem <> nil then
-            grpData.items ItemIndex := AFocusedItem.Index;
+          grpData.ItemIndex := 3;
+          viewBillCfwd.ViewData.Expand(True);
+//          AFocusedItem := layMain.FindItem(litBillCfComparison);
+//          if AFocusedItem <> nil then
+//            grpData.items ItemIndex := AFocusedItem.Index;
         end;
     end;
   finally
