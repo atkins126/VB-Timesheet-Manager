@@ -242,7 +242,9 @@ inherited TSDM: TTSDM
   object cdsTSPeriod: TFDMemTable
     ActiveStoredUsage = [auDesignTime]
     FilterOptions = [foCaseInsensitive]
+    FieldDefs = <>
     CachedUpdates = True
+    IndexDefs = <>
     ConstraintsEnabled = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
@@ -257,15 +259,18 @@ inherited TSDM: TTSDM
     UpdateOptions.CheckRequired = False
     UpdateOptions.AutoCommitUpdates = True
     UpdateOptions.UpdateTableName = 'PERIOD'
+    StoreDefs = True
     Left = 322
     Top = 125
     object cdsTSPeriodTHE_PERIOD: TIntegerField
       Alignment = taLeftJustify
       DisplayLabel = 'Period'
       FieldName = 'THE_PERIOD'
+      Origin = 'THE_PERIOD'
     end
   end
   object cdsSystemUser: TFDMemTable
+    Tag = 24
     ActiveStoredUsage = [auDesignTime]
     FilterOptions = [foCaseInsensitive]
     CachedUpdates = True
@@ -645,6 +650,7 @@ inherited TSDM: TTSDM
     Top = 305
   end
   object cdsTimesheet: TFDMemTable
+    Tag = 27
     ActiveStoredUsage = [auDesignTime]
     BeforeEdit = cdsTimesheetBeforeEdit
     AfterPost = cdsTimesheetAfterPost
@@ -872,7 +878,9 @@ inherited TSDM: TTSDM
   object cdsStdActivity: TFDMemTable
     ActiveStoredUsage = [auDesignTime]
     FilterOptions = [foCaseInsensitive]
+    FieldDefs = <>
     CachedUpdates = True
+    IndexDefs = <>
     ConstraintsEnabled = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
@@ -887,6 +895,7 @@ inherited TSDM: TTSDM
     UpdateOptions.CheckRequired = False
     UpdateOptions.AutoCommitUpdates = True
     UpdateOptions.UpdateTableName = 'STD_ACTIVITY'
+    StoreDefs = True
     Left = 505
     Top = 10
     object cdsStdActivityID: TIntegerField

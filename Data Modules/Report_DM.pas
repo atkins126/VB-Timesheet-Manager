@@ -65,7 +65,6 @@ type
     cdsPeriodListingTHE_PERIOD: TIntegerField;
     cdsTSCustomer: TFDMemTable;
     dtsTSCustomer: TDataSource;
-    VbliveConnection: TFDConnection;
     cdsTSCustomerID: TIntegerField;
     cdsTSCustomerCUSTOMER_TYPE_ID: TIntegerField;
     cdsTSCustomerSTATUS_ID: TIntegerField;
@@ -259,8 +258,6 @@ type
     dtsTimesheetDetail: TDataSource;
     cdsTimesheetCF: TFDMemTable;
     dtsTimesheetCF: TDataSource;
-    VBDevConnection: TFDConnection;
-    View_timesheetView: TFDQuery;
     cdsTimesheetDetailID: TIntegerField;
     cdsTimesheetDetailUSER_ID: TIntegerField;
     cdsTimesheetDetailCUSTOMER_ID: TIntegerField;
@@ -425,6 +422,20 @@ type
     cdsBillCfwdTOTAL_CARRY_FORWARD: TFloatField;
     cdsBillCfwdBILL_CFWD: TStringField;
     fdsBillCfwd: TfrxDBDataset;
+    cdsMonthlyBilling: TFDMemTable;
+    rptMonthlyBilling: TfrxReport;
+    fdsMonthlyBilling: TfrxDBDataset;
+    VbdevConnection: TFDConnection;
+    dtsMonthlyBilling: TDataSource;
+    cdsYear: TFDMemTable;
+    dtsYear: TDataSource;
+    cdsMonthlyBillingTHE_PERIOD: TIntegerField;
+    cdsMonthlyBillingTOTAL_BILLABLE: TFloatField;
+    cdsMonthlyBillingTOTAL_CARRY_FORWARD: TFloatField;
+    cdsMonthlyBillingTOTAL_HOURS_BILLABLE: TFloatField;
+    cdsMonthlyBillingTHE_MONTH: TStringField;
+    cdsMonthlyBillingTHE_YEAR: TIntegerField;
+    cdsYearTHE_YEAR: TIntegerField;
     procedure cdsTimesheetCalcFields(DataSet: TDataSet);
     procedure cdsTimesheetAfterPost(DataSet: TDataSet);
     procedure cdsTimesheetBeforePost(DataSet: TDataSet);

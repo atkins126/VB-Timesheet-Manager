@@ -204,6 +204,9 @@ type
     ClearCarryForward1: TMenuItem;
     tipInvoice: TdxScreenTip;
     tipCarryForward: TdxScreenTip;
+    actMonthlyBilling: TAction;
+    btnMonthlyBilling: TdxBarLargeButton;
+    tipMonthlyBilling: TdxScreenTip;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoEditInsertEntry(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
@@ -242,6 +245,7 @@ type
 
     procedure cbxApprovedCustomDrawCell(Sender: TcxCustomGridTableView;
       ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
+    procedure DoMonthlyBilling(Sender: TObject);
   private
     { Private declarations }
     FTSUserID: Integer;
@@ -290,7 +294,7 @@ uses
   TimesheetDetailReport_Frm,
   BillableSummary_Frm,
   TimesheetActivitySummary_Frm,
-  InvoiceItem_Frm;
+  InvoiceItem_Frm, MonthlyBillableReport_Frm;
 
 procedure TMainFrm.DrawCellBorder(var Msg: TMessage);
 begin
@@ -1104,6 +1108,21 @@ begin
 //
 end;
 
+procedure TMainFrm.DoMonthlyBilling(Sender: TObject);
+begin
+  inherited;
+  Screen.Cursor := crHourglass;
+  try
+    if MonthlyBillableReportFrm = nil then
+      MonthlyBillableReportFrm := TMonthlyBillableReportFrm.Create(nil);
+    MonthlyBillableReportFrm.ShowModal;
+    MonthlyBillableReportFrm.Close;
+    FreeAndNil(MonthlyBillableReportFrm);
+  finally
+    Screen.Cursor := crDefault;
+  end;
+end;
+
 procedure TMainFrm.DoGetTimesheetData(Sender: TObject);
 var
   ParamList { , WhereClause }: string;
@@ -1796,7 +1815,7 @@ end;
 procedure TMainFrm.DoPrint(Sender: TObject);
 var
   WhereClause, UserClause, OrderByClause, DateClause, FileName,
-  RepFileName{, CarryForwardClause}: string;
+    RepFileName {, CarryForwardClause}: string;
 begin
   inherited;
   Screen.Cursor := crHourglass;

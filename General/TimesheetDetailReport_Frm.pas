@@ -477,7 +477,7 @@ begin
       dteFromDate.SetFocus;
   end;
 
-  WindowState :=  wsMaximized;
+  WindowState := wsMaximized;
   Screen.Cursor := crDefault;
 end;
 
@@ -888,12 +888,12 @@ begin
   begin
     if AViewInfo.Item <> nil then
       if AViewInfo.Item.Focused then
-    begin
+      begin
         // This renders the background and border colour of the focused cell
-      ACanvas.Brush.Color := $B6EDFA;
-      ACanvas.Font.Color := RootLookAndFeel.SkinPainter.DefaultSelectionColor;
-      PostMessage(Handle, CM_DRAWBORDER, Integer(ACanvas), Integer(AViewInfo));
-    end;
+        ACanvas.Brush.Color := $B6EDFA;
+        ACanvas.Font.Color := RootLookAndFeel.SkinPainter.DefaultSelectionColor;
+        PostMessage(Handle, CM_DRAWBORDER, Integer(ACanvas), Integer(AViewInfo));
+      end;
   end;
 end;
 

@@ -95,6 +95,7 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Left = 112
       Top = 11
       DataBinding.DataField = 'ACTIVITY_DATE'
+      DataBinding.DataSource = TSDM.dtsTimesheet
       Properties.DisplayFormat = 'dd/MM/yyyy'
       Properties.EditFormat = 'dd/MM/yyyy'
       Properties.ImmediatePost = True
@@ -112,6 +113,7 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Top = 38
       BeepOnEnter = False
       DataBinding.DataField = 'CUSTOMER_ID'
+      DataBinding.DataSource = TSDM.dtsTimesheet
       Properties.DropDownListStyle = lsFixedList
       Properties.DropDownWidth = 550
       Properties.ImmediatePost = True
@@ -137,6 +139,7 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Top = 65
       BeepOnEnter = False
       DataBinding.DataField = 'PRICE_LIST_ITEM_ID'
+      DataBinding.DataSource = TSDM.dtsTimesheet
       Properties.DropDownListStyle = lsFixedList
       Properties.DropDownWidth = 850
       Properties.ImmediatePost = True
@@ -168,6 +171,7 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Top = 94
       BeepOnEnter = False
       DataBinding.DataField = 'ACTIVITY_TYPE_ID'
+      DataBinding.DataSource = TSDM.dtsTimesheet
       Properties.DropDownListStyle = lsFixedList
       Properties.DropDownWidth = 500
       Properties.ImmediatePost = True
@@ -198,6 +202,7 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Left = 112
       Top = 123
       DataBinding.DataField = 'ACTIVITY'
+      DataBinding.DataSource = TSDM.dtsTimesheet
       Properties.ScrollBars = ssVertical
       Style.HotTrack = False
       TabOrder = 10
@@ -208,6 +213,7 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Left = 112
       Top = 415
       DataBinding.DataField = 'TIME_SPENT'
+      DataBinding.DataSource = TSDM.dtsTimesheet
       Properties.Alignment.Horz = taLeftJustify
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = '#,##0'
@@ -227,6 +233,7 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Left = 311
       Top = 415
       DataBinding.DataField = 'ACTUAL_RATE'
+      DataBinding.DataSource = TSDM.dtsTimesheet
       Properties.Alignment.Horz = taLeftJustify
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = '#,###,##0.00'
@@ -245,6 +252,7 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Top = 442
       TabStop = False
       DataBinding.DataField = 'STD_RATE'
+      DataBinding.DataSource = TSDM.dtsTimesheet
       Properties.Alignment.Horz = taLeftJustify
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = '#,###,##0.00'
@@ -287,6 +295,7 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Top = 415
       BeepOnEnter = False
       DataBinding.DataField = 'RATE_UNIT_ID'
+      DataBinding.DataSource = TSDM.dtsTimesheet
       Properties.DropDownAutoSize = True
       Properties.DropDownListStyle = lsFixedList
       Properties.ImmediatePost = True

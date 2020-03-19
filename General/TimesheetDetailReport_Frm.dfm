@@ -20,7 +20,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     ExplicitHeight = 647
     object lucDateType: TcxComboBox [0]
       Left = 97
-      Top = 106
+      Top = 102
       Properties.DropDownListStyle = lsFixedList
       Properties.ImmediatePost = True
       Properties.ImmediateUpdateText = True
@@ -36,7 +36,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     end
     object lucBillable: TcxComboBox [1]
       Left = 469
-      Top = 106
+      Top = 102
       Properties.DropDownListStyle = lsFixedList
       Properties.ImmediatePost = True
       Properties.ImmediateUpdateText = True
@@ -51,7 +51,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     end
     object lucWorkType: TcxComboBox [2]
       Left = 469
-      Top = 156
+      Top = 152
       Properties.DropDownListStyle = lsFixedList
       Properties.ImmediatePost = True
       Properties.ImmediateUpdateText = True
@@ -66,7 +66,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     end
     object dteToDate: TcxDateEdit [3]
       Left = 269
-      Top = 131
+      Top = 127
       Properties.DisplayFormat = 'dd/MM/yyyy'
       Properties.EditFormat = 'dd/MM/yyyy'
       Properties.ImmediatePost = True
@@ -79,7 +79,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     end
     object lucPeriod: TcxLookupComboBox [4]
       Left = 97
-      Top = 131
+      Top = 127
       BeepOnEnter = False
       Properties.DropDownAutoSize = True
       Properties.DropDownListStyle = lsFixedList
@@ -99,13 +99,13 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Left = 11
       Top = 11
       Width = 944
-      Height = 58
+      Height = 54
       Align = dalNone
       BarManager = barManager
     end
     object dteFromDate: TcxDateEdit [6]
       Left = 269
-      Top = 106
+      Top = 102
       Properties.DisplayFormat = 'dd/MM/yyyy'
       Properties.EditFormat = 'dd/MM/yyyy'
       Properties.ImmediatePost = True
@@ -118,7 +118,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     end
     object cbxOepnDocument: TcxCheckBox [7]
       Left = 595
-      Top = 106
+      Top = 102
       Caption = 'Open document after export'
       State = cbsChecked
       Style.HotTrack = False
@@ -128,7 +128,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     end
     object cbxRemoveZeroBillableValues: TcxCheckBox [8]
       Left = 595
-      Top = 151
+      Top = 147
       Caption = 'Remove items with zero billable values'
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
@@ -139,13 +139,12 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Transparent = True
     end
     object grdSystemUser: TcxGrid [9]
-      Left = 10000
-      Top = 10000
+      Left = 25
+      Top = 251
       Width = 913
       Height = 349
       BorderStyle = cxcbsNone
       TabOrder = 12
-      Visible = False
       object viewSystemUser: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
@@ -477,7 +476,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     end
     object lucBillCfComparison: TcxComboBox [12]
       Left = 469
-      Top = 131
+      Top = 127
       Properties.DropDownListStyle = lsFixedList
       Properties.ImmediatePost = True
       Properties.Items.Strings = (
@@ -491,7 +490,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     end
     object lucReportType: TcxComboBox [13]
       Left = 97
-      Top = 156
+      Top = 152
       Properties.DropDownListStyle = lsFixedList
       Properties.ImmediatePost = True
       Properties.Items.Strings = (
@@ -505,10 +504,10 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Width = 100
     end
     object grdBillCfwd: TcxGrid [14]
-      Left = 25
-      Top = 255
+      Left = 10000
+      Top = 10000
       Width = 913
-      Height = 364
+      Height = 368
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -516,6 +515,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Font.Style = []
       ParentFont = False
       TabOrder = 15
+      Visible = False
       object viewBillCfwd: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
@@ -1121,7 +1121,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     end
     object lucSortOptions: TcxComboBox [15]
       Left = 97
-      Top = 181
+      Top = 177
       Properties.DropDownListStyle = lsFixedList
       Properties.ImmediatePost = True
       Properties.Items.Strings = (
@@ -1146,7 +1146,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       CaptionOptions.Visible = False
       Control = docToolbar
       ControlOptions.AutoColor = True
-      ControlOptions.OriginalHeight = 58
+      ControlOptions.OriginalHeight = 54
       ControlOptions.OriginalWidth = 1307
       ControlOptions.ShowBorder = False
       Index = 0
@@ -1239,7 +1239,6 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       AlignVert = avClient
       CaptionOptions.Text = 'New Group'
       ButtonOptions.Buttons = <>
-      ItemIndex = 3
       LayoutDirection = ldTabbed
       ShowBorder = False
       Index = 2
@@ -2522,8 +2521,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     end
   end
   object grdTimesheetBillable: TcxGrid [3]
-    Left = 157
-    Top = 150
+    Left = 1012
+    Top = 398
     Width = 896
     Height = 421
     Font.Charset = ANSI_CHARSET
@@ -3919,6 +3918,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       AllowCustomizing = False
       AllowQuickCustomizing = False
       AllowReset = False
+      BorderStyle = bbsNone
       Caption = 'Toolbar'
       CaptionButtons = <>
       DockControl = docToolbar

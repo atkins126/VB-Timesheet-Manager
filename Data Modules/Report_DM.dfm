@@ -1101,7 +1101,7 @@ inherited ReportDM: TReportDM
         object Memo13: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 971.339258818897600000
+          Left = 971.339258818897700000
           Width = 75.590551181102400000
           Height = 18.897650000000000000
           DisplayFormat.FormatStr = '###,##0.00'
@@ -1269,7 +1269,7 @@ inherited ReportDM: TReportDM
         object Memo25: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 971.339258818897600000
+          Left = 971.339258818897700000
           Top = 49.133890000000000000
           Width = 75.590551181102400000
           Height = 18.897650000000000000
@@ -1375,7 +1375,7 @@ inherited ReportDM: TReportDM
         object Memo4: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 971.339258818897600000
+          Left = 971.339258818897700000
           Width = 75.590551181102400000
           Height = 18.897650000000000000
           DisplayFormat.FormatStr = '###,##0.00'
@@ -2120,30 +2120,6 @@ inherited ReportDM: TReportDM
     Left = 320
     Top = 185
   end
-  object VbliveConnection: TFDConnection
-    Params.Strings = (
-      'ConnectionDef=VB Live')
-    FormatOptions.AssignedValues = [fvMapRules]
-    FormatOptions.OwnMapRules = True
-    FormatOptions.MapRules = <
-      item
-        SourceDataType = dtWideString
-        TargetDataType = dtAnsiString
-      end
-      item
-        SourceDataType = dtFmtBCD
-        TargetDataType = dtCurrency
-      end
-      item
-        SourceDataType = dtSingle
-        TargetDataType = dtDouble
-      end>
-    ResourceOptions.AssignedValues = [rvAutoReconnect]
-    ResourceOptions.AutoReconnect = True
-    LoginPrompt = False
-    Left = 997
-    Top = 12
-  end
   object cdsActivityType: TFDMemTable
     ActiveStoredUsage = [auDesignTime]
     CachedUpdates = True
@@ -2482,7 +2458,6 @@ inherited ReportDM: TReportDM
     Top = 330
   end
   object qryDummy: TFDQuery
-    Connection = VbliveConnection
     SQL.Strings = (
       'SELECT'
       'T.THE_PERIOD,'
@@ -5351,7 +5326,7 @@ inherited ReportDM: TReportDM
         object Memo25: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 971.339258818897600000
+          Left = 971.339258818897700000
           Top = 49.133890000000000000
           Width = 75.590551181102400000
           Height = 18.897650000000000000
@@ -6142,37 +6117,6 @@ inherited ReportDM: TReportDM
     Left = 865
     Top = 185
   end
-  object VBDevConnection: TFDConnection
-    Params.Strings = (
-      'ConnectionDef=VB Test')
-    FormatOptions.AssignedValues = [fvMapRules]
-    FormatOptions.OwnMapRules = True
-    FormatOptions.MapRules = <
-      item
-        SourceDataType = dtWideString
-        TargetDataType = dtAnsiString
-      end
-      item
-        SourceDataType = dtFmtBCD
-        TargetDataType = dtCurrency
-      end
-      item
-        SourceDataType = dtSingle
-        TargetDataType = dtDouble
-      end>
-    ResourceOptions.AssignedValues = [rvAutoReconnect]
-    ResourceOptions.AutoReconnect = True
-    LoginPrompt = False
-    Left = 996
-    Top = 95
-  end
-  object View_timesheetView: TFDQuery
-    Connection = VBDevConnection
-    SQL.Strings = (
-      'SELECT * FROM VIEW_TIMESHEET')
-    Left = 1008
-    Top = 163
-  end
   object cdsSystemUser1: TFDMemTable
     ActiveStoredUsage = [auDesignTime]
     CachedUpdates = True
@@ -6861,5 +6805,150 @@ inherited ReportDM: TReportDM
     BCDToCurrency = False
     Left = 470
     Top = 425
+  end
+  object cdsMonthlyBilling: TFDMemTable
+    ActiveStoredUsage = [auDesignTime]
+    FilterOptions = [foCaseInsensitive]
+    CachedUpdates = True
+    ConstraintsEnabled = True
+    FetchOptions.AssignedValues = [evMode, evRecordCountMode]
+    FetchOptions.Mode = fmAll
+    FetchOptions.RecordCountMode = cmTotal
+    FormatOptions.AssignedValues = [fvDataSnapCompatibility]
+    FormatOptions.DataSnapCompatibility = True
+    ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
+    ResourceOptions.StorePrettyPrint = True
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 355
+    Top = 505
+    object cdsMonthlyBillingTHE_PERIOD: TIntegerField
+      DisplayLabel = 'Period'
+      FieldName = 'THE_PERIOD'
+      Origin = 'THE_PERIOD'
+    end
+    object cdsMonthlyBillingTHE_YEAR: TIntegerField
+      DisplayLabel = 'Year'
+      FieldName = 'THE_YEAR'
+      Origin = 'THE_YEAR'
+    end
+    object cdsMonthlyBillingTHE_MONTH: TStringField
+      DisplayLabel = 'Month'
+      FieldName = 'THE_MONTH'
+      Origin = 'THE_MONTH'
+      FixedChar = True
+      Size = 9
+    end
+    object cdsMonthlyBillingTOTAL_BILLABLE: TFloatField
+      DisplayLabel = 'Total Billable'
+      FieldName = 'TOTAL_BILLABLE'
+      Origin = 'TOTAL_BILLABLE'
+    end
+    object cdsMonthlyBillingTOTAL_CARRY_FORWARD: TFloatField
+      DisplayLabel = 'Total C/Fwd'
+      FieldName = 'TOTAL_CARRY_FORWARD'
+      Origin = 'TOTAL_CARRY_FORWARD'
+    end
+    object cdsMonthlyBillingTOTAL_HOURS_BILLABLE: TFloatField
+      DisplayLabel = 'Total Hours'
+      FieldName = 'TOTAL_HOURS_BILLABLE'
+      Origin = 'TOTAL_HOURS_BILLABLE'
+    end
+  end
+  object rptMonthlyBilling: TfrxReport
+    Version = '6.2.1'
+    DotMatrixReport = False
+    IniFile = '\Software\Fast Reports'
+    PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick, pbCopy, pbSelection]
+    PreviewOptions.Zoom = 1.000000000000000000
+    PrintOptions.Printer = 'Default'
+    PrintOptions.PrintOnSheet = 0
+    ReportOptions.CreateDate = 43908.394616481480000000
+    ReportOptions.LastChange = 43908.394616481480000000
+    ScriptLanguage = 'PascalScript'
+    ScriptText.Strings = (
+      'begin'
+      ''
+      'end.')
+    Left = 355
+    Top = 605
+    Datasets = <>
+    Variables = <>
+    Style = <>
+  end
+  object fdsMonthlyBilling: TfrxDBDataset
+    UserName = 'MonthlyBilling'
+    CloseDataSource = False
+    FieldAliases.Strings = (
+      'THE_PERIOD=THE_PERIOD'
+      'TOTAL_BILLABLE=TOTAL_BILLABLE'
+      'TOTAL_CARRY_FORWARD=TOTAL_CARRY_FORWARD'
+      'TOTAL_HOURS_BILLABLE=TOTAL_HOURS_BILLABLE'
+      'THE_MONTH=THE_MONTH'
+      'THE_YEAR=THE_YEAR')
+    DataSet = cdsMonthlyBilling
+    BCDToCurrency = False
+    Left = 355
+    Top = 660
+  end
+  object VbdevConnection: TFDConnection
+    Params.Strings = (
+      'Database=C:\Data\Firebird\VB\VB.FDB'
+      'ConnectionDef=VB Live')
+    FormatOptions.AssignedValues = [fvMapRules]
+    FormatOptions.OwnMapRules = True
+    FormatOptions.MapRules = <
+      item
+        SourceDataType = dtWideString
+        TargetDataType = dtAnsiString
+      end
+      item
+        SourceDataType = dtFmtBCD
+        TargetDataType = dtCurrency
+      end
+      item
+        SourceDataType = dtSingle
+        TargetDataType = dtDouble
+      end>
+    ResourceOptions.AssignedValues = [rvAutoReconnect]
+    ResourceOptions.AutoReconnect = True
+    LoginPrompt = False
+    Left = 997
+    Top = 12
+  end
+  object dtsMonthlyBilling: TDataSource
+    DataSet = cdsMonthlyBilling
+    Left = 355
+    Top = 555
+  end
+  object cdsYear: TFDMemTable
+    ActiveStoredUsage = [auDesignTime]
+    FilterOptions = [foCaseInsensitive]
+    CachedUpdates = True
+    ConstraintsEnabled = True
+    FetchOptions.AssignedValues = [evMode, evRecordCountMode]
+    FetchOptions.Mode = fmAll
+    FetchOptions.RecordCountMode = cmTotal
+    FormatOptions.AssignedValues = [fvDataSnapCompatibility]
+    FormatOptions.DataSnapCompatibility = True
+    ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
+    ResourceOptions.StorePrettyPrint = True
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 460
+    Top = 505
+    object cdsYearTHE_YEAR: TIntegerField
+      DisplayLabel = 'Year'
+      FieldName = 'THE_YEAR'
+    end
+  end
+  object dtsYear: TDataSource
+    DataSet = cdsYear
+    Left = 460
+    Top = 555
   end
 end
