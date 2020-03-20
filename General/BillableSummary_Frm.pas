@@ -310,6 +310,7 @@ begin
 
   lucGroupBy.SetFocus;
   AComboBox := TcxBarEditItemControl(lucGroupBy.Links[0].Control).Edit as TcxComboBox;
+
   case AComboBox.ItemIndex of
     0: RepFileName := TSDM.ShellResource.ReportFolder + 'BillableSummaryByPeriod.fr3';
     1: RepFileName := TSDM.ShellResource.ReportFolder + 'BillableSummaryByCustomer.fr3';

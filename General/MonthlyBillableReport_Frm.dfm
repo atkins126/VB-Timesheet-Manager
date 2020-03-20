@@ -3,8 +3,8 @@ inherited MonthlyBillableReportFrm: TMonthlyBillableReportFrm
   BorderStyle = bsSingle
   Caption = 'MonthlyBillableReportFrm'
   ClientHeight = 546
-  ClientWidth = 603
-  ExplicitWidth = 609
+  ClientWidth = 604
+  ExplicitWidth = 610
   ExplicitHeight = 575
   PixelsPerInch = 96
   TextHeight = 13
@@ -16,7 +16,7 @@ inherited MonthlyBillableReportFrm: TMonthlyBillableReportFrm
     object docToolbar: TdxBarDockControl [0]
       Left = 11
       Top = 11
-      Width = 523
+      Width = 637
       Height = 54
       Align = dalNone
       BarManager = barManager
@@ -36,13 +36,14 @@ inherited MonthlyBillableReportFrm: TMonthlyBillableReportFrm
       Properties.ListOptions.SyncMode = True
       Properties.ListSource = ReportDM.dtsPeriod
       Properties.PostPopupValueOnTab = True
+      Properties.OnChange = lucFromPeriodPropertiesChange
       Style.HotTrack = False
       Style.TransparentBorder = False
       TabOrder = 2
-      Width = 100
+      Width = 80
     end
     object lucToPeriod: TcxLookupComboBox [2]
-      Left = 308
+      Left = 288
       Top = 71
       BeepOnEnter = False
       Properties.DropDownAutoSize = True
@@ -56,17 +57,18 @@ inherited MonthlyBillableReportFrm: TMonthlyBillableReportFrm
       Properties.ListOptions.SyncMode = True
       Properties.ListSource = ReportDM.dtsToPeriod
       Properties.PostPopupValueOnTab = True
+      Properties.OnChange = lucFromPeriodPropertiesChange
       Style.HotTrack = False
       Style.TransparentBorder = False
       TabOrder = 3
-      Width = 100
+      Width = 80
     end
     object grdMonthlyBilling: TcxGrid [3]
       Left = 11
       Top = 96
-      Width = 523
-      Height = 414
-      TabOrder = 5
+      Width = 637
+      Height = 397
+      TabOrder = 7
       object viewMonthlyBilling: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
@@ -140,6 +142,7 @@ inherited MonthlyBillableReportFrm: TMonthlyBillableReportFrm
         OptionsView.Footer = True
         OptionsView.GroupFooters = gfVisibleWhenExpanded
         OptionsView.GroupSummaryLayout = gslAlignWithColumns
+        OnCustomDrawGroupSummaryCell = viewMonthlyBillingCustomDrawGroupSummaryCell
         Bands = <
           item
             Caption = 'Monthly billable summary'
@@ -267,8 +270,8 @@ inherited MonthlyBillableReportFrm: TMonthlyBillableReportFrm
       TabOrder = 1
       Width = 70
     end
-    object lucYear: TcxLookupComboBox [5]
-      Left = 446
+    object lucFromYear: TcxLookupComboBox [5]
+      Left = 409
       Top = 71
       BeepOnEnter = False
       Properties.DropDownAutoSize = True
@@ -282,11 +285,46 @@ inherited MonthlyBillableReportFrm: TMonthlyBillableReportFrm
       Properties.ListOptions.SyncMode = True
       Properties.ListSource = ReportDM.dtsYear
       Properties.PostPopupValueOnTab = True
-      Properties.OnChange = lucYearPropertiesChange
+      Properties.OnChange = lucFromYearPropertiesChange
       Style.HotTrack = False
       Style.TransparentBorder = False
       TabOrder = 4
       Width = 60
+    end
+    object lucToYear: TcxLookupComboBox [6]
+      Left = 495
+      Top = 71
+      BeepOnEnter = False
+      Properties.DropDownAutoSize = True
+      Properties.DropDownListStyle = lsFixedList
+      Properties.ImmediatePost = True
+      Properties.KeyFieldNames = 'THE_YEAR'
+      Properties.ListColumns = <
+        item
+          FieldName = 'THE_YEAR'
+        end>
+      Properties.ListOptions.SyncMode = True
+      Properties.ListSource = ReportDM.dtsYear
+      Properties.PostPopupValueOnTab = True
+      Properties.OnChange = lucFromYearPropertiesChange
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 5
+      Width = 60
+    end
+    object cbxGetAll: TcxCheckBox [7]
+      Left = 561
+      Top = 71
+      Caption = 'Get all data'
+      ParentShowHint = False
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
+      Properties.OnChange = cbxGetAllPropertiesChange
+      ShowHint = True
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 6
+      Transparent = True
     end
     inherited layMainGroup_Root: TdxLayoutGroup
       ItemIndex = 1
@@ -305,7 +343,7 @@ inherited MonthlyBillableReportFrm: TMonthlyBillableReportFrm
       Parent = layMainGroup_Root
       CaptionOptions.Text = 'New Group'
       ButtonOptions.Buttons = <>
-      ItemIndex = 1
+      ItemIndex = 3
       LayoutDirection = ldHorizontal
       ShowBorder = False
       Index = 1
@@ -315,7 +353,7 @@ inherited MonthlyBillableReportFrm: TMonthlyBillableReportFrm
       CaptionOptions.Text = 'From'
       Control = lucFromPeriod
       ControlOptions.OriginalHeight = 19
-      ControlOptions.OriginalWidth = 100
+      ControlOptions.OriginalWidth = 80
       ControlOptions.ShowBorder = False
       Index = 0
     end
@@ -324,7 +362,7 @@ inherited MonthlyBillableReportFrm: TMonthlyBillableReportFrm
       CaptionOptions.Text = 'To'
       Control = lucToPeriod
       ControlOptions.OriginalHeight = 19
-      ControlOptions.OriginalWidth = 100
+      ControlOptions.OriginalWidth = 80
       ControlOptions.ShowBorder = False
       Index = 1
     end
@@ -360,17 +398,37 @@ inherited MonthlyBillableReportFrm: TMonthlyBillableReportFrm
       Parent = grpGetOptions
       CaptionOptions.Text = 'New Group'
       ButtonOptions.Buttons = <>
+      LayoutDirection = ldHorizontal
       ShowBorder = False
       Index = 2
     end
     object litYear: TdxLayoutItem
       Parent = grpYear
-      CaptionOptions.Text = 'Year'
-      Control = lucYear
+      CaptionOptions.Text = 'From'
+      Control = lucFromYear
       ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 60
       ControlOptions.ShowBorder = False
       Index = 0
+    end
+    object litToYear: TdxLayoutItem
+      Parent = grpYear
+      CaptionOptions.Text = 'To'
+      Control = lucToYear
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 60
+      ControlOptions.ShowBorder = False
+      Index = 1
+    end
+    object litGetAllData: TdxLayoutItem
+      Parent = grpGetOptions
+      CaptionOptions.Text = 'Get all data'
+      CaptionOptions.Visible = False
+      Control = cbxGetAll
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 87
+      ControlOptions.ShowBorder = False
+      Index = 3
     end
   end
   inherited styRepository: TcxStyleRepository

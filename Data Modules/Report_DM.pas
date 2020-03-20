@@ -12,7 +12,10 @@ unit Report_DM;
  rptTimesheetCustomer           TSSummaryByActivity.fr3
  rptBillableSummaryByCustomer   BillableSummaryByCustomer.fr3
  rptBillableSummaryByPeriod     BillableSummaryByPeriod.fr3
+ rptMonthlyBilling              TimesheetBillCfwdByUser.fr3
+ rptBillCfwdByUser              MonthlyBilling.fr3
 }
+
 
 interface
 
@@ -31,6 +34,8 @@ uses
   FireDAC.Phys.SQLiteVDataSet, FireDAC.Phys.FB, FireDAC.Phys.FBDef;
 
 type
+  TReportFileName = array of string;
+
   TReportDM = class(TBaseDM)
     cdsBillableSummary: TFDMemTable;
     cdsBillableSummaryCUSTOMER_ID: TIntegerField;
@@ -443,14 +448,17 @@ type
     procedure cdsCarryForwardDetailCalcFields(DataSet: TDataSet);
     procedure cdsCarryForwardDetailBeforePost(DataSet: TDataSet);
     procedure cdsTimesheetDetailCalcFields(DataSet: TDataSet);
+    procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
     FID: Integer;
+    FReportFileName: TReportFileName;
   public
     { Public declarations }
     FReport: TfrxReport;
 
     property Report: TfrxReport read FReport write FReport;
+    property ReportFileName: TReportFileName read FReportFileName write FReportFileName;
   end;
 
 var
@@ -458,6 +466,7 @@ var
 
 const
   TABLE_COUNT = 5;
+  REPORT_COUNT = 6;
 
 implementation
 
@@ -546,6 +555,19 @@ begin
   DataSet.FieldByName('FULL_NAME').AsString :=
     DataSet.FieldByName('FIRST_NAME').AsString + '' +
     DataSet.FieldByName('LAST_NAME').AsString;
+end;
+
+procedure TReportDM.DataModuleCreate(Sender: TObject);
+begin
+  inherited;
+  SetLength(FReportFileName, REPORT_COUNT);
+
+  FReportFileName[0] := 'TimesheetUser.fr3';
+  FReportFileName[1] := 'TimesheetCustomer.fr3';
+  FReportFileName[2] := 'TimesheetActivityType.fr3';
+  FReportFileName[3] := 'TimesheetBillCfwdByUser.fr3';
+  FReportFileName[4] := 'TimesheetBillCfwdByCustomer.fr3';
+  FReportFileName[5] := 'MonthlyBilling.fr3';
 end;
 
 procedure TReportDM.cdsCarryForwardDetailBeforePost(DataSet: TDataSet);

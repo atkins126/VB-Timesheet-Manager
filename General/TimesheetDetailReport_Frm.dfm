@@ -139,12 +139,13 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Transparent = True
     end
     object grdSystemUser: TcxGrid [9]
-      Left = 25
-      Top = 251
+      Left = 10000
+      Top = 10000
       Width = 913
       Height = 349
       BorderStyle = cxcbsNone
       TabOrder = 12
+      Visible = False
       object viewSystemUser: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
@@ -504,8 +505,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Width = 100
     end
     object grdBillCfwd: TcxGrid [14]
-      Left = 10000
-      Top = 10000
+      Left = 25
+      Top = 251
       Width = 913
       Height = 368
       Font.Charset = ANSI_CHARSET
@@ -515,7 +516,6 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Font.Style = []
       ParentFont = False
       TabOrder = 15
-      Visible = False
       object viewBillCfwd: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
@@ -535,6 +535,14 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
             Kind = skSum
             FieldName = 'ITEM_VALUE'
             Column = edtBCItemValue
+            DisplayText = 'Billed'
+          end
+          item
+            Format = '#,##0.00'
+            Kind = skSum
+            FieldName = 'ITEM_VALUE'
+            Column = edtBCItemValue
+            DisplayText = 'Carry Fwd'
           end>
         DataController.Summary.SummaryGroups = <
           item
@@ -565,7 +573,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         OptionsView.NoDataToDisplayInfoText = '<No Timesheet data to display>'
         OptionsView.Footer = True
         OptionsView.FooterMultiSummaries = True
-        OptionsView.GroupFooters = gfAlwaysVisible
+        OptionsView.GroupFooters = gfVisibleWhenExpanded
         Bands = <
           item
             Caption = 'Billable/Carry Forward Summary'
@@ -1239,6 +1247,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       AlignVert = avClient
       CaptionOptions.Text = 'New Group'
       ButtonOptions.Buttons = <>
+      ItemIndex = 3
       LayoutDirection = ldTabbed
       ShowBorder = False
       Index = 2

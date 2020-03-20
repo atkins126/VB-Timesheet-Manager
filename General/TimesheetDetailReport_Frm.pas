@@ -24,8 +24,6 @@ uses
   cxGridExportLink, dxScreenTip, dxCustomHint, cxHint;
 
 type
-  TReportFileName = array of string;
-
   TTimesheetDetailReportFrm = class(TBaseLayoutFrm)
     lucDateType: TcxComboBox;
     lucBillable: TcxComboBox;
@@ -252,7 +250,7 @@ type
       var ADone: Boolean);
   private
     { Private declarations }
-    FReportFileName: TReportFileName;
+//    FReportFileName: TReportFileName;
     FOrderByClause: string;
 
     procedure GetPeriods;
@@ -273,7 +271,7 @@ var
 
 const
   ARRAY_COUNT = 4;
-  REPORT_COUNT = 5;
+  REPORT_COUNT = 6;
 
 implementation
 
@@ -321,13 +319,15 @@ begin
 
 //  cbxAlwaysMaximize.Checked := RegKey.ReadBool('Maximize Report Form');
 //  PopulateReportSelectionList;
-  SetLength(FReportFileName, REPORT_COUNT);
 
-  FReportFileName[0] := 'TimesheetUser.fr3';
-  FReportFileName[1] := 'TimesheetCustomer.fr3';
-  FReportFileName[2] := 'TimesheetActivityType.fr3';
-  FReportFileName[3] := 'TimesheetBillCfwdByUser.fr3';
-  FReportFileName[4] := 'TimesheetBillCfwdByCustomer.fr3';
+//  SetLength(ReportDM.ReportFileName, REPORT_COUNT);
+//
+//  ReportDM.ReportFileName[0] := 'TimesheetUser.fr3';
+//  ReportDM.ReportFileName[1] := 'TimesheetCustomer.fr3';
+//  ReportDM.ReportFileName[2] := 'TimesheetActivityType.fr3';
+//  ReportDM.ReportFileName[3] := 'TimesheetBillCfwdByUser.fr3';
+//  ReportDM.ReportFileName[4] := 'TimesheetBillCfwdByCustomer.fr3';
+//  ReportDM.ReportFileName[5] := 'rptMonthlyBilling.fr3';
 
   lucPeriod.Properties.ListSource := ReportDM.dtsPeriodListing;
   viewSystemUser.DataController.DataSource := ReportDM.dtsSystemUser;
@@ -938,12 +938,12 @@ begin
   edtTActivtyType.Visible := False;
 
   GetTimesheetDetail;
-//  RepFileName := TSDM.ShellResource.ReportFolder + FReportFileName[grpData.ItemIndex];
+//  RepFileName := TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[grpData.ItemIndex];
 //
 //  if not TFile.Exists(RepFileName) then
 //    raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 //
-//  ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + FReportFileName[grpData.ItemIndex]);
+//  ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[grpData.ItemIndex]);
 
   case grpData.ItemIndex of
     0:
@@ -1027,12 +1027,12 @@ begin
   end;
 
   GetTimesheetDetail;
-//  RepFileName := TSDM.ShellResource.ReportFolder + FReportFileName[grpData.ItemIndex];
+//  RepFileName := TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[grpData.ItemIndex];
 //
 //  if not TFile.Exists(RepFileName) then
 //    raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 //
-//  ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + FReportFileName[grpData.ItemIndex]);
+//  ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[grpData.ItemIndex]);
 
   DC := viewTimesheetBillable.DataController;
   DC.BeginUpdate;
@@ -1096,12 +1096,12 @@ begin
       0:
         begin
           GetTimesheetDetail;
-          RepFileName := TSDM.ShellResource.ReportFolder + FReportFileName[grpData.ItemIndex];
+          RepFileName := TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[grpData.ItemIndex];
 
           if not TFile.Exists(RepFileName) then
             raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 
-          ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + FReportFileName[3]);
+          ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[3]);
         end;
 
       1:
@@ -1112,14 +1112,14 @@ begin
             0, 1: // Previewing or printing
               begin
                 case lucReportType.ItemIndex of
-                  0: RepFileName := TSDM.ShellResource.ReportFolder + FReportFileName[3];
-                  1: RepFileName := TSDM.ShellResource.ReportFolder + FReportFileName[4];
+                  0: RepFileName := TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[3];
+                  1: RepFileName := TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[4];
                 end;
 
                 if not TFile.Exists(RepFileName) then
                   raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 
-                ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + FReportFileName[4]);
+                ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[4]);
               end;
           end;
         end;

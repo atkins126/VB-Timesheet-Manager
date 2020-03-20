@@ -2176,7 +2176,7 @@ inherited ReportDM: TReportDM
     UpdateOptions.CheckRequired = False
     UpdateOptions.AutoCommitUpdates = True
     StoreDefs = True
-    Left = 905
+    Left = 1070
     Top = 275
     object cdsTSSummaryByActivityTHE_PERIOD: TIntegerField
       Alignment = taLeftJustify
@@ -2302,7 +2302,7 @@ inherited ReportDM: TReportDM
   end
   object dtsTSSummaryByActivity: TDataSource
     DataSet = cdsTSSummaryByActivity
-    Left = 905
+    Left = 1070
     Top = 325
   end
   object cdsTSSummaryByUser: TFDMemTable
@@ -2323,7 +2323,7 @@ inherited ReportDM: TReportDM
     UpdateOptions.CheckRequired = False
     UpdateOptions.AutoCommitUpdates = True
     StoreDefs = True
-    Left = 755
+    Left = 920
     Top = 275
     object cdsTSSummaryByUserUSER_ID: TIntegerField
       FieldName = 'USER_ID'
@@ -2454,7 +2454,7 @@ inherited ReportDM: TReportDM
     end
   end
   object dtsTSSummaryByUser: TDataSource
-    Left = 755
+    Left = 920
     Top = 330
   end
   object qryDummy: TFDQuery
@@ -2548,7 +2548,7 @@ inherited ReportDM: TReportDM
       'begin'
       ''
       'end.')
-    Left = 610
+    Left = 775
     Top = 375
     Datasets = <
       item
@@ -3081,7 +3081,7 @@ inherited ReportDM: TReportDM
       'begin'
       ''
       'end.')
-    Left = 745
+    Left = 910
     Top = 375
     Datasets = <
       item
@@ -3650,7 +3650,7 @@ inherited ReportDM: TReportDM
       'TOTAL_CARRY_FORWARD=TOTAL_CARRY_FORWARD')
     DataSet = cdsTSBillable
     BCDToCurrency = False
-    Left = 610
+    Left = 775
     Top = 425
   end
   object fdsTimesheetByActivity: TfrxDBDataset
@@ -3658,7 +3658,7 @@ inherited ReportDM: TReportDM
     CloseDataSource = False
     DataSet = cdsTSBillable
     BCDToCurrency = False
-    Left = 745
+    Left = 910
     Top = 425
   end
   object rptTSSummaryByActivity: TfrxReport
@@ -3678,7 +3678,7 @@ inherited ReportDM: TReportDM
       'begin'
       ''
       'end.')
-    Left = 905
+    Left = 1070
     Top = 375
     Datasets = <
       item
@@ -4282,7 +4282,7 @@ inherited ReportDM: TReportDM
     CloseDataSource = False
     DataSet = cdsTSSummaryByActivity
     BCDToCurrency = False
-    Left = 905
+    Left = 1070
     Top = 425
   end
   object cdsTimesheet: TFDMemTable
@@ -4777,7 +4777,7 @@ inherited ReportDM: TReportDM
     UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
     UpdateOptions.CheckRequired = False
     UpdateOptions.AutoCommitUpdates = True
-    Left = 190
+    Left = 175
     Top = 505
     object cdsCustomerID: TIntegerField
       FieldName = 'ID'
@@ -4850,8 +4850,8 @@ inherited ReportDM: TReportDM
   end
   object dtsCustomer: TDataSource
     DataSet = cdsCustomer
-    Left = 185
-    Top = 560
+    Left = 175
+    Top = 555
   end
   object cdsPriceListView: TFDMemTable
     ActiveStoredUsage = [auDesignTime]
@@ -6133,7 +6133,7 @@ inherited ReportDM: TReportDM
     UpdateOptions.CheckRequired = False
     UpdateOptions.AutoCommitUpdates = True
     UpdateOptions.UpdateTableName = 'SYSTEM_USER'
-    Left = 605
+    Left = 770
     Top = 490
     object IntegerField4: TIntegerField
       Alignment = taLeftJustify
@@ -6184,7 +6184,7 @@ inherited ReportDM: TReportDM
   end
   object dtsSystemUser1: TDataSource
     DataSet = cdsSystemUser1
-    Left = 605
+    Left = 770
     Top = 540
   end
   object cdsSystemUser2: TFDMemTable
@@ -6203,7 +6203,7 @@ inherited ReportDM: TReportDM
     UpdateOptions.CheckRequired = False
     UpdateOptions.AutoCommitUpdates = True
     UpdateOptions.UpdateTableName = 'SYSTEM_USER'
-    Left = 600
+    Left = 765
     Top = 610
     object IntegerField19: TIntegerField
       Alignment = taLeftJustify
@@ -6254,7 +6254,7 @@ inherited ReportDM: TReportDM
   end
   object dtsSystemUser2: TDataSource
     DataSet = cdsSystemUser2
-    Left = 600
+    Left = 765
     Top = 660
   end
   object cdsPriceList1: TFDMemTable
@@ -6279,7 +6279,7 @@ inherited ReportDM: TReportDM
     UpdateOptions.AutoCommitUpdates = True
     UpdateOptions.UpdateTableName = 'PRICE_LIST'
     StoreDefs = True
-    Left = 687
+    Left = 852
     Top = 490
     object cdsPriceList1ID: TIntegerField
       FieldName = 'ID'
@@ -6327,7 +6327,7 @@ inherited ReportDM: TReportDM
   end
   object dtsPriceList1: TDataSource
     DataSet = cdsPriceList1
-    Left = 687
+    Left = 852
     Top = 540
   end
   object cdsPriceList2: TFDMemTable
@@ -6352,7 +6352,7 @@ inherited ReportDM: TReportDM
     UpdateOptions.AutoCommitUpdates = True
     UpdateOptions.UpdateTableName = 'PRICE_LIST'
     StoreDefs = True
-    Left = 687
+    Left = 852
     Top = 610
     object IntegerField21: TIntegerField
       FieldName = 'ID'
@@ -6400,7 +6400,7 @@ inherited ReportDM: TReportDM
   end
   object dtsPriceList2: TDataSource
     DataSet = cdsPriceList2
-    Left = 687
+    Left = 852
     Top = 660
   end
   object cdsRateUnit1: TFDMemTable
@@ -6425,7 +6425,7 @@ inherited ReportDM: TReportDM
     UpdateOptions.AutoCommitUpdates = True
     UpdateOptions.UpdateTableName = 'RATE_UNIT'
     StoreDefs = True
-    Left = 766
+    Left = 931
     Top = 490
     object IntegerField23: TIntegerField
       Alignment = taLeftJustify
@@ -6444,7 +6444,7 @@ inherited ReportDM: TReportDM
   end
   object dtsRateUnit1: TDataSource
     DataSet = cdsRateUnit1
-    Left = 766
+    Left = 931
     Top = 545
   end
   object cdsRateUnit2: TFDMemTable
@@ -6469,7 +6469,7 @@ inherited ReportDM: TReportDM
     UpdateOptions.AutoCommitUpdates = True
     UpdateOptions.UpdateTableName = 'RATE_UNIT'
     StoreDefs = True
-    Left = 766
+    Left = 931
     Top = 605
     object IntegerField24: TIntegerField
       Alignment = taLeftJustify
@@ -6488,7 +6488,7 @@ inherited ReportDM: TReportDM
   end
   object dtsRateUnit2: TDataSource
     DataSet = cdsRateUnit2
-    Left = 766
+    Left = 931
     Top = 660
   end
   object cdsActivityType1: TFDMemTable
@@ -6513,7 +6513,7 @@ inherited ReportDM: TReportDM
     UpdateOptions.AutoCommitUpdates = True
     UpdateOptions.UpdateTableName = 'ACTIVITY_TYPE'
     StoreDefs = True
-    Left = 878
+    Left = 1043
     Top = 490
     object IntegerField25: TIntegerField
       Alignment = taLeftJustify
@@ -6532,7 +6532,7 @@ inherited ReportDM: TReportDM
   end
   object dtsActivityType1: TDataSource
     DataSet = cdsActivityType1
-    Left = 878
+    Left = 1043
     Top = 545
   end
   object cdsActivityType2: TFDMemTable
@@ -6557,7 +6557,7 @@ inherited ReportDM: TReportDM
     UpdateOptions.AutoCommitUpdates = True
     UpdateOptions.UpdateTableName = 'ACTIVITY_TYPE'
     StoreDefs = True
-    Left = 873
+    Left = 1038
     Top = 605
     object IntegerField26: TIntegerField
       Alignment = taLeftJustify
@@ -6576,7 +6576,7 @@ inherited ReportDM: TReportDM
   end
   object dtsActivityType2: TDataSource
     DataSet = cdsActivityType2
-    Left = 873
+    Left = 1038
     Top = 660
   end
   object cdsBillCfwd: TFDMemTable
@@ -6809,19 +6809,23 @@ inherited ReportDM: TReportDM
   object cdsMonthlyBilling: TFDMemTable
     ActiveStoredUsage = [auDesignTime]
     FilterOptions = [foCaseInsensitive]
+    FieldDefs = <>
     CachedUpdates = True
+    IndexDefs = <>
     ConstraintsEnabled = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
     FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
-    ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
+    ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
+    ResourceOptions.Persistent = True
     ResourceOptions.StorePrettyPrint = True
     ResourceOptions.SilentMode = True
     UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
     UpdateOptions.CheckRequired = False
     UpdateOptions.AutoCommitUpdates = True
+    StoreDefs = True
     Left = 355
     Top = 505
     object cdsMonthlyBillingTHE_PERIOD: TIntegerField
@@ -6860,13 +6864,15 @@ inherited ReportDM: TReportDM
   object rptMonthlyBilling: TfrxReport
     Version = '6.2.1'
     DotMatrixReport = False
+    EngineOptions.DoublePass = True
+    EngineOptions.PrintIfEmpty = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick, pbCopy, pbSelection]
     PreviewOptions.Zoom = 1.000000000000000000
     PrintOptions.Printer = 'Default'
     PrintOptions.PrintOnSheet = 0
-    ReportOptions.CreateDate = 43908.394616481480000000
-    ReportOptions.LastChange = 43908.394616481480000000
+    ReportOptions.CreateDate = 43494.671348414300000000
+    ReportOptions.LastChange = 43909.309415254600000000
     ScriptLanguage = 'PascalScript'
     ScriptText.Strings = (
       'begin'
@@ -6874,9 +6880,360 @@ inherited ReportDM: TReportDM
       'end.')
     Left = 355
     Top = 605
-    Datasets = <>
+    Datasets = <
+      item
+        DataSet = fdsMonthlyBilling
+        DataSetName = 'MonthlyBilling'
+      end>
     Variables = <>
     Style = <>
+    object Data: TfrxDataPage
+      Height = 1000.000000000000000000
+      Width = 1000.000000000000000000
+    end
+    object Page1: TfrxReportPage
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clBlack
+      Font.Height = -13
+      Font.Name = 'Calibri'
+      Font.Style = []
+      PaperWidth = 210.000000000000000000
+      PaperHeight = 297.000000000000000000
+      PaperSize = 9
+      LeftMargin = 10.000000000000000000
+      RightMargin = 10.000000000000000000
+      TopMargin = 10.000000000000000000
+      BottomMargin = 10.000000000000000000
+      Frame.Typ = []
+      object bndMaster: TfrxMasterData
+        FillType = ftBrush
+        Frame.Typ = [ftLeft, ftRight, ftBottom]
+        Height = 18.897637800000000000
+        Top = 185.196970000000000000
+        Width = 718.110700000000000000
+        DataSet = fdsMonthlyBilling
+        DataSetName = 'MonthlyBilling'
+        RowCount = 0
+        Stretched = True
+        object Memo1: TfrxMemoView
+          AllowVectorExport = True
+          Width = 75.590551180000000000
+          Height = 18.897650000000000000
+          DataField = 'THE_MONTH'
+          DataSet = fdsMonthlyBilling
+          DataSetName = 'MonthlyBilling'
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Calibri'
+          Font.Style = []
+          Frame.Typ = [ftRight]
+          GapX = 4.000000000000000000
+          Memo.UTF8W = (
+            '[MonthlyBilling."THE_MONTH"]')
+          ParentFont = False
+        end
+        object Memo2: TfrxMemoView
+          AllowVectorExport = True
+          Left = 94.488250000000000000
+          Width = 83.149606300000000000
+          Height = 18.897650000000000000
+          DataSet = fdsMonthlyBilling
+          DataSetName = 'MonthlyBilling'
+          DisplayFormat.FormatStr = '#,##0.00'
+          DisplayFormat.Kind = fkNumeric
+          Frame.Typ = [ftRight]
+          GapX = 4.000000000000000000
+          HAlign = haRight
+          Memo.UTF8W = (
+            '[MonthlyBilling."TOTAL_BILLABLE"]')
+        end
+        object Memo14: TfrxMemoView
+          AllowVectorExport = True
+          Left = 192.756030000000000000
+          Width = 83.149606300000000000
+          Height = 18.897650000000000000
+          DataField = 'TOTAL_CARRY_FORWARD'
+          DataSet = fdsMonthlyBilling
+          DataSetName = 'MonthlyBilling'
+          DisplayFormat.FormatStr = '#,##0.00'
+          DisplayFormat.Kind = fkNumeric
+          Frame.Typ = [ftRight]
+          GapX = 4.000000000000000000
+          HAlign = haRight
+          Memo.UTF8W = (
+            '[MonthlyBilling."TOTAL_CARRY_FORWARD"]')
+        end
+        object Memo16: TfrxMemoView
+          AllowVectorExport = True
+          Left = 283.464750000000000000
+          Width = 83.149606300000000000
+          Height = 18.897650000000000000
+          DataField = 'TOTAL_HOURS_BILLABLE'
+          DataSet = fdsMonthlyBilling
+          DataSetName = 'MonthlyBilling'
+          DisplayFormat.FormatStr = '#,##0.00'
+          DisplayFormat.Kind = fkNumeric
+          Frame.Typ = [ftRight]
+          GapX = 4.000000000000000000
+          HAlign = haRight
+          Memo.UTF8W = (
+            '[MonthlyBilling."TOTAL_HOURS_BILLABLE"]')
+        end
+      end
+      object PageFooter1: TfrxPageFooter
+        FillType = ftBrush
+        Frame.Typ = [ftTop]
+        Height = 22.677180000000000000
+        Top = 351.496290000000000000
+        Width = 718.110700000000000000
+        object Memo11: TfrxMemoView
+          Align = baLeft
+          AllowVectorExport = True
+          Top = 3.779530000000000000
+          Width = 207.874150000000000000
+          Height = 18.897650000000000000
+          Frame.Typ = []
+          Memo.UTF8W = (
+            'Printed on: [(Date)] at: [(Time)]')
+        end
+        object Memo12: TfrxMemoView
+          Align = baRight
+          AllowVectorExport = True
+          Left = 525.354670000000000000
+          Width = 192.756030000000000000
+          Height = 18.897650000000000000
+          Frame.Typ = []
+          HAlign = haRight
+          Memo.UTF8W = (
+            'Page [Page] of [TotalPages]')
+          Formats = <
+            item
+            end
+            item
+            end>
+        end
+      end
+      object PageHeader1: TfrxPageHeader
+        FillType = ftBrush
+        Frame.Typ = []
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -15
+        Font.Name = 'Calibri'
+        Font.Style = [fsBold]
+        Height = 37.795275590000000000
+        ParentFont = False
+        Top = 18.897650000000000000
+        Width = 718.110700000000000000
+        object lblReportTypeName: TfrxMemoView
+          Align = baRight
+          AllowVectorExport = True
+          Left = 275.905690000000000000
+          Width = 442.205010000000000000
+          Height = 30.236220470000000000
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Height = -21
+          Font.Name = 'Calibri'
+          Font.Style = [fsBold]
+          Frame.Typ = []
+          HAlign = haRight
+          Memo.UTF8W = (
+            'Report Type')
+          ParentFont = False
+        end
+        object Memo10: TfrxMemoView
+          Align = baLeft
+          AllowVectorExport = True
+          Width = 257.008040000000000000
+          Height = 30.236240000000000000
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Height = -21
+          Font.Name = 'Calibri'
+          Font.Style = [fsBold]
+          Frame.Typ = []
+          Memo.UTF8W = (
+            'van Brakel and Associates')
+          ParentFont = False
+        end
+      end
+      object bndYearHeader: TfrxGroupHeader
+        FillType = ftBrush
+        Frame.Typ = [ftBottom]
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -19
+        Font.Name = 'Calibri'
+        Font.Style = [fsBold]
+        Height = 46.866141732283500000
+        ParentFont = False
+        Top = 117.165430000000000000
+        Width = 718.110700000000000000
+        Condition = 'MonthlyBilling."THE_YEAR"'
+        ResetPageNumbers = True
+        object Memo24: TfrxMemoView
+          AllowVectorExport = True
+          Top = 26.456710000000000000
+          Width = 718.110236220000000000
+          Height = 18.897650000000000000
+          Frame.Typ = [ftLeft, ftRight, ftTop]
+        end
+        object Memo18: TfrxMemoView
+          AllowVectorExport = True
+          Width = 377.953000000000000000
+          Height = 22.677165350000000000
+          DataSet = ReportDM.fdsCustomerListing
+          DataSetName = 'CustomerListing'
+          Frame.Typ = []
+          Memo.UTF8W = (
+            'Year: [MonthlyBilling."THE_YEAR"]')
+        end
+        object Memo13: TfrxMemoView
+          AllowVectorExport = True
+          Top = 26.456710000000000000
+          Width = 75.590551180000000000
+          Height = 18.897650000000000000
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Height = -15
+          Font.Name = 'Calibri'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftRight]
+          GapX = 4.000000000000000000
+          Memo.UTF8W = (
+            'Month')
+          ParentFont = False
+        end
+        object Memo15: TfrxMemoView
+          AllowVectorExport = True
+          Left = 94.488250000000000000
+          Top = 26.456710000000000000
+          Width = 83.149606300000000000
+          Height = 18.897650000000000000
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Height = -15
+          Font.Name = 'Calibri'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftRight]
+          GapX = 4.000000000000000000
+          HAlign = haRight
+          Memo.UTF8W = (
+            'Billable')
+          ParentFont = False
+        end
+        object Memo19: TfrxMemoView
+          AllowVectorExport = True
+          Left = 192.756030000000000000
+          Top = 26.456710000000000000
+          Width = 83.149606300000000000
+          Height = 18.897650000000000000
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Height = -15
+          Font.Name = 'Calibri'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftRight]
+          GapX = 4.000000000000000000
+          HAlign = haRight
+          Memo.UTF8W = (
+            'Carry Fwd')
+          ParentFont = False
+        end
+        object Memo20: TfrxMemoView
+          AllowVectorExport = True
+          Left = 283.464750000000000000
+          Top = 26.456710000000000000
+          Width = 83.149606300000000000
+          Height = 18.897650000000000000
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Height = -15
+          Font.Name = 'Calibri'
+          Font.Style = [fsBold]
+          Frame.Typ = [ftRight]
+          GapX = 4.000000000000000000
+          HAlign = haRight
+          Memo.UTF8W = (
+            'Hours')
+          ParentFont = False
+        end
+      end
+      object bndYearFooter: TfrxGroupFooter
+        FillType = ftBrush
+        Frame.Typ = [ftLeft, ftRight, ftBottom]
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Calibri'
+        Font.Style = [fsBold]
+        Height = 18.897637800000000000
+        ParentFont = False
+        Top = 226.771800000000000000
+        Width = 718.110700000000000000
+        Child = rptMonthlyBilling.Child1
+        object Memo17: TfrxMemoView
+          AllowVectorExport = True
+          Left = 94.488250000000000000
+          Width = 83.149606300000000000
+          Height = 18.897650000000000000
+          DisplayFormat.FormatStr = '#,##0.00'
+          DisplayFormat.Kind = fkNumeric
+          Frame.Typ = [ftRight]
+          GapX = 4.000000000000000000
+          HAlign = haRight
+          Memo.UTF8W = (
+            '[SUM(<MonthlyBilling."TOTAL_BILLABLE">,bndMaster)]')
+        end
+        object Memo21: TfrxMemoView
+          AllowVectorExport = True
+          Left = 192.756030000000000000
+          Width = 83.149606300000000000
+          Height = 18.897650000000000000
+          DisplayFormat.FormatStr = '#,##0.00'
+          DisplayFormat.Kind = fkNumeric
+          Frame.Typ = [ftRight]
+          GapX = 4.000000000000000000
+          HAlign = haRight
+          Memo.UTF8W = (
+            '[SUM(<MonthlyBilling."TOTAL_CARRY_FORWARD">,bndMaster)]')
+        end
+        object Memo22: TfrxMemoView
+          AllowVectorExport = True
+          Left = 283.464750000000000000
+          Width = 83.149606300000000000
+          Height = 18.897650000000000000
+          DisplayFormat.FormatStr = '#,##0.00'
+          DisplayFormat.Kind = fkNumeric
+          Frame.Typ = [ftRight]
+          GapX = 4.000000000000000000
+          HAlign = haRight
+          Memo.UTF8W = (
+            '[SUM(<MonthlyBilling."TOTAL_HOURS_BILLABLE">,bndMaster)]')
+        end
+        object Memo23: TfrxMemoView
+          AllowVectorExport = True
+          Width = 75.590551180000000000
+          Height = 18.897650000000000000
+          Frame.Typ = [ftRight]
+          GapX = 4.000000000000000000
+          Memo.UTF8W = (
+            'Totals')
+        end
+      end
+      object Child1: TfrxChild
+        FillType = ftBrush
+        Frame.Typ = []
+        Height = 22.677180000000000000
+        Top = 268.346630000000000000
+        Width = 718.110700000000000000
+        PrintChildIfInvisible = True
+        ToNRows = 0
+        ToNRowsMode = rmCount
+      end
+    end
   end
   object fdsMonthlyBilling: TfrxDBDataset
     UserName = 'MonthlyBilling'
@@ -6939,7 +7296,7 @@ inherited ReportDM: TReportDM
     UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
     UpdateOptions.CheckRequired = False
     UpdateOptions.AutoCommitUpdates = True
-    Left = 460
+    Left = 265
     Top = 505
     object cdsYearTHE_YEAR: TIntegerField
       DisplayLabel = 'Year'
@@ -6948,7 +7305,7 @@ inherited ReportDM: TReportDM
   end
   object dtsYear: TDataSource
     DataSet = cdsYear
-    Left = 460
+    Left = 265
     Top = 555
   end
 end

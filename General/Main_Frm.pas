@@ -317,11 +317,7 @@ procedure TMainFrm.FormShow(Sender: TObject);
 var
   VBShell: string;
   {$IFDEF DEBUG}ErrorMsg, {$ENDIF}SkinResourceFileName, SkinName: string;
-// Day, Month, Year: Word;
   RegKey: TRegistry;
-  // AComboBox: TcxComboBox;
-  // ALookupComboBox: TcxLookupComboBox;
-  // ADateEdit: TcxDateEdit;
 begin
   inherited;
   Screen.Cursor := crHourglass;
@@ -383,6 +379,7 @@ begin
       BaseFrm := TBaseFrm.Create(nil);
 
     VBBaseDM.CurrentPeriod := RUtils.CurrentPeriod(Date);
+    VBBaseDM.CurrentYear := Trunc(VBBaseDM.CurrentPeriod div 100);
     VBBaseDM.CurrentMonth := RUtils.MonthInt(Date);
 
     viewTimesheet.DataController.DataSource := TSDM.dtsTimesheet;
@@ -411,37 +408,18 @@ begin
         TSDM.cdsSystemUser.First;
         TSDM.CurrentUserID := TSDM.cdsSystemUser.FieldByName('ID').AsInteger;
       end;
+
       FTSUserID := TSDM.CurrentUserID;
-
-// lucUser.SetFocus;
-// ALookupComboBox := TcxBarEditItemControl(lucUser.Links[0].Control).Edit as TcxLookupComboBox;
-// ALookupComboBox.EditValue := TSDM.CurrentUserID;
-// TcxLookupComboBox(lucUser).EditValue := TSDM.cdsSystemUser.FieldByName('LOGIN_NAME').AsString;
-// lucUser.EditValue := TSDM.CurrentUserID;
-      lucUser.EditValue := TSDM.CurrentUserID; // TSDM.cdsSystemUser.FieldByName('LOGIN_NAME').AsString;
+      lucUser.EditValue := TSDM.CurrentUserID;
       RegKey.CloseKey;
-
       VerifyRegistry;
       ReadRegValues;
-
       RegKey.OpenKey(KEY_TIME_SHEET, True);
-
-// dteFromDate.SetFocus;
-// ADateEdit := TcxBarEditItemControl(dteFromDate.Links[0].Control).Edit as TcxDateEdit;
-// ADateEdit.Date := RegKey.ReadDate('From Date');
       FFromDate := RegKey.ReadDate('From Date');
       dteFromDate.EditValue := FFromDate;
-
-// dteToDate.SetFocus;
-// ADateEdit := TcxBarEditItemControl(dteToDate.Links[0].Control).Edit as TcxDateEdit;
-// ADateEdit.Date := RegKey.ReadDate('To Date');
       FToDate := RegKey.ReadDate('To Date');
       dteToDate.EditValue := FToDate;
-
-// lucPeriod.SetFocus;
-// ALookupComboBox := TcxBarEditItemControl(lucPeriod.Links[0].Control).Edit as TcxLookupComboBox;
       FTimesheetPeriod := RegKey.ReadInteger('Period');
-// ALookupComboBox.EditValue := FTimesheetPeriod;
       lucPeriod.EditValue := FTimesheetPeriod;
 
       if not TSDM.cdsTSPeriod.Locate('THE_PERIOD', FTimesheetPeriod, []) then
@@ -451,23 +429,7 @@ begin
       end;
 
       GetMonthEndDate(FTimesheetPeriod);
-// lucViewMode.SetFocus;
-// AComboBox := TcxBarEditItemControl(lucViewMode.Links[0].Control).Edit as TcxComboBox;
-// AComboBox.ItemIndex := RegKey.ReadInteger('View Mode Index');
       lucViewMode.ItemIndex := RegKey.ReadInteger('View Mode Index');
-
-// lucPeriod.SetFocus;
-// ALookupComboBox := TcxBarEditItemControl(lucPeriod.Links[0].Control).Edit as TcxLookupComboBox;
-// ALookupComboBox.EditValue := FTimesheetPeriod;
-//
-// dteFromDate.SetFocus;
-// ADateEdit := TcxBarEditItemControl(dteFromDate.Links[0].Control).Edit as TcxDateEdit;
-// ADateEdit.Date := RegKey.ReadDate('From Date');
-//
-// dteToDate.SetFocus;
-// ADateEdit := TcxBarEditItemControl(dteToDate.Links[0].Control).Edit as TcxDateEdit;
-// ADateEdit.Date := RegKey.ReadDate('To Date');
-//
       RegKey.CloseKey;
     finally
       RegKey.Free
@@ -477,6 +439,7 @@ begin
     FIteration := 0;
     grdTimesheet.SetFocus;
     viewTimesheet.Focused := True;
+
     if not TSDM.cdsTimesheet.IsEmpty then
     begin
       viewTimesheet.DataController.FocusedRecordIndex := 0;
