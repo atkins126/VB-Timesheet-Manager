@@ -11,9 +11,9 @@ inherited MainFrm: TMainFrm
   PixelsPerInch = 96
   TextHeight = 13
   inherited layMain: TdxLayoutControl
-    Top = 116
+    Top = 115
     Width = 1455
-    Height = 616
+    Height = 617
     Align = alClient
     ExplicitTop = 116
     ExplicitWidth = 1455
@@ -22,7 +22,7 @@ inherited MainFrm: TMainFrm
       Left = 11
       Top = 11
       Width = 1433
-      Height = 594
+      Height = 595
       TabOrder = 0
       object viewTimesheet: TcxGridDBBandedTableView
         PopupMenu = popTimesheet
@@ -662,9 +662,9 @@ inherited MainFrm: TMainFrm
     Left = 0
     Top = 0
     Width = 1455
-    Height = 116
+    Height = 115
     BarManager = barManager
-    ColorSchemeName = 'Blue'
+    ColorSchemeName = 'UserSkin'
     Fonts.ApplicationButton.Charset = ANSI_CHARSET
     Fonts.ApplicationButton.Color = clWindowText
     Fonts.ApplicationButton.Height = -11

@@ -155,7 +155,6 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
         OptionsBehavior.CellHints = True
-        OptionsBehavior.IncSearch = True
         OptionsSelection.MultiSelect = True
         OptionsSelection.CheckBoxVisibility = [cbvDataRow, cbvColumnHeader]
         OptionsSelection.MultiSelectMode = msmPersistent
@@ -225,18 +224,17 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Left = 10000
       Top = 10000
       Width = 644
-      Height = 368
+      Height = 364
       TabOrder = 13
       Visible = False
       object viewCustomerListing: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
         OnCustomDrawCell = viewSystemUserCustomDrawCell
-        DataController.DataSource = ReportDM.dtsTSCustomer
+        DataController.DataSource = ReportDM.dtsCustomer
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
-        OptionsBehavior.IncSearch = True
         OptionsSelection.MultiSelect = True
         OptionsSelection.CheckBoxVisibility = [cbvDataRow, cbvColumnHeader]
         OptionsSelection.MultiSelectMode = msmPersistent
@@ -422,7 +420,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Left = 10000
       Top = 10000
       Width = 819
-      Height = 368
+      Height = 364
       TabOrder = 14
       Visible = False
       object viewActivityType: TcxGridDBBandedTableView
@@ -433,7 +431,6 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
-        OptionsBehavior.IncSearch = True
         OptionsSelection.MultiSelect = True
         OptionsSelection.CheckBoxVisibility = [cbvDataRow, cbvColumnHeader]
         OptionsSelection.MultiSelectMode = msmPersistent
@@ -486,7 +483,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Properties.Items.Strings = (
         'Timsheet'
         'Billable/CFwd')
-      Properties.OnChange = lucBillCfComparisonPropertiesChange
+      Properties.OnEditValueChanged = lucBillCfComparisonPropertiesEditValueChanged
       Style.HotTrack = False
       Style.TransparentBorder = False
       TabOrder = 8
@@ -555,37 +552,35 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
           item
             Format = 'Billed'
             Kind = skCount
-            Column = edtBCTimeSpent
+            Column = edtBCStdRate
           end
           item
             Format = 'C/Fwd'
             Kind = skCount
-            Column = edtBCTimeSpent
+            Column = edtBCStdRate
           end
           item
             Format = 'Total'
             Kind = skCount
-            Column = edtBCTimeSpent
-          end
-          item
-            Format = '#,##0.00'
-            Kind = skSum
-            FieldName = 'TIME_HOURS'
-            Column = edtBCHours
-          end
-          item
-            Format = '#,##0.00'
-            Kind = skSum
-            FieldName = 'TIME_HOURS'
-            Column = edtBCHours
-          end
-          item
-            Format = '#,##0.00'
-            Kind = skSum
-            FieldName = 'TIME_HOURS'
-            Column = edtBCHours
+            Column = edtBCStdRate
           end>
-        DataController.Summary.SummaryGroups = <>
+        DataController.Summary.SummaryGroups = <
+          item
+            Links = <
+              item
+                Column = edtBillCfwd
+              end
+              item
+                Column = edtBCItemValue
+              end>
+            SummaryItems = <
+              item
+                Format = '#,##0.00'
+                Kind = skSum
+                FieldName = 'ITEM_VALUE'
+                Column = edtBCItemValue
+              end>
+          end>
         OptionsBehavior.CellHints = True
         OptionsBehavior.FocusCellOnTab = True
         OptionsBehavior.IncSearch = True
@@ -1168,6 +1163,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Style.HotTrack = False
       Style.TransparentBorder = False
       TabOrder = 6
+      Text = 'Activity Date>User name>Customer'
       Width = 272
     end
     inherited layMainGroup_Root: TdxLayoutGroup
@@ -1430,8 +1426,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     end
   end
   object grdTimesheet: TcxGrid [1]
-    Left = 1058
-    Top = 110
+    Left = 1088
+    Top = 200
     Width = 1181
     Height = 421
     TabOrder = 1
@@ -1992,8 +1988,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     end
   end
   object grdCarryForwardDetail: TcxGrid [2]
-    Left = 1255
-    Top = 99
+    Left = 1125
+    Top = 39
     Width = 1181
     Height = 421
     TabOrder = 2
@@ -2554,8 +2550,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     end
   end
   object grdTimesheetBillable: TcxGrid [3]
-    Left = 1212
-    Top = 351
+    Left = 1012
+    Top = 398
     Width = 896
     Height = 421
     Font.Charset = ANSI_CHARSET
@@ -3120,45 +3116,6 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     end
     object lvlTimesheetBillable: TcxGridLevel
       GridView = viewTimesheetBillable
-    end
-  end
-  object grdSort: TcxGrid [4]
-    Left = 757
-    Top = 35
-    Width = 155
-    Height = 105
-    TabOrder = 8
-    object viewSort: TcxGridTableView
-      OnDragDrop = viewSortDragDrop
-      OnDragOver = viewSortDragOver
-      OnStartDrag = viewSortStartDrag
-      Navigator.Buttons.CustomButtons = <>
-      ScrollbarAnnotations.CustomAnnotations = <>
-      OnCustomDrawCell = viewSystemUserCustomDrawCell
-      DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
-      DataController.Summary.SummaryGroups = <>
-      OptionsBehavior.FocusCellOnTab = True
-      OptionsBehavior.IncSearch = True
-      OptionsBehavior.FocusCellOnCycle = True
-      OptionsSelection.MultiSelect = True
-      OptionsSelection.CheckBoxVisibility = [cbvDataRow, cbvColumnHeader]
-      OptionsView.ColumnAutoWidth = True
-      OptionsView.GroupByBox = False
-      object edtSortOption: TcxGridColumn
-        Caption = 'Sort Order'
-        PropertiesClassName = 'TcxTextEditProperties'
-        Properties.ReadOnly = True
-        Options.Editing = False
-        Options.Filtering = False
-        Options.IncSearch = False
-        Options.Grouping = False
-        Options.Moving = False
-        Options.Sorting = False
-      end
-    end
-    object lvlSort: TcxGridLevel
-      GridView = viewSort
     end
   end
   inherited styRepository: TcxStyleRepository

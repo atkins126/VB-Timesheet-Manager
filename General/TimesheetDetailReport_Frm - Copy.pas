@@ -234,10 +234,6 @@ type
     lucSortOptions: TcxComboBox;
     litSortOptions: TdxLayoutItem;
     grpSortOptions: TdxLayoutGroup;
-    grdSort: TcxGrid;
-    viewSort: TcxGridTableView;
-    lvlSort: TcxGridLevel;
-    edtSortOption: TcxGridColumn;
     procedure FormCreate(Sender: TObject);
     procedure DoCloseForm(Sender: TObject);
     procedure DoPrint(Sender: TObject);
@@ -247,6 +243,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure lucDateTypePropertiesEditValueChanged(Sender: TObject);
     procedure lucReportTypePropertiesEditValueChanged(Sender: TObject);
+    procedure lucBillCfComparisonPropertiesEditValueChanged(Sender: TObject);
     procedure lucUserSortOptionsPropertiesChange(Sender: TObject);
     procedure viewSystemUserCustomDrawCell(Sender: TcxCustomGridTableView;
       ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
@@ -254,17 +251,10 @@ type
     procedure viewBillCfwdDataControllerSummaryFooterSummaryItemsSummary(
       ASender: TcxDataSummaryItems; Arguments: TcxSummaryEventArguments;
       var OutArguments: TcxSummaryEventOutArguments);
-    procedure lucBillCfComparisonPropertiesChange(Sender: TObject);
-    procedure viewSortStartDrag(Sender: TObject; var DragObject: TDragObject);
-    procedure viewSortDragOver(Sender, Source: TObject; X, Y: Integer;
-      State: TDragState; var Accept: Boolean);
-    procedure viewSortDragDrop(Sender, Source: TObject; X, Y: Integer);
   private
     { Private declarations }
 //    FReportFileName: TReportFileName;
     FOrderByClause: string;
-    FDragRecord: Integer;
-    FItem: TcxCustomGridTableItem;
 
     procedure GetPeriods;
     procedure GetSystemUser;
@@ -275,7 +265,6 @@ type
     procedure GetBillCfwd;
     procedure HideTabs;
     procedure DrawCellBorder(var Msg: TMessage); message CM_DRAWBORDER;
-    procedure PopulateSortOptions;
   public
     { Public declarations }
   end;
@@ -284,7 +273,8 @@ var
   TimesheetDetailReportFrm: TTimesheetDetailReportFrm;
 
 const
-  TS_REPORT_SORT_OPTIONS = 4;
+  ARRAY_COUNT = 4;
+  REPORT_COUNT = 6;
 
 implementation
 
@@ -364,11 +354,8 @@ begin
   TcxLookupComboBoxProperties(lucActivityType.Properties).ListSource := ReportDM.dtsActivityType;
   TcxLookupComboBoxProperties(lucCFActivityType.Properties).ListSource := ReportDM.dtsActivityType;
 
-//  FOrderByClause := ' ORDER BY 1, 6, 5, 8 ';
-  lucReportType.ItemIndex := 0;
-  lucSortOptions.ItemIndex := 0;
+  FOrderByClause := ' ORDER BY 1, 6, 5, 8 ';
   lucBillCfComparison.ItemIndex := 0;
-  PopulateSortOptions;
   GetPeriods;
 
   if not ReportDM.cdsPeriodListing.Locate('THE_PERIOD', VBBaseDM.CurrentPeriod, []) then
@@ -426,6 +413,7 @@ begin
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FloatToStr(Progress))), 0);
     GetActivityType;
 
+    lucReportType.ItemIndex := 0;
     HideTabs;
 //    lucReportType.SetFocus;
 //    AComboBox := TcxBarEditItemControl(lucReportType.Links[0].Control).Edit as TcxComboBox;
@@ -609,7 +597,7 @@ begin
         end;
 
 //        OrderByClause:= 'ORDER BY T.LOGIN_NAME, T.THE_PERIOD, T.ACTIVITY_DATE';
-        WhereClause := DateClause + UserClause + BillableClause + WorkTypeClause + FOrderByClause;
+        WhereClause := DateClause + UserClause + BillableClause + WorkTypeClause + ' ';
       end;
 
     1:
@@ -638,7 +626,7 @@ begin
         end;
 
 //        OrderByClause := 'ORDER BY T.CUSTOMER_NAME, T.THE_PERIOD, T.LOGIN_NAME, T.ACTIVITY_DATE';
-        WhereClause := DateClause + CustomerClause + BillableClause + WorkTypeClause + FOrderByClause;
+        WhereClause := DateClause + CustomerClause + BillableClause + WorkTypeClause + ' ';
       end;
 
     2:
@@ -667,11 +655,11 @@ begin
         end;
 
 //        OrderByClause := 'ORDER BY T.ACTIVITY_TYPE, T.THE_PERIOD, T.LOGIN_NAME, T.ACTIVITY_DATE';
-        WhereClause := DateClause + ActivityClause + BillableClause + WorkTypeClause + FOrderByClause;
+        WhereClause := DateClause + ActivityClause + BillableClause + WorkTypeClause + ' ';
       end;
   end;
 
-  VBBaseDM.GetData(45, ReportDM.cdsTSBillable, ReportDM.cdsTSBillable.Name, WhereClause,
+  VBBaseDM.GetData(45, ReportDM.cdsTSBillable, ReportDM.cdsTSBillable.Name, WhereClause + ';' + FOrderByClause,
     'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsTSBillable.UpdateOptions.Generatorname,
     ReportDM.cdsTSBillable.UpdateOptions.UpdateTableName);
 end;
@@ -770,8 +758,8 @@ begin
 //        OrderByClause := 'ORDER BY T.CUSTOMER_NAME, T.THE_PERIOD, T.LOGIN_NAME, T.ACTIVITY_DATE';
 //               Field index order =   8                18                          6
 //        OrderByClause := ' ORDER BY 1, 8, 18, 6 ';
-        WhereClause1 := DateClause + CustomerClause + BillCfwdClause1;
-        WhereClause2 := DateClause + CustomerClause + BillCfwdClause2 + FOrderByClause;
+        WhereClause1 := DateClause + UserClause + BillCfwdClause1;
+        WhereClause2 := DateClause + UserClause + BillCfwdClause2 + FOrderByClause;
       end;
 
     2:
@@ -802,8 +790,8 @@ begin
 //        OrderByClause := 'ORDER BY T.ACTIVITY_TYPE, T.THE_PERIOD, T.LOGIN_NAME, T.ACTIVITY_DATE';
 //               Field index order =   9                18                          6
 //        OrderByClause := ' ORDER BY 1, 9, 18, 6 ';
-        WhereClause1 := DateClause + ActivityClause + BillCfwdClause1;
-        WhereClause2 := DateClause + ActivityClause + BillCfwdClause2 + FOrderByClause;
+        WhereClause1 := DateClause + UserClause + BillCfwdClause1;
+        WhereClause2 := DateClause + UserClause + BillCfwdClause2 + FOrderByClause;
       end;
   end;
 
@@ -820,7 +808,7 @@ begin
     grpData.Items[I].Visible := False;
 end;
 
-procedure TTimesheetDetailReportFrm.lucBillCfComparisonPropertiesChange(Sender: TObject);
+procedure TTimesheetDetailReportFrm.lucBillCfComparisonPropertiesEditValueChanged(Sender: TObject);
 begin
   inherited;
   lucBillable.Enabled := lucBillCfComparison.ItemIndex = 0;
@@ -874,81 +862,19 @@ procedure TTimesheetDetailReportFrm.lucUserSortOptionsPropertiesChange(Sender: T
 begin
   inherited;
   // Union field order
-  // 4 = User Name
-  // 5 = Activity Date
-  // 7 = Customer Name
-  // 8 = Activity Type
-
-  case lucReportType.ItemIndex of
-    0: // Standard timseheet report
-      case lucSortOptions.ItemIndex of
-        0: FOrderByClause := ' ORDER BY T.LOGIN_NAME, T.ACTIVITY_DATE, T.CUSTOMER_NAME';
-        1: FOrderByClause := ' ORDER BY T.LOGIN_NAME, T.CUSTOMER_NAME, T.ACTIVITY_DATE';
-        2: FOrderByClause := ' ORDER BY T.CUSTOMER_NAME, T.ACTIVITY_DATE, T.LOGIN_NAME';
-        3: FOrderByClause := ' ORDER BY T.CUSTOMER_NAME, T.LOGIN_NAME, T.ACTIVITY_DATE';
-        4: FOrderByClause := ' ORDER BY T.ACTIVITY_TYPE, T.ACTIVITY_DATE, T.LOGIN_NAME';
-        5: FOrderByClause := ' ORDER BY T.ACTIVITY_TYPE, T.ACTIVITY_DATE, T.CUSTOMER_NAME';
-      end;
-
-//      case lucSortOptions.ItemIndex of
-//        0: FOrderByClause := ' ORDER BY 5, 4, 7 ';
-//        1: FOrderByClause := ' ORDER BY 5, 7, 4 ';
-//        2: FOrderByClause := ' ORDER BY 5, 8, 7 ';
-//        3: FOrderByClause := ' ORDER BY 4, 5, 7 ';
-//        4: FOrderByClause := ' ORDER BY 7, 5, 4 ';
-//        5: FOrderByClause := ' ORDER BY 8, 5, 7 ';
-//      end;
-
-  // Union field order
   // 1 = BILL_CFWD
   // 5 = User Name
   // 6 = Activity Date
   // 8 = Customer Name
   // 9 = Activity Type
 
-    1: // Billing summary raport
-      case lucSortOptions.ItemIndex of
-        0: FOrderByClause := ' ORDER BY 1, 6, 5, 8 ';
-        1: FOrderByClause := ' ORDER BY 1, 6, 8, 5 ';
-        2: FOrderByClause := ' ORDER BY 1, 6, 9, 8 ';
-        3: FOrderByClause := ' ORDER BY 1, 5, 6, 8 ';
-        4: FOrderByClause := ' ORDER BY 1, 8, 6, 5 ';
-        5: FOrderByClause := ' ORDER BY 1, 9, 6, 8 ';
-      end;
-  end;
-
-end;
-
-procedure TTimesheetDetailReportFrm.PopulateSortOptions;
-var
-  DC: TcxGridDataController;
-  SortOptioinsList: TStringList;
-  I: Integer;
-begin
-  DC := viewSort.DataController;
-  DC.RecordCount := 0;
-  SortOptioinsList := RUtils.CreateStringList(COMMA, SINGLE_QUOTE);
-
-  try
-    if TFile.Exists(TSDM.ShellResource.ResourceFolder + 'TS Sort Optios.csv') then
-      SortOptioinsList.LoadFromFile(TSDM.ShellResource.ResourceFolder + 'TS Sort Optios.csv')
-    else
-    begin
-      SortOptioinsList.Add('User Name');
-      SortOptioinsList.Add('Activity Date');
-      SortOptioinsList.Add('Customer Name');
-      SortOptioinsList.Add('Activity Type');
-      SortOptioinsList.SaveToFile(TSDM.ShellResource.ResourceFolder + 'TS Sort Optios.csv');
-    end;
-
-    for I := 0 to SortOptioinsList.Count - 1 do
-    begin
-      DC.AppendRecord;
-      DC.Values[I, edtSortOption.Index] := SortOptioinsList[I];
-      DC.PostEditingData;
-    end;
-  finally
-    SortOptioinsList.Free;
+  case lucSortOptions.ItemIndex of
+    0: FOrderByClause := ' ORDER BY 1, 6, 5, 8 ';
+    1: FOrderByClause := ' ORDER BY 1, 6, 8, 5 ';
+    2: FOrderByClause := ' ORDER BY 1, 6, 9, 8 ';
+    3: FOrderByClause := ' ORDER BY 1, 5, 6, 8 ';
+    4: FOrderByClause := ' ORDER BY 1, 8, 6, 5 ';
+    5: FOrderByClause := ' ORDER BY 1, 9, 6, 8 ';
   end;
 end;
 
@@ -958,12 +884,24 @@ procedure TTimesheetDetailReportFrm.viewBillCfwdDataControllerSummaryFooterSumma
 var
   SummaryItem: TcxGridDBTableSummaryItem;
   AValue: Variant;
-begin
+  begin
   inherited;
   SummaryItem := Arguments.SummaryItem as TcxGridDBTableSummaryItem;
 
+
+//  case Arguments.SummaryItem.Field.Index of
+//    26:
+//      begin
+////        ADisplayText := Arguments.SummaryItem.DataController.DisplayTexts[Arguments.RecordIndex, Arguments.SummaryItem.Field.Index{AValue}];
+////        IntValue := MinutesBetween(StrToTime(ADisplayText), 0);
+//        OutArguments.Value := IntValue;
+//      end;
+//  end;
+
+
   if SummaryItem.Column = edtBCItemValue then
   begin
+//    AValue := Arguments.SummaryItem.DataController.Values[Arguments.RecordIndex, Arguments.SummaryItem.Field.Index];
     AValue := Arguments.SummaryItem.DataController.Values[Arguments.RecordIndex, 26];
 
     case SummaryItem.ID of
@@ -972,123 +910,13 @@ begin
       1: // Summarize only C/Fwd values
         OutArguments.Done := AValue = 0;
     end;
-  end;
 
-  if SummaryItem.Column = edtBCItemValue then
-  begin
-    AValue := Arguments.SummaryItem.DataController.Values[Arguments.RecordIndex, 26];
-
-    case SummaryItem.ID of
-      0: // Summarize only billed values
-        OutArguments.Done := AValue = 1;
-      1: // Summarize only C/Fwd values
-        OutArguments.Done := AValue = 0;
-    end;
-
-  end;
-
-  if SummaryItem.Column = edtBCItemValue then
-  begin
-    AValue := Arguments.SummaryItem.DataController.Values[Arguments.RecordIndex, 26];
-
-    case SummaryItem.ID of
-      0: // Summarize only billed values
-        OutArguments.Done := AValue = 1;
-      1: // Summarize only C/Fwd values
-        OutArguments.Done := AValue = 0;
-    end;
-  end;
-
-  if SummaryItem.Column = edtBCHours then
-  begin
-    AValue := Arguments.SummaryItem.DataController.Values[Arguments.RecordIndex, 26];
-
-    case SummaryItem.ID of
-      6: // Summarize only billed values
-        OutArguments.Done := AValue = 1;
-      7: // Summarize only C/Fwd values
-        OutArguments.Done := AValue = 0;
-    end;
-  end;
-end;
-
-procedure TTimesheetDetailReportFrm.viewSortStartDrag(Sender: TObject;
-  var DragObject: TDragObject);
-var
-  P: TPoint;
-  AHitTest: TcxCustomGridHitTest;
-begin
-  FDragRecord := -1;
-  FItem := nil;
-  GetCursorPos(P);
-  P := (Sender as TcxGridSite).ScreenToClient(P);
-  AHitTest := (Sender as TcxGridSite).GridView.ViewInfo.GetHitTest(P);
-  if AHitTest.HitTestCode = htCell then // Record is being dragged
-  begin
-    FDragRecord := TcxGridRecordCellHitTest(AHitTest).GridRecord.RecordIndex; // Drag record index
-    FItem := TcxGridRecordCellHitTest(AHitTest).Item;
-  end;
-end;
-
-procedure TTimesheetDetailReportFrm.viewSortDragOver(Sender, Source: TObject; X,
-  Y: Integer; State: TDragState; var Accept: Boolean);
-var
-  AHitTest: TcxCustomGridHitTest;
-begin
-  Accept := False;
-  AHitTest := (Sender as TcxGridSite).GridView.ViewInfo.GetHitTest(X, Y);
-  if AHitTest.HitTestCode = htCell then
-    with TcxGridRecordCellHitTest(AHitTest) do
-      Accept :=
-        (FDragRecord <> GridRecord.RecordIndex)
-        and (Item = FItem)
-        and not TcxGridDBColumn(FItem).DataBinding.Field.ReadOnly
-  else if AHitTest.HitTestCode = htNone then
-    Accept :=
-      (TcxDragControlObject(Source).Control = Sender)
-      and (TcxGridTableView(TcxGridSite(Sender).GridView).ViewInfo.RecordsViewInfo.ContentBounds.Right > X);
-end;
-
-procedure TTimesheetDetailReportFrm.viewSortDragDrop(Sender, Source: TObject; X,
-  Y: Integer);
-var
-  AHitTest: TcxCustomGridHitTest;
-  AView: TcxGridDBTableView;
-  I: Integer;
-  ADataSet: TDataSet;
-  DC: TcxGridDataController;
-begin
-  AView := TcxGridDBTableView((Sender as TcxGridSite).GridView);
-  DC := AView.DataController;
-  ADataSet := AView.DataController.DataSet;
-  AHitTest := AView.ViewInfo.GetHitTest(X, Y);
-
-  if AHitTest.HitTestCode = htCell then
-  begin
-    TcxGridRecordCellHitTest(AHitTest).GridRecord.Focused := True;
-//    ADataSet.Edit;
-    DC.Edit;
-    DC.Values[TcxGridRecordCellHitTest(AHitTest).GridRecord.Index, edtSortOption.Index] :=
-      TcxGridRecordCellHitTest(AHitTest).GridView.DataController.Values[FDragRecord, TcxGridRecordCellHitTest(AHitTest).Item.Index];
-
-    DC.PostEditingData;
-
-//    ADataSet.FieldByName(TcxGridDBColumn(TcxGridRecordCellHitTest(AHitTest).Item).DataBinding.FieldName).Value :=
-//      TcxGridRecordCellHitTest(AHitTest).GridView.DataController.Values[FDragRecord, TcxGridRecordCellHitTest(AHitTest).Item.Index];
-//    ADataSet.Post;
-  end
-  else if AHitTest.HitTestCode = htNone then
-  begin
-  DC.AppendRecord;
-    for I := 0 to ADataSet.FieldCount - 1 do
-      if not ADataSet.Fields[I].ReadOnly then
-        ADataSet.Fields[I].Value := AView.DataController.Values[FDragRecord, AView.GetColumnByFieldNAme(ADataSet.Fields[I].FieldName).Index];
-
-//    ADataSet.Append;
-//    for I := 0 to ADataSet.FieldCount - 1 do
-//      if not ADataSet.Fields[I].ReadOnly then
-//        ADataSet.Fields[I].Value := AView.DataController.Values[FDragRecord, AView.GetColumnByFieldNAme(ADataSet.Fields[I].FieldName).Index];
-//    ADataSet.Post;
+//    case SummaryItem.ID of
+//      0: // Summarize only billed values
+//        OutArguments.Done := VarIsNull(OutArguments.Value) or (OutArguments.Value > 0);
+//      1: // Summarize only C/Fwd values
+//        OutArguments.Done := VarIsNull(OutArguments.Value) or (OutArguments.Value < 0);
+//    end;
   end;
 end;
 
@@ -1318,7 +1146,7 @@ begin
           if not TFile.Exists(RepFileName) then
             raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 
-          ReportDM.FReport.LoadFromFile(RepFileName);
+          ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[3]);
         end;
 
       1:
@@ -1336,7 +1164,7 @@ begin
                 if not TFile.Exists(RepFileName) then
                   raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 
-                ReportDM.FReport.LoadFromFile(RepFileName);
+                ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[4]);
               end;
           end;
         end;
