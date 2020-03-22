@@ -479,6 +479,7 @@ begin
   GetBillableSummary;
   FShowingForm := False;
   GetBillableTimesheet;
+  WindowState := wsMaximized;
   Screen.Cursor := crDefault;
 end;
 

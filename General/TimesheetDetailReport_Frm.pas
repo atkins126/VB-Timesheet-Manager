@@ -21,7 +21,8 @@ uses
   cxNavigator, dxDateRanges, dxScrollbarAnnotations, cxCurrencyEdit, cxMemo,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridBandedTableView,
   cxGridDBBandedTableView, cxGridCustomView, cxGrid, cxBarEditItem, dxScreenTip,
-  cxGridExportLink, dxCustomHint, cxHint, cxGridDBTableView;
+  cxGridExportLink, dxCustomHint, cxHint, cxGridDBTableView, cxCustomListBox,
+  cxCheckListBox, Vcl.Menus, Vcl.StdCtrls, cxButtons;
 
 type
   TTimesheetDetailReportFrm = class(TBaseLayoutFrm)
@@ -231,13 +232,12 @@ type
     tipExcel: TdxScreenTip;
     tipToGrid: TdxScreenTip;
     styHintController: TcxHintStyleController;
-    lucSortOptions: TcxComboBox;
     litSortOptions: TdxLayoutItem;
     grpSortOptions: TdxLayoutGroup;
-    grdSort: TcxGrid;
-    viewSort: TcxGridTableView;
-    lvlSort: TcxGridLevel;
-    edtSortOption: TcxGridColumn;
+    lstSortOptions: TcxCheckListBox;
+    litSaveSortOptions: TdxLayoutItem;
+    cbxSaveSortOptoions: TcxCheckBox;
+    btnTest: TcxButton;
     procedure FormCreate(Sender: TObject);
     procedure DoCloseForm(Sender: TObject);
     procedure DoPrint(Sender: TObject);
@@ -247,7 +247,6 @@ type
     procedure FormShow(Sender: TObject);
     procedure lucDateTypePropertiesEditValueChanged(Sender: TObject);
     procedure lucReportTypePropertiesEditValueChanged(Sender: TObject);
-    procedure lucUserSortOptionsPropertiesChange(Sender: TObject);
     procedure viewSystemUserCustomDrawCell(Sender: TcxCustomGridTableView;
       ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
       var ADone: Boolean);
@@ -255,16 +254,18 @@ type
       ASender: TcxDataSummaryItems; Arguments: TcxSummaryEventArguments;
       var OutArguments: TcxSummaryEventOutArguments);
     procedure lucBillCfComparisonPropertiesChange(Sender: TObject);
-    procedure viewSortStartDrag(Sender: TObject; var DragObject: TDragObject);
-    procedure viewSortDragOver(Sender, Source: TObject; X, Y: Integer;
+    procedure lstSortOptionsDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
-    procedure viewSortDragDrop(Sender, Source: TObject; X, Y: Integer);
+    procedure lstSortOptionsEndDrag(Sender, Target: TObject; X, Y: Integer);
+    procedure cbxSaveSortOptoionsPropertiesChange(Sender: TObject);
+    procedure btnTestClick(Sender: TObject);
   private
     { Private declarations }
 //    FReportFileName: TReportFileName;
     FOrderByClause: string;
     FDragRecord: Integer;
     FItem: TcxCustomGridTableItem;
+    FItemIndex: Integer;
 
     procedure GetPeriods;
     procedure GetSystemUser;
@@ -319,6 +320,7 @@ begin
   layMain.LayoutLookAndFeel := lafCustomSkin;
   TcxDateEditProperties(lucTSActivityDate.Properties).MinDate := StrToDate('01/01/2019');
   TcxDateEditProperties(lucTSActivityDate.Properties).MaxDate := Date;
+  FItemIndex := -1;
 
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   RegKey.RootKey := HKEY_CURRENT_USER;
@@ -366,7 +368,6 @@ begin
 
 //  FOrderByClause := ' ORDER BY 1, 6, 5, 8 ';
   lucReportType.ItemIndex := 0;
-  lucSortOptions.ItemIndex := 0;
   lucBillCfComparison.ItemIndex := 0;
   PopulateSortOptions;
   GetPeriods;
@@ -494,6 +495,73 @@ begin
 
   WindowState := wsMaximized;
   Screen.Cursor := crDefault;
+end;
+
+procedure TTimesheetDetailReportFrm.btnTestClick(Sender: TObject);
+var
+  I: Integer;
+begin
+  inherited;
+  // Union field order
+  // 4 = User Name
+  // 5 = Activity Date
+  // 7 = Customer Name
+  // 8 = Activity Type
+
+  FOrderByClause := ' ORDER BY ';
+  for I := 0 to lstSortOptions.Items.Count - 1 do
+  begin
+    if lstSortOptions.Items[I].State = cbsChecked then
+    begin
+      FOrderByClause := FOrderByClause + 'T.' + lstSortOptions.Items[I].Text;
+      if I < lstSortOptions.Items.Count - 1 then
+        FOrderByClause := FOrderByClause + ', ';
+    end;
+  end;
+
+//  case lucReportType.ItemIndex of
+//    0: // Standard timseheet report
+//      case lucSortOptions.ItemIndex of
+//        0: FOrderByClause := ' ORDER BY T.LOGIN_NAME, T.ACTIVITY_DATE, T.CUSTOMER_NAME';
+//        1: FOrderByClause := ' ORDER BY T.LOGIN_NAME, T.CUSTOMER_NAME, T.ACTIVITY_DATE';
+//        2: FOrderByClause := ' ORDER BY T.CUSTOMER_NAME, T.ACTIVITY_DATE, T.LOGIN_NAME';
+//        3: FOrderByClause := ' ORDER BY T.CUSTOMER_NAME, T.LOGIN_NAME, T.ACTIVITY_DATE';
+//        4: FOrderByClause := ' ORDER BY T.ACTIVITY_TYPE, T.ACTIVITY_DATE, T.LOGIN_NAME';
+//        5: FOrderByClause := ' ORDER BY T.ACTIVITY_TYPE, T.ACTIVITY_DATE, T.CUSTOMER_NAME';
+//      end;
+//
+////      case lucSortOptions.ItemIndex of
+////        0: FOrderByClause := ' ORDER BY 5, 4, 7 ';
+////        1: FOrderByClause := ' ORDER BY 5, 7, 4 ';
+////        2: FOrderByClause := ' ORDER BY 5, 8, 7 ';
+////        3: FOrderByClause := ' ORDER BY 4, 5, 7 ';
+////        4: FOrderByClause := ' ORDER BY 7, 5, 4 ';
+////        5: FOrderByClause := ' ORDER BY 8, 5, 7 ';
+////      end;
+//
+//  // Union field order
+//  // 1 = BILL_CFWD
+//  // 5 = User Name
+//  // 6 = Activity Date
+//  // 8 = Customer Name
+//  // 9 = Activity Type
+//
+//    1: // Billing summary raport
+//      case lucSortOptions.ItemIndex of
+//        0: FOrderByClause := ' ORDER BY 1, 6, 5, 8 ';
+//        1: FOrderByClause := ' ORDER BY 1, 6, 8, 5 ';
+//        2: FOrderByClause := ' ORDER BY 1, 6, 9, 8 ';
+//        3: FOrderByClause := ' ORDER BY 1, 5, 6, 8 ';
+//        4: FOrderByClause := ' ORDER BY 1, 8, 6, 5 ';
+//        5: FOrderByClause := ' ORDER BY 1, 9, 6, 8 ';
+//      end;
+//  end;
+end;
+
+procedure TTimesheetDetailReportFrm.cbxSaveSortOptoionsPropertiesChange(Sender: TObject);
+begin
+  inherited;
+//
 end;
 
 procedure TTimesheetDetailReportFrm.CloseDataSets;
@@ -820,6 +888,32 @@ begin
     grpData.Items[I].Visible := False;
 end;
 
+procedure TTimesheetDetailReportFrm.lstSortOptionsDragOver(Sender,
+  Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
+begin
+  inherited;
+  Accept := False;
+  FItemIndex := lstSortOptions.ItemAtPos(Point(X, Y), True);
+  if (FItemIndex <> -1) and (FItemIndex <> lstSortOptions.ItemIndex) then
+  begin
+    Accept := True;
+  end
+  else
+    FItemIndex := -1;
+end;
+
+procedure TTimesheetDetailReportFrm.lstSortOptionsEndDrag(Sender,
+  Target: TObject; X, Y: Integer);
+begin
+  inherited;
+  if FItemIndex <> -1 then
+  begin
+    lstSortOptions.Items[lstSortOptions.ItemIndex].Index := FItemIndex;
+    lstSortOptions.Selected[FItemIndex] := True; //added: retain selection on dragged item
+    FItemIndex := -1; // prevent further unwanted moves
+  end;
+end;
+
 procedure TTimesheetDetailReportFrm.lucBillCfComparisonPropertiesChange(Sender: TObject);
 begin
   inherited;
@@ -862,71 +956,21 @@ begin
 //  grpData.Items[AComboBox.ItemIndex].Visible := True;
   grpData.Items[lucReportType.ItemIndex].Visible := True;
 
-  case grpData.ItemIndex of
-    0: lucSortOptions.ItemIndex := 0;
-    1: lucSortOptions.ItemIndex := 1;
-    2: lucSortOptions.ItemIndex := 2;
-  end;
+{TODO: Set correct order by clause based on report type}
+//  case grpData.ItemIndex of
+//    0: lucSortOptions.ItemIndex := 0;
+//    1: lucSortOptions.ItemIndex := 1;
+//    2: lucSortOptions.ItemIndex := 2;
+//  end;
 //  grpData.Items[lucReportType.EditValue].Visible := True;
-end;
-
-procedure TTimesheetDetailReportFrm.lucUserSortOptionsPropertiesChange(Sender: TObject);
-begin
-  inherited;
-  // Union field order
-  // 4 = User Name
-  // 5 = Activity Date
-  // 7 = Customer Name
-  // 8 = Activity Type
-
-  case lucReportType.ItemIndex of
-    0: // Standard timseheet report
-      case lucSortOptions.ItemIndex of
-        0: FOrderByClause := ' ORDER BY T.LOGIN_NAME, T.ACTIVITY_DATE, T.CUSTOMER_NAME';
-        1: FOrderByClause := ' ORDER BY T.LOGIN_NAME, T.CUSTOMER_NAME, T.ACTIVITY_DATE';
-        2: FOrderByClause := ' ORDER BY T.CUSTOMER_NAME, T.ACTIVITY_DATE, T.LOGIN_NAME';
-        3: FOrderByClause := ' ORDER BY T.CUSTOMER_NAME, T.LOGIN_NAME, T.ACTIVITY_DATE';
-        4: FOrderByClause := ' ORDER BY T.ACTIVITY_TYPE, T.ACTIVITY_DATE, T.LOGIN_NAME';
-        5: FOrderByClause := ' ORDER BY T.ACTIVITY_TYPE, T.ACTIVITY_DATE, T.CUSTOMER_NAME';
-      end;
-
-//      case lucSortOptions.ItemIndex of
-//        0: FOrderByClause := ' ORDER BY 5, 4, 7 ';
-//        1: FOrderByClause := ' ORDER BY 5, 7, 4 ';
-//        2: FOrderByClause := ' ORDER BY 5, 8, 7 ';
-//        3: FOrderByClause := ' ORDER BY 4, 5, 7 ';
-//        4: FOrderByClause := ' ORDER BY 7, 5, 4 ';
-//        5: FOrderByClause := ' ORDER BY 8, 5, 7 ';
-//      end;
-
-  // Union field order
-  // 1 = BILL_CFWD
-  // 5 = User Name
-  // 6 = Activity Date
-  // 8 = Customer Name
-  // 9 = Activity Type
-
-    1: // Billing summary raport
-      case lucSortOptions.ItemIndex of
-        0: FOrderByClause := ' ORDER BY 1, 6, 5, 8 ';
-        1: FOrderByClause := ' ORDER BY 1, 6, 8, 5 ';
-        2: FOrderByClause := ' ORDER BY 1, 6, 9, 8 ';
-        3: FOrderByClause := ' ORDER BY 1, 5, 6, 8 ';
-        4: FOrderByClause := ' ORDER BY 1, 8, 6, 5 ';
-        5: FOrderByClause := ' ORDER BY 1, 9, 6, 8 ';
-      end;
-  end;
-
 end;
 
 procedure TTimesheetDetailReportFrm.PopulateSortOptions;
 var
-  DC: TcxGridDataController;
   SortOptioinsList: TStringList;
   I: Integer;
-begin
-  DC := viewSort.DataController;
-  DC.RecordCount := 0;
+  AnItem: TcxCheckListBoxItem;
+  begin
   SortOptioinsList := RUtils.CreateStringList(COMMA, SINGLE_QUOTE);
 
   try
@@ -934,19 +978,29 @@ begin
       SortOptioinsList.LoadFromFile(TSDM.ShellResource.ResourceFolder + 'TS Sort Optios.csv')
     else
     begin
-      SortOptioinsList.Add('User Name');
+      SortOptioinsList.Add('Login Name');
       SortOptioinsList.Add('Activity Date');
       SortOptioinsList.Add('Customer Name');
       SortOptioinsList.Add('Activity Type');
       SortOptioinsList.SaveToFile(TSDM.ShellResource.ResourceFolder + 'TS Sort Optios.csv');
     end;
 
+//    lstSortOptions.Items :=  SortOptioinsList.Strings;
     for I := 0 to SortOptioinsList.Count - 1 do
     begin
-      DC.AppendRecord;
-      DC.Values[I, edtSortOption.Index] := SortOptioinsList[I];
-      DC.PostEditingData;
+    AnItem :=  lstSortOptions.Items.Add;
+    AnItem.Text := SortOptioinsList[I];
+    AnItem.ItemObject.t
+//      lstSortOptions.Items.Add.Text := SortOptioinsList[I];
+//      lstSortOptions.Items.addObject(
     end;
+
+//    for I := 0 to SortOptioinsList.Count - 1 do
+//    begin
+//      DC.AppendRecord;
+//      DC.Values[I, edtSortOption.Index] := SortOptioinsList[I];
+//      DC.PostEditingData;
+//    end;
   finally
     SortOptioinsList.Free;
   end;
@@ -1009,86 +1063,6 @@ begin
       7: // Summarize only C/Fwd values
         OutArguments.Done := AValue = 0;
     end;
-  end;
-end;
-
-procedure TTimesheetDetailReportFrm.viewSortStartDrag(Sender: TObject;
-  var DragObject: TDragObject);
-var
-  P: TPoint;
-  AHitTest: TcxCustomGridHitTest;
-begin
-  FDragRecord := -1;
-  FItem := nil;
-  GetCursorPos(P);
-  P := (Sender as TcxGridSite).ScreenToClient(P);
-  AHitTest := (Sender as TcxGridSite).GridView.ViewInfo.GetHitTest(P);
-  if AHitTest.HitTestCode = htCell then // Record is being dragged
-  begin
-    FDragRecord := TcxGridRecordCellHitTest(AHitTest).GridRecord.RecordIndex; // Drag record index
-    FItem := TcxGridRecordCellHitTest(AHitTest).Item;
-  end;
-end;
-
-procedure TTimesheetDetailReportFrm.viewSortDragOver(Sender, Source: TObject; X,
-  Y: Integer; State: TDragState; var Accept: Boolean);
-var
-  AHitTest: TcxCustomGridHitTest;
-begin
-  Accept := False;
-  AHitTest := (Sender as TcxGridSite).GridView.ViewInfo.GetHitTest(X, Y);
-  if AHitTest.HitTestCode = htCell then
-    with TcxGridRecordCellHitTest(AHitTest) do
-      Accept :=
-        (FDragRecord <> GridRecord.RecordIndex)
-        and (Item = FItem)
-        and not TcxGridDBColumn(FItem).DataBinding.Field.ReadOnly
-  else if AHitTest.HitTestCode = htNone then
-    Accept :=
-      (TcxDragControlObject(Source).Control = Sender)
-      and (TcxGridTableView(TcxGridSite(Sender).GridView).ViewInfo.RecordsViewInfo.ContentBounds.Right > X);
-end;
-
-procedure TTimesheetDetailReportFrm.viewSortDragDrop(Sender, Source: TObject; X,
-  Y: Integer);
-var
-  AHitTest: TcxCustomGridHitTest;
-  AView: TcxGridDBTableView;
-  I: Integer;
-  ADataSet: TDataSet;
-  DC: TcxGridDataController;
-begin
-  AView := TcxGridDBTableView((Sender as TcxGridSite).GridView);
-  DC := AView.DataController;
-  ADataSet := AView.DataController.DataSet;
-  AHitTest := AView.ViewInfo.GetHitTest(X, Y);
-
-  if AHitTest.HitTestCode = htCell then
-  begin
-    TcxGridRecordCellHitTest(AHitTest).GridRecord.Focused := True;
-//    ADataSet.Edit;
-    DC.Edit;
-    DC.Values[TcxGridRecordCellHitTest(AHitTest).GridRecord.Index, edtSortOption.Index] :=
-      TcxGridRecordCellHitTest(AHitTest).GridView.DataController.Values[FDragRecord, TcxGridRecordCellHitTest(AHitTest).Item.Index];
-
-    DC.PostEditingData;
-
-//    ADataSet.FieldByName(TcxGridDBColumn(TcxGridRecordCellHitTest(AHitTest).Item).DataBinding.FieldName).Value :=
-//      TcxGridRecordCellHitTest(AHitTest).GridView.DataController.Values[FDragRecord, TcxGridRecordCellHitTest(AHitTest).Item.Index];
-//    ADataSet.Post;
-  end
-  else if AHitTest.HitTestCode = htNone then
-  begin
-  DC.AppendRecord;
-    for I := 0 to ADataSet.FieldCount - 1 do
-      if not ADataSet.Fields[I].ReadOnly then
-        ADataSet.Fields[I].Value := AView.DataController.Values[FDragRecord, AView.GetColumnByFieldNAme(ADataSet.Fields[I].FieldName).Index];
-
-//    ADataSet.Append;
-//    for I := 0 to ADataSet.FieldCount - 1 do
-//      if not ADataSet.Fields[I].ReadOnly then
-//        ADataSet.Fields[I].Value := AView.DataController.Values[FDragRecord, AView.GetColumnByFieldNAme(ADataSet.Fields[I].FieldName).Index];
-//    ADataSet.Post;
   end;
 end;
 
