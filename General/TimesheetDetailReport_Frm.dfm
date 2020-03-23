@@ -46,7 +46,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         'All')
       Style.HotTrack = False
       Style.TransparentBorder = False
-      TabOrder = 8
+      TabOrder = 9
       Width = 120
     end
     object lucWorkType: TcxComboBox [2]
@@ -61,7 +61,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         'All')
       Style.HotTrack = False
       Style.TransparentBorder = False
-      TabOrder = 10
+      TabOrder = 11
       Width = 120
     end
     object dteToDate: TcxDateEdit [3]
@@ -123,7 +123,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       State = cbsChecked
       Style.HotTrack = False
       Style.TransparentBorder = False
-      TabOrder = 11
+      TabOrder = 12
       Transparent = True
     end
     object cbxRemoveZeroBillableValues: TcxCheckBox [8]
@@ -135,7 +135,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       State = cbsChecked
       Style.HotTrack = False
       Style.TransparentBorder = False
-      TabOrder = 12
+      TabOrder = 13
       Transparent = True
     end
     object grdSystemUser: TcxGrid [9]
@@ -144,7 +144,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Width = 913
       Height = 349
       BorderStyle = cxcbsNone
-      TabOrder = 13
+      TabOrder = 14
       Visible = False
       object viewSystemUser: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
@@ -226,7 +226,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Top = 10000
       Width = 644
       Height = 368
-      TabOrder = 14
+      TabOrder = 15
       Visible = False
       object viewCustomerListing: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
@@ -423,7 +423,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Top = 10000
       Width = 819
       Height = 368
-      TabOrder = 15
+      TabOrder = 16
       Visible = False
       object viewActivityType: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
@@ -489,7 +489,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Properties.OnChange = lucBillCfComparisonPropertiesChange
       Style.HotTrack = False
       Style.TransparentBorder = False
-      TabOrder = 9
+      TabOrder = 10
       Width = 120
     end
     object lucReportType: TcxComboBox [13]
@@ -509,7 +509,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     end
     object grdBillCfwd: TcxGrid [14]
       Left = 25
-      Top = 262
+      Top = 287
       Width = 966
       Height = 349
       Font.Charset = ANSI_CHARSET
@@ -518,7 +518,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Font.Name = 'Verdana'
       Font.Style = []
       ParentFont = False
-      TabOrder = 16
+      TabOrder = 17
       object viewBillCfwd: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
@@ -1152,7 +1152,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         GridView = viewBillCfwd
       end
     end
-    object lstSortOptions: TcxCheckListBox [15]
+    object lstSortOrder: TcxCheckListBox [15]
       Left = 389
       Top = 102
       Width = 140
@@ -1160,8 +1160,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       DragMode = dmAutomatic
       Items = <>
       TabOrder = 6
-      OnDragOver = lstSortOptionsDragOver
-      OnEndDrag = lstSortOptionsEndDrag
+      OnDragOver = lstSortOrderDragOver
+      OnEndDrag = lstSortOrderEndDrag
     end
     object cbxSaveSortOptoions: TcxCheckBox [16]
       Left = 389
@@ -1175,6 +1175,19 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Style.HotTrack = False
       Style.TransparentBorder = False
       TabOrder = 7
+      Transparent = True
+    end
+    object cbxGroupedReport: TcxCheckBox [17]
+      Left = 389
+      Top = 213
+      Caption = 'Grouped Report'
+      ParentShowHint = False
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
+      ShowHint = True
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 8
       Transparent = True
     end
     inherited layMainGroup_Root: TdxLayoutGroup
@@ -1422,7 +1435,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     object litSortOptions: TdxLayoutItem
       Parent = grpSortOptions
       CaptionOptions.Visible = False
-      Control = lstSortOptions
+      Control = lstSortOrder
       ControlOptions.OriginalHeight = 80
       ControlOptions.OriginalWidth = 140
       ControlOptions.ShowBorder = False
@@ -1432,7 +1445,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Parent = grpAll
       CaptionOptions.Text = 'Sort Options'
       ButtonOptions.Buttons = <>
-      ItemIndex = 1
+      ItemIndex = 2
       Index = 1
     end
     object litSaveSortOptions: TdxLayoutItem
@@ -1444,6 +1457,16 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       ControlOptions.OriginalWidth = 97
       ControlOptions.ShowBorder = False
       Index = 1
+    end
+    object litGroupedReport: TdxLayoutItem
+      Parent = grpSortOptions
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = cbxGroupedReport
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 112
+      ControlOptions.ShowBorder = False
+      Index = 2
     end
   end
   object grdTimesheet: TcxGrid [1]
@@ -3147,7 +3170,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     Caption = 'Test'
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 8
+    TabOrder = 4
     OnClick = btnTestClick
   end
   inherited styRepository: TcxStyleRepository

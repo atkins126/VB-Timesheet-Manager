@@ -234,10 +234,12 @@ type
     styHintController: TcxHintStyleController;
     litSortOptions: TdxLayoutItem;
     grpSortOptions: TdxLayoutGroup;
-    lstSortOptions: TcxCheckListBox;
+    lstSortOrder: TcxCheckListBox;
     litSaveSortOptions: TdxLayoutItem;
     cbxSaveSortOptoions: TcxCheckBox;
     btnTest: TcxButton;
+    litGroupedReport: TdxLayoutItem;
+    cbxGroupedReport: TcxCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure DoCloseForm(Sender: TObject);
     procedure DoPrint(Sender: TObject);
@@ -254,9 +256,9 @@ type
       ASender: TcxDataSummaryItems; Arguments: TcxSummaryEventArguments;
       var OutArguments: TcxSummaryEventOutArguments);
     procedure lucBillCfComparisonPropertiesChange(Sender: TObject);
-    procedure lstSortOptionsDragOver(Sender, Source: TObject; X, Y: Integer;
+    procedure lstSortOrderDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
-    procedure lstSortOptionsEndDrag(Sender, Target: TObject; X, Y: Integer);
+    procedure lstSortOrderEndDrag(Sender, Target: TObject; X, Y: Integer);
     procedure cbxSaveSortOptoionsPropertiesChange(Sender: TObject);
     procedure btnTestClick(Sender: TObject);
   private
@@ -266,6 +268,7 @@ type
     FDragRecord: Integer;
     FItem: TcxCustomGridTableItem;
     FItemIndex: Integer;
+    FSortOptioinsList: TStringlist;
 
     procedure GetPeriods;
     procedure GetSystemUser;
@@ -320,14 +323,20 @@ begin
   layMain.LayoutLookAndFeel := lafCustomSkin;
   TcxDateEditProperties(lucTSActivityDate.Properties).MinDate := StrToDate('01/01/2019');
   TcxDateEditProperties(lucTSActivityDate.Properties).MaxDate := Date;
+  FSortOptioinsList := RUtils.CreateStringList(COMMA, SINGLE_QUOTE);
   FItemIndex := -1;
 
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   RegKey.RootKey := HKEY_CURRENT_USER;
-  RegKey.OpenKey(KEY_VB_APPS, True);
+  RegKey.OpenKey(KEY_TIME_SHEET, True);
 
-  if not RegKey.ValueExists('Maximize Report Form') then
-    RegKey.WriteBool('Maximize Report Form', True);
+  if not RegKey.ValueExists('Save Report Sort Order') then
+    RegKey.WriteBool('Save Report Sort Order', True);
+
+  if not RegKey.ValueExists('Timesheet Report Sort Order') then
+  begin
+    RegKey.WriteBool('Timesheet Report Sort Order', True);
+  end;
 
   if ReportDM = nil then
     ReportDM := TReportDM.Create(nil);
@@ -475,6 +484,9 @@ end;
 procedure TTimesheetDetailReportFrm.FormDestroy(Sender: TObject);
 begin
   inherited;
+  if FSortOptioinsList <> nil then
+    FSortOptioinsList.Free;
+
   if Assigned(ReportDM) then
     FreeAndNil(ReportDM);
 end;
@@ -499,7 +511,9 @@ end;
 
 procedure TTimesheetDetailReportFrm.btnTestClick(Sender: TObject);
 var
-  I: Integer;
+  I, Index: Integer;
+  SaveItemList, ItemString: TStringList;
+  ItemText, FieldName: string;
 begin
   inherited;
   // Union field order
@@ -509,14 +523,26 @@ begin
   // 8 = Activity Type
 
   FOrderByClause := ' ORDER BY ';
-  for I := 0 to lstSortOptions.Items.Count - 1 do
+
+  for I := 0 to lstSortOrder.Items.Count - 1 do
   begin
-    if lstSortOptions.Items[I].State = cbsChecked then
+    ItemText := lstSortOrder.Items[I].Text;
+    Index := FSortOptioinsList.IndexOf(ItemString);
+    ItemString.DelimitedText := FSortOptioinsList[Index];
+    FieldName := ItemString[2];
+
+    SaveitemList.Add(
+      BooleanToString(lstSortOrder.Items[I].Checked) + ';' +
+      ItemText + ';' +
+      'T.' + FieldName);
+
+    if lstSortOrder.Items[I].State = cbsChecked then
     begin
-      FOrderByClause := FOrderByClause + 'T.' + lstSortOptions.Items[I].Text;
-      if I < lstSortOptions.Items.Count - 1 then
+      FOrderByClause := FOrderByClause + 'T.' + lstSortOrder.Items[I].Text;
+      if I < lstSortOrder.Items.Count - 1 then
         FOrderByClause := FOrderByClause + ', ';
     end;
+    SaveItemList.SaveToFile(TSDM.ShellResource.ResourceFolder + 'TS Report Sort Order.csv');
   end;
 
 //  case lucReportType.ItemIndex of
@@ -888,13 +914,13 @@ begin
     grpData.Items[I].Visible := False;
 end;
 
-procedure TTimesheetDetailReportFrm.lstSortOptionsDragOver(Sender,
+procedure TTimesheetDetailReportFrm.lstSortOrderDragOver(Sender,
   Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
 begin
   inherited;
   Accept := False;
-  FItemIndex := lstSortOptions.ItemAtPos(Point(X, Y), True);
-  if (FItemIndex <> -1) and (FItemIndex <> lstSortOptions.ItemIndex) then
+  FItemIndex := lstSortOrder.ItemAtPos(Point(X, Y), True);
+  if (FItemIndex <> -1) and (FItemIndex <> lstSortOrder.ItemIndex) then
   begin
     Accept := True;
   end
@@ -902,14 +928,14 @@ begin
     FItemIndex := -1;
 end;
 
-procedure TTimesheetDetailReportFrm.lstSortOptionsEndDrag(Sender,
+procedure TTimesheetDetailReportFrm.lstSortOrderEndDrag(Sender,
   Target: TObject; X, Y: Integer);
 begin
   inherited;
   if FItemIndex <> -1 then
   begin
-    lstSortOptions.Items[lstSortOptions.ItemIndex].Index := FItemIndex;
-    lstSortOptions.Selected[FItemIndex] := True; //added: retain selection on dragged item
+    lstSortOrder.Items[lstSortOrder.ItemIndex].Index := FItemIndex;
+    lstSortOrder.Selected[FItemIndex] := True; //added: retain selection on dragged item
     FItemIndex := -1; // prevent further unwanted moves
   end;
 end;
@@ -967,32 +993,34 @@ end;
 
 procedure TTimesheetDetailReportFrm.PopulateSortOptions;
 var
-  SortOptioinsList: TStringList;
+  ItemString: TStringList;
   I: Integer;
   AnItem: TcxCheckListBoxItem;
-  begin
-  SortOptioinsList := RUtils.CreateStringList(COMMA, SINGLE_QUOTE);
+begin
+  ItemString := RUtils.CreateStringList(SEMI_COLON, SINGLE_QUOTE);
 
   try
-    if TFile.Exists(TSDM.ShellResource.ResourceFolder + 'TS Sort Optios.csv') then
-      SortOptioinsList.LoadFromFile(TSDM.ShellResource.ResourceFolder + 'TS Sort Optios.csv')
+    if TFile.Exists(TSDM.ShellResource.ResourceFolder + 'TS Report Sort Order.csv') then
+      FSortOptioinsList.LoadFromFile(TSDM.ShellResource.ResourceFolder + 'TS Report Sort Order.csv')
     else
     begin
-      SortOptioinsList.Add('Login Name');
-      SortOptioinsList.Add('Activity Date');
-      SortOptioinsList.Add('Customer Name');
-      SortOptioinsList.Add('Activity Type');
-      SortOptioinsList.SaveToFile(TSDM.ShellResource.ResourceFolder + 'TS Sort Optios.csv');
+      FSortOptioinsList.Add('True;Login Name;LOGIN_NAME');
+      FSortOptioinsList.Add('True;Activity Date;ACTIVITY_DATE');
+      FSortOptioinsList.Add('False;Customer Name;CUSTOMER_NAME');
+      FSortOptioinsList.Add('False;Activity Type;ACTIVITY_TYPE');
+      FSortOptioinsList.SaveToFile(TSDM.ShellResource.ResourceFolder + 'TS Report Sort Order.csv');
     end;
 
-//    lstSortOptions.Items :=  SortOptioinsList.Strings;
-    for I := 0 to SortOptioinsList.Count - 1 do
+//    lstSortOrder.Items :=  FSortOptioinsList.Strings;
+    for I := 0 to FSortOptioinsList.Count - 1 do
     begin
-    AnItem :=  lstSortOptions.Items.Add;
-    AnItem.Text := SortOptioinsList[I];
-    AnItem.ItemObject.t
-//      lstSortOptions.Items.Add.Text := SortOptioinsList[I];
-//      lstSortOptions.Items.addObject(
+      ItemString.DelimitedText := FSortOptioinsList[I];
+      AnItem := lstSortOrder.Items.Add;
+      AnItem.Text := ItemString[1];
+      AnItem.Checked := StringToBoolean(ItemString[0]);
+//    AnItem.ItemObject.t
+//      lstSortOrder.Items.Add.Text := SortOptioinsList[I];
+//      lstSortOrder.Items.addObject(
     end;
 
 //    for I := 0 to SortOptioinsList.Count - 1 do
@@ -1002,7 +1030,7 @@ var
 //      DC.PostEditingData;
 //    end;
   finally
-    SortOptioinsList.Free;
+    ItemString.Free;
   end;
 end;
 
