@@ -7511,4 +7511,58 @@ inherited ReportDM: TReportDM
     Left = 265
     Top = 555
   end
+  object cdsTSSortOrder: TFDMemTable
+    ActiveStoredUsage = [auDesignTime]
+    FilterOptions = [foCaseInsensitive]
+    FieldDefs = <>
+    CachedUpdates = True
+    IndexDefs = <>
+    Indexes = <
+      item
+        Active = True
+        Selected = True
+        Name = 'idxID'
+        Fields = 'ID'
+        Options = [soNoCase]
+      end>
+    IndexName = 'idxID'
+    ConstraintsEnabled = True
+    FetchOptions.AssignedValues = [evMode, evRecordCountMode]
+    FetchOptions.Mode = fmAll
+    FetchOptions.RecordCountMode = cmTotal
+    FormatOptions.AssignedValues = [fvDataSnapCompatibility]
+    FormatOptions.DataSnapCompatibility = True
+    ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
+    ResourceOptions.Persistent = True
+    ResourceOptions.StorePrettyPrint = True
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    StoreDefs = True
+    Left = 575
+    Top = 275
+    object cdsTSSortOrderID: TIntegerField
+      Alignment = taLeftJustify
+      FieldName = 'ID'
+    end
+    object cdsTSSortOrderINCLUDE: TBooleanField
+      Alignment = taCenter
+      DisplayLabel = 'Incl'
+      FieldName = 'INCLUDE'
+    end
+    object cdsTSSortOrderSORT_BY: TStringField
+      DisplayLabel = 'Sort By'
+      FieldName = 'SORT_BY'
+    end
+    object cdsTSSortOrderFIELD_NAME: TStringField
+      DisplayLabel = 'Field Name'
+      FieldName = 'FIELD_NAME'
+    end
+  end
+  object dtsTSSortOrder: TDataSource
+    DataSet = cdsTSSortOrder
+    Left = 575
+    Top = 320
+  end
 end

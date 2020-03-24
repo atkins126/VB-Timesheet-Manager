@@ -441,6 +441,12 @@ type
     cdsMonthlyBillingTHE_MONTH: TStringField;
     cdsMonthlyBillingTHE_YEAR: TIntegerField;
     cdsYearTHE_YEAR: TIntegerField;
+    cdsTSSortOrder: TFDMemTable;
+    dtsTSSortOrder: TDataSource;
+    cdsTSSortOrderID: TIntegerField;
+    cdsTSSortOrderINCLUDE: TBooleanField;
+    cdsTSSortOrderSORT_BY: TStringField;
+    cdsTSSortOrderFIELD_NAME: TStringField;
     procedure cdsTimesheetCalcFields(DataSet: TDataSet);
     procedure cdsTimesheetAfterPost(DataSet: TDataSet);
     procedure cdsTimesheetBeforePost(DataSet: TDataSet);

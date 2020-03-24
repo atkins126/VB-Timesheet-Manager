@@ -6,9 +6,9 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Forms,
   System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Dialogs, System.ImageList,
   Vcl.ImgList, System.Actions, Vcl.ActnList, System.Win.Registry, System.IOUtils,
-  Vcl.ComCtrls, Data.DB, WinApi.ShellApi,
+  Vcl.ComCtrls, Data.DB, WinApi.ShellApi, Vcl.Menus, Vcl.StdCtrls,
 
-  frxClass,
+  frxClass, FireDAC.Comp.Client,
 
   BaseLayout_Frm, VBCommonValues, Base_DM, CommonFunctions, CommonValues,
 
@@ -22,7 +22,7 @@ uses
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridBandedTableView,
   cxGridDBBandedTableView, cxGridCustomView, cxGrid, cxBarEditItem, dxScreenTip,
   cxGridExportLink, dxCustomHint, cxHint, cxGridDBTableView, cxCustomListBox,
-  cxCheckListBox, Vcl.Menus, Vcl.StdCtrls, cxButtons;
+  cxCheckListBox, cxButtons, cxGridDBDataDefinitions;
 
 type
   TTimesheetDetailReportFrm = class(TBaseLayoutFrm)
@@ -240,6 +240,13 @@ type
     btnTest: TcxButton;
     litGroupedReport: TdxLayoutItem;
     cbxGroupedReport: TcxCheckBox;
+    grdSortOrder: TcxGrid;
+    lvlSortOrder: TcxGridLevel;
+    viewSortOrder: TcxGridDBTableView;
+    edtID: TcxGridDBColumn;
+    cbxInclude: TcxGridDBColumn;
+    edtSortBy: TcxGridDBColumn;
+    edtFieldName: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure DoCloseForm(Sender: TObject);
     procedure DoPrint(Sender: TObject);
@@ -249,18 +256,26 @@ type
     procedure FormShow(Sender: TObject);
     procedure lucDateTypePropertiesEditValueChanged(Sender: TObject);
     procedure lucReportTypePropertiesEditValueChanged(Sender: TObject);
-    procedure viewSystemUserCustomDrawCell(Sender: TcxCustomGridTableView;
-      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
-      var ADone: Boolean);
-    procedure viewBillCfwdDataControllerSummaryFooterSummaryItemsSummary(
-      ASender: TcxDataSummaryItems; Arguments: TcxSummaryEventArguments;
-      var OutArguments: TcxSummaryEventOutArguments);
     procedure lucBillCfComparisonPropertiesChange(Sender: TObject);
-    procedure lstSortOrderDragOver(Sender, Source: TObject; X, Y: Integer;
-      State: TDragState; var Accept: Boolean);
     procedure lstSortOrderEndDrag(Sender, Target: TObject; X, Y: Integer);
     procedure cbxSaveSortOptoionsPropertiesChange(Sender: TObject);
     procedure btnTestClick(Sender: TObject);
+    procedure viewSortOrderDragDrop(Sender, Source: TObject; X, Y: Integer);
+    procedure viewSortOrderStartDrag(Sender: TObject; var DragObject: TDragObject);
+
+    procedure viewSortOrderDragOver(Sender, Source: TObject; X, Y: Integer;
+      State: TDragState; var Accept: Boolean);
+
+    procedure viewSystemUserCustomDrawCell(Sender: TcxCustomGridTableView;
+      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
+
+    procedure viewBillCfwdDataControllerSummaryFooterSummaryItemsSummary(
+      ASender: TcxDataSummaryItems; Arguments: TcxSummaryEventArguments;
+      var OutArguments: TcxSummaryEventOutArguments);
+
+    procedure lstSortOrderDragOver(Sender, Source: TObject; X, Y: Integer;
+      State: TDragState; var Accept: Boolean);
+    procedure cbxIncludePropertiesEditValueChanged(Sender: TObject);
   private
     { Private declarations }
 //    FReportFileName: TReportFileName;
@@ -269,6 +284,9 @@ type
     FItem: TcxCustomGridTableItem;
     FItemIndex: Integer;
     FSortOptioinsList: TStringlist;
+    FSourceRecordIndex: Integer;
+    FDestRecordIndex: Integer;
+    FID: Integer;
 
     procedure GetPeriods;
     procedure GetSystemUser;
@@ -280,6 +298,8 @@ type
     procedure HideTabs;
     procedure DrawCellBorder(var Msg: TMessage); message CM_DRAWBORDER;
     procedure PopulateSortOptions;
+    procedure ReorderRows(AView: TcxGridDBTableView; ADestRow: TcxCustomGridRecord);
+    procedure SetOrderValue(DataSet: TDataSet; AValue: Variant);
   public
     { Public declarations }
   end;
@@ -362,6 +382,7 @@ begin
   viewTimesheet.DataController.DataSource := ReportDM.dtsTimesheet;
   viewCarryForwardDetail.DataController.DataSource := ReportDM.dtsCarryForwardDetail;
   viewBillCfwd.DataController.DataSource := ReportDM.dtsBillCfwd;
+  viewSortOrder.DataController.DataSource := ReportDM.dtsTSSortOrder;
 
   TcxLookupComboBoxProperties(lucSystemUser.Properties).ListSource := ReportDM.dtsSystemUser;
   TcxLookupComboBoxProperties(lucCFSystemuser.Properties).ListSource := ReportDM.dtsSystemUser;
@@ -474,6 +495,12 @@ begin
     lucDateType.ItemIndex := 0;
     lucBillable.ItemIndex := 2;
     lucWorkType.ItemIndex := 2;
+    {$IFDEF DEBUG}
+    viewSortOrder.OptionsCustomize.ColumnsQuickCustomization := True;
+    {$ELSE}
+    viewSortOrder.OptionsCustomize.ColumnsQuickCustomization := False;
+    {$ENDIF}
+    grdSortOrder.Height := 120;
   finally
     FreeAndNil(RegKey);
     ProgressFrm.Close;
@@ -511,7 +538,7 @@ end;
 
 procedure TTimesheetDetailReportFrm.btnTestClick(Sender: TObject);
 var
-  I, Index: Integer;
+  I, J, Index: Integer;
   SaveItemList, ItemString: TStringList;
   ItemText, FieldName: string;
 begin
@@ -527,7 +554,12 @@ begin
   for I := 0 to lstSortOrder.Items.Count - 1 do
   begin
     ItemText := lstSortOrder.Items[I].Text;
-    Index := FSortOptioinsList.IndexOf(ItemString);
+    for J := 0 to FSortOptioinsList.Count - 1 do
+    begin
+
+    end;
+
+    Index := FSortOptioinsList.IndexOf(ItemText);
     ItemString.DelimitedText := FSortOptioinsList[Index];
     FieldName := ItemString[2];
 
@@ -582,6 +614,12 @@ begin
 //        5: FOrderByClause := ' ORDER BY 1, 9, 6, 8 ';
 //      end;
 //  end;
+end;
+
+procedure TTimesheetDetailReportFrm.cbxIncludePropertiesEditValueChanged(Sender: TObject);
+begin
+  inherited;
+  ReportDM.cdsTSSortOrder.Post;
 end;
 
 procedure TTimesheetDetailReportFrm.cbxSaveSortOptoionsPropertiesChange(Sender: TObject);
@@ -993,45 +1031,136 @@ end;
 
 procedure TTimesheetDetailReportFrm.PopulateSortOptions;
 var
-  ItemString: TStringList;
-  I: Integer;
+  I, ID: Integer;
   AnItem: TcxCheckListBoxItem;
+  DC: TcxGridDBDataController;
 begin
-  ItemString := RUtils.CreateStringList(SEMI_COLON, SINGLE_QUOTE);
+  if TFile.Exists(TSDM.ShellResource.ResourceFolder + 'TS Report Sort Order.xml') then
+    ReportDM.cdsTSSortOrder.LoadFromFile(TSDM.ShellResource.ResourceFolder + 'TS Report Sort Order.xml')
+  else
+  begin
+    ID := 1;
+    ReportDM.cdsTSSortOrder.CreateDataSet;
+    ReportDM.cdsTSSortOrder.Append;
+    ReportDM.cdsTSSortOrder.FieldByName('ID').AsInteger := ID;
+    ReportDM.cdsTSSortOrder.FieldByName('INCLUDE').AsBoolean := True;
+    ReportDM.cdsTSSortOrder.FieldByName('SORT_BY').AsString := 'Login Name';
+    ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString := 'LOGIN_NAME';
+    ReportDM.cdsTSSortOrder.Post;
 
-  try
-    if TFile.Exists(TSDM.ShellResource.ResourceFolder + 'TS Report Sort Order.csv') then
-      FSortOptioinsList.LoadFromFile(TSDM.ShellResource.ResourceFolder + 'TS Report Sort Order.csv')
-    else
-    begin
-      FSortOptioinsList.Add('True;Login Name;LOGIN_NAME');
-      FSortOptioinsList.Add('True;Activity Date;ACTIVITY_DATE');
-      FSortOptioinsList.Add('False;Customer Name;CUSTOMER_NAME');
-      FSortOptioinsList.Add('False;Activity Type;ACTIVITY_TYPE');
-      FSortOptioinsList.SaveToFile(TSDM.ShellResource.ResourceFolder + 'TS Report Sort Order.csv');
-    end;
+    Inc(ID);
+    ReportDM.cdsTSSortOrder.Append;
+    ReportDM.cdsTSSortOrder.FieldByName('ID').AsInteger := ID;
+    ReportDM.cdsTSSortOrder.FieldByName('INCLUDE').AsBoolean := True;
+    ReportDM.cdsTSSortOrder.FieldByName('SORT_BY').AsString := 'Activity Date';
+    ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString := 'ACTIVITY_DATE';
+    ReportDM.cdsTSSortOrder.Post;
 
-//    lstSortOrder.Items :=  FSortOptioinsList.Strings;
-    for I := 0 to FSortOptioinsList.Count - 1 do
-    begin
-      ItemString.DelimitedText := FSortOptioinsList[I];
-      AnItem := lstSortOrder.Items.Add;
-      AnItem.Text := ItemString[1];
-      AnItem.Checked := StringToBoolean(ItemString[0]);
-//    AnItem.ItemObject.t
-//      lstSortOrder.Items.Add.Text := SortOptioinsList[I];
-//      lstSortOrder.Items.addObject(
-    end;
+    Inc(ID);
+    ReportDM.cdsTSSortOrder.Append;
+    ReportDM.cdsTSSortOrder.FieldByName('ID').AsInteger := ID;
+    ReportDM.cdsTSSortOrder.FieldByName('INCLUDE').AsBoolean := False;
+    ReportDM.cdsTSSortOrder.FieldByName('SORT_BY').AsString := 'Customer Name';
+    ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString := 'CUSTOMER_NAME';
+    ReportDM.cdsTSSortOrder.Post;
 
-//    for I := 0 to SortOptioinsList.Count - 1 do
-//    begin
-//      DC.AppendRecord;
-//      DC.Values[I, edtSortOption.Index] := SortOptioinsList[I];
-//      DC.PostEditingData;
-//    end;
-  finally
-    ItemString.Free;
+    Inc(ID);
+    ReportDM.cdsTSSortOrder.Append;
+    ReportDM.cdsTSSortOrder.FieldByName('ID').AsInteger := ID;
+    ReportDM.cdsTSSortOrder.FieldByName('INCLUDE').AsBoolean := False;
+    ReportDM.cdsTSSortOrder.FieldByName('SORT_BY').AsString := 'Activity Type';
+    ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString := 'ACTIVITY_TYPE';
+    ReportDM.cdsTSSortOrder.Post;
+    ReportDM.cdsTSSortOrder.First;
+    ReportDM.cdsTSSortOrder.SaveToFile(TSDM.ShellResource.ResourceFolder + 'TS Report Sort Order.xml');
   end;
+
+end;
+
+procedure TTimesheetDetailReportFrm.viewSortOrderStartDrag(Sender: TObject;
+  var DragObject: TDragObject);
+begin
+  inherited;
+//  FSourceRecordIndex := viewSortOrder.Controller.FocusedRecord.Index;
+  FID := TcxGridDBTableView(TcxGridSite(Sender).GridView).DataController.DataSet.FieldValues['ID'];
+end;
+
+procedure TTimesheetDetailReportFrm.viewSortOrderDragOver(Sender,
+  Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
+var
+  HT: TcxCustomGridHitTest;
+begin
+//  Accept :=
+//    TcxGridSite(TDragControlObject(Source).Control).GridView = viewSortOrder;
+
+// Good for when you want to use this for multiple grid so that you can get the
+// view generically.
+  HT := TcxGridSite(Sender).ViewInfo.GetHitTest(X, Y);
+  Accept := (HT is TcxGridRecordCellHitTest) and (TcxGridRecordCellHitTest(HT).GridRecord.RecordIndex <> TcxGridSite(Sender).GridView.DataController.FocusedRecordIndex)
+end;
+
+procedure TTimesheetDetailReportFrm.viewSortOrderDragDrop(Sender,
+  Source: TObject; X, Y: Integer);
+var
+  HT: TcxCustomGridHitTest;
+begin
+//  with TcxGridSite(Sender) do
+//  begin
+  HT := TcxGridSite(Sender).ViewInfo.GetHitTest(X, Y);
+  ReorderRows(TcxGridDBTableView(TcxGridSite(Sender).GridView), TcxGridRecordCellHitTest(HT).GridRecord);
+//  end;
+end;
+
+procedure TTimesheetDetailReportFrm.ReorderRows(AView: TcxGridDBTableView;
+  ADestRow: TcxCustomGridRecord);
+var
+  I: Integer;
+  DC: TcxGridDBDataController;
+  OrderValue: Variant;
+  IDColumnIndex: Integer;
+  IsAbove: Boolean;
+  RowIndex: Integer;
+begin
+  DC := AView.DataController;
+  IDColumnIndex := TcxGridColumn(DC.GetItemByFieldName('ID')).Index;
+  OrderValue := ADestRow.Values[IDColumnIndex];
+  RowIndex := DC.GetRowIndexByRecordIndex(DC.FindRecordIndexByKey(FID), False);
+  IsAbove := ADestRow.Index < RowIndex;
+//  IsAbove := ADestRow.Index < DC.GetRowIndexByRecordIndex(DC.FindRecordIndexByKey(FID), False);
+  ADestRow.Focused := True;
+  SetOrderValue(DC.DataSet, OrderValue - Ord(not IsAbove) + 0.5); // move dragged record 1 record lower
+  DC.LocateByKey(FID); // focus the dragged record in the DataSet
+  SetOrderValue(DC.DataSet, OrderValue);
+
+//  if IsAbove then
+//    DC.GotoLast
+//  else
+//    DC.GotoFirst;
+
+//  DC.DataSet.First;
+//  while not DC.DataSet.EOF do
+//  begin
+//    SetOrderValue(DC.DataSet, I + 1);
+//    DC.DataSet.Next;
+//  end;
+
+  for I := 0 to DC.RecordCount - 1 do
+  begin
+    DC.Values[I, edtID.Index] := I + 1;
+    DC.PostEditingData;
+  end;
+
+  TFDMemTable(DC.DataSet).CommitUpdates;
+
+//  for I := 0 to DC.RecordCount - 1 do
+//    SetOrderValue(DC.DataSet, I + 1);
+end;
+
+procedure TTimesheetDetailReportFrm.SetOrderValue(DataSet: TDataSet; AValue: Variant);
+begin
+  DataSet.Edit;
+  DataSet.FieldByName('ID').AsInteger := AValue;
+  DataSet.Post;
 end;
 
 procedure TTimesheetDetailReportFrm.viewBillCfwdDataControllerSummaryFooterSummaryItemsSummary(

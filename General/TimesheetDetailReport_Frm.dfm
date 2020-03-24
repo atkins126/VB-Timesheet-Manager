@@ -35,7 +35,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Width = 100
     end
     object lucBillable: TcxComboBox [1]
-      Left = 629
+      Left = 682
       Top = 102
       Properties.DropDownListStyle = lsFixedList
       Properties.ImmediatePost = True
@@ -50,7 +50,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Width = 120
     end
     object lucWorkType: TcxComboBox [2]
-      Left = 629
+      Left = 682
       Top = 152
       Properties.DropDownListStyle = lsFixedList
       Properties.ImmediatePost = True
@@ -98,7 +98,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     object docToolbar: TdxBarDockControl [5]
       Left = 11
       Top = 11
-      Width = 997
+      Width = 1050
       Height = 54
       Align = dalNone
       BarManager = barManager
@@ -117,7 +117,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Width = 100
     end
     object cbxOepnDocument: TcxCheckBox [7]
-      Left = 755
+      Left = 808
       Top = 102
       Caption = 'Open document after export'
       State = cbsChecked
@@ -127,7 +127,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Transparent = True
     end
     object cbxRemoveZeroBillableValues: TcxCheckBox [8]
-      Left = 755
+      Left = 808
       Top = 147
       Caption = 'Remove items with zero billable values'
       Properties.ImmediatePost = True
@@ -139,13 +139,12 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Transparent = True
     end
     object grdSystemUser: TcxGrid [9]
-      Left = 10000
-      Top = 10000
-      Width = 913
+      Left = 25
+      Top = 373
+      Width = 1019
       Height = 349
       BorderStyle = cxcbsNone
       TabOrder = 14
-      Visible = False
       object viewSystemUser: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
@@ -225,7 +224,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Left = 10000
       Top = 10000
       Width = 644
-      Height = 368
+      Height = 349
       TabOrder = 15
       Visible = False
       object viewCustomerListing: TcxGridDBBandedTableView
@@ -422,7 +421,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Left = 10000
       Top = 10000
       Width = 819
-      Height = 368
+      Height = 349
       TabOrder = 16
       Visible = False
       object viewActivityType: TcxGridDBBandedTableView
@@ -479,7 +478,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       end
     end
     object lucBillCfComparison: TcxComboBox [12]
-      Left = 629
+      Left = 682
       Top = 127
       Properties.DropDownListStyle = lsFixedList
       Properties.ImmediatePost = True
@@ -508,8 +507,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Width = 100
     end
     object grdBillCfwd: TcxGrid [14]
-      Left = 25
-      Top = 287
+      Left = 10000
+      Top = 10000
       Width = 966
       Height = 349
       Font.Charset = ANSI_CHARSET
@@ -519,6 +518,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Font.Style = []
       ParentFont = False
       TabOrder = 17
+      Visible = False
       object viewBillCfwd: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
@@ -1152,21 +1152,10 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         GridView = viewBillCfwd
       end
     end
-    object lstSortOrder: TcxCheckListBox [15]
+    object cbxSaveSortOptoions: TcxCheckBox [15]
       Left = 389
-      Top = 102
-      Width = 140
-      Height = 80
-      DragMode = dmAutomatic
-      Items = <>
-      TabOrder = 6
-      OnDragOver = lstSortOrderDragOver
-      OnEndDrag = lstSortOrderEndDrag
-    end
-    object cbxSaveSortOptoions: TcxCheckBox [16]
-      Left = 389
-      Top = 188
-      Caption = 'Save Options'
+      Top = 274
+      Caption = 'Save on Close'
       ParentShowHint = False
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
@@ -1177,9 +1166,9 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       TabOrder = 7
       Transparent = True
     end
-    object cbxGroupedReport: TcxCheckBox [17]
+    object cbxGroupedReport: TcxCheckBox [16]
       Left = 389
-      Top = 213
+      Top = 299
       Caption = 'Grouped Report'
       ParentShowHint = False
       Properties.ImmediatePost = True
@@ -1189,6 +1178,97 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Style.TransparentBorder = False
       TabOrder = 8
       Transparent = True
+    end
+    object grdSortOrder: TcxGrid [17]
+      Left = 389
+      Top = 102
+      Width = 193
+      Height = 166
+      DragMode = dmAutomatic
+      TabOrder = 6
+      object viewSortOrder: TcxGridDBTableView
+        DragMode = dmAutomatic
+        OnDragDrop = viewSortOrderDragDrop
+        OnDragOver = viewSortOrderDragOver
+        OnStartDrag = viewSortOrderStartDrag
+        Navigator.Buttons.CustomButtons = <>
+        ScrollbarAnnotations.CustomAnnotations = <>
+        OnCustomDrawCell = viewSystemUserCustomDrawCell
+        DataController.DataSource = ReportDM.dtsTSSortOrder
+        DataController.KeyFieldNames = 'ID'
+        DataController.Summary.DefaultGroupSummaryItems = <>
+        DataController.Summary.FooterSummaryItems = <>
+        DataController.Summary.SummaryGroups = <>
+        OptionsCustomize.ColumnsQuickCustomization = True
+        OptionsView.GroupByBox = False
+        object edtID: TcxGridDBColumn
+          DataBinding.FieldName = 'ID'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = '##0'
+          Properties.EditFormat = '##0'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 30
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.ExpressionEditing = False
+          Options.GroupFooters = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 30
+        end
+        object cbxInclude: TcxGridDBColumn
+          DataBinding.FieldName = 'INCLUDE'
+          PropertiesClassName = 'TcxCheckBoxProperties'
+          Properties.Alignment = taCenter
+          Properties.ImmediatePost = True
+          Properties.UseAlignmentWhenInplace = True
+          Properties.OnEditValueChanged = cbxIncludePropertiesEditValueChanged
+          HeaderAlignmentHorz = taCenter
+          HeaderHint = 'Include field in sorting'
+          Width = 35
+        end
+        object edtSortBy: TcxGridDBColumn
+          DataBinding.FieldName = 'SORT_BY'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          MinWidth = 120
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.ExpressionEditing = False
+          Options.GroupFooters = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 120
+        end
+        object edtFieldName: TcxGridDBColumn
+          DataBinding.FieldName = 'FIELD_NAME'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 150
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.ExpressionEditing = False
+          Options.GroupFooters = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 150
+        end
+      end
+      object lvlSortOrder: TcxGridLevel
+        GridView = viewSortOrder
+      end
     end
     inherited layMainGroup_Root: TdxLayoutGroup
       ItemIndex = 1
@@ -1292,7 +1372,6 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       AlignVert = avClient
       CaptionOptions.Text = 'New Group'
       ButtonOptions.Buttons = <>
-      ItemIndex = 3
       LayoutDirection = ldTabbed
       ShowBorder = False
       Index = 2
@@ -1435,9 +1514,9 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     object litSortOptions: TdxLayoutItem
       Parent = grpSortOptions
       CaptionOptions.Visible = False
-      Control = lstSortOrder
-      ControlOptions.OriginalHeight = 80
-      ControlOptions.OriginalWidth = 140
+      Control = grdSortOrder
+      ControlOptions.OriginalHeight = 166
+      ControlOptions.OriginalWidth = 193
       ControlOptions.ShowBorder = False
       Index = 0
     end
@@ -1470,8 +1549,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     end
   end
   object grdTimesheet: TcxGrid [1]
-    Left = 1058
-    Top = 110
+    Left = 1073
+    Top = 91
     Width = 1181
     Height = 421
     TabOrder = 1
@@ -2032,8 +2111,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     end
   end
   object grdCarryForwardDetail: TcxGrid [2]
-    Left = 1255
-    Top = 99
+    Left = 1105
+    Top = 131
     Width = 1181
     Height = 421
     TabOrder = 2
@@ -2594,8 +2673,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     end
   end
   object grdTimesheetBillable: TcxGrid [3]
-    Left = 1212
-    Top = 351
+    Left = 1088
+    Top = 296
     Width = 896
     Height = 421
     Font.Charset = ANSI_CHARSET
@@ -3163,7 +3242,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     end
   end
   object btnTest: TcxButton [4]
-    Left = 570
+    Left = 630
     Top = 201
     Width = 75
     Height = 25
@@ -3172,6 +3251,18 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     ShowHint = True
     TabOrder = 4
     OnClick = btnTestClick
+  end
+  object lstSortOrder: TcxCheckListBox [5]
+    Left = 1110
+    Top = 5
+    Width = 140
+    Height = 80
+    DragMode = dmAutomatic
+    Items = <>
+    TabOrder = 5
+    Visible = False
+    OnDragOver = lstSortOrderDragOver
+    OnEndDrag = lstSortOrderEndDrag
   end
   inherited styRepository: TcxStyleRepository
     Left = 260
