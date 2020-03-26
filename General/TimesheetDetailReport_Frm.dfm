@@ -509,7 +509,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     object grdBillCfwd: TcxGrid [14]
       Left = 10000
       Top = 10000
-      Width = 966
+      Width = 1019
       Height = 349
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
@@ -1152,7 +1152,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         GridView = viewBillCfwd
       end
     end
-    object cbxSaveSortOptoions: TcxCheckBox [15]
+    object cbxSaveSortOrder: TcxCheckBox [15]
       Left = 389
       Top = 274
       Caption = 'Save on Close'
@@ -1173,6 +1173,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       ParentShowHint = False
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnChange = cbxGroupedReportPropertiesChange
       ShowHint = True
       Style.HotTrack = False
       Style.TransparentBorder = False
@@ -1264,6 +1265,25 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
           Options.Moving = False
           Options.Sorting = False
           Width = 150
+        end
+        object edtOrdValue: TcxGridDBColumn
+          DataBinding.FieldName = 'ORD_VALUE'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = '##0'
+          Properties.EditFormat = '##0'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 30
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.ExpressionEditing = False
+          Options.GroupFooters = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 30
         end
       end
       object lvlSortOrder: TcxGridLevel
@@ -1531,7 +1551,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Parent = grpSortOptions
       CaptionOptions.Text = 'New Item'
       CaptionOptions.Visible = False
-      Control = cbxSaveSortOptoions
+      Control = cbxSaveSortOrder
       ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 97
       ControlOptions.ShowBorder = False
@@ -1549,8 +1569,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     end
   end
   object grdTimesheet: TcxGrid [1]
-    Left = 1073
-    Top = 91
+    Left = 1058
+    Top = 81
     Width = 1181
     Height = 421
     TabOrder = 1
@@ -2111,8 +2131,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     end
   end
   object grdCarryForwardDetail: TcxGrid [2]
-    Left = 1105
-    Top = 131
+    Left = 1115
+    Top = 186
     Width = 1181
     Height = 421
     TabOrder = 2
@@ -2673,8 +2693,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     end
   end
   object grdTimesheetBillable: TcxGrid [3]
-    Left = 1088
-    Top = 296
+    Left = 1073
+    Top = 286
     Width = 896
     Height = 421
     Font.Charset = ANSI_CHARSET
@@ -3240,29 +3260,6 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     object lvlTimesheetBillable: TcxGridLevel
       GridView = viewTimesheetBillable
     end
-  end
-  object btnTest: TcxButton [4]
-    Left = 630
-    Top = 201
-    Width = 75
-    Height = 25
-    Caption = 'Test'
-    ParentShowHint = False
-    ShowHint = True
-    TabOrder = 4
-    OnClick = btnTestClick
-  end
-  object lstSortOrder: TcxCheckListBox [5]
-    Left = 1110
-    Top = 5
-    Width = 140
-    Height = 80
-    DragMode = dmAutomatic
-    Items = <>
-    TabOrder = 5
-    Visible = False
-    OnDragOver = lstSortOrderDragOver
-    OnEndDrag = lstSortOrderEndDrag
   end
   inherited styRepository: TcxStyleRepository
     Left = 260
@@ -4232,11 +4229,29 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Header.Text = 'To Grid'
       Description.Text = 'Fetch data and display in grid'
     end
+    object tipGroupedReport: TdxScreenTip
+      Header.Text = 'Grouped Report'
+      Description.Text = 'Report will be grouped by first sort column'
+      Width = 285
+    end
+    object tipSaveSortOrder: TdxScreenTip
+      Header.Text = 'Save Sort Order'
+      Description.Text = 'Save current sort order options on close'
+      Width = 270
+    end
   end
   object styHintController: TcxHintStyleController
     Global = False
     HintStyleClassName = 'TdxScreenTipStyle'
-    HintStyle.ScreenTipLinks = <>
+    HintStyle.ScreenTipLinks = <
+      item
+        ScreenTip = tipGroupedReport
+        Control = cbxGroupedReport
+      end
+      item
+        ScreenTip = tipSaveSortOrder
+        Control = cbxSaveSortOrder
+      end>
     HintStyle.ScreenTipActionLinks = <>
     HintShortPause = 0
     HintPause = 0

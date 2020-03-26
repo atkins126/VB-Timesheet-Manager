@@ -1796,12 +1796,12 @@ begin
       'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsTSBillable.UpdateOptions.Generatorname,
       ReportDM.cdsTSBillable.UpdateOptions.UpdateTableName);
 
-    RepFileName := TSDM.ShellResource.ReportFolder + 'TimesheetUser.fr3';
+    RepFileName := TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[0]; // 'TimesheetByUser.fr3';
 
     if not TFile.Exists(RepFileName) then
       raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 
-    ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + 'TimesheetUser.fr3');
+    ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[0]{'TimesheetByUser.fr3'});
 
     if ReportDM.FReport.PrepareReport then
       if TAction(Sender).Tag = 0 then
@@ -1871,12 +1871,12 @@ begin
     'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsTSBillable.UpdateOptions.Generatorname,
     ReportDM.cdsTSBillable.UpdateOptions.UpdateTableName);
 
-  RepFileName := TSDM.ShellResource.ReportFolder + 'TimesheetUser.fr3';
+  RepFileName := TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[0]; //'TimesheetByUser.fr3';
 
   if not TFile.Exists(RepFileName) then
     raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 
-  ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + 'TimesheetUser.fr3');
+  ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[0]{'TimesheetByUser.fr3'});
 
   edtTCustomerName.Visible := True;
   viewTimesheetBillable.OptionsView.BandHeaders := False;
@@ -1944,12 +1944,12 @@ begin
       'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsTSBillable.UpdateOptions.Generatorname,
       ReportDM.cdsTSBillable.UpdateOptions.UpdateTableName);
 
-    RepFileName := TSDM.ShellResource.ReportFolder + 'TimesheetUser.fr3';
+    RepFileName := TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[0]; //'TimesheetByUser.fr3';
 
     if not TFile.Exists(RepFileName) then
       raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 
-    ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + 'TimesheetUser.fr3');
+    ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[0]{'TimesheetByUser.fr3'});
 
     edtTCustomerName.Visible := True;
     viewTimesheetBillable.OptionsView.BandHeaders := False;

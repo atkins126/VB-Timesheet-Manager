@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Forms,
   System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Dialogs, System.ImageList,
   Vcl.ImgList, System.Actions, Vcl.ActnList, System.Win.Registry, System.IOUtils,
-  Vcl.ComCtrls, Data.DB, WinApi.ShellApi, Vcl.Menus, Vcl.StdCtrls,
+  Vcl.ComCtrls, Data.DB, WinApi.ShellApi, Vcl.Menus, Vcl.StdCtrls, System.Math,
 
   frxClass, FireDAC.Comp.Client,
 
@@ -234,10 +234,8 @@ type
     styHintController: TcxHintStyleController;
     litSortOptions: TdxLayoutItem;
     grpSortOptions: TdxLayoutGroup;
-    lstSortOrder: TcxCheckListBox;
     litSaveSortOptions: TdxLayoutItem;
-    cbxSaveSortOptoions: TcxCheckBox;
-    btnTest: TcxButton;
+    cbxSaveSortOrder: TcxCheckBox;
     litGroupedReport: TdxLayoutItem;
     cbxGroupedReport: TcxCheckBox;
     grdSortOrder: TcxGrid;
@@ -247,6 +245,9 @@ type
     cbxInclude: TcxGridDBColumn;
     edtSortBy: TcxGridDBColumn;
     edtFieldName: TcxGridDBColumn;
+    edtOrdValue: TcxGridDBColumn;
+    tipGroupedReport: TdxScreenTip;
+    tipSaveSortOrder: TdxScreenTip;
     procedure FormCreate(Sender: TObject);
     procedure DoCloseForm(Sender: TObject);
     procedure DoPrint(Sender: TObject);
@@ -257,9 +258,7 @@ type
     procedure lucDateTypePropertiesEditValueChanged(Sender: TObject);
     procedure lucReportTypePropertiesEditValueChanged(Sender: TObject);
     procedure lucBillCfComparisonPropertiesChange(Sender: TObject);
-    procedure lstSortOrderEndDrag(Sender, Target: TObject; X, Y: Integer);
     procedure cbxSaveSortOptoionsPropertiesChange(Sender: TObject);
-    procedure btnTestClick(Sender: TObject);
     procedure viewSortOrderDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure viewSortOrderStartDrag(Sender: TObject; var DragObject: TDragObject);
 
@@ -272,21 +271,19 @@ type
     procedure viewBillCfwdDataControllerSummaryFooterSummaryItemsSummary(
       ASender: TcxDataSummaryItems; Arguments: TcxSummaryEventArguments;
       var OutArguments: TcxSummaryEventOutArguments);
-
-    procedure lstSortOrderDragOver(Sender, Source: TObject; X, Y: Integer;
-      State: TDragState; var Accept: Boolean);
     procedure cbxIncludePropertiesEditValueChanged(Sender: TObject);
+    procedure cbxGroupedReportPropertiesChange(Sender: TObject);
   private
     { Private declarations }
 //    FReportFileName: TReportFileName;
     FOrderByClause: string;
     FDragRecord: Integer;
     FItem: TcxCustomGridTableItem;
-    FItemIndex: Integer;
     FSortOptioinsList: TStringlist;
     FSourceRecordIndex: Integer;
     FDestRecordIndex: Integer;
     FID: Integer;
+    FMadChanges: Boolean;
 
     procedure GetPeriods;
     procedure GetSystemUser;
@@ -300,6 +297,7 @@ type
     procedure PopulateSortOptions;
     procedure ReorderRows(AView: TcxGridDBTableView; ADestRow: TcxCustomGridRecord);
     procedure SetOrderValue(DataSet: TDataSet; AValue: Variant);
+    function OrderByClause: string;
   public
     { Public declarations }
   end;
@@ -344,7 +342,8 @@ begin
   TcxDateEditProperties(lucTSActivityDate.Properties).MinDate := StrToDate('01/01/2019');
   TcxDateEditProperties(lucTSActivityDate.Properties).MaxDate := Date;
   FSortOptioinsList := RUtils.CreateStringList(COMMA, SINGLE_QUOTE);
-  FItemIndex := -1;
+  edtOrdValue.SortOrder := soAscending;
+  FMadChanges := False;
 
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   RegKey.RootKey := HKEY_CURRENT_USER;
@@ -353,10 +352,12 @@ begin
   if not RegKey.ValueExists('Save Report Sort Order') then
     RegKey.WriteBool('Save Report Sort Order', True);
 
-  if not RegKey.ValueExists('Timesheet Report Sort Order') then
-  begin
-    RegKey.WriteBool('Timesheet Report Sort Order', True);
-  end;
+  cbxSaveSortOrder.Checked := RegKey.ReadBool('Save Report Sort Order');
+
+  if not RegKey.ValueExists('Group Timsheet Detail Report') then
+    RegKey.WriteBool('Group Timsheet Detail Report', True);
+
+  cbxGroupedReport.Checked := RegKey.ReadBool('Group Timsheet Detail Report');
 
   if ReportDM = nil then
     ReportDM := TReportDM.Create(nil);
@@ -536,84 +537,20 @@ begin
   Screen.Cursor := crDefault;
 end;
 
-procedure TTimesheetDetailReportFrm.btnTestClick(Sender: TObject);
+procedure TTimesheetDetailReportFrm.cbxGroupedReportPropertiesChange(Sender: TObject);
 var
-  I, J, Index: Integer;
-  SaveItemList, ItemString: TStringList;
-  ItemText, FieldName: string;
+  RegKey: TRegistry;
 begin
   inherited;
-  // Union field order
-  // 4 = User Name
-  // 5 = Activity Date
-  // 7 = Customer Name
-  // 8 = Activity Type
-
-  FOrderByClause := ' ORDER BY ';
-
-  for I := 0 to lstSortOrder.Items.Count - 1 do
-  begin
-    ItemText := lstSortOrder.Items[I].Text;
-    for J := 0 to FSortOptioinsList.Count - 1 do
-    begin
-
-    end;
-
-    Index := FSortOptioinsList.IndexOf(ItemText);
-    ItemString.DelimitedText := FSortOptioinsList[Index];
-    FieldName := ItemString[2];
-
-    SaveitemList.Add(
-      BooleanToString(lstSortOrder.Items[I].Checked) + ';' +
-      ItemText + ';' +
-      'T.' + FieldName);
-
-    if lstSortOrder.Items[I].State = cbsChecked then
-    begin
-      FOrderByClause := FOrderByClause + 'T.' + lstSortOrder.Items[I].Text;
-      if I < lstSortOrder.Items.Count - 1 then
-        FOrderByClause := FOrderByClause + ', ';
-    end;
-    SaveItemList.SaveToFile(TSDM.ShellResource.ResourceFolder + 'TS Report Sort Order.csv');
+  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+  RegKey.RootKey := HKEY_CURRENT_USER;
+  RegKey.OpenKey(KEY_TIME_SHEET, True);
+  try
+    RegKey.WriteBool('Group Timsheet Detail Report', cbxSaveSortOrder.Checked);
+    RegKey.CloseKey;
+  finally
+    Regkey.Free;
   end;
-
-//  case lucReportType.ItemIndex of
-//    0: // Standard timseheet report
-//      case lucSortOptions.ItemIndex of
-//        0: FOrderByClause := ' ORDER BY T.LOGIN_NAME, T.ACTIVITY_DATE, T.CUSTOMER_NAME';
-//        1: FOrderByClause := ' ORDER BY T.LOGIN_NAME, T.CUSTOMER_NAME, T.ACTIVITY_DATE';
-//        2: FOrderByClause := ' ORDER BY T.CUSTOMER_NAME, T.ACTIVITY_DATE, T.LOGIN_NAME';
-//        3: FOrderByClause := ' ORDER BY T.CUSTOMER_NAME, T.LOGIN_NAME, T.ACTIVITY_DATE';
-//        4: FOrderByClause := ' ORDER BY T.ACTIVITY_TYPE, T.ACTIVITY_DATE, T.LOGIN_NAME';
-//        5: FOrderByClause := ' ORDER BY T.ACTIVITY_TYPE, T.ACTIVITY_DATE, T.CUSTOMER_NAME';
-//      end;
-//
-////      case lucSortOptions.ItemIndex of
-////        0: FOrderByClause := ' ORDER BY 5, 4, 7 ';
-////        1: FOrderByClause := ' ORDER BY 5, 7, 4 ';
-////        2: FOrderByClause := ' ORDER BY 5, 8, 7 ';
-////        3: FOrderByClause := ' ORDER BY 4, 5, 7 ';
-////        4: FOrderByClause := ' ORDER BY 7, 5, 4 ';
-////        5: FOrderByClause := ' ORDER BY 8, 5, 7 ';
-////      end;
-//
-//  // Union field order
-//  // 1 = BILL_CFWD
-//  // 5 = User Name
-//  // 6 = Activity Date
-//  // 8 = Customer Name
-//  // 9 = Activity Type
-//
-//    1: // Billing summary raport
-//      case lucSortOptions.ItemIndex of
-//        0: FOrderByClause := ' ORDER BY 1, 6, 5, 8 ';
-//        1: FOrderByClause := ' ORDER BY 1, 6, 8, 5 ';
-//        2: FOrderByClause := ' ORDER BY 1, 6, 9, 8 ';
-//        3: FOrderByClause := ' ORDER BY 1, 5, 6, 8 ';
-//        4: FOrderByClause := ' ORDER BY 1, 8, 6, 5 ';
-//        5: FOrderByClause := ' ORDER BY 1, 9, 6, 8 ';
-//      end;
-//  end;
 end;
 
 procedure TTimesheetDetailReportFrm.cbxIncludePropertiesEditValueChanged(Sender: TObject);
@@ -623,9 +560,19 @@ begin
 end;
 
 procedure TTimesheetDetailReportFrm.cbxSaveSortOptoionsPropertiesChange(Sender: TObject);
+var
+  RegKey: TRegistry;
 begin
   inherited;
-//
+  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+  RegKey.RootKey := HKEY_CURRENT_USER;
+  RegKey.OpenKey(KEY_TIME_SHEET, True);
+  try
+    RegKey.WriteBool('Save Report Sort Order', cbxSaveSortOrder.Checked);
+    RegKey.CloseKey;
+  finally
+    Regkey.Free;
+  end;
 end;
 
 procedure TTimesheetDetailReportFrm.CloseDataSets;
@@ -739,6 +686,8 @@ begin
           end;
           UserClause := UserClause + ')';
         end;
+
+        FOrderByClause := OrderByClause;
 
 //        OrderByClause:= 'ORDER BY T.LOGIN_NAME, T.THE_PERIOD, T.ACTIVITY_DATE';
         WhereClause := DateClause + UserClause + BillableClause + WorkTypeClause + FOrderByClause;
@@ -952,32 +901,6 @@ begin
     grpData.Items[I].Visible := False;
 end;
 
-procedure TTimesheetDetailReportFrm.lstSortOrderDragOver(Sender,
-  Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
-begin
-  inherited;
-  Accept := False;
-  FItemIndex := lstSortOrder.ItemAtPos(Point(X, Y), True);
-  if (FItemIndex <> -1) and (FItemIndex <> lstSortOrder.ItemIndex) then
-  begin
-    Accept := True;
-  end
-  else
-    FItemIndex := -1;
-end;
-
-procedure TTimesheetDetailReportFrm.lstSortOrderEndDrag(Sender,
-  Target: TObject; X, Y: Integer);
-begin
-  inherited;
-  if FItemIndex <> -1 then
-  begin
-    lstSortOrder.Items[lstSortOrder.ItemIndex].Index := FItemIndex;
-    lstSortOrder.Selected[FItemIndex] := True; //added: retain selection on dragged item
-    FItemIndex := -1; // prevent further unwanted moves
-  end;
-end;
-
 procedure TTimesheetDetailReportFrm.lucBillCfComparisonPropertiesChange(Sender: TObject);
 begin
   inherited;
@@ -1035,6 +958,12 @@ var
   AnItem: TcxCheckListBoxItem;
   DC: TcxGridDBDataController;
 begin
+  // Union field order
+  // 4 = User Name
+  // 5 = Activity Date
+  // 7 = Customer Name
+  // 8 = Activity Type
+
   if TFile.Exists(TSDM.ShellResource.ResourceFolder + 'TS Report Sort Order.xml') then
     ReportDM.cdsTSSortOrder.LoadFromFile(TSDM.ShellResource.ResourceFolder + 'TS Report Sort Order.xml')
   else
@@ -1046,6 +975,7 @@ begin
     ReportDM.cdsTSSortOrder.FieldByName('INCLUDE').AsBoolean := True;
     ReportDM.cdsTSSortOrder.FieldByName('SORT_BY').AsString := 'Login Name';
     ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString := 'LOGIN_NAME';
+    ReportDM.cdsTSSortOrder.FieldByName('ORD_VALUE').AsInteger := ID;
     ReportDM.cdsTSSortOrder.Post;
 
     Inc(ID);
@@ -1054,6 +984,7 @@ begin
     ReportDM.cdsTSSortOrder.FieldByName('INCLUDE').AsBoolean := True;
     ReportDM.cdsTSSortOrder.FieldByName('SORT_BY').AsString := 'Activity Date';
     ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString := 'ACTIVITY_DATE';
+    ReportDM.cdsTSSortOrder.FieldByName('ORD_VALUE').AsInteger := ID;
     ReportDM.cdsTSSortOrder.Post;
 
     Inc(ID);
@@ -1062,6 +993,7 @@ begin
     ReportDM.cdsTSSortOrder.FieldByName('INCLUDE').AsBoolean := False;
     ReportDM.cdsTSSortOrder.FieldByName('SORT_BY').AsString := 'Customer Name';
     ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString := 'CUSTOMER_NAME';
+    ReportDM.cdsTSSortOrder.FieldByName('ORD_VALUE').AsInteger := ID;
     ReportDM.cdsTSSortOrder.Post;
 
     Inc(ID);
@@ -1070,11 +1002,11 @@ begin
     ReportDM.cdsTSSortOrder.FieldByName('INCLUDE').AsBoolean := False;
     ReportDM.cdsTSSortOrder.FieldByName('SORT_BY').AsString := 'Activity Type';
     ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString := 'ACTIVITY_TYPE';
+    ReportDM.cdsTSSortOrder.FieldByName('ORD_VALUE').AsInteger := ID;
     ReportDM.cdsTSSortOrder.Post;
     ReportDM.cdsTSSortOrder.First;
     ReportDM.cdsTSSortOrder.SaveToFile(TSDM.ShellResource.ResourceFolder + 'TS Report Sort Order.xml');
   end;
-
 end;
 
 procedure TTimesheetDetailReportFrm.viewSortOrderStartDrag(Sender: TObject;
@@ -1107,6 +1039,7 @@ begin
 //  with TcxGridSite(Sender) do
 //  begin
   HT := TcxGridSite(Sender).ViewInfo.GetHitTest(X, Y);
+  FMadChanges := True;
   ReorderRows(TcxGridDBTableView(TcxGridSite(Sender).GridView), TcxGridRecordCellHitTest(HT).GridRecord);
 //  end;
 end;
@@ -1115,51 +1048,113 @@ procedure TTimesheetDetailReportFrm.ReorderRows(AView: TcxGridDBTableView;
   ADestRow: TcxCustomGridRecord);
 var
   I: Integer;
-  DC: TcxGridDBDataController;
-  OrderValue: Variant;
-  IDColumnIndex: Integer;
-  IsAbove: Boolean;
-  RowIndex: Integer;
+  ADC: TcxDBDataController;
+  AOrderValue: Variant;
+  AOrderColumnIndex: Integer;
+  IsUpper: Boolean;
 begin
-  DC := AView.DataController;
-  IDColumnIndex := TcxGridColumn(DC.GetItemByFieldName('ID')).Index;
-  OrderValue := ADestRow.Values[IDColumnIndex];
-  RowIndex := DC.GetRowIndexByRecordIndex(DC.FindRecordIndexByKey(FID), False);
-  IsAbove := ADestRow.Index < RowIndex;
-//  IsAbove := ADestRow.Index < DC.GetRowIndexByRecordIndex(DC.FindRecordIndexByKey(FID), False);
-  ADestRow.Focused := True;
-  SetOrderValue(DC.DataSet, OrderValue - Ord(not IsAbove) + 0.5); // move dragged record 1 record lower
-  DC.LocateByKey(FID); // focus the dragged record in the DataSet
-  SetOrderValue(DC.DataSet, OrderValue);
-
-//  if IsAbove then
-//    DC.GotoLast
-//  else
-//    DC.GotoFirst;
-
-//  DC.DataSet.First;
-//  while not DC.DataSet.EOF do
-//  begin
-//    SetOrderValue(DC.DataSet, I + 1);
-//    DC.DataSet.Next;
-//  end;
-
-  for I := 0 to DC.RecordCount - 1 do
+  with AView do
   begin
-    DC.Values[I, edtID.Index] := I + 1;
-    DC.PostEditingData;
+    ADC := TcxDBDataController(DataController);
+    AOrderColumnIndex := TcxGridColumn(ADC.GetItemByFieldName('ORD_VALUE')).Index;
+    AOrderValue := ADestRow.Values[AOrderColumnIndex];
+    IsUpper := ADestRow.Index < ADC.GetRowIndexByRecordIndex(ADC.FindRecordIndexByKey(FID {AKeys}), False);
   end;
 
-  TFDMemTable(DC.DataSet).CommitUpdates;
+  ADestRow.Focused := True;
 
-//  for I := 0 to DC.RecordCount - 1 do
-//    SetOrderValue(DC.DataSet, I + 1);
+// -----------------
+  if IsUpper then
+    SetOrderValue(ADC.DataSet, AOrderValue + 1) // move dragged record 1 record lower
+  else
+    SetOrderValue(ADC.DataSet, AOrderValue - 1); // move dragged record 1 record above
+
+// -----------------
+
+//  SetOrderValue(ADC.DataSet, AOrderValue - Ord(not IsUpper) + 0.5); // move dragged record 1 record lower
+  ADC.LocateByKey(FID {AKeys}); // focus the dragged record in the DataSet
+  SetOrderValue(ADC.DataSet, AOrderValue);
+
+// Working code
+  if isUpper then
+    ADC.GotoLast
+  else
+    ADC.GotoFirst;
+  I := 0;
+
+  while ADC.Values[ADC.FocusedRecordIndex, AOrderColumnIndex] <> AOrderValue do
+  begin
+    SetOrderValue(ADC.DataSet, Ord(IsUpper) * ADC.RowCount - Sign(Ord(IsUpper) - 0.1) * (I + Ord(not IsUpper)));
+    Inc(I);
+    if IsUpper then
+      ADC.GotoPrev
+    else
+      ADC.GotoNext;
+  end;
+
+// Not working!!
+//  ADC.GotoFirst;
+//  I := 0;
+//
+//  while (ADC.Values[ADC.FocusedRecordIndex, AOrderColumnIndex] <> AOrderValue)
+//    and (I < ADC.RecordCount - 1) do
+//  begin
+//    SetOrderValue(ADC.DataSet, I + 1);
+//    Inc(I);
+//    ADC.GotoNext;
+//  end;
 end;
+
+//procedure TTimesheetDetailReportFrm.ReorderRows(AView: TcxGridDBTableView;
+//  ADestRow: TcxCustomGridRecord);
+//var
+//  I: Integer;
+//  DC: TcxGridDBDataController;
+//  OrderValue: Variant;
+//  IDColumnIndex: Integer;
+//  IsAbove: Boolean;
+//  RowIndex: Integer;
+//begin
+//  DC := AView.DataController;
+//  IDColumnIndex := TcxGridColumn(DC.GetItemByFieldName('ID')).Index;
+//  OrderValue := ADestRow.Values[IDColumnIndex];
+//  RowIndex := DC.GetRowIndexByRecordIndex(DC.FindRecordIndexByKey(FID), False);
+//  IsAbove := ADestRow.Index < RowIndex;
+////  IsAbove := ADestRow.Index < DC.GetRowIndexByRecordIndex(DC.FindRecordIndexByKey(FID), False);
+//  ADestRow.Focused := True;
+//  SetOrderValue(DC.DataSet, OrderValue - Ord(not IsAbove) + 0.5); // move dragged record 1 record lower
+//  DC.LocateByKey(FID); // focus the dragged record in the DataSet
+//  SetOrderValue(DC.DataSet, OrderValue);
+//
+////  if IsAbove then
+////    DC.GotoLast
+////  else
+////    DC.GotoFirst;
+//
+////  DC.DataSet.First;
+////  while not DC.DataSet.EOF do
+////  begin
+////    SetOrderValue(DC.DataSet, I + 1);
+////    DC.DataSet.Next;
+////  end;
+//
+//  for I := 0 to DC.RecordCount - 1 do
+//  begin
+//    DC.Values[I, edtID.Index] := I + 1;
+//    DC.PostEditingData;
+//  end;
+//
+//  TFDMemTable(DC.DataSet).CommitUpdates;
+//
+////  for I := 0 to DC.RecordCount - 1 do
+////    SetOrderValue(DC.DataSet, I + 1);
+//end;
 
 procedure TTimesheetDetailReportFrm.SetOrderValue(DataSet: TDataSet; AValue: Variant);
 begin
   DataSet.Edit;
-  DataSet.FieldByName('ID').AsInteger := AValue;
+  DataSet.FieldByName('ORD_VALUE').AsInteger := AValue;
+//  DataSet.FieldByName('ID').AsInteger := AValue;
   DataSet.Post;
 end;
 
@@ -1336,6 +1331,11 @@ procedure TTimesheetDetailReportFrm.DoCloseForm(Sender: TObject);
 begin
   inherited;
   CloseDataSets;
+
+  if cbxSaveSortOrder.Checked then
+    if FMadChanges then
+      ReportDM.cdsTSSortOrder.SaveToFile(TSDM.ShellResource.ResourceFolder + 'TS Report Sort Order.xml');
+
   Self.ModalResult := mrOK;
 end;
 
@@ -1390,6 +1390,36 @@ begin
       ReportDM.FReport.Export(ReportDM.frxPDFExport);
   finally
     ReportDM.cdsTSBillable.First;
+    DC.EndUpdate;
+  end;
+end;
+
+function TTimesheetDetailReportFrm.OrderByClause: string;
+var
+  DC: TcxCustomDataController;
+  I, IncludeCount: Integer;
+begin
+  DC := viewSortOrder.DataController;
+  Result := ' ORDER BY ';
+
+  DC.BeginUpdate;
+  IncludeCount := 0;
+  for I := 0 to DC.RecordCount - 1 do
+    if DC.Values[I, cbxInclude.Index] then
+      Inc(IncludeCount);
+
+  try
+    for I := 0 to DC.RecordCount - 1 do
+    begin
+      if DC.Values[I, cbxInclude.Index] then
+      begin
+        Result := Result + ' T.' + DC.Values[I, edtFieldName.Index];
+        if IncludeCount > 1 then
+          Result := Result + ',';
+        Dec(IncludeCount);
+      end;
+    end;
+  finally
     DC.EndUpdate;
   end;
 end;

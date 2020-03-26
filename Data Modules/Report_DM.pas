@@ -5,15 +5,15 @@ unit Report_DM;
  report component at runtime.
  All reports are located in the C:\Data\VB\Reports\ folder.
 
- Report Compnent                Filename
+ Report Compnent                  Filename
  -------------------------------------------------------------------------------
- rptTimesheetUser               TimesheetUser.fr3
- rptTimesheetActivity           TimesheetCustomer.fr3
- rptTimesheetCustomer           TSSummaryByActivity.fr3
- rptBillableSummaryByCustomer   BillableSummaryByCustomer.fr3
- rptBillableSummaryByPeriod     BillableSummaryByPeriod.fr3
- rptMonthlyBilling              TimesheetBillCfwdByUser.fr3
- rptBillCfwdByUser              MonthlyBilling.fr3
+ rptTimesheetByUser               TimesheetByUser.fr3
+ rptTimesheetByActivity           TimesheetByCustomer.fr3
+ rptTimesheetByCustomer           TSSummaryByActivity.fr3
+ rptBillableSummaryByCustomer     BillableSummaryByCustomer.fr3
+ rptBillableSummaryByPeriod       BillableSummaryByPeriod.fr3
+ rptMonthlyBilling                TimesheetBillCfwdByUser.fr3
+ rptBillCfwdByUser                MonthlyBilling.fr3
 }
 
 
@@ -447,6 +447,7 @@ type
     cdsTSSortOrderINCLUDE: TBooleanField;
     cdsTSSortOrderSORT_BY: TStringField;
     cdsTSSortOrderFIELD_NAME: TStringField;
+    cdsTSSortOrderORD_VALUE: TIntegerField;
     procedure cdsTimesheetCalcFields(DataSet: TDataSet);
     procedure cdsTimesheetAfterPost(DataSet: TDataSet);
     procedure cdsTimesheetBeforePost(DataSet: TDataSet);
@@ -568,9 +569,9 @@ begin
   inherited;
   SetLength(FReportFileName, REPORT_COUNT);
 
-  FReportFileName[0] := 'TimesheetUser.fr3';
-  FReportFileName[1] := 'TimesheetCustomer.fr3';
-  FReportFileName[2] := 'TimesheetActivityType.fr3';
+  FReportFileName[0] := 'TimesheetByUser.fr3';
+  FReportFileName[1] := 'TimesheetByCustomer.fr3';
+  FReportFileName[2] := 'TimesheetByActivityType.fr3';
   FReportFileName[3] := 'TimesheetBillCfwdByUser.fr3';
   FReportFileName[4] := 'TimesheetBillCfwdByCustomer.fr3';
   FReportFileName[5] := 'MonthlyBilling.fr3';

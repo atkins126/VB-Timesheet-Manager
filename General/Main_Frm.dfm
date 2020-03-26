@@ -15,9 +15,9 @@ inherited MainFrm: TMainFrm
     Width = 1455
     Height = 617
     Align = alClient
-    ExplicitTop = 116
+    ExplicitTop = 115
     ExplicitWidth = 1455
-    ExplicitHeight = 616
+    ExplicitHeight = 617
     object grdTimesheet: TcxGrid [0]
       Left = 11
       Top = 11
@@ -691,6 +691,7 @@ inherited MainFrm: TMainFrm
     TabStop = False
     OnTabChanged = ribMainTabChanged
     object tabTimesheet: TdxRibbonTab
+      Active = True
       Caption = 'Timesheet'
       Groups = <
         item
@@ -699,7 +700,6 @@ inherited MainFrm: TMainFrm
       Index = 0
     end
     object tabReports: TdxRibbonTab
-      Active = True
       Caption = 'Reports'
       Groups = <
         item
