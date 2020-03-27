@@ -718,6 +718,7 @@ begin
           CustomerClause := CustomerClause + ')';
         end;
 
+        FOrderByClause := OrderByClause;
 //        OrderByClause := 'ORDER BY T.CUSTOMER_NAME, T.THE_PERIOD, T.LOGIN_NAME, T.ACTIVITY_DATE';
         WhereClause := DateClause + CustomerClause + BillableClause + WorkTypeClause + FOrderByClause;
       end;
@@ -747,6 +748,7 @@ begin
           ActivityClause := ActivityClause + ')';
         end;
 
+        FOrderByClause := OrderByClause;
 //        OrderByClause := 'ORDER BY T.ACTIVITY_TYPE, T.THE_PERIOD, T.LOGIN_NAME, T.ACTIVITY_DATE';
         WhereClause := DateClause + ActivityClause + BillableClause + WorkTypeClause + FOrderByClause;
       end;
@@ -1080,6 +1082,7 @@ begin
     ADC.GotoLast
   else
     ADC.GotoFirst;
+
   I := 0;
 
   while ADC.Values[ADC.FocusedRecordIndex, AOrderColumnIndex] <> AOrderValue do
@@ -1091,6 +1094,24 @@ begin
     else
       ADC.GotoNext;
   end;
+
+//  ReportDM.cdsTSSortOrder.First;
+//  while not ReportDM.cdsTSSortOrder.EOF do
+//  begin
+//    ReportDM.cdsTSSortOrder.Edit;
+//    ReportDM.cdsTSSortOrder.FieldByName('ID').AsInteger := ReportDM.cdsTSSortOrder.FieldByName('ORD_VALUE').AsInteger;
+//    ReportDM.cdsTSSortOrder.Post;
+//    ReportDM.cdsTSSortOrder.Next;
+//  end;
+//  ReportDM.cdsTSSortOrder.CommitUpdates;
+
+  ReportDM.cdsTSSortOrder.SaveToFile(TSDM.ShellResource.ResourceFolder + 'TS Report Sort Order ' +
+    FormatDateTime('dd-MM-yyyy hh mm ss', Now) + '.xml');
+
+//  if IsUpper then
+//    ReportDM.cdsTSSortOrder.Last
+//  else
+//    ReportDM.cdsTSSortOrder.First;
 
 // Not working!!
 //  ADC.GotoFirst;
@@ -1156,6 +1177,7 @@ begin
   DataSet.FieldByName('ORD_VALUE').AsInteger := AValue;
 //  DataSet.FieldByName('ID').AsInteger := AValue;
   DataSet.Post;
+  TFDMemTable(DataSet).CommitUpdates;
 end;
 
 procedure TTimesheetDetailReportFrm.viewBillCfwdDataControllerSummaryFooterSummaryItemsSummary(
@@ -1403,24 +1425,48 @@ begin
   Result := ' ORDER BY ';
 
   DC.BeginUpdate;
+  ReportDM.cdsTSSortOrder.DisableControls;
   IncludeCount := 0;
-  for I := 0 to DC.RecordCount - 1 do
-    if DC.Values[I, cbxInclude.Index] then
-      Inc(IncludeCount);
+  ReportDM.cdsTSSortOrder.First;
 
   try
-    for I := 0 to DC.RecordCount - 1 do
+    while not ReportDM.cdsTSSortOrder.EOF do
     begin
-      if DC.Values[I, cbxInclude.Index] then
+      if ReportDM.cdsTSSortOrder.FieldByName('INCLUDE').AsBoolean then
+        Inc(IncludeCount);
+      ReportDM.cdsTSSortOrder.Next;
+    end;
+
+    ReportDM.cdsTSSortOrder.First;
+    while not ReportDM.cdsTSSortOrder.EOF do
+    begin
+      if ReportDM.cdsTSSortOrder.FieldByName('INCLUDE').AsBoolean then
       begin
-        Result := Result + ' T.' + DC.Values[I, edtFieldName.Index];
+        Result := Result + ' T.' + ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString;
         if IncludeCount > 1 then
           Result := Result + ',';
         Dec(IncludeCount);
       end;
+      ReportDM.cdsTSSortOrder.Next;
     end;
+
+//    for I := 0 to DC.RecordCount - 1 do
+//      if DC.Values[I, cbxInclude.Index] then
+//        Inc(IncludeCount);
+//
+//    for I := 0 to DC.RecordCount - 1 do
+//    begin
+//      if DC.Values[I, cbxInclude.Index] then
+//      begin
+//        Result := Result + ' T.' + DC.Values[I, edtFieldName.Index];
+//        if IncludeCount > 1 then
+//          Result := Result + ',';
+//        Dec(IncludeCount);
+//      end;
+//    end;
   finally
     DC.EndUpdate;
+    ReportDM.cdsTSSortOrder.EnableControls;
   end;
 end;
 
