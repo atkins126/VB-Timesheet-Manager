@@ -289,6 +289,12 @@ inherited ReportDM: TReportDM
       FieldName = 'STD_RATE'
       Origin = 'STD_RATE'
     end
+    object cdsTSBillableABBREVIATION: TStringField
+      Alignment = taCenter
+      DisplayLabel = 'RU'
+      FieldName = 'ABBREVIATION'
+      Size = 5
+    end
     object cdsTSBillableITEM_VALUE: TFloatField
       DisplayLabel = 'Value'
       FieldName = 'ITEM_VALUE'
@@ -366,9 +372,9 @@ inherited ReportDM: TReportDM
       FixedChar = True
       Size = 1
     end
-    object cdsTSBillableTOTAL_CARRY_FORWARD: TFloatField
+    object cdsTSBillableCARRY_FORWARD_VALUE: TFloatField
       DisplayLabel = 'C/Fwd'
-      FieldName = 'TOTAL_CARRY_FORWARD'
+      FieldName = 'CARRY_FORWARD_VALUE'
     end
   end
   object dtsTSBillable: TDataSource
@@ -896,7 +902,7 @@ inherited ReportDM: TReportDM
     PrintOptions.Printer = 'Default'
     PrintOptions.PrintOnSheet = 0
     ReportOptions.CreateDate = 43494.671348414300000000
-    ReportOptions.LastChange = 43915.694442800920000000
+    ReportOptions.LastChange = 43919.669375358800000000
     ScriptLanguage = 'PascalScript'
     ScriptText.Strings = (
       'begin'
@@ -1004,11 +1010,11 @@ inherited ReportDM: TReportDM
         object TimesheetTIME_SPENT: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 971.339258818897700000
-          Width = 75.590551181102400000
+          Left = 971.339258820000000000
+          Width = 75.590551180000000000
           Height = 18.897650000000000000
           StretchMode = smMaxHeight
-          DataField = 'TOTAL_CARRY_FORWARD'
+          DataField = 'CARRY_FORWARD_VALUE'
           DataSet = fdsTimesheetByUser
           DataSetName = 'TimesheetByUser'
           DisplayFormat.FormatStr = '###,###0.00'
@@ -1017,7 +1023,7 @@ inherited ReportDM: TReportDM
           GapX = 5.000000000000000000
           HAlign = haRight
           Memo.UTF8W = (
-            '[TimesheetByUser."TOTAL_CARRY_FORWARD"]')
+            '[TimesheetByUser."CARRY_FORWARD_VALUE"]')
         end
         object TimesheetRATE: TfrxMemoView
           AllowVectorExport = True
@@ -1101,15 +1107,15 @@ inherited ReportDM: TReportDM
         object Memo13: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 971.339258818897700000
-          Width = 75.590551181102400000
+          Left = 971.339258820000000000
+          Width = 75.590551180000000000
           Height = 18.897650000000000000
           DisplayFormat.FormatStr = '###,##0.00'
           DisplayFormat.Kind = fkNumeric
           Frame.Typ = [ftLeft]
           HAlign = haRight
           Memo.UTF8W = (
-            '[SUM(<TimesheetByUser."TOTAL_CARRY_FORWARD">,bndMaster)]')
+            '[SUM(<TimesheetByUser."CARRY_FORWARD_VALUE">,bndMaster)]')
         end
         object Memo14: TfrxMemoView
           AllowVectorExport = True
@@ -1180,13 +1186,13 @@ inherited ReportDM: TReportDM
       object PageFooter1: TfrxPageFooter
         FillType = ftBrush
         Frame.Typ = [ftTop]
-        Height = 22.677180000000000000
+        Height = 37.795300000000000000
         Top = 381.732530000000000000
         Width = 1046.929810000000000000
         object Memo11: TfrxMemoView
           Align = baLeft
           AllowVectorExport = True
-          Top = 3.779530000000000000
+          Top = 18.897650000000000000
           Width = 207.874150000000000000
           Height = 18.897650000000000000
           Frame.Typ = []
@@ -1196,7 +1202,8 @@ inherited ReportDM: TReportDM
         object Memo12: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 854.173780000000100000
+          Left = 854.173780000000000000
+          Top = 18.897637795275590000
           Width = 192.756030000000000000
           Height = 18.897650000000000000
           Frame.Typ = []
@@ -1208,6 +1215,23 @@ inherited ReportDM: TReportDM
             end
             item
             end>
+        end
+        object Memo29: TfrxMemoView
+          Align = baLeft
+          AllowVectorExport = True
+          Width = 1046.929810000000000000
+          Height = 15.118110240000000000
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = []
+          Frame.Typ = []
+          Memo.UTF8W = (
+            
+              'Col RU: HR = Hourly;  EA = Each;  PD = Per extra director;  PP =' +
+              ' per page;  PR = Per return;  PT = Plus time spent')
+          ParentFont = False
         end
       end
       object PageHeader1: TfrxPageHeader
@@ -1275,7 +1299,7 @@ inherited ReportDM: TReportDM
         object Memo25: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 971.339258818897700000
+          Left = 971.339258818897600000
           Top = 49.133890000000000000
           Width = 75.590551181102400000
           Height = 18.897650000000000000
@@ -1324,7 +1348,7 @@ inherited ReportDM: TReportDM
         object Memo5: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 604.724800000000100000
+          Left = 604.724800000000000000
           Width = 442.205010000000000000
           Height = 30.236220470000000000
           Font.Charset = ANSI_CHARSET
@@ -1389,7 +1413,7 @@ inherited ReportDM: TReportDM
           Frame.Typ = [ftLeft]
           HAlign = haRight
           Memo.UTF8W = (
-            '[SUM(<TimesheetByUser."TOTAL_CARRY_FORWARD">,bndMaster)]')
+            '[SUM(<TimesheetByUser."CARRY_FORWARD_VALUE">,bndMaster)]')
         end
         object Memo6: TfrxMemoView
           AllowVectorExport = True
@@ -1467,7 +1491,7 @@ inherited ReportDM: TReportDM
       'CARRY_FORWARD_STR=CARRY_FORWARD_STR'
       'IS_ADDITIONAL_WORK=IS_ADDITIONAL_WORK'
       'IS_ADDITIONAL_WORK_STR=IS_ADDITIONAL_WORK_STR'
-      'TOTAL_CARRY_FORWARD=TOTAL_CARRY_FORWARD')
+      'CARRY_FORWARD_VALUE=CARRY_FORWARD_VALUE')
     DataSet = cdsTSBillable
     BCDToCurrency = False
     Left = 650
@@ -2471,7 +2495,7 @@ inherited ReportDM: TReportDM
     PrintOptions.Printer = 'Default'
     PrintOptions.PrintOnSheet = 0
     ReportOptions.CreateDate = 43494.671348414300000000
-    ReportOptions.LastChange = 43915.667337129600000000
+    ReportOptions.LastChange = 43919.669793449070000000
     ScriptLanguage = 'PascalScript'
     ScriptText.Strings = (
       'begin'
@@ -2566,11 +2590,12 @@ inherited ReportDM: TReportDM
         object TimesheetTIME_SPENT: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 971.339258818897700000
-          Width = 75.590551181102400000
+          Left = 971.339258820000000000
+          Width = 75.590551180000000000
           Height = 18.897650000000000000
+          Visible = False
           StretchMode = smMaxHeight
-          DataField = 'TOTAL_CARRY_FORWARD'
+          DataField = 'CARRY_FORWARD_VALUE'
           DataSet = fdsTimesheetByCustomer
           DataSetName = 'TimesheetByCustomer'
           DisplayFormat.FormatStr = '###,###0.00'
@@ -2579,7 +2604,7 @@ inherited ReportDM: TReportDM
           GapX = 5.000000000000000000
           HAlign = haRight
           Memo.UTF8W = (
-            '[TimesheetByCustomer."TOTAL_CARRY_FORWARD"]')
+            '[TimesheetByCustomer."CARRY_FORWARD_VALUE"]')
         end
         object TimesheetRATE: TfrxMemoView
           AllowVectorExport = True
@@ -2672,15 +2697,15 @@ inherited ReportDM: TReportDM
         object Memo13: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 971.339258818897700000
-          Width = 75.590551181102400000
+          Left = 971.339258820000000000
+          Width = 75.590551180000000000
           Height = 18.897650000000000000
           DisplayFormat.FormatStr = '###,##0.00'
           DisplayFormat.Kind = fkNumeric
           Frame.Typ = [ftLeft]
           HAlign = haRight
           Memo.UTF8W = (
-            '[SUM(<TimesheetByCustomer."TOTAL_CARRY_FORWARD">,bndMaster)]')
+            '[SUM(<TimesheetByCustomer."CARRY_FORWARD_VALUE">,bndMaster)]')
         end
         object Memo14: TfrxMemoView
           AllowVectorExport = True
@@ -2745,13 +2770,13 @@ inherited ReportDM: TReportDM
       object PageFooter1: TfrxPageFooter
         FillType = ftBrush
         Frame.Typ = [ftTop]
-        Height = 22.677180000000000000
+        Height = 37.795275590000000000
         Top = 377.953000000000000000
         Width = 1046.929810000000000000
         object Memo11: TfrxMemoView
           Align = baLeft
           AllowVectorExport = True
-          Top = 3.779530000000000000
+          Top = 18.897637795275590000
           Width = 207.874150000000000000
           Height = 18.897650000000000000
           Frame.Typ = []
@@ -2761,7 +2786,8 @@ inherited ReportDM: TReportDM
         object Memo12: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 903.307670000000100000
+          Left = 903.307670000000000000
+          Top = 18.897637795275590000
           Width = 143.622140000000000000
           Height = 18.897650000000000000
           Frame.Typ = []
@@ -2773,6 +2799,23 @@ inherited ReportDM: TReportDM
             end
             item
             end>
+        end
+        object Memo31: TfrxMemoView
+          Align = baLeft
+          AllowVectorExport = True
+          Width = 1046.929810000000000000
+          Height = 15.118110240000000000
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = []
+          Frame.Typ = []
+          Memo.UTF8W = (
+            
+              'Col RU: HR = Hourly;  EA = Each;  PD = Per extra director;  PP =' +
+              ' per page;  PR = Per return;  PT = Plus time spent')
+          ParentFont = False
         end
       end
       object PageHeader1: TfrxPageHeader
@@ -2879,7 +2922,7 @@ inherited ReportDM: TReportDM
         object Memo5: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 604.724800000000100000
+          Left = 604.724800000000000000
           Width = 442.205010000000000000
           Height = 30.236220470000000000
           Font.Charset = ANSI_CHARSET
@@ -2946,15 +2989,15 @@ inherited ReportDM: TReportDM
         object Memo4: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 971.339258818897700000
-          Width = 75.590551181102400000
+          Left = 971.339258820000000000
+          Width = 75.590551180000000000
           Height = 18.897650000000000000
           DisplayFormat.FormatStr = '###,##0.00'
           DisplayFormat.Kind = fkNumeric
           Frame.Typ = [ftLeft]
           HAlign = haRight
           Memo.UTF8W = (
-            '[SUM(<TimesheetByCustomer."TOTAL_CARRY_FORWARD">,bndMaster)]')
+            '[SUM(<TimesheetByCustomer."CARRY_FORWARD_VALUE">,bndMaster)]')
         end
         object Memo6: TfrxMemoView
           AllowVectorExport = True
@@ -3004,7 +3047,7 @@ inherited ReportDM: TReportDM
     PrintOptions.Printer = 'Default'
     PrintOptions.PrintOnSheet = 0
     ReportOptions.CreateDate = 43494.671348414300000000
-    ReportOptions.LastChange = 43915.667982743070000000
+    ReportOptions.LastChange = 43919.670139444450000000
     ScriptLanguage = 'PascalScript'
     ScriptText.Strings = (
       'begin'
@@ -3099,11 +3142,11 @@ inherited ReportDM: TReportDM
         object TimesheetTIME_SPENT: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 971.339258818897800000
+          Left = 971.339258818897600000
           Width = 75.590551181102360000
           Height = 18.897650000000000000
           StretchMode = smMaxHeight
-          DataField = 'TOTAL_CARRY_FORWARD'
+          DataField = 'CARRY_FORWARD_VALUE'
           DataSet = fdsTimesheetByActivity
           DataSetName = 'TimesheetByActivity'
           DisplayFormat.FormatStr = '###,###0.00'
@@ -3112,7 +3155,7 @@ inherited ReportDM: TReportDM
           GapX = 5.000000000000000000
           HAlign = haRight
           Memo.UTF8W = (
-            '[TimesheetByActivity."TOTAL_CARRY_FORWARD"]')
+            '[TimesheetByActivity."CARRY_FORWARD_VALUE"]')
         end
         object TimesheetRATE: TfrxMemoView
           AllowVectorExport = True
@@ -3209,8 +3252,8 @@ inherited ReportDM: TReportDM
         object Memo13: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 971.339258818897800000
-          Width = 75.590551181102360000
+          Left = 971.339258820000000000
+          Width = 75.590551180000000000
           Height = 18.897650000000000000
           DataSet = fdsTimesheetByActivity
           DataSetName = 'TimesheetByActivity'
@@ -3219,7 +3262,7 @@ inherited ReportDM: TReportDM
           Frame.Typ = [ftLeft]
           HAlign = haRight
           Memo.UTF8W = (
-            '[SUM(<TimesheetByActivity."TOTAL_CARRY_FORWARD">,bndMaster)]')
+            '[SUM(<TimesheetByActivity."CARRY_FORWARD_VALUE">,bndMaster)]')
         end
         object Memo14: TfrxMemoView
           AllowVectorExport = True
@@ -3290,13 +3333,13 @@ inherited ReportDM: TReportDM
       object PageFooter1: TfrxPageFooter
         FillType = ftBrush
         Frame.Typ = [ftTop]
-        Height = 22.677180000000000000
+        Height = 37.795275590000000000
         Top = 377.953000000000000000
         Width = 1046.929810000000000000
         object Memo11: TfrxMemoView
           Align = baLeft
           AllowVectorExport = True
-          Top = 3.779530000000000000
+          Top = 18.897637795275590000
           Width = 207.874150000000000000
           Height = 18.897650000000000000
           Frame.Typ = []
@@ -3306,7 +3349,8 @@ inherited ReportDM: TReportDM
         object Memo12: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 903.307670000000100000
+          Left = 903.307670000000000000
+          Top = 18.897637795275590000
           Width = 143.622140000000000000
           Height = 18.897650000000000000
           Frame.Typ = []
@@ -3318,6 +3362,23 @@ inherited ReportDM: TReportDM
             end
             item
             end>
+        end
+        object Memo31: TfrxMemoView
+          Align = baLeft
+          AllowVectorExport = True
+          Width = 1046.929810000000000000
+          Height = 15.118110240000000000
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = []
+          Frame.Typ = []
+          Memo.UTF8W = (
+            
+              'Col RU: HR = Hourly;  EA = Each;  PD = Per extra director;  PP =' +
+              ' per page;  PR = Per return;  PT = Plus time spent')
+          ParentFont = False
         end
       end
       object PageHeader1: TfrxPageHeader
@@ -3375,7 +3436,7 @@ inherited ReportDM: TReportDM
         object Memo25: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 971.339258818897800000
+          Left = 971.339258818897600000
           Top = 49.133890000000000000
           Width = 75.590551181102360000
           Height = 18.897650000000000000
@@ -3424,7 +3485,7 @@ inherited ReportDM: TReportDM
         object Memo5: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 604.724800000000100000
+          Left = 604.724800000000000000
           Width = 442.205010000000000000
           Height = 30.236220470000000000
           Font.Charset = ANSI_CHARSET
@@ -3491,8 +3552,8 @@ inherited ReportDM: TReportDM
         object Memo4: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 971.339258818897800000
-          Width = 75.590551181102360000
+          Left = 971.339258820000000000
+          Width = 75.590551180000000000
           Height = 18.897650000000000000
           DataSet = fdsTimesheetByActivity
           DataSetName = 'TimesheetByActivity'
@@ -3501,7 +3562,7 @@ inherited ReportDM: TReportDM
           Frame.Typ = [ftLeft]
           HAlign = haRight
           Memo.UTF8W = (
-            '[SUM(<TimesheetByActivity."TOTAL_CARRY_FORWARD">,bndMaster)]')
+            '[SUM(<TimesheetByActivity."CARRY_FORWARD_VALUE">,bndMaster)]')
         end
         object Memo6: TfrxMemoView
           AllowVectorExport = True
@@ -3564,7 +3625,6 @@ inherited ReportDM: TReportDM
       'STD_RATE=STD_RATE'
       'ITEM_VALUE=ITEM_VALUE'
       'THE_PERIOD=THE_PERIOD'
-      'WEEK_ENDING=WEEK_ENDING'
       'BILLABLE=BILLABLE'
       'BILLABLE_STR=BILLABLE_STR'
       'INVOICE_ID=INVOICE_ID'
@@ -3576,7 +3636,7 @@ inherited ReportDM: TReportDM
       'CARRY_FORWARD_STR=CARRY_FORWARD_STR'
       'IS_ADDITIONAL_WORK=IS_ADDITIONAL_WORK'
       'IS_ADDITIONAL_WORK_STR=IS_ADDITIONAL_WORK_STR'
-      'TOTAL_CARRY_FORWARD=TOTAL_CARRY_FORWARD')
+      'CARRY_FORWARD_VALUE=CARRY_FORWARD_VALUE')
     DataSet = cdsTSBillable
     BCDToCurrency = False
     Left = 775
@@ -3585,6 +3645,35 @@ inherited ReportDM: TReportDM
   object fdsTimesheetByActivity: TfrxDBDataset
     UserName = 'TimesheetByActivity'
     CloseDataSource = False
+    FieldAliases.Strings = (
+      'ID=ID'
+      'FIRST_NAME=FIRST_NAME'
+      'LAST_NAME=LAST_NAME'
+      'LOGIN_NAME=LOGIN_NAME'
+      'ACTIVITY_DATE=ACTIVITY_DATE'
+      'CUSTOMER_TYPE=CUSTOMER_TYPE'
+      'CUSTOMER_NAME=CUSTOMER_NAME'
+      'ACTIVITY_TYPE=ACTIVITY_TYPE'
+      'ACTIVITY=ACTIVITY'
+      'PRICE_LIST_ITEM=PRICE_LIST_ITEM'
+      'TIME_SPENT=TIME_SPENT'
+      'TIME_HOURS=TIME_HOURS'
+      'ACTUAL_RATE=ACTUAL_RATE'
+      'STD_RATE=STD_RATE'
+      'ITEM_VALUE=ITEM_VALUE'
+      'THE_PERIOD=THE_PERIOD'
+      'BILLABLE=BILLABLE'
+      'BILLABLE_STR=BILLABLE_STR'
+      'INVOICE_ID=INVOICE_ID'
+      'CN_ID=CN_ID'
+      'LOCKED=LOCKED'
+      'LOCKED_STR=LOCKED_STR'
+      'INVOICE_DATE=INVOICE_DATE'
+      'CARRY_FORWARD=CARRY_FORWARD'
+      'CARRY_FORWARD_STR=CARRY_FORWARD_STR'
+      'IS_ADDITIONAL_WORK=IS_ADDITIONAL_WORK'
+      'IS_ADDITIONAL_WORK_STR=IS_ADDITIONAL_WORK_STR'
+      'CARRY_FORWARD_VALUE=CARRY_FORWARD_VALUE')
     DataSet = cdsTSBillable
     BCDToCurrency = False
     Left = 910
@@ -4879,6 +4968,11 @@ inherited ReportDM: TReportDM
       Origin = 'NAME'
       Required = True
       Size = 30
+    end
+    object cdsRateUnitABBREVIATION: TStringField
+      DisplayLabel = 'Abbr'
+      FieldName = 'ABBREVIATION'
+      Size = 5
     end
   end
   object dtsRateUnit: TDataSource

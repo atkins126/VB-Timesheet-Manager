@@ -238,6 +238,11 @@ inherited TSDM: TTSDM
       Required = True
       Size = 30
     end
+    object cdsRateUnitABBREVIATION: TStringField
+      DisplayLabel = 'Abbr'
+      FieldName = 'ABBREVIATION'
+      Size = 5
+    end
   end
   object cdsTSPeriod: TFDMemTable
     ActiveStoredUsage = [auDesignTime]
@@ -642,6 +647,11 @@ inherited TSDM: TTSDM
       Origin = 'NAME'
       Required = True
       Size = 30
+    end
+    object cdsRatePUnitrefABBREVIATION: TStringField
+      DisplayLabel = 'Abbr'
+      FieldName = 'ABBREVIATION'
+      Size = 5
     end
   end
   object dtsRateUnitPref: TDataSource

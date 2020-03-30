@@ -171,7 +171,7 @@ type
     edtTRate: TcxGridDBBandedColumn;
     edtTStdRate: TcxGridDBBandedColumn;
     edtTItemValue: TcxGridDBBandedColumn;
-    edtTTotalCFwd: TcxGridDBBandedColumn;
+    edtTCFwdValue: TcxGridDBBandedColumn;
     edtTWeekEnding: TcxGridDBBandedColumn;
     edtTBillable: TcxGridDBBandedColumn;
     edtTBillableStr: TcxGridDBBandedColumn;
@@ -209,7 +209,7 @@ type
     edtBCRate: TcxGridDBBandedColumn;
     edtBCStdRate: TcxGridDBBandedColumn;
     edtBCItemValue: TcxGridDBBandedColumn;
-    edtBCTotalCFwd: TcxGridDBBandedColumn;
+    edtBCCFwdValue: TcxGridDBBandedColumn;
     edtBCWeekEnding: TcxGridDBBandedColumn;
     edtBCBillable: TcxGridDBBandedColumn;
     edtBCBillableStr: TcxGridDBBandedColumn;
@@ -248,6 +248,8 @@ type
     edtOrdValue: TcxGridDBColumn;
     tipGroupedReport: TdxScreenTip;
     tipSaveSortOrder: TdxScreenTip;
+    edtAbbreviation: TcxGridDBBandedColumn;
+    litTimesheetDetail: TdxLayoutItem;
     procedure FormCreate(Sender: TObject);
     procedure DoCloseForm(Sender: TObject);
     procedure DoPrint(Sender: TObject);
@@ -292,6 +294,7 @@ type
     procedure CloseDataSets;
     procedure GetTimesheetDetail;
     procedure GetBillCfwd;
+    procedure GetRateUnit;
     procedure HideTabs;
     procedure DrawCellBorder(var Msg: TMessage); message CM_DRAWBORDER;
     procedure PopulateSortOptions;
@@ -457,6 +460,27 @@ begin
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(DownloadCaption)), 0);
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FloatToStr(Progress))), 0);
     GetActivityType;
+
+    Inc(I);
+    Progress := StrToFloat(I.ToString) / StrToFloat(TABLE_COUNT.ToString) * 100;
+    DownloadCaption := 'Rate Unit Table';
+//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
+//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=' + DownloadCaption + '|PROGRESS=' + FloatToStr(progress))), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(DownloadCaption)), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FloatToStr(Progress))), 0);
+    GetRateUnit;
+
+    ReportDM.RateUnitLegend := 'Col RU: ';
+    while not ReportDm.cdsRateUnit.EOF do
+    begin
+      ReportDM.RateUnitLegend := ReportDM.RateUnitLegend +
+        ReportDM.cdsRateUnit.FieldByName('ABBREVIATION').AsString + ' = ' +
+        ReportDM.cdsRateUnit.FieldByName('NAME').AsString;
+
+      ReportDM.cdsRateUnit.Next;
+      if not ReportDM.cdsRateUnit.EOF then
+        ReportDM.RateUnitLegend := ReportDM.RateUnitLegend + ';  ';
+    end;
 
     HideTabs;
 //    lucReportType.SetFocus;
@@ -628,6 +652,15 @@ begin
   VBBaseDM.GetData(24, ReportDM.cdsSystemUser, ReportDM.cdsSystemUser.Name, ONE_SPACE,
     'C:\Data\Xml\System User.xml', ReportDM.cdsSystemUser.UpdateOptions.Generatorname,
     ReportDM.cdsSystemUser.UpdateOptions.UpdateTableName);
+end;
+
+procedure TTimesheetDetailReportFrm.GetRateUnit;
+begin
+  ReportDM.cdsRateUnit.Close;
+
+  VBBaseDM.GetData(38, ReportDM.cdsRateUnit, ReportDM.cdsRateUnit.Name, ONE_SPACE,
+    'C:\Data\Xml\Rate Unit.xml', ReportDM.cdsRateUnit.UpdateOptions.Generatorname,
+    ReportDM.cdsRateUnit.UpdateOptions.UpdateTableName);
 end;
 
 procedure TTimesheetDetailReportFrm.GetTimesheetDetail;
@@ -1465,6 +1498,7 @@ begin
 //      end;
 //    end;
   finally
+    ReportDM.cdsTSSortOrder.First;
     DC.EndUpdate;
     ReportDM.cdsTSSortOrder.EnableControls;
   end;
@@ -1569,9 +1603,19 @@ begin
 
       2: // Display data in grid
         begin
-          litBillCfwd.Visible := True;
-          grpData.ItemIndex := 3;
-          viewBillCfwd.ViewData.Expand(True);
+          case lucBillCfComparison.ItemIndex of
+            0:
+              begin
+                litTimesheetDetail.Visible := True;
+                grpData.ItemIndex := 3;
+              end;
+            1:
+              begin
+                litBillCfwd.Visible := True;
+                grpData.ItemIndex := 4;
+                viewBillCfwd.ViewData.Expand(True);
+              end;
+          end;
 //          AFocusedItem := layMain.FindItem(litBillCfComparison);
 //          if AFocusedItem <> nil then
 //            grpData.items ItemIndex := AFocusedItem.Index;

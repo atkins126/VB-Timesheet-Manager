@@ -152,7 +152,7 @@ type
     cdsTSBillableCARRY_FORWARD_STR: TStringField;
     cdsTSBillableIS_ADDITIONAL_WORK: TIntegerField;
     cdsTSBillableIS_ADDITIONAL_WORK_STR: TStringField;
-    cdsTSBillableTOTAL_CARRY_FORWARD: TFloatField;
+    cdsTSBillableCARRY_FORWARD_VALUE: TFloatField;
     rptTimesheetByCustomer: TfrxReport;
     rptTimesheetByActivity: TfrxReport;
     fdsTimesheetByCustomer: TfrxDBDataset;
@@ -448,6 +448,8 @@ type
     cdsTSSortOrderSORT_BY: TStringField;
     cdsTSSortOrderFIELD_NAME: TStringField;
     cdsTSSortOrderORD_VALUE: TIntegerField;
+    cdsRateUnitABBREVIATION: TStringField;
+    cdsTSBillableABBREVIATION: TStringField;
     procedure cdsTimesheetCalcFields(DataSet: TDataSet);
     procedure cdsTimesheetAfterPost(DataSet: TDataSet);
     procedure cdsTimesheetBeforePost(DataSet: TDataSet);
@@ -460,19 +462,21 @@ type
     { Private declarations }
     FID: Integer;
     FReportFileName: TReportFileName;
+    FRateUnitLegend: String;
   public
     { Public declarations }
     FReport: TfrxReport;
 
     property Report: TfrxReport read FReport write FReport;
     property ReportFileName: TReportFileName read FReportFileName write FReportFileName;
+    property RateUnitLegend: String read FRateUnitLegend write FRateUnitLegend;
   end;
 
 var
   ReportDM: TReportDM;
 
 const
-  TABLE_COUNT = 5;
+  TABLE_COUNT = 6;
   REPORT_COUNT = 6;
 
 implementation

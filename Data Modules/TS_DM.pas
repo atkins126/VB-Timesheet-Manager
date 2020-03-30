@@ -145,6 +145,8 @@ type
     dtsStdActivity: TDataSource;
     cdsStdActivityID: TIntegerField;
     cdsStdActivityNAME: TStringField;
+    cdsRateUnitABBREVIATION: TStringField;
+    cdsRatePUnitrefABBREVIATION: TStringField;
     procedure dtsTimesheetStateChange(Sender: TObject);
     procedure cdsCustomerLookupCalcFields(DataSet: TDataSet);
     procedure cdsTimesheetNewRecord(DataSet: TDataSet);
@@ -260,7 +262,7 @@ end;
 
 function TTSDM.GetDefaulttInvoiceDate: TDateTime;
 var
-  aYear, aMonth, aDay, aHour, aMin, aSec, aMSec: Word;
+  aYear, aMonth, aDay: Word;
 begin
   DecodeDate(Date, aYear, aMonth, Aday);
   Result := EncodeDate(Ayear, Amonth, 1);
