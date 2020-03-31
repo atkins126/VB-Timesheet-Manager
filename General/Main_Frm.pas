@@ -1789,7 +1789,8 @@ begin
 
   OrderByClause := 'ORDER BY T.ACTIVITY_DATE';
   WhereClause := DateClause + {CarryForwardClause + }UserClause + ' ';
-  ReportDM.FReport := ReportDM.rptTimesheetByUser;
+//  ReportDM.FReport := ReportDM.rptTimesheetByUser;
+  ReportDM.FReport := ReportDM.rptTimesheetDetail;
 
   try
     VBBaseDM.GetData(45, ReportDM.cdsTSBillable, ReportDM.cdsTSBillable.Name, WhereClause + ';' + OrderByClause,
@@ -1801,7 +1802,7 @@ begin
     if not TFile.Exists(RepFileName) then
       raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 
-    ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[0]{'TimesheetByUser.fr3'});
+    ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[0] {'TimesheetByUser.fr3'});
 
     if ReportDM.FReport.PrepareReport then
       if TAction(Sender).Tag = 0 then
@@ -1865,7 +1866,8 @@ begin
   UserClause := ' AND T.USER_ID IN (' + FTSUserID.ToString + ')';
   OrderByClause := 'ORDER BY T.ACTIVITY_DATE';
   WhereClause := DateClause + UserClause + ' ';
-  ReportDM.FReport := ReportDM.rptTimesheetByUser;
+//  ReportDM.FReport := ReportDM.rptTimesheetByUser;
+  ReportDM.FReport := ReportDM.rptTimesheetDetail;
 
   VBBaseDM.GetData(45, ReportDM.cdsTSBillable, ReportDM.cdsTSBillable.Name, WhereClause + ';' + OrderByClause,
     'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsTSBillable.UpdateOptions.Generatorname,
@@ -1876,7 +1878,7 @@ begin
   if not TFile.Exists(RepFileName) then
     raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 
-  ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[0]{'TimesheetByUser.fr3'});
+  ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[0] {'TimesheetByUser.fr3'});
 
   edtTCustomerName.Visible := True;
   viewTimesheetBillable.OptionsView.BandHeaders := False;
@@ -1938,7 +1940,8 @@ begin
     UserClause := ' AND T.USER_ID IN (' + FTSUserID.ToString + ')';
     OrderByClause := 'ORDER BY T.ACTIVITY_DATE';
     WhereClause := DateClause + UserClause + ' ';
-    ReportDM.FReport := ReportDM.rptTimesheetByUser;
+//    ReportDM.FReport := ReportDM.rptTimesheetByUser;
+    ReportDM.FReport := ReportDM.rptTimesheetDetail;
 
     VBBaseDM.GetData(45, ReportDM.cdsTSBillable, ReportDM.cdsTSBillable.Name, WhereClause + ';' + OrderByClause,
       'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsTSBillable.UpdateOptions.Generatorname,
@@ -1949,7 +1952,7 @@ begin
     if not TFile.Exists(RepFileName) then
       raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 
-    ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[0]{'TimesheetByUser.fr3'});
+    ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[0] {'TimesheetByUser.fr3'});
 
     edtTCustomerName.Visible := True;
     viewTimesheetBillable.OptionsView.BandHeaders := False;

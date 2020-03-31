@@ -185,7 +185,7 @@ type
     edtTAddWork: TcxGridDBBandedColumn;
     edtTAddWorkStr: TcxGridDBBandedColumn;
     lvlTimesheetBillable: TcxGridLevel;
-    litBillCfComparison: TdxLayoutItem;
+    litReportType: TdxLayoutItem;
     litBillCfComparisonDescription: TdxLayoutLabeledItem;
     lucBillCfComparison: TcxComboBox;
     litBillCfwd: TdxLayoutItem;
@@ -236,13 +236,12 @@ type
     grpSortOptions: TdxLayoutGroup;
     litSaveSortOptions: TdxLayoutItem;
     cbxSaveSortOrder: TcxCheckBox;
-    litGroupedReport: TdxLayoutItem;
+    litReportGrouping: TdxLayoutItem;
     cbxGroupedReport: TcxCheckBox;
     grdSortOrder: TcxGrid;
     lvlSortOrder: TcxGridLevel;
     viewSortOrder: TcxGridDBTableView;
     edtID: TcxGridDBColumn;
-    cbxInclude: TcxGridDBColumn;
     edtSortBy: TcxGridDBColumn;
     edtFieldName: TcxGridDBColumn;
     edtOrdValue: TcxGridDBColumn;
@@ -250,6 +249,10 @@ type
     tipSaveSortOrder: TdxScreenTip;
     edtAbbreviation: TcxGridDBBandedColumn;
     litTimesheetDetail: TdxLayoutItem;
+    grpTimesheetDetail: TdxLayoutGroup;
+    litTSDetailLegend: TdxLayoutLabeledItem;
+    grp3: TdxLayoutGroup;
+    sep1: TdxLayoutSeparatorItem;
     procedure FormCreate(Sender: TObject);
     procedure DoCloseForm(Sender: TObject);
     procedure DoPrint(Sender: TObject);
@@ -275,6 +278,13 @@ type
       var OutArguments: TcxSummaryEventOutArguments);
     procedure cbxIncludePropertiesEditValueChanged(Sender: TObject);
     procedure cbxGroupedReportPropertiesChange(Sender: TObject);
+    procedure edtTLoginNameGetDisplayText(Sender: TcxCustomGridTableItem;
+      ARecord: TcxCustomGridRecord; var AText: string);
+    procedure lucReportTypePropertiesChange(Sender: TObject);
+    procedure lucPeriodPropertiesChange(Sender: TObject);
+    procedure dteFromDatePropertiesChange(Sender: TObject);
+    procedure viewSystemUserKeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private declarations }
 //    FReportFileName: TReportFileName;
@@ -286,6 +296,7 @@ type
     FDestRecordIndex: Integer;
     FID: Integer;
     FMadChanges: Boolean;
+    FSortListID: TStringList;
 
     procedure GetPeriods;
     procedure GetSystemUser;
@@ -296,6 +307,7 @@ type
     procedure GetBillCfwd;
     procedure GetRateUnit;
     procedure HideTabs;
+    procedure ShowTabs;
     procedure DrawCellBorder(var Msg: TMessage); message CM_DRAWBORDER;
     procedure PopulateSortOptions;
     procedure ReorderRows(AView: TcxGridDBTableView; ADestRow: TcxCustomGridRecord);
@@ -329,6 +341,23 @@ begin
     TcxCanvas(Msg.WParam).DrawComplexFrame(TcxGridTableDataCellViewInfo(Msg.LParam).ClientBounds, clRed, clRed, cxBordersAll, 1);
 end;
 
+procedure TTimesheetDetailReportFrm.dteFromDatePropertiesChange(Sender: TObject);
+begin
+  inherited;
+  HideTabs;
+//  Showtabs;
+  ReportDM.cdsTSBillable.Close;
+  ReportDM.cdsBillCfwd.Close;
+end;
+
+procedure TTimesheetDetailReportFrm.edtTLoginNameGetDisplayText(
+  Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord; var AText: string);
+begin
+  inherited;
+  if ARecord is TcxGridGroupRow then
+    AText := TcxGridGroupRow(ARecord).Value;
+end;
+
 procedure TTimesheetDetailReportFrm.FormCreate(Sender: TObject);
 var
   I: Integer;
@@ -347,6 +376,7 @@ begin
   FSortOptioinsList := RUtils.CreateStringList(COMMA, SINGLE_QUOTE);
   edtOrdValue.SortOrder := soAscending;
   FMadChanges := False;
+  FSortListID := RUtils.CreateStringList(COMMA, SINGLE_QUOTE);
 
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   RegKey.RootKey := HKEY_CURRENT_USER;
@@ -478,17 +508,16 @@ begin
         ReportDM.cdsRateUnit.FieldByName('NAME').AsString;
 
       ReportDM.cdsRateUnit.Next;
+
       if not ReportDM.cdsRateUnit.EOF then
         ReportDM.RateUnitLegend := ReportDM.RateUnitLegend + ';  ';
     end;
 
-    HideTabs;
+    litTSDetailLegend.CaptionOptions.Text := ReportDM.RateUnitLegend;
+
 //    lucReportType.SetFocus;
 //    AComboBox := TcxBarEditItemControl(lucReportType.Links[0].Control).Edit as TcxComboBox;
 //    AComboBox.ItemIndex := 0;
-
-    grpData.Items[0].Visible := True;
-    grpData.Items[3].Visible := False;
 
 //    Inc(I);
 //    Progress := StrToFloat(I.ToString) / StrToFloat(TABLE_COUNT.ToString) * 100;
@@ -536,6 +565,9 @@ end;
 procedure TTimesheetDetailReportFrm.FormDestroy(Sender: TObject);
 begin
   inherited;
+  if FSortListID <> nil then
+    FSortListID.Free;
+
   if FSortOptioinsList <> nil then
     FSortOptioinsList.Free;
 
@@ -556,6 +588,11 @@ begin
     if dteFromDate.CanFocus and Self.Showing then
       dteFromDate.SetFocus;
   end;
+
+//  litTimesheetDetail.Visible := False;
+//  litBillCfwd.Visible := False;
+  HideTabs;
+  ShowTabs;
 
   WindowState := wsMaximized;
   Screen.Cursor := crDefault;
@@ -612,6 +649,7 @@ begin
   ReportDM.cdsRateUnit.Close;
 //  ReportDM.cdsTSSummaryByActivity.Close;
   ReportDM.cdsSystemUser.Close;
+  ReportDM.cdsRateUnit.Close;
 //  ReportDM.cdsTSBillable.Close;
 end;
 
@@ -646,10 +684,13 @@ begin
 end;
 
 procedure TTimesheetDetailReportFrm.GetSystemUser;
+var
+  WhereClause: string;
 begin
   ReportDM.cdsSystemUser.Close;
+  WhereClause := ' ORDER BY U.LOGIN_NAME';
 
-  VBBaseDM.GetData(24, ReportDM.cdsSystemUser, ReportDM.cdsSystemUser.Name, ONE_SPACE,
+  VBBaseDM.GetData(24, ReportDM.cdsSystemUser, ReportDM.cdsSystemUser.Name, WhereClause,
     'C:\Data\Xml\System User.xml', ReportDM.cdsSystemUser.UpdateOptions.Generatorname,
     ReportDM.cdsSystemUser.UpdateOptions.UpdateTableName);
 end;
@@ -697,7 +738,8 @@ begin
     0:
       begin
         FileName := 'Timesheet Detail by User';
-        ReportDM.FReport := ReportDM.rptTimesheetByUser;
+//        ReportDM.FReport := ReportDM.rptTimesheetByUser;
+        ReportDM.FReport := ReportDM.rptTimesheetDetail;
         DC := viewSystemUser.DataController;
         C := viewSystemUser.Controller;
 
@@ -729,7 +771,8 @@ begin
     1:
       begin
         FileName := 'Timesheet Detail by Customer';
-        ReportDM.FReport := ReportDM.rptTimesheetByCustomer;
+//        ReportDM.FReport := ReportDM.rptTimesheetByCustomer;
+        ReportDM.FReport := ReportDM.rptTimesheetDetail;
         DC := viewCustomerListing.DataController;
         C := viewCustomerListing.Controller;
 
@@ -759,7 +802,8 @@ begin
     2:
       begin
         FileName := 'Timesheet Detail by Activity';
-        ReportDM.FReport := ReportDM.rptTimesheetByActivity;
+//        ReportDM.FReport := ReportDM.rptTimesheetByActivity;
+        ReportDM.FReport := ReportDM.rptTimesheetDetail;
         DC := viewActivityType.DataController;
         C := viewActivityType.Controller;
 
@@ -828,7 +872,8 @@ begin
     0:
       begin
         FileName := 'Timesheet Detail BillCfwd by User';
-        ReportDM.FReport := ReportDM.rptTimesheetByUser;
+//        ReportDM.FReport := ReportDM.rptTimesheetByUser;
+        ReportDM.FReport := ReportDM.rptTimesheetDetail;
         DC := viewSystemUser.DataController;
         C := viewSystemUser.Controller;
 
@@ -936,21 +981,46 @@ begin
     grpData.Items[I].Visible := False;
 end;
 
+procedure TTimesheetDetailReportFrm.ShowTabs;
+begin
+  grpData.Items[0].Visible := lucReportType.ItemIndex = 0;
+  grpData.Items[3].Visible := lucReportType.ItemIndex = 1;
+  grpData.Items[4].Visible := lucReportType.ItemIndex = 2;
+end;
+
 procedure TTimesheetDetailReportFrm.lucBillCfComparisonPropertiesChange(Sender: TObject);
 begin
   inherited;
+//  HideTabs;
+//  Showtabs;
+  ReportDM.cdsTSBillable.Close;
+  ReportDM.cdsBillCfwd.Close;
   lucBillable.Enabled := lucBillCfComparison.ItemIndex = 0;
   lucWorkType.Enabled := lucBillCfComparison.ItemIndex = 0;
 
   case lucBillCfComparison.ItemIndex of
-    0: litBillCfComparisonDescription.CaptionOptions.Text := 'Timesheet details';
-    1: litBillCfComparisonDescription.CaptionOptions.Text := 'Timesheets grouped by billable/Cfwd with summary totals';
+    0:
+      begin
+        litBillCfComparisonDescription.CaptionOptions.Text := 'Timesheet details';
+//        litTimesheetDetail.Visible := True;
+      end;
+
+    1:
+      begin
+        litBillCfComparisonDescription.CaptionOptions.Text := 'Timesheets grouped by billable/Cfwd with summary totals';
+//        litBillCfwd.Visible := True;
+      end;
   end;
 end;
 
 procedure TTimesheetDetailReportFrm.lucDateTypePropertiesEditValueChanged(Sender: TObject);
 begin
   inherited;
+  HideTabs;
+  Showtabs;
+  ReportDM.cdsTSBillable.Close;
+  ReportDM.cdsBillCfwd.Close;
+
   lucPeriod.Enabled := lucDateType.ItemIndex = 0;
   dteFromDate.Enabled := not lucPeriod.Enabled;
   dteToDate.Enabled := not lucPeriod.Enabled;
@@ -967,24 +1037,97 @@ begin
   end;
 end;
 
-procedure TTimesheetDetailReportFrm.lucReportTypePropertiesEditValueChanged(Sender: TObject);
-//var
-//  AComboBox: TcxComboBox;
+procedure TTimesheetDetailReportFrm.lucPeriodPropertiesChange(Sender: TObject);
 begin
   inherited;
   HideTabs;
-//  lucReportType.SetFocus;
-//  AComboBox := TcxBarEditItemControl(lucReportType.Links[0].Control).Edit as TcxComboBox;
-//  grpData.Items[AComboBox.ItemIndex].Visible := True;
+  Showtabs;
+  ReportDM.cdsTSBillable.Close;
+  ReportDM.cdsBillCfwd.Close;
+end;
+
+procedure TTimesheetDetailReportFrm.lucReportTypePropertiesChange(Sender: TObject);
+begin
+  inherited;
+  HideTabs;
+//  Showtabs;
   grpData.Items[lucReportType.ItemIndex].Visible := True;
 
-{TODO: Set correct order by clause based on report type}
-//  case grpData.ItemIndex of
-//    0: lucSortOptions.ItemIndex := 0;
-//    1: lucSortOptions.ItemIndex := 1;
-//    2: lucSortOptions.ItemIndex := 2;
+  viewSystemUser.Controller.ClearSelection;
+  viewCustomerListing.Controller.ClearSelection;
+  viewActivityType.Controller.ClearSelection;
+
+  case lucBillCfComparison.ItemIndex of
+    0:
+      begin
+        ReportDM.cdsTSBillable.Close;
+        viewTimesheetBillable.DataController.Groups.ClearGrouping;
+        edtTActivtyType.Visible := True;
+        edtTLoginName.Visible := True;
+        edtTCustomerName.Visible := True;
+
+        case lucReportType.ItemIndex of
+          0:
+            begin
+              edtTLoginName.GroupBy(0, True, True, True);
+              edtTLoginName.Position.BandIndex := 0;
+            end;
+
+          1:
+            begin
+              edtTCustomerName.GroupBy(0, True, True, True);
+              edtTCustomerName.Position.BandIndex := 0;
+            end;
+
+          2:
+            begin
+              edtTActivtyType.GroupBy(0, True, True, True);
+              edtTActivtyType.Position.BandIndex := 0;
+            end;
+        end;
+        grpData.ItemIndex := lucReportType.ItemIndex;
+      end;
+  end;
+end;
+
+procedure TTimesheetDetailReportFrm.lucReportTypePropertiesEditValueChanged(Sender: TObject);
+begin
+  inherited;
+//  HideTabs;
+//  grpData.Items[lucReportType.ItemIndex].Visible := True;
+//  viewTimesheetBillable.DataController.Groups.ClearGrouping;
+//  edtTActivtyType.Visible := True;
+//  edtTLoginName.Visible := True;
+//  edtTCustomerName.Visible := True;
+//  viewSystemUser.Controller.ClearSelection;
+//  viewCustomerListing.Controller.ClearSelection;
+//  viewActivityType.Controller.ClearSelection;
+//
+//  case lucBillCfComparison.ItemIndex of
+//    0:
+//      begin
+//        case lucReportType.ItemIndex of
+//          0:
+//            begin
+//              edtTLoginName.GroupBy(0, True, True, True);
+//              edtTLoginName.Position.BandIndex := 0;
+//            end;
+//
+//          1:
+//            begin
+//              edtTCustomerName.GroupBy(0, True, True, True);
+//              edtTCustomerName.Position.BandIndex := 0;
+//            end;
+//
+//          2:
+//            begin
+//              edtTActivtyType.GroupBy(0, True, True, True);
+//              edtTActivtyType.Position.BandIndex := 0;
+//            end;
+//        end;
+//        grpData.ItemIndex := lucReportType.ItemIndex;
+//      end;
 //  end;
-//  grpData.Items[lucReportType.EditValue].Visible := True;
 end;
 
 procedure TTimesheetDetailReportFrm.PopulateSortOptions;
@@ -1004,37 +1147,41 @@ begin
   else
   begin
     ID := 1;
+    FSortListID.Add(I.ToString);
     ReportDM.cdsTSSortOrder.CreateDataSet;
     ReportDM.cdsTSSortOrder.Append;
     ReportDM.cdsTSSortOrder.FieldByName('ID').AsInteger := ID;
-    ReportDM.cdsTSSortOrder.FieldByName('INCLUDE').AsBoolean := True;
+//    ReportDM.cdsTSSortOrder.FieldByName('INCLUDE').AsBoolean := True;
     ReportDM.cdsTSSortOrder.FieldByName('SORT_BY').AsString := 'Login Name';
     ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString := 'LOGIN_NAME';
     ReportDM.cdsTSSortOrder.FieldByName('ORD_VALUE').AsInteger := ID;
     ReportDM.cdsTSSortOrder.Post;
 
     Inc(ID);
+    FSortListID.Add(I.ToString);
     ReportDM.cdsTSSortOrder.Append;
     ReportDM.cdsTSSortOrder.FieldByName('ID').AsInteger := ID;
-    ReportDM.cdsTSSortOrder.FieldByName('INCLUDE').AsBoolean := True;
+//    ReportDM.cdsTSSortOrder.FieldByName('INCLUDE').AsBoolean := True;
     ReportDM.cdsTSSortOrder.FieldByName('SORT_BY').AsString := 'Activity Date';
     ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString := 'ACTIVITY_DATE';
     ReportDM.cdsTSSortOrder.FieldByName('ORD_VALUE').AsInteger := ID;
     ReportDM.cdsTSSortOrder.Post;
 
     Inc(ID);
+    FSortListID.Add(I.ToString);
     ReportDM.cdsTSSortOrder.Append;
     ReportDM.cdsTSSortOrder.FieldByName('ID').AsInteger := ID;
-    ReportDM.cdsTSSortOrder.FieldByName('INCLUDE').AsBoolean := False;
+//    ReportDM.cdsTSSortOrder.FieldByName('INCLUDE').AsBoolean := False;
     ReportDM.cdsTSSortOrder.FieldByName('SORT_BY').AsString := 'Customer Name';
     ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString := 'CUSTOMER_NAME';
     ReportDM.cdsTSSortOrder.FieldByName('ORD_VALUE').AsInteger := ID;
     ReportDM.cdsTSSortOrder.Post;
 
     Inc(ID);
+    FSortListID.Add(I.ToString);
     ReportDM.cdsTSSortOrder.Append;
     ReportDM.cdsTSSortOrder.FieldByName('ID').AsInteger := ID;
-    ReportDM.cdsTSSortOrder.FieldByName('INCLUDE').AsBoolean := False;
+//    ReportDM.cdsTSSortOrder.FieldByName('INCLUDE').AsBoolean := False;
     ReportDM.cdsTSSortOrder.FieldByName('SORT_BY').AsString := 'Activity Type';
     ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString := 'ACTIVITY_TYPE';
     ReportDM.cdsTSSortOrder.FieldByName('ORD_VALUE').AsInteger := ID;
@@ -1042,6 +1189,9 @@ begin
     ReportDM.cdsTSSortOrder.First;
     ReportDM.cdsTSSortOrder.SaveToFile(TSDM.ShellResource.ResourceFolder + 'TS Report Sort Order.xml');
   end;
+
+  ReportDM.cdsTSSortOrder.First;
+  cbxGroupedReport.Caption := 'Group report by: ' + ReportDM.cdsTSSortOrder.FieldByName('SORT_BY').AsString;
 end;
 
 procedure TTimesheetDetailReportFrm.viewSortOrderStartDrag(Sender: TObject;
@@ -1083,49 +1233,51 @@ procedure TTimesheetDetailReportFrm.ReorderRows(AView: TcxGridDBTableView;
   ADestRow: TcxCustomGridRecord);
 var
   I: Integer;
-  ADC: TcxDBDataController;
-  AOrderValue: Variant;
-  AOrderColumnIndex: Integer;
-  IsUpper: Boolean;
+  DC: TcxDBDataController;
+  OrderValue: Variant;
+  OrderColumnIndex: Integer;
+  MoveUp: Boolean;
 begin
+  FSortListID.Clear;
+
   with AView do
   begin
-    ADC := TcxDBDataController(DataController);
-    AOrderColumnIndex := TcxGridColumn(ADC.GetItemByFieldName('ORD_VALUE')).Index;
-    AOrderValue := ADestRow.Values[AOrderColumnIndex];
-    IsUpper := ADestRow.Index < ADC.GetRowIndexByRecordIndex(ADC.FindRecordIndexByKey(FID {AKeys}), False);
+    DC := TcxDBDataController(DataController);
+    OrderColumnIndex := TcxGridColumn(DC.GetItemByFieldName('ORD_VALUE')).Index;
+    OrderValue := ADestRow.Values[OrderColumnIndex];
+    MoveUp := ADestRow.Index < DC.GetRowIndexByRecordIndex(DC.FindRecordIndexByKey(FID {AKeys}), False);
   end;
 
   ADestRow.Focused := True;
 
 // -----------------
-  if IsUpper then
-    SetOrderValue(ADC.DataSet, AOrderValue + 1) // move dragged record 1 record lower
+  if MoveUp then
+    SetOrderValue(DC.DataSet, OrderValue + 1) // move dragged record 1 record lower
   else
-    SetOrderValue(ADC.DataSet, AOrderValue - 1); // move dragged record 1 record above
+    SetOrderValue(DC.DataSet, OrderValue - 1); // move dragged record 1 record above
 
 // -----------------
 
-//  SetOrderValue(ADC.DataSet, AOrderValue - Ord(not IsUpper) + 0.5); // move dragged record 1 record lower
-  ADC.LocateByKey(FID {AKeys}); // focus the dragged record in the DataSet
-  SetOrderValue(ADC.DataSet, AOrderValue);
+//  SetOrderValue(DC.DataSet, OrderValue - Ord(not MoveUp) + 0.5); // move dragged record 1 record lower
+  DC.LocateByKey(FID {AKeys}); // focus the dragged record in the DataSet
+  SetOrderValue(DC.DataSet, OrderValue);
 
 // Working code
-  if isUpper then
-    ADC.GotoLast
+  if MoveUp then
+    DC.GotoLast
   else
-    ADC.GotoFirst;
+    DC.GotoFirst;
 
   I := 0;
 
-  while ADC.Values[ADC.FocusedRecordIndex, AOrderColumnIndex] <> AOrderValue do
+  while DC.Values[DC.FocusedRecordIndex, OrderColumnIndex] <> OrderValue do
   begin
-    SetOrderValue(ADC.DataSet, Ord(IsUpper) * ADC.RowCount - Sign(Ord(IsUpper) - 0.1) * (I + Ord(not IsUpper)));
+    SetOrderValue(DC.DataSet, Ord(MoveUp) * DC.RowCount - Sign(Ord(MoveUp) - 0.1) * (I + Ord(not MoveUp)));
     Inc(I);
-    if IsUpper then
-      ADC.GotoPrev
+    if MoveUp then
+      DC.GotoPrev
     else
-      ADC.GotoNext;
+      DC.GotoNext;
   end;
 
 //  ReportDM.cdsTSSortOrder.First;
@@ -1138,24 +1290,27 @@ begin
 //  end;
 //  ReportDM.cdsTSSortOrder.CommitUpdates;
 
+  ReportDM.cdsTSSortOrder.First;
+  cbxGroupedReport.Caption := 'Group report by: ' + ReportDM.cdsTSSortOrder.FieldByName('SORT_BY').AsString;
+
   ReportDM.cdsTSSortOrder.SaveToFile(TSDM.ShellResource.ResourceFolder + 'TS Report Sort Order ' +
     FormatDateTime('dd-MM-yyyy hh mm ss', Now) + '.xml');
 
-//  if IsUpper then
+//  if MoveUp then
 //    ReportDM.cdsTSSortOrder.Last
 //  else
 //    ReportDM.cdsTSSortOrder.First;
 
 // Not working!!
-//  ADC.GotoFirst;
+//  DC.GotoFirst;
 //  I := 0;
 //
-//  while (ADC.Values[ADC.FocusedRecordIndex, AOrderColumnIndex] <> AOrderValue)
-//    and (I < ADC.RecordCount - 1) do
+//  while (DC.Values[DC.FocusedRecordIndex, OrderColumnIndex] <> OrderValue)
+//    and (I < DC.RecordCount - 1) do
 //  begin
-//    SetOrderValue(ADC.DataSet, I + 1);
+//    SetOrderValue(DC.DataSet, I + 1);
 //    Inc(I);
-//    ADC.GotoNext;
+//    DC.GotoNext;
 //  end;
 end;
 
@@ -1292,6 +1447,20 @@ begin
         ACanvas.Font.Color := RootLookAndFeel.SkinPainter.DefaultSelectionColor;
         PostMessage(Handle, CM_DRAWBORDER, Integer(ACanvas), Integer(AViewInfo));
       end;
+  end;
+end;
+
+procedure TTimesheetDetailReportFrm.viewSystemUserKeyUp(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+var
+  AView: TcxGridBandedTableView;
+begin
+  inherited;
+  if key = VK_SPACE then
+  begin
+    AView := TcxGridBandedTableView(TcxGridSite(Sender).GridView);
+    AView.Controller.FocusedRecord.Selected :=
+      not AView.Controller.FocusedRecord.Selected;
   end;
 end;
 
@@ -1452,35 +1621,23 @@ end;
 function TTimesheetDetailReportFrm.OrderByClause: string;
 var
   DC: TcxCustomDataController;
-  I, IncludeCount: Integer;
+  I: Integer;
 begin
   DC := viewSortOrder.DataController;
   Result := ' ORDER BY ';
 
   DC.BeginUpdate;
   ReportDM.cdsTSSortOrder.DisableControls;
-  IncludeCount := 0;
   ReportDM.cdsTSSortOrder.First;
 
   try
     while not ReportDM.cdsTSSortOrder.EOF do
     begin
-      if ReportDM.cdsTSSortOrder.FieldByName('INCLUDE').AsBoolean then
-        Inc(IncludeCount);
+      Result := Result + ' T.' + ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString;
       ReportDM.cdsTSSortOrder.Next;
-    end;
 
-    ReportDM.cdsTSSortOrder.First;
-    while not ReportDM.cdsTSSortOrder.EOF do
-    begin
-      if ReportDM.cdsTSSortOrder.FieldByName('INCLUDE').AsBoolean then
-      begin
-        Result := Result + ' T.' + ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString;
-        if IncludeCount > 1 then
-          Result := Result + ',';
-        Dec(IncludeCount);
-      end;
-      ReportDM.cdsTSSortOrder.Next;
+      if not ReportDM.cdsTSSortOrder.EOF then
+        Result := Result + ',';
     end;
 
 //    for I := 0 to DC.RecordCount - 1 do
@@ -1560,6 +1717,8 @@ begin
             raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 
           ReportDM.FReport.LoadFromFile(RepFileName);
+          TfrxMemoView(ReportDM.FReport.FindObject('bndGroupHeader')).Visible := cbxGroupedReport.Checked;
+          TfrxMemoView(ReportDM.FReport.FindObject('bndGroupFooter')).Visible := cbxGroupedReport.Checked;
         end;
 
       1:
@@ -1583,6 +1742,12 @@ begin
         end;
     end;
 
+//    litTimesheetDetail.Visible := lucBillCfComparison.ItemIndex = 0;
+//    litBillCfwd.Visible := not litTimesheetDetail.Visible;
+
+    grpData.Items[3].Visible := lucBillCfComparison.ItemIndex = 0;
+    grpData.Items[4].Visible := not grpData.Items[3].Visible;
+
     case TAction(Sender).Tag of
       0, 1: // Previewing or printing
         begin
@@ -1604,21 +1769,14 @@ begin
       2: // Display data in grid
         begin
           case lucBillCfComparison.ItemIndex of
-            0:
-              begin
-                litTimesheetDetail.Visible := True;
-                grpData.ItemIndex := 3;
-              end;
+            0: grpData.ItemIndex := 3;
+
             1:
               begin
-                litBillCfwd.Visible := True;
                 grpData.ItemIndex := 4;
                 viewBillCfwd.ViewData.Expand(True);
               end;
           end;
-//          AFocusedItem := layMain.FindItem(litBillCfComparison);
-//          if AFocusedItem <> nil then
-//            grpData.items ItemIndex := AFocusedItem.Index;
         end;
     end;
   finally

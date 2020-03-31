@@ -60,9 +60,9 @@ type
     dtsTSBillable: TDataSource;
     frxPDFExport: TfrxPDFExport;
     rptBillableSummaryByCustomer: TfrxReport;
-    rptTimesheetByUser: TfrxReport;
+    rptTimesheetDetail: TfrxReport;
     fdsBillableSummaryByCustomer: TfrxDBDataset;
-    fdsTimesheetByUser: TfrxDBDataset;
+    fdsTimesheetDetail: TfrxDBDataset;
     rptBillableSummaryByPeriod: TfrxReport;
     fdsBillableSummaryByPeriod: TfrxDBDataset;
     cdsPeriodListing: TFDMemTable;
@@ -444,12 +444,12 @@ type
     cdsTSSortOrder: TFDMemTable;
     dtsTSSortOrder: TDataSource;
     cdsTSSortOrderID: TIntegerField;
-    cdsTSSortOrderINCLUDE: TBooleanField;
     cdsTSSortOrderSORT_BY: TStringField;
     cdsTSSortOrderFIELD_NAME: TStringField;
     cdsTSSortOrderORD_VALUE: TIntegerField;
     cdsRateUnitABBREVIATION: TStringField;
     cdsTSBillableABBREVIATION: TStringField;
+    rptTimesheetDetailGrouped: TfrxReport;
     procedure cdsTimesheetCalcFields(DataSet: TDataSet);
     procedure cdsTimesheetAfterPost(DataSet: TDataSet);
     procedure cdsTimesheetBeforePost(DataSet: TDataSet);
