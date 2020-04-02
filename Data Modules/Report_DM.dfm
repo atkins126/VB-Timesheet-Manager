@@ -902,7 +902,7 @@ inherited ReportDM: TReportDM
     PrintOptions.Printer = 'Default'
     PrintOptions.PrintOnSheet = 0
     ReportOptions.CreateDate = 43494.671348414300000000
-    ReportOptions.LastChange = 43920.678272037040000000
+    ReportOptions.LastChange = 43920.678272037000000000
     ScriptLanguage = 'PascalScript'
     ScriptText.Strings = (
       'begin'
@@ -2538,7 +2538,7 @@ inherited ReportDM: TReportDM
     PrintOptions.Printer = 'Default'
     PrintOptions.PrintOnSheet = 0
     ReportOptions.CreateDate = 43494.671348414300000000
-    ReportOptions.LastChange = 43920.619739710700000000
+    ReportOptions.LastChange = 43922.506811296300000000
     ScriptLanguage = 'PascalScript'
     ScriptText.Strings = (
       'begin'
@@ -2803,7 +2803,7 @@ inherited ReportDM: TReportDM
             'Totals For: [TimesheetByCustomer."CUSTOMER_NAME"]')
         end
       end
-      object grpCustomer: TfrxGroupHeader
+      object bndGroupHeader: TfrxGroupHeader
         FillType = ftBrush
         Frame.Typ = [ftBottom]
         Font.Charset = ANSI_CHARSET
@@ -3048,7 +3048,7 @@ inherited ReportDM: TReportDM
             'R')
         end
       end
-      object Footer1: TfrxFooter
+      object bndGroupSummary: TfrxFooter
         FillType = ftBrush
         Frame.Typ = [ftLeft, ftRight, ftBottom]
         Font.Charset = ANSI_CHARSET
@@ -3110,7 +3110,7 @@ inherited ReportDM: TReportDM
       end
     end
   end
-  object rptTimesheetByActivity: TfrxReport
+  object rptTimesheetByActivityType: TfrxReport
     Version = '6.2.1'
     DotMatrixReport = False
     EngineOptions.DoublePass = True
@@ -3121,7 +3121,7 @@ inherited ReportDM: TReportDM
     PrintOptions.Printer = 'Default'
     PrintOptions.PrintOnSheet = 0
     ReportOptions.CreateDate = 43494.671348414300000000
-    ReportOptions.LastChange = 43920.641574398100000000
+    ReportOptions.LastChange = 43922.507035439810000000
     ScriptLanguage = 'PascalScript'
     ScriptText.Strings = (
       'begin'
@@ -3131,8 +3131,8 @@ inherited ReportDM: TReportDM
     Top = 370
     Datasets = <
       item
-        DataSet = fdsTimesheetByActivity
-        DataSetName = 'TimesheetByActivity'
+        DataSet = fdsTimesheetByActivityType
+        DataSetName = 'TimesheetByActivityType'
       end>
     Variables = <>
     Style = <>
@@ -3167,8 +3167,8 @@ inherited ReportDM: TReportDM
         Height = 18.897637800000000000
         Top = 215.433210000000000000
         Width = 1046.929810000000000000
-        DataSet = fdsTimesheetByActivity
-        DataSetName = 'TimesheetByActivity'
+        DataSet = fdsTimesheetByActivityType
+        DataSetName = 'TimesheetByActivityType'
         RowCount = 0
         Stretched = True
         object TimesheetACTIVITY_DATE: TfrxMemoView
@@ -3178,8 +3178,8 @@ inherited ReportDM: TReportDM
           Height = 18.897650000000000000
           StretchMode = smMaxHeight
           DataField = 'ACTIVITY_DATE'
-          DataSet = fdsTimesheetByActivity
-          DataSetName = 'TimesheetByActivity'
+          DataSet = fdsTimesheetByActivityType
+          DataSetName = 'TimesheetByActivityType'
           Frame.Typ = [ftLeft]
           GapX = 7.000000000000000000
           Memo.UTF8W = (
@@ -3192,8 +3192,8 @@ inherited ReportDM: TReportDM
           Height = 18.897650000000000000
           StretchMode = smMaxHeight
           DataField = 'CUSTOMER_NAME'
-          DataSet = fdsTimesheetByActivity
-          DataSetName = 'TimesheetByActivity'
+          DataSet = fdsTimesheetByActivityType
+          DataSetName = 'TimesheetByActivityType'
           Frame.Typ = [ftLeft]
           GapX = 7.000000000000000000
           Memo.UTF8W = (
@@ -3206,8 +3206,8 @@ inherited ReportDM: TReportDM
           Height = 18.897650000000000000
           StretchMode = smMaxHeight
           DataField = 'ACTIVITY'
-          DataSet = fdsTimesheetByActivity
-          DataSetName = 'TimesheetByActivity'
+          DataSet = fdsTimesheetByActivityType
+          DataSetName = 'TimesheetByActivityType'
           Frame.Typ = [ftLeft]
           GapX = 7.000000000000000000
           Memo.UTF8W = (
@@ -3221,8 +3221,8 @@ inherited ReportDM: TReportDM
           Height = 18.897650000000000000
           StretchMode = smMaxHeight
           DataField = 'CARRY_FORWARD_VALUE'
-          DataSet = fdsTimesheetByActivity
-          DataSetName = 'TimesheetByActivity'
+          DataSet = fdsTimesheetByActivityType
+          DataSetName = 'TimesheetByActivityType'
           DisplayFormat.FormatStr = '###,###0.00'
           DisplayFormat.Kind = fkNumeric
           Frame.Typ = [ftLeft]
@@ -3238,8 +3238,8 @@ inherited ReportDM: TReportDM
           Height = 18.897650000000000000
           StretchMode = smMaxHeight
           DataField = 'ACTUAL_RATE'
-          DataSet = fdsTimesheetByActivity
-          DataSetName = 'TimesheetByActivity'
+          DataSet = fdsTimesheetByActivityType
+          DataSetName = 'TimesheetByActivityType'
           DisplayFormat.FormatStr = '###,##0.00'
           DisplayFormat.Kind = fkNumeric
           Frame.Typ = [ftLeft]
@@ -3255,8 +3255,8 @@ inherited ReportDM: TReportDM
           Height = 18.897650000000000000
           StretchMode = smMaxHeight
           DataField = 'ITEM_VALUE'
-          DataSet = fdsTimesheetByActivity
-          DataSetName = 'TimesheetByActivity'
+          DataSet = fdsTimesheetByActivityType
+          DataSetName = 'TimesheetByActivityType'
           DisplayFormat.FormatStr = '###,##0.00'
           DisplayFormat.Kind = fkNumeric
           Frame.Typ = [ftLeft]
@@ -3272,8 +3272,8 @@ inherited ReportDM: TReportDM
           Height = 18.897650000000000000
           StretchMode = smMaxHeight
           DataField = 'TIME_HOURS'
-          DataSet = fdsTimesheetByActivity
-          DataSetName = 'TimesheetByActivity'
+          DataSet = fdsTimesheetByActivityType
+          DataSetName = 'TimesheetByActivityType'
           DisplayFormat.FormatStr = '###0.00'
           DisplayFormat.Kind = fkNumeric
           Frame.Typ = [ftLeft]
@@ -3289,8 +3289,8 @@ inherited ReportDM: TReportDM
           Height = 18.897650000000000000
           StretchMode = smMaxHeight
           DataField = 'BILLABLE_STR'
-          DataSet = fdsTimesheetByActivity
-          DataSetName = 'TimesheetByActivity'
+          DataSet = fdsTimesheetByActivityType
+          DataSetName = 'TimesheetByActivityType'
           Frame.Typ = [ftLeft]
           GapX = 5.000000000000000000
           HAlign = haCenter
@@ -3303,8 +3303,8 @@ inherited ReportDM: TReportDM
           Height = 18.897650000000000000
           StretchMode = smMaxHeight
           DataField = 'LOGIN_NAME'
-          DataSet = fdsTimesheetByActivity
-          DataSetName = 'TimesheetByActivity'
+          DataSet = fdsTimesheetByActivityType
+          DataSetName = 'TimesheetByActivityType'
           Frame.Typ = [ftLeft]
           GapX = 7.000000000000000000
           Memo.UTF8W = (
@@ -3317,8 +3317,8 @@ inherited ReportDM: TReportDM
           Height = 18.897650000000000000
           StretchMode = smMaxHeight
           DataField = 'ABBREVIATION'
-          DataSet = fdsTimesheetByActivity
-          DataSetName = 'TimesheetByActivity'
+          DataSet = fdsTimesheetByActivityType
+          DataSetName = 'TimesheetByActivityType'
           Frame.Typ = [ftLeft]
           GapX = 5.000000000000000000
           HAlign = haCenter
@@ -3326,7 +3326,7 @@ inherited ReportDM: TReportDM
             '[TimesheetByActivity."ABBREVIATION"]')
         end
       end
-      object bndGrpFooterActivity: TfrxGroupFooter
+      object bndGroupFooter: TfrxGroupFooter
         FillType = ftBrush
         Frame.Typ = [ftLeft, ftRight, ftBottom]
         Font.Charset = ANSI_CHARSET
@@ -3344,8 +3344,8 @@ inherited ReportDM: TReportDM
           Left = 971.339258820000000000
           Width = 75.590551180000000000
           Height = 18.897650000000000000
-          DataSet = fdsTimesheetByActivity
-          DataSetName = 'TimesheetByActivity'
+          DataSet = fdsTimesheetByActivityType
+          DataSetName = 'TimesheetByActivityType'
           DisplayFormat.FormatStr = '###,##0.00'
           DisplayFormat.Kind = fkNumeric
           Frame.Typ = [ftLeft]
@@ -3358,8 +3358,8 @@ inherited ReportDM: TReportDM
           Left = 891.968464880000000000
           Width = 75.590551180000000000
           Height = 18.897650000000000000
-          DataSet = fdsTimesheetByActivity
-          DataSetName = 'TimesheetByActivity'
+          DataSet = fdsTimesheetByActivityType
+          DataSetName = 'TimesheetByActivityType'
           DisplayFormat.FormatStr = '###,##0.00'
           DisplayFormat.Kind = fkNumeric
           Frame.Typ = [ftLeft]
@@ -3372,8 +3372,8 @@ inherited ReportDM: TReportDM
           Left = 752.125984251969000000
           Width = 49.133860710000000000
           Height = 18.897650000000000000
-          DataSet = fdsTimesheetByActivity
-          DataSetName = 'TimesheetByActivity'
+          DataSet = fdsTimesheetByActivityType
+          DataSetName = 'TimesheetByActivityType'
           DisplayFormat.FormatStr = '###,##0.00'
           DisplayFormat.Kind = fkNumeric
           Frame.Typ = [ftLeft, ftRight]
@@ -3392,7 +3392,7 @@ inherited ReportDM: TReportDM
             'Totals For: [TimesheetByActivity."ACTIVITY_TYPE"]')
         end
       end
-      object grpActivity: TfrxGroupHeader
+      object bndGroupHeader: TfrxGroupHeader
         FillType = ftBrush
         Frame.Typ = [ftBottom]
         Font.Charset = ANSI_CHARSET
@@ -3412,8 +3412,8 @@ inherited ReportDM: TReportDM
           AllowVectorExport = True
           Width = 706.772110000000000000
           Height = 18.897650000000000000
-          DataSet = fdsTimesheetByActivity
-          DataSetName = 'TimesheetByActivity'
+          DataSet = fdsTimesheetByActivityType
+          DataSetName = 'TimesheetByActivityType'
           Frame.Typ = []
           Memo.UTF8W = (
             'Timesheets for: [TimesheetByActivity."ACTIVITY_TYPE"]')
@@ -3638,7 +3638,7 @@ inherited ReportDM: TReportDM
             'R')
         end
       end
-      object Footer1: TfrxFooter
+      object bndReportSummary: TfrxFooter
         FillType = ftBrush
         Frame.Typ = [ftLeft, ftRight, ftBottom]
         Font.Charset = ANSI_CHARSET
@@ -3656,8 +3656,8 @@ inherited ReportDM: TReportDM
           Left = 971.339258820000000000
           Width = 75.590551180000000000
           Height = 18.897650000000000000
-          DataSet = fdsTimesheetByActivity
-          DataSetName = 'TimesheetByActivity'
+          DataSet = fdsTimesheetByActivityType
+          DataSetName = 'TimesheetByActivityType'
           DisplayFormat.FormatStr = '###,##0.00'
           DisplayFormat.Kind = fkNumeric
           Frame.Typ = [ftLeft]
@@ -3670,8 +3670,8 @@ inherited ReportDM: TReportDM
           Left = 891.968943310000000000
           Width = 75.590551180000000000
           Height = 18.897650000000000000
-          DataSet = fdsTimesheetByActivity
-          DataSetName = 'TimesheetByActivity'
+          DataSet = fdsTimesheetByActivityType
+          DataSetName = 'TimesheetByActivityType'
           DisplayFormat.FormatStr = '###,##0.00'
           DisplayFormat.Kind = fkNumeric
           Frame.Typ = [ftLeft]
@@ -3684,8 +3684,8 @@ inherited ReportDM: TReportDM
           Left = 752.125984251969000000
           Width = 49.133860710000000000
           Height = 18.897650000000000000
-          DataSet = fdsTimesheetByActivity
-          DataSetName = 'TimesheetByActivity'
+          DataSet = fdsTimesheetByActivityType
+          DataSetName = 'TimesheetByActivityType'
           DisplayFormat.FormatStr = '###,##0.00'
           DisplayFormat.Kind = fkNumeric
           Frame.Typ = [ftLeft, ftRight]
@@ -3744,8 +3744,8 @@ inherited ReportDM: TReportDM
     Left = 775
     Top = 420
   end
-  object fdsTimesheetByActivity: TfrxDBDataset
-    UserName = 'TimesheetByActivity'
+  object fdsTimesheetByActivityType: TfrxDBDataset
+    UserName = 'TimesheetByActivityType'
     CloseDataSource = False
     FieldAliases.Strings = (
       'ID=ID'
@@ -7784,7 +7784,7 @@ inherited ReportDM: TReportDM
       ''
       'end.')
     Left = 510
-    Top = 365
+    Top = 370
     Datasets = <
       item
         DataSet = fdsTimesheetDetail
@@ -8368,5 +8368,646 @@ inherited ReportDM: TReportDM
         end
       end
     end
+  end
+  object rptTimesheetByActivityDate: TfrxReport
+    Version = '6.2.1'
+    DotMatrixReport = False
+    EngineOptions.DoublePass = True
+    EngineOptions.PrintIfEmpty = False
+    IniFile = '\Software\Fast Reports'
+    PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick, pbCopy, pbSelection]
+    PreviewOptions.Zoom = 1.000000000000000000
+    PrintOptions.Printer = 'Default'
+    PrintOptions.PrintOnSheet = 0
+    ReportOptions.CreateDate = 43494.671348414300000000
+    ReportOptions.LastChange = 43921.225796956020000000
+    ScriptLanguage = 'PascalScript'
+    ScriptText.Strings = (
+      'begin'
+      ''
+      'end.')
+    Left = 650
+    Top = 475
+    Datasets = <
+      item
+        DataSet = fdsTimesheetDetail
+        DataSetName = 'TimesheetDetail'
+      end>
+    Variables = <>
+    Style = <>
+    object Data: TfrxDataPage
+      Height = 1000.000000000000000000
+      Width = 1000.000000000000000000
+    end
+    object Page1: TfrxReportPage
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clBlack
+      Font.Height = -13
+      Font.Name = 'Calibri'
+      Font.Style = []
+      Orientation = poLandscape
+      PaperWidth = 297.000000000000000000
+      PaperHeight = 210.000000000000000000
+      PaperSize = 9
+      LeftMargin = 10.000000000000000000
+      RightMargin = 10.000000000000000000
+      TopMargin = 10.000000000000000000
+      BottomMargin = 10.000000000000000000
+      Frame.Typ = []
+      object ReportTitle1: TfrxReportTitle
+        FillType = ftBrush
+        Frame.Typ = []
+        Top = 18.897650000000000000
+        Width = 1046.929810000000000000
+      end
+      object bndMaster: TfrxMasterData
+        FillType = ftBrush
+        Frame.Typ = [ftRight, ftTop, ftBottom]
+        Height = 18.897637800000000000
+        Top = 215.433210000000000000
+        Width = 1046.929810000000000000
+        DataSet = fdsTimesheetDetail
+        DataSetName = 'TimesheetDetail'
+        RowCount = 0
+        Stretched = True
+        object TimesheetACTIVITY_DATE: TfrxMemoView
+          AllowVectorExport = True
+          Width = 79.370078740000000000
+          Height = 18.897650000000000000
+          StretchMode = smMaxHeight
+          DataField = 'LOGIN_NAME'
+          DataSet = fdsTimesheetDetail
+          DataSetName = 'TimesheetDetail'
+          Frame.Typ = [ftLeft]
+          GapX = 7.000000000000000000
+          Memo.UTF8W = (
+            '[TimesheetDetail."LOGIN_NAME"]')
+        end
+        object TimesheetCUSTOMER_NAME: TfrxMemoView
+          AllowVectorExport = True
+          Left = 83.149660000000000000
+          Width = 226.771653540000000000
+          Height = 18.897650000000000000
+          StretchMode = smMaxHeight
+          DataField = 'CUSTOMER_NAME'
+          DataSet = fdsTimesheetDetail
+          DataSetName = 'TimesheetDetail'
+          Frame.Typ = [ftLeft]
+          GapX = 7.000000000000000000
+          Memo.UTF8W = (
+            '[TimesheetDetail."CUSTOMER_NAME"]')
+        end
+        object TimesheetACTIVITY_TYPE: TfrxMemoView
+          AllowVectorExport = True
+          Left = 313.700990000000000000
+          Width = 143.622047240000000000
+          Height = 18.897650000000000000
+          StretchMode = smMaxHeight
+          DataField = 'ACTIVITY_TYPE'
+          DataSet = fdsTimesheetDetail
+          DataSetName = 'TimesheetDetail'
+          Frame.Typ = [ftLeft]
+          GapX = 7.000000000000000000
+          Memo.UTF8W = (
+            '[TimesheetDetail."ACTIVITY_TYPE"]')
+        end
+        object TimesheetACTIVITY: TfrxMemoView
+          AllowVectorExport = True
+          Left = 461.102660000000000000
+          Width = 268.346456692913000000
+          Height = 18.897650000000000000
+          StretchMode = smMaxHeight
+          DataField = 'ACTIVITY'
+          DataSet = fdsTimesheetDetail
+          DataSetName = 'TimesheetDetail'
+          Frame.Typ = [ftLeft]
+          GapX = 7.000000000000000000
+          Memo.UTF8W = (
+            '[TimesheetDetail."ACTIVITY"]')
+        end
+        object TimesheetTIME_SPENT: TfrxMemoView
+          Align = baRight
+          AllowVectorExport = True
+          Left = 971.339258820000000000
+          Width = 75.590551180000000000
+          Height = 18.897650000000000000
+          StretchMode = smMaxHeight
+          DataField = 'CARRY_FORWARD_VALUE'
+          DataSet = fdsTimesheetDetail
+          DataSetName = 'TimesheetDetail'
+          DisplayFormat.FormatStr = '###,###0.00'
+          DisplayFormat.Kind = fkNumeric
+          Frame.Typ = [ftLeft]
+          GapX = 5.000000000000000000
+          HAlign = haRight
+          Memo.UTF8W = (
+            '[TimesheetDetail."CARRY_FORWARD_VALUE"]')
+        end
+        object TimesheetRATE: TfrxMemoView
+          AllowVectorExport = True
+          Left = 805.039362760000000000
+          Width = 56.692913390000000000
+          Height = 18.897650000000000000
+          StretchMode = smMaxHeight
+          DataField = 'ACTUAL_RATE'
+          DataSet = fdsTimesheetDetail
+          DataSetName = 'TimesheetDetail'
+          DisplayFormat.FormatStr = '###,##0.00'
+          DisplayFormat.Kind = fkNumeric
+          Frame.Typ = [ftLeft]
+          GapX = 5.000000000000000000
+          HAlign = haRight
+          Memo.UTF8W = (
+            '[TimesheetDetail."ACTUAL_RATE"]')
+        end
+        object TimesheetITEM_VALUE: TfrxMemoView
+          AllowVectorExport = True
+          Left = 891.968503940000000000
+          Width = 75.590551180000000000
+          Height = 18.897650000000000000
+          StretchMode = smMaxHeight
+          DataField = 'ITEM_VALUE'
+          DataSet = fdsTimesheetDetail
+          DataSetName = 'TimesheetDetail'
+          DisplayFormat.FormatStr = '###,##0.00'
+          DisplayFormat.Kind = fkNumeric
+          Frame.Typ = [ftLeft]
+          GapX = 5.000000000000000000
+          HAlign = haRight
+          Memo.UTF8W = (
+            '[TimesheetDetail."ITEM_VALUE"]')
+        end
+        object TimesheetTIME_HOURS: TfrxMemoView
+          AllowVectorExport = True
+          Left = 756.685007640000000000
+          Width = 45.354330710000000000
+          Height = 18.897650000000000000
+          StretchMode = smMaxHeight
+          DataField = 'TIME_HOURS'
+          DataSet = fdsTimesheetDetail
+          DataSetName = 'TimesheetDetail'
+          DisplayFormat.FormatStr = '###0.00'
+          DisplayFormat.Kind = fkNumeric
+          Frame.Typ = [ftLeft]
+          GapX = 5.000000000000000000
+          HAlign = haRight
+          Memo.UTF8W = (
+            '[TimesheetDetail."TIME_HOURS"]')
+        end
+        object Memo37: TfrxMemoView
+          AllowVectorExport = True
+          Left = 734.008350000000000000
+          Width = 18.897637800000000000
+          Height = 18.897650000000000000
+          StretchMode = smMaxHeight
+          DataField = 'BILLABLE_STR'
+          DataSet = fdsTimesheetDetail
+          DataSetName = 'TimesheetDetail'
+          Frame.Typ = [ftLeft]
+          GapX = 5.000000000000000000
+          HAlign = haCenter
+          Memo.UTF8W = (
+            '[TimesheetDetail."BILLABLE_STR"]')
+        end
+        object Memo31: TfrxMemoView
+          AllowVectorExport = True
+          Left = 865.511811023622000000
+          Width = 24.566929130000000000
+          Height = 18.897650000000000000
+          StretchMode = smMaxHeight
+          DataField = 'ABBREVIATION'
+          DataSet = fdsTimesheetDetail
+          DataSetName = 'TimesheetDetail'
+          Frame.Typ = [ftLeft]
+          GapX = 5.000000000000000000
+          HAlign = haCenter
+          Memo.UTF8W = (
+            '[TimesheetDetail."ABBREVIATION"]')
+        end
+      end
+      object bndGroupFooter: TfrxGroupFooter
+        FillType = ftBrush
+        Frame.Typ = [ftLeft, ftRight, ftBottom]
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Calibri'
+        Font.Style = [fsBold]
+        Height = 18.897637800000000000
+        ParentFont = False
+        Top = 257.008040000000000000
+        Width = 1046.929810000000000000
+        object Memo13: TfrxMemoView
+          Align = baRight
+          AllowVectorExport = True
+          Left = 971.339258820000000000
+          Width = 75.590551180000000000
+          Height = 18.897650000000000000
+          DisplayFormat.FormatStr = '###,##0.00'
+          DisplayFormat.Kind = fkNumeric
+          Frame.Typ = [ftLeft]
+          HAlign = haRight
+          Memo.UTF8W = (
+            '[SUM(<TimesheetDetail."CARRY_FORWARD_VALUE">,bndMaster)]')
+        end
+        object Memo14: TfrxMemoView
+          AllowVectorExport = True
+          Left = 891.968503940000000000
+          Width = 75.590551180000000000
+          Height = 18.897650000000000000
+          DisplayFormat.FormatStr = '###,##0.00'
+          DisplayFormat.Kind = fkNumeric
+          Frame.Typ = [ftLeft]
+          HAlign = haRight
+          Memo.UTF8W = (
+            '[SUM(<TimesheetDetail."ITEM_VALUE">,bndMaster)]')
+        end
+        object Memo16: TfrxMemoView
+          AllowVectorExport = True
+          Left = 756.661417320000000000
+          Width = 45.354330710000000000
+          Height = 18.897650000000000000
+          DisplayFormat.FormatStr = '###,##0.00'
+          DisplayFormat.Kind = fkNumeric
+          Frame.Typ = [ftLeft]
+          HAlign = haRight
+          Memo.UTF8W = (
+            '[SUM(<TimesheetDetail."TIME_HOURS">,bndMaster)]')
+        end
+        object Memo2: TfrxMemoView
+          AllowVectorExport = True
+          Left = 597.165740000000000000
+          Width = 143.622047240000000000
+          Height = 18.897650000000000000
+          Frame.Typ = []
+          HAlign = haRight
+          Memo.UTF8W = (
+            'Totals For: [TimesheetDetail."LOGIN_NAME"]')
+        end
+        object Memo32: TfrxMemoView
+          AllowVectorExport = True
+          Left = 805.039890000000000000
+          Width = 56.692913390000000000
+          Height = 18.897650000000000000
+          Frame.Typ = [ftLeft]
+        end
+      end
+      object bndGroupHeader: TfrxGroupHeader
+        FillType = ftBrush
+        Frame.Typ = [ftBottom]
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -15
+        Font.Name = 'Calibri'
+        Font.Style = [fsBold]
+        Height = 22.677165350000000000
+        ParentFont = False
+        Top = 170.078850000000000000
+        Width = 1046.929810000000000000
+        Condition = 'TimesheetDetail."ACTIVITY_DATE"'
+        KeepTogether = True
+        ResetPageNumbers = True
+        StartNewPage = True
+        object Memo1: TfrxMemoView
+          AllowVectorExport = True
+          Width = 532.913730000000000000
+          Height = 22.677165350000000000
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Height = -19
+          Font.Name = 'Calibri'
+          Font.Style = [fsBold]
+          Frame.Typ = []
+          Memo.UTF8W = (
+            'Timesheets for: [(<TimesheetDetail."ACTIVITY_DATE">)]')
+          ParentFont = False
+        end
+      end
+      object PageFooter1: TfrxPageFooter
+        FillType = ftBrush
+        Frame.Typ = [ftTop]
+        Height = 37.795300000000000000
+        Top = 381.732530000000000000
+        Width = 1046.929810000000000000
+        object Memo11: TfrxMemoView
+          Align = baLeft
+          AllowVectorExport = True
+          Top = 18.897650000000000000
+          Width = 207.874150000000000000
+          Height = 18.897650000000000000
+          Frame.Typ = []
+          Memo.UTF8W = (
+            'Printed on: [(Date)] at: [(Time)]')
+        end
+        object Memo12: TfrxMemoView
+          Align = baRight
+          AllowVectorExport = True
+          Left = 854.173780000000000000
+          Top = 18.897637795275600000
+          Width = 192.756030000000000000
+          Height = 18.897650000000000000
+          Frame.Typ = []
+          HAlign = haRight
+          Memo.UTF8W = (
+            'Page [Page] of [TotalPages]')
+          Formats = <
+            item
+            end
+            item
+            end>
+        end
+        object Memo29: TfrxMemoView
+          Align = baLeft
+          AllowVectorExport = True
+          Width = 1046.929810000000000000
+          Height = 15.118110240000000000
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Calibri'
+          Font.Style = []
+          Frame.Typ = []
+          Memo.UTF8W = (
+            
+              'Col RU: HR = Hourly;  EA = Each;  PD = Per extra director;  PP =' +
+              ' per page;  PR = Per return;  PT = Plus time spent')
+          ParentFont = False
+        end
+      end
+      object PageHeader1: TfrxPageHeader
+        FillType = ftBrush
+        Frame.Typ = []
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -15
+        Font.Name = 'Calibri'
+        Font.Style = [fsBold]
+        Height = 68.031540000000000000
+        ParentFont = False
+        Top = 41.574830000000000000
+        Width = 1046.929810000000000000
+        object Memo18: TfrxMemoView
+          AllowVectorExport = True
+          Left = 0.000000000000000629
+          Top = 49.133890000000000000
+          Width = 1046.929133860000000000
+          Height = 18.897637800000000000
+          Frame.Typ = [ftLeft, ftRight, ftTop, ftBottom]
+        end
+        object Memo21: TfrxMemoView
+          AllowVectorExport = True
+          Top = 49.133890000000000000
+          Width = 79.370078740000000000
+          Height = 18.897650000000000000
+          Frame.Typ = [ftLeft]
+          GapX = 5.000000000000000000
+          Memo.UTF8W = (
+            'Date')
+        end
+        object Memo22: TfrxMemoView
+          AllowVectorExport = True
+          Left = 83.149606300000000000
+          Top = 49.133890000000000000
+          Width = 226.771653543307000000
+          Height = 18.897650000000000000
+          Frame.Typ = [ftLeft]
+          GapX = 5.000000000000000000
+          Memo.UTF8W = (
+            'Customer')
+        end
+        object Memo23: TfrxMemoView
+          AllowVectorExport = True
+          Left = 313.700799610000000000
+          Top = 49.133890000000000000
+          Width = 143.622047240000000000
+          Height = 18.897650000000000000
+          Frame.Typ = [ftLeft]
+          GapX = 5.000000000000000000
+          Memo.UTF8W = (
+            'Activity Type')
+        end
+        object Memo24: TfrxMemoView
+          AllowVectorExport = True
+          Left = 461.102352440000000000
+          Top = 49.133890000000000000
+          Width = 268.346456692913000000
+          Height = 18.897650000000000000
+          Frame.Typ = [ftLeft]
+          GapX = 5.000000000000000000
+          Memo.UTF8W = (
+            'Description')
+        end
+        object Memo25: TfrxMemoView
+          Align = baRight
+          AllowVectorExport = True
+          Left = 971.339258818897600000
+          Top = 49.133890000000000000
+          Width = 75.590551181102400000
+          Height = 18.897650000000000000
+          Frame.Typ = [ftLeft]
+          GapX = 5.000000000000000000
+          HAlign = haRight
+          Memo.UTF8W = (
+            'C/Fwd')
+        end
+        object Memo26: TfrxMemoView
+          AllowVectorExport = True
+          Left = 805.039362760000000000
+          Top = 49.133890000000000000
+          Width = 56.692913390000000000
+          Height = 18.897650000000000000
+          Frame.Typ = [ftLeft]
+          GapX = 5.000000000000000000
+          HAlign = haRight
+          Memo.UTF8W = (
+            'Rate')
+        end
+        object Memo27: TfrxMemoView
+          AllowVectorExport = True
+          Left = 891.968513700000000000
+          Top = 49.133890000000000000
+          Width = 75.590551180000000000
+          Height = 18.897650000000000000
+          Frame.Typ = [ftLeft]
+          GapX = 5.000000000000000000
+          HAlign = haRight
+          Memo.UTF8W = (
+            'Amt')
+        end
+        object Memo28: TfrxMemoView
+          AllowVectorExport = True
+          Left = 756.685007640000000000
+          Top = 49.133890000000000000
+          Width = 45.354330710000000000
+          Height = 18.897650000000000000
+          Frame.Typ = [ftLeft]
+          GapX = 5.000000000000000000
+          HAlign = haRight
+          Memo.UTF8W = (
+            'Hrs')
+        end
+        object Memo5: TfrxMemoView
+          Align = baRight
+          AllowVectorExport = True
+          Left = 604.724800000000000000
+          Width = 442.205010000000000000
+          Height = 30.236220470000000000
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Height = -21
+          Font.Name = 'Calibri'
+          Font.Style = [fsBold]
+          Frame.Typ = []
+          HAlign = haRight
+          Memo.UTF8W = (
+            'Timesheet Detail Report')
+          ParentFont = False
+        end
+        object Memo10: TfrxMemoView
+          Align = baLeft
+          AllowVectorExport = True
+          Width = 257.008040000000000000
+          Height = 30.236240000000000000
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Height = -21
+          Font.Name = 'Calibri'
+          Font.Style = [fsBold]
+          Frame.Typ = []
+          Memo.UTF8W = (
+            'van Brakel and Associates')
+          ParentFont = False
+        end
+        object Memo36: TfrxMemoView
+          AllowVectorExport = True
+          Left = 734.007837400000000000
+          Top = 49.133890000000000000
+          Width = 18.897637800000000000
+          Height = 18.897650000000000000
+          Frame.Typ = [ftLeft]
+          GapX = 5.000000000000000000
+          HAlign = haCenter
+          Memo.UTF8W = (
+            'Bl')
+        end
+        object Memo30: TfrxMemoView
+          AllowVectorExport = True
+          Left = 865.512370000000000000
+          Top = 49.133890000000000000
+          Width = 24.566929130000000000
+          Height = 18.897650000000000000
+          Frame.Typ = [ftLeft]
+          GapX = 5.000000000000000000
+          HAlign = haCenter
+          Memo.UTF8W = (
+            'R')
+        end
+      end
+      object bndReportSummary: TfrxReportSummary
+        FillType = ftBrush
+        Frame.Typ = []
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Calibri'
+        Font.Style = [fsBold]
+        Height = 22.677180000000000000
+        ParentFont = False
+        Top = 336.378170000000000000
+        Width = 1046.929810000000000000
+        object Memo4: TfrxMemoView
+          Align = baRight
+          AllowVectorExport = True
+          Left = 971.339258820000000000
+          Width = 75.590551180000000000
+          Height = 18.897650000000000000
+          DisplayFormat.FormatStr = '###,##0.00'
+          DisplayFormat.Kind = fkNumeric
+          Frame.Typ = [ftLeft]
+          HAlign = haRight
+          Memo.UTF8W = (
+            '[SUM(<TimesheetDetail."CARRY_FORWARD_VALUE">,bndMaster)]')
+        end
+        object Memo6: TfrxMemoView
+          AllowVectorExport = True
+          Left = 891.968503940000000000
+          Width = 75.590551180000000000
+          Height = 18.897650000000000000
+          DisplayFormat.FormatStr = '###,##0.00'
+          DisplayFormat.Kind = fkNumeric
+          Frame.Typ = [ftLeft]
+          HAlign = haRight
+          Memo.UTF8W = (
+            '[SUM(<TimesheetDetail."ITEM_VALUE">,bndMaster)]')
+        end
+        object Memo7: TfrxMemoView
+          AllowVectorExport = True
+          Left = 756.661417320000000000
+          Width = 45.354330710000000000
+          Height = 18.897650000000000000
+          DisplayFormat.FormatStr = '###,##0.00'
+          DisplayFormat.Kind = fkNumeric
+          Frame.Typ = [ftLeft]
+          HAlign = haRight
+          Memo.UTF8W = (
+            '[SUM(<TimesheetDetail."TIME_HOURS">,bndMaster)]')
+        end
+        object Memo9: TfrxMemoView
+          AllowVectorExport = True
+          Left = 600.945270000000000000
+          Width = 143.622047240000000000
+          Height = 18.897650000000000000
+          Frame.Typ = []
+          HAlign = haRight
+          Memo.UTF8W = (
+            'Grand Totals:')
+        end
+        object Memo33: TfrxMemoView
+          AllowVectorExport = True
+          Left = 805.039890000000000000
+          Width = 56.692913390000000000
+          Height = 18.897650000000000000
+          Frame.Typ = [ftLeft]
+        end
+      end
+    end
+  end
+  object fdsTimesheetByActivityDate: TfrxDBDataset
+    UserName = 'TimesheetDetail'
+    CloseDataSource = False
+    FieldAliases.Strings = (
+      'ID=ID'
+      'FIRST_NAME=FIRST_NAME'
+      'LAST_NAME=LAST_NAME'
+      'LOGIN_NAME=LOGIN_NAME'
+      'ACTIVITY_DATE=ACTIVITY_DATE'
+      'CUSTOMER_TYPE=CUSTOMER_TYPE'
+      'CUSTOMER_NAME=CUSTOMER_NAME'
+      'ACTIVITY_TYPE=ACTIVITY_TYPE'
+      'ACTIVITY=ACTIVITY'
+      'PRICE_LIST_ITEM=PRICE_LIST_ITEM'
+      'TIME_SPENT=TIME_SPENT'
+      'TIME_HOURS=TIME_HOURS'
+      'ACTUAL_RATE=ACTUAL_RATE'
+      'STD_RATE=STD_RATE'
+      'ABBREVIATION=ABBREVIATION'
+      'ITEM_VALUE=ITEM_VALUE'
+      'THE_PERIOD=THE_PERIOD'
+      'BILLABLE=BILLABLE'
+      'BILLABLE_STR=BILLABLE_STR'
+      'INVOICE_ID=INVOICE_ID'
+      'CN_ID=CN_ID'
+      'LOCKED=LOCKED'
+      'LOCKED_STR=LOCKED_STR'
+      'INVOICE_DATE=INVOICE_DATE'
+      'CARRY_FORWARD=CARRY_FORWARD'
+      'CARRY_FORWARD_STR=CARRY_FORWARD_STR'
+      'IS_ADDITIONAL_WORK=IS_ADDITIONAL_WORK'
+      'IS_ADDITIONAL_WORK_STR=IS_ADDITIONAL_WORK_STR'
+      'CARRY_FORWARD_VALUE=CARRY_FORWARD_VALUE')
+    DataSet = cdsTSBillable
+    BCDToCurrency = False
+    Left = 650
+    Top = 530
   end
 end

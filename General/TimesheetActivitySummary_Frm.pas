@@ -188,7 +188,7 @@ begin
       Exit;
   end;
 
-  ReportDM.FReport := ReportDM.rptTSSummaryByActivity;
+  ReportDM.Report := ReportDM.rptTSSummaryByActivity;
   viewSummaryByActivity.DataController.BeginUpdate;
 
   RepFileName := TSDM.ShellResource.ReportFolder + 'TSSummaryByActivity.fr3';
@@ -197,12 +197,12 @@ begin
     raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 
   ActivityTypeID := ReportDM.cdsTSSummaryByActivity.FieldByName('ACTIVITY_TYPE_ID').AsInteger;
-  ReportDM.FReport := ReportDM.rptTSSummaryByActivity;
+  ReportDM.Report := ReportDM.rptTSSummaryByActivity;
 
   try
     ReportDM.frxPDFExport.FileName := dlgFileSave.FileName;
-    if ReportDM.FReport.PrepareReport(True) then
-      ReportDM.FReport.Export(ReportDM.frxPDFExport);
+    if ReportDM.Report.PrepareReport(True) then
+      ReportDM.Report.Export(ReportDM.frxPDFExport);
   finally
     if not ReportDM.cdsTSSummaryByActivity.Locate('ACTIVITY_TYPE_ID', ActivityTypeID, []) then
       ReportDM.cdsTSSummaryByActivity.First;
@@ -222,26 +222,26 @@ begin
     raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 
   ActivityTypeID := ReportDM.cdsTSSummaryByActivity.FieldByName('ACTIVITY_TYPE_ID').AsInteger;
-  ReportDM.FReport := ReportDM.rptTSSummaryByActivity;
+  ReportDM.Report := ReportDM.rptTSSummaryByActivity;
   viewSummaryByActivity.DataController.BeginUpdate;
 
   try
-    ReportDM.FReport.LoadFromFile(RepFileName);
+    ReportDM.Report.LoadFromFile(RepFileName);
 
-    if ReportDM.FReport.PrepareReport then
+    if ReportDM.Report.PrepareReport then
       if TAction(Sender).Tag = 0 then
-        ReportDM.FReport.ShowPreparedReport
+        ReportDM.Report.ShowPreparedReport
       else
       begin
         if dlgPrint.Execute then
         begin
-          ReportDM.FReport.PrintOptions.Copies :=
+          ReportDM.Report.PrintOptions.Copies :=
             dlgPrint.DialogData.Copies;
 
-//              ReportDM.FReport.PrintOptions.Printer.
+//              ReportDM.Report.PrintOptions.Printer.
 //                dxPrintDevice.PrinterIndex;
 
-          ReportDM.FReport.Print;
+          ReportDM.Report.Print;
         end;
       end;
   finally

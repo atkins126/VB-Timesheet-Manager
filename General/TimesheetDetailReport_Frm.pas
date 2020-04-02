@@ -66,7 +66,7 @@ type
     dlgFileSave: TSaveDialog;
     grpOther1: TdxLayoutGroup;
     grpOther2: TdxLayoutGroup;
-    cbxOepnDocument: TcxCheckBox;
+    cbxOpenDocument: TcxCheckBox;
     cbxRemoveZeroBillableValues: TcxCheckBox;
     litOpenDoc: TdxLayoutItem;
     litRemoveZeroBillable: TdxLayoutItem;
@@ -230,7 +230,7 @@ type
     tipPrint: TdxScreenTip;
     tipPDF: TdxScreenTip;
     tipExcel: TdxScreenTip;
-    tipToGrid: TdxScreenTip;
+    tipToScreen: TdxScreenTip;
     styHintController: TcxHintStyleController;
     litSortOptions: TdxLayoutItem;
     grpSortOptions: TdxLayoutGroup;
@@ -266,6 +266,12 @@ type
     procedure cbxSaveSortOptoionsPropertiesChange(Sender: TObject);
     procedure viewSortOrderDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure viewSortOrderStartDrag(Sender: TObject; var DragObject: TDragObject);
+    procedure cbxIncludePropertiesEditValueChanged(Sender: TObject);
+    procedure cbxGroupedReportPropertiesChange(Sender: TObject);
+    procedure lucReportTypePropertiesChange(Sender: TObject);
+    procedure lucPeriodPropertiesChange(Sender: TObject);
+    procedure dteFromDatePropertiesChange(Sender: TObject);
+    procedure viewSystemUserKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
 
     procedure viewSortOrderDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
@@ -276,15 +282,12 @@ type
     procedure viewBillCfwdDataControllerSummaryFooterSummaryItemsSummary(
       ASender: TcxDataSummaryItems; Arguments: TcxSummaryEventArguments;
       var OutArguments: TcxSummaryEventOutArguments);
-    procedure cbxIncludePropertiesEditValueChanged(Sender: TObject);
-    procedure cbxGroupedReportPropertiesChange(Sender: TObject);
+
     procedure edtTLoginNameGetDisplayText(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AText: string);
-    procedure lucReportTypePropertiesChange(Sender: TObject);
-    procedure lucPeriodPropertiesChange(Sender: TObject);
-    procedure dteFromDatePropertiesChange(Sender: TObject);
-    procedure viewSystemUserKeyUp(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
+    procedure cbxOepnDocumentPropertiesChange(Sender: TObject);
+    procedure cbxRemoveZeroBillableValuesPropertiesChange(Sender: TObject);
+
   private
     { Private declarations }
 //    FReportFileName: TReportFileName;
@@ -297,6 +300,8 @@ type
     FID: Integer;
     FMadChanges: Boolean;
     FSortListID: TStringList;
+    FGroupByField: string;
+    FShowingForm: Boolean;
 
     procedure GetPeriods;
     procedure GetSystemUser;
@@ -377,6 +382,7 @@ begin
   edtOrdValue.SortOrder := soAscending;
   FMadChanges := False;
   FSortListID := RUtils.CreateStringList(COMMA, SINGLE_QUOTE);
+  FShowingForm := True;
 
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   RegKey.RootKey := HKEY_CURRENT_USER;
@@ -385,12 +391,23 @@ begin
   if not RegKey.ValueExists('Save Report Sort Order') then
     RegKey.WriteBool('Save Report Sort Order', True);
 
-  cbxSaveSortOrder.Checked := RegKey.ReadBool('Save Report Sort Order');
-
   if not RegKey.ValueExists('Group Timsheet Detail Report') then
     RegKey.WriteBool('Group Timsheet Detail Report', True);
 
+  if not RegKey.ValueExists('Open Document After Export') then
+    RegKey.WriteBool('Open Document After Export', True);
+
+  if not RegKey.ValueExists('Remove Zero Billable Values') then
+    RegKey.WriteBool('Remove Zero Billable Values', True);
+
+  if not RegKey.ValueExists('Timesheet Detail Report Type Index') then
+    RegKey.WriteInteger('Timesheet Detail Report Type Index', 0);
+
+  cbxSaveSortOrder.Checked := RegKey.ReadBool('Save Report Sort Order');
   cbxGroupedReport.Checked := RegKey.ReadBool('Group Timsheet Detail Report');
+  cbxOpenDocument.Checked := RegKey.ReadBool('Open Document After Export');
+  cbxRemoveZeroBillableValues.Checked := RegKey.ReadBool('Remove Zero Billable Values');
+  lucReportType.ItemIndex := RegKey.ReadBool('Timesheet Detail Report Type Index');
 
   if ReportDM = nil then
     ReportDM := TReportDM.Create(nil);
@@ -603,14 +620,17 @@ var
   RegKey: TRegistry;
 begin
   inherited;
-  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
-  RegKey.RootKey := HKEY_CURRENT_USER;
-  RegKey.OpenKey(KEY_TIME_SHEET, True);
-  try
-    RegKey.WriteBool('Group Timsheet Detail Report', cbxSaveSortOrder.Checked);
-    RegKey.CloseKey;
-  finally
-    Regkey.Free;
+  if not FShowingForm then
+  begin
+    RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+    RegKey.RootKey := HKEY_CURRENT_USER;
+    RegKey.OpenKey(KEY_TIME_SHEET, True);
+    try
+      RegKey.WriteBool('Group Timsheet Detail Report', cbxGroupedReport.Checked);
+      RegKey.CloseKey;
+    finally
+      Regkey.Free;
+    end;
   end;
 end;
 
@@ -618,6 +638,44 @@ procedure TTimesheetDetailReportFrm.cbxIncludePropertiesEditValueChanged(Sender:
 begin
   inherited;
   ReportDM.cdsTSSortOrder.Post;
+end;
+
+procedure TTimesheetDetailReportFrm.cbxOepnDocumentPropertiesChange(Sender: TObject);
+var
+  RegKey: TRegistry;
+begin
+  inherited;
+  if not FShowingForm then
+  begin
+    RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+    RegKey.RootKey := HKEY_CURRENT_USER;
+    RegKey.OpenKey(KEY_TIME_SHEET, True);
+    try
+      RegKey.WriteBool('Group Timsheet Detail Report', cbxOpenDocument.Checked);
+      RegKey.CloseKey;
+    finally
+      Regkey.Free;
+    end;
+  end;
+end;
+
+procedure TTimesheetDetailReportFrm.cbxRemoveZeroBillableValuesPropertiesChange(Sender: TObject);
+var
+  RegKey: TRegistry;
+begin
+  inherited;
+  if not FShowingForm then
+  begin
+    RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+    RegKey.RootKey := HKEY_CURRENT_USER;
+    RegKey.OpenKey(KEY_TIME_SHEET, True);
+    try
+      RegKey.WriteBool('Remove Zero Billable Values', cbxRemoveZeroBillableValues.Checked);
+      RegKey.CloseKey;
+    finally
+      Regkey.Free;
+    end;
+  end;
 end;
 
 procedure TTimesheetDetailReportFrm.cbxSaveSortOptoionsPropertiesChange(Sender: TObject);
@@ -738,8 +796,8 @@ begin
     0:
       begin
         FileName := 'Timesheet Detail by User';
-//        ReportDM.FReport := ReportDM.rptTimesheetByUser;
-        ReportDM.FReport := ReportDM.rptTimesheetDetail;
+//        ReportDM.Report := ReportDM.rptTimesheetByUser;
+        ReportDM.Report := ReportDM.rptTimesheetDetail;
         DC := viewSystemUser.DataController;
         C := viewSystemUser.Controller;
 
@@ -771,8 +829,8 @@ begin
     1:
       begin
         FileName := 'Timesheet Detail by Customer';
-//        ReportDM.FReport := ReportDM.rptTimesheetByCustomer;
-        ReportDM.FReport := ReportDM.rptTimesheetDetail;
+//        ReportDM.Report := ReportDM.rptTimesheetByCustomer;
+        ReportDM.Report := ReportDM.rptTimesheetDetail;
         DC := viewCustomerListing.DataController;
         C := viewCustomerListing.Controller;
 
@@ -802,8 +860,8 @@ begin
     2:
       begin
         FileName := 'Timesheet Detail by Activity';
-//        ReportDM.FReport := ReportDM.rptTimesheetByActivity;
-        ReportDM.FReport := ReportDM.rptTimesheetDetail;
+//        ReportDM.Report := ReportDM.rptTimesheetByActivity;
+        ReportDM.Report := ReportDM.rptTimesheetDetail;
         DC := viewActivityType.DataController;
         C := viewActivityType.Controller;
 
@@ -872,8 +930,8 @@ begin
     0:
       begin
         FileName := 'Timesheet Detail BillCfwd by User';
-//        ReportDM.FReport := ReportDM.rptTimesheetByUser;
-        ReportDM.FReport := ReportDM.rptTimesheetDetail;
+//        ReportDM.Report := ReportDM.rptTimesheetByUser;
+        ReportDM.Report := ReportDM.rptTimesheetDetail;
         DC := viewSystemUser.DataController;
         C := viewSystemUser.Controller;
 
@@ -906,7 +964,7 @@ begin
     1:
       begin
         FileName := 'Timesheet Detail BillFwd by Customer';
-        ReportDM.FReport := ReportDM.rptTimesheetByCustomer;
+        ReportDM.Report := ReportDM.rptTimesheetByCustomer;
         DC := viewCustomerListing.DataController;
         C := viewCustomerListing.Controller;
 
@@ -938,7 +996,7 @@ begin
     2:
       begin
         FileName := 'Timesheet Detail by Activity';
-        ReportDM.FReport := ReportDM.rptTimesheetByActivity;
+        ReportDM.Report := ReportDM.rptTimesheetByActivity;
         DC := viewActivityType.DataController;
         C := viewActivityType.Controller;
 
@@ -1047,8 +1105,24 @@ begin
 end;
 
 procedure TTimesheetDetailReportFrm.lucReportTypePropertiesChange(Sender: TObject);
+var
+  RegKey: TRegistry;
 begin
   inherited;
+  if not FShowingForm then
+  begin
+    RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+    RegKey.RootKey := HKEY_CURRENT_USER;
+    RegKey.OpenKey(KEY_TIME_SHEET, True);
+
+    try
+      RegKey.WriteBool('Timesheet Detail Report Type Index', cbxRemoveZeroBillableValues.Checked);
+      RegKey.CloseKey;
+    finally
+      Regkey.Free;
+    end;
+  end;
+
   HideTabs;
 //  Showtabs;
   grpData.Items[lucReportType.ItemIndex].Visible := True;
@@ -1510,7 +1584,7 @@ begin
 //  if not TFile.Exists(RepFileName) then
 //    raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 //
-//  ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[grpData.ItemIndex]);
+//  ReportDM.Report.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[grpData.ItemIndex]);
 
   case grpData.ItemIndex of
     0:
@@ -1544,7 +1618,7 @@ begin
       True, // Use native format
       'xlsx');
 
-    if cbxOepnDocument.Checked then
+    if cbxOpenDocument.Checked then
       ShellExecute(0, 'open', PChar('Excel.exe'), PChar('"' + ExportFileName + '"'), nil, SW_SHOWNORMAL)
   finally
     viewTimesheetBillable.OptionsView.BandHeaders := True;
@@ -1572,7 +1646,7 @@ begin
   inherited;
   ReportDM.frxPDFExport.ShowDialog := False;
   ReportDM.frxPDFExport.Background := True;
-  ReportDM.frxPDFExport.OpenAfterExport := cbxOepnDocument.Checked;
+  ReportDM.frxPDFExport.OpenAfterExport := cbxOpenDocument.Checked;
   ReportDM.frxPDFExport.OverwritePrompt := True;
   ReportDM.frxPDFExport.ShowProgress := True;
 //  TfrxGroupHeader(ReportDM.rptBillableSummaryByCustomer.FindObject('bndCustomerHeader')).Visible := False;
@@ -1604,14 +1678,14 @@ begin
 //  if not TFile.Exists(RepFileName) then
 //    raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 //
-//  ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[grpData.ItemIndex]);
+//  ReportDM.Report.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[grpData.ItemIndex]);
 
   DC := viewTimesheetBillable.DataController;
   DC.BeginUpdate;
   try
     ReportDM.frxPDFExport.FileName := dlgFileSave.FileName;
-    if ReportDM.FReport.PrepareReport(True) then
-      ReportDM.FReport.Export(ReportDM.frxPDFExport);
+    if ReportDM.Report.PrepareReport(True) then
+      ReportDM.Report.Export(ReportDM.frxPDFExport);
   finally
     ReportDM.cdsTSBillable.First;
     DC.EndUpdate;
@@ -1620,15 +1694,16 @@ end;
 
 function TTimesheetDetailReportFrm.OrderByClause: string;
 var
-  DC: TcxCustomDataController;
+//  DC: TcxCustomDataController;
   I: Integer;
 begin
-  DC := viewSortOrder.DataController;
+//  DC := viewSortOrder.DataController;
   Result := ' ORDER BY ';
 
-  DC.BeginUpdate;
+//  DC.BeginUpdate;
   ReportDM.cdsTSSortOrder.DisableControls;
   ReportDM.cdsTSSortOrder.First;
+  FGroupByField := ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString;
 
   try
     while not ReportDM.cdsTSSortOrder.EOF do
@@ -1656,7 +1731,7 @@ begin
 //    end;
   finally
     ReportDM.cdsTSSortOrder.First;
-    DC.EndUpdate;
+//    DC.EndUpdate;
     ReportDM.cdsTSSortOrder.EnableControls;
   end;
 end;
@@ -1711,14 +1786,29 @@ begin
       0:
         begin
           GetTimesheetDetail;
-          RepFileName := TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[grpData.ItemIndex];
+
+          if SameText(FGroupByField, 'CUSTOMER_NAME') then
+            RepFileName := 'TimesheetByCustomer.fr3'
+
+          else if SameText(FGroupByField, 'LOGIN_NAME') then
+            RepFileName := 'TimesheetByUser.fr3'
+
+          else if SameText(FGroupByField, 'ACTIVITY_TYPE') then
+            RepFileName := 'TimesheetByActivityType.fr3'
+
+          else if SameText(FGroupByField, 'ACTIVITY_DATE') then
+            RepFileName := 'TimesheetByActivityDate.fr3';
+
+          RepFileName := TSDM.ShellResource.ReportFolder + RepFileName;
+
+//          RepFileName := TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[grpData.ItemIndex];
 
           if not TFile.Exists(RepFileName) then
             raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 
-          ReportDM.FReport.LoadFromFile(RepFileName);
-          TfrxMemoView(ReportDM.FReport.FindObject('bndGroupHeader')).Visible := cbxGroupedReport.Checked;
-          TfrxMemoView(ReportDM.FReport.FindObject('bndGroupFooter')).Visible := cbxGroupedReport.Checked;
+          ReportDM.Report.LoadFromFile(RepFileName);
+          TfrxMemoView(ReportDM.Report.FindObject('bndGroupHeader')).Visible := cbxGroupedReport.Checked;
+          TfrxMemoView(ReportDM.Report.FindObject('bndGroupFooter')).Visible := cbxGroupedReport.Checked;
         end;
 
       1:
@@ -1729,14 +1819,14 @@ begin
             0, 1: // Previewing or printing
               begin
                 case lucReportType.ItemIndex of
-                  0: RepFileName := TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[3];
-                  1: RepFileName := TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[4];
+                  0: RepFileName := TSDM.ShellResource.ReportFolder + 'TimesheetBillCfwdByUser.fr3'; // ReportDM.ReportFileName[3];
+                  1: RepFileName := TSDM.ShellResource.ReportFolder + 'TimesheetBillCfwdByCustomer.fr3'; //ReportDM.ReportFileName[4];
                 end;
 
                 if not TFile.Exists(RepFileName) then
                   raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 
-                ReportDM.FReport.LoadFromFile(RepFileName);
+                ReportDM.Report.LoadFromFile(RepFileName);
               end;
           end;
         end;
@@ -1751,17 +1841,17 @@ begin
     case TAction(Sender).Tag of
       0, 1: // Previewing or printing
         begin
-          if ReportDM.FReport.PrepareReport then
+          if ReportDM.Report.PrepareReport then
             if TAction(Sender).Tag = 0 then
-              ReportDM.FReport.ShowPreparedReport
+              ReportDM.Report.ShowPreparedReport
             else
             begin
               if dlgPrint.Execute then
               begin
-                ReportDM.FReport.PrintOptions.Copies :=
+                ReportDM.Report.PrintOptions.Copies :=
                   dlgPrint.DialogData.Copies;
 
-                ReportDM.FReport.Print;
+                ReportDM.Report.Print;
               end;
             end;
         end;

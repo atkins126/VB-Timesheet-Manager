@@ -341,14 +341,14 @@ begin
   if not TFile.Exists(RepFileName) then
     raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 
-  ReportDM.FReport.LoadFromFile(RepFileName);
+  ReportDM.Report.LoadFromFile(RepFileName);
 
   DC := viewMonthlyBilling.DataController;
   DC.BeginUpdate;
   try
     ReportDM.frxPDFExport.FileName := dlgFileSave.FileName;
-    if ReportDM.FReport.PrepareReport(True) then
-      ReportDM.FReport.Export(ReportDM.frxPDFExport);
+    if ReportDM.Report.PrepareReport(True) then
+      ReportDM.Report.Export(ReportDM.frxPDFExport);
   finally
     if not ReportDM.cdsMonthlyBilling.Locate('THE_PERIOD', ThePeriod, []) then
       ReportDM.cdsMonthlyBilling.First;
@@ -371,41 +371,41 @@ begin
     case TAction(Sender).Tag of
       0, 1: // Previewing or printing
         begin
-          ReportDM.FReport := ReportDM.rptMonthlyBilling;
+          ReportDM.Report := ReportDM.rptMonthlyBilling;
           RepFileName := TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[5];
 
           if not TFile.Exists(RepFileName) then
             raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 
-          ReportDM.FReport.LoadFromFile(RepFileName);
+          ReportDM.Report.LoadFromFile(RepFileName);
           case lucSelectBy.ItemIndex of
             0:
               begin
                 if lucFromPeriod.EditValue = lucToPeriod.EditValue then
 
-                  TfrxMemoView(ReportDM.FReport.FindObject('lblReportTypeName')).Text := 'Billing Summary for: ' +
+                  TfrxMemoView(ReportDM.Report.FindObject('lblReportTypeName')).Text := 'Billing Summary for: ' +
                     VarToStr(lucFromPeriod.EditValue)
                 else
-                  TfrxMemoView(ReportDM.FReport.FindObject('lblReportTypeName')).Text := 'Billing Summary for: ' +
+                  TfrxMemoView(ReportDM.Report.FindObject('lblReportTypeName')).Text := 'Billing Summary for: ' +
                     VarToStr(lucFromPeriod.EditValue) + ' to ' + VarToStr(lucToPeriod.EditValue);
               end;
 
-            1: TfrxMemoView(ReportDM.FReport.FindObject('lblReportTypeName')).Text :=
+            1: TfrxMemoView(ReportDM.Report.FindObject('lblReportTypeName')).Text :=
               'Billing Summary for: ' + VarToStr(lucFromYear.EditValue);
           end;
 
           viewMonthlyBilling.DataController.BeginUpdate;
-          if ReportDM.FReport.PrepareReport then
+          if ReportDM.Report.PrepareReport then
             if TAction(Sender).Tag = 0 then
-              ReportDM.FReport.ShowPreparedReport
+              ReportDM.Report.ShowPreparedReport
             else
             begin
               if dlgPrint.Execute then
               begin
-                ReportDM.FReport.PrintOptions.Copies :=
+                ReportDM.Report.PrintOptions.Copies :=
                   dlgPrint.DialogData.Copies;
 
-                ReportDM.FReport.Print;
+                ReportDM.Report.Print;
               end;
             end;
         end;

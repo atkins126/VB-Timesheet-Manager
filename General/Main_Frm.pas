@@ -1789,8 +1789,8 @@ begin
 
   OrderByClause := 'ORDER BY T.ACTIVITY_DATE';
   WhereClause := DateClause + {CarryForwardClause + }UserClause + ' ';
-//  ReportDM.FReport := ReportDM.rptTimesheetByUser;
-  ReportDM.FReport := ReportDM.rptTimesheetDetail;
+//  ReportDM.Report := ReportDM.rptTimesheetByUser;
+  ReportDM.Report := ReportDM.rptTimesheetDetail;
 
   try
     VBBaseDM.GetData(45, ReportDM.cdsTSBillable, ReportDM.cdsTSBillable.Name, WhereClause + ';' + OrderByClause,
@@ -1802,19 +1802,19 @@ begin
     if not TFile.Exists(RepFileName) then
       raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 
-    ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[0] {'TimesheetByUser.fr3'});
+    ReportDM.Report.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[0] {'TimesheetByUser.fr3'});
 
-    if ReportDM.FReport.PrepareReport then
+    if ReportDM.Report.PrepareReport then
       if TAction(Sender).Tag = 0 then
-        ReportDM.FReport.ShowPreparedReport
+        ReportDM.Report.ShowPreparedReport
       else
       begin
         if dlgPrint.Execute then
         begin
-          ReportDM.FReport.PrintOptions.Copies :=
+          ReportDM.Report.PrintOptions.Copies :=
             dlgPrint.DialogData.Copies;
 
-          ReportDM.FReport.Print;
+          ReportDM.Report.Print;
         end;
       end;
   finally
@@ -1866,8 +1866,8 @@ begin
   UserClause := ' AND T.USER_ID IN (' + FTSUserID.ToString + ')';
   OrderByClause := 'ORDER BY T.ACTIVITY_DATE';
   WhereClause := DateClause + UserClause + ' ';
-//  ReportDM.FReport := ReportDM.rptTimesheetByUser;
-  ReportDM.FReport := ReportDM.rptTimesheetDetail;
+//  ReportDM.Report := ReportDM.rptTimesheetByUser;
+  ReportDM.Report := ReportDM.rptTimesheetDetail;
 
   VBBaseDM.GetData(45, ReportDM.cdsTSBillable, ReportDM.cdsTSBillable.Name, WhereClause + ';' + OrderByClause,
     'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsTSBillable.UpdateOptions.Generatorname,
@@ -1878,7 +1878,7 @@ begin
   if not TFile.Exists(RepFileName) then
     raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 
-  ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[0] {'TimesheetByUser.fr3'});
+  ReportDM.Report.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[0] {'TimesheetByUser.fr3'});
 
   edtTCustomerName.Visible := True;
   viewTimesheetBillable.OptionsView.BandHeaders := False;
@@ -1940,8 +1940,8 @@ begin
     UserClause := ' AND T.USER_ID IN (' + FTSUserID.ToString + ')';
     OrderByClause := 'ORDER BY T.ACTIVITY_DATE';
     WhereClause := DateClause + UserClause + ' ';
-//    ReportDM.FReport := ReportDM.rptTimesheetByUser;
-    ReportDM.FReport := ReportDM.rptTimesheetDetail;
+//    ReportDM.Report := ReportDM.rptTimesheetByUser;
+    ReportDM.Report := ReportDM.rptTimesheetDetail;
 
     VBBaseDM.GetData(45, ReportDM.cdsTSBillable, ReportDM.cdsTSBillable.Name, WhereClause + ';' + OrderByClause,
       'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsTSBillable.UpdateOptions.Generatorname,
@@ -1952,15 +1952,15 @@ begin
     if not TFile.Exists(RepFileName) then
       raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 
-    ReportDM.FReport.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[0] {'TimesheetByUser.fr3'});
+    ReportDM.Report.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[0] {'TimesheetByUser.fr3'});
 
     edtTCustomerName.Visible := True;
     viewTimesheetBillable.OptionsView.BandHeaders := False;
 
     DC.BeginUpdate;
     ReportDM.frxPDFExport.FileName := dlgFileSave.FileName;
-    if ReportDM.FReport.PrepareReport(True) then
-      ReportDM.FReport.Export(ReportDM.frxPDFExport);
+    if ReportDM.Report.PrepareReport(True) then
+      ReportDM.Report.Export(ReportDM.frxPDFExport);
   finally
     ReportDM.cdsTSBillable.First;
     viewTimesheetBillable.OptionsView.BandHeaders := True;

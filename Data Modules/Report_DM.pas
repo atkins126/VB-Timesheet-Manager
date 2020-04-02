@@ -154,9 +154,9 @@ type
     cdsTSBillableIS_ADDITIONAL_WORK_STR: TStringField;
     cdsTSBillableCARRY_FORWARD_VALUE: TFloatField;
     rptTimesheetByCustomer: TfrxReport;
-    rptTimesheetByActivity: TfrxReport;
+    rptTimesheetByActivityType: TfrxReport;
     fdsTimesheetByCustomer: TfrxDBDataset;
-    fdsTimesheetByActivity: TfrxDBDataset;
+    fdsTimesheetByActivityType: TfrxDBDataset;
     cdsTSBillableLOCKED_STR: TStringField;
     rptTSSummaryByActivity: TfrxReport;
     fdsTSSummaryByActivity: TfrxDBDataset;
@@ -450,6 +450,8 @@ type
     cdsRateUnitABBREVIATION: TStringField;
     cdsTSBillableABBREVIATION: TStringField;
     rptTimesheetDetailGrouped: TfrxReport;
+    rptTimesheetByActivityDate: TfrxReport;
+    fdsTimesheetByActivityDate: TfrxDBDataset;
     procedure cdsTimesheetCalcFields(DataSet: TDataSet);
     procedure cdsTimesheetAfterPost(DataSet: TDataSet);
     procedure cdsTimesheetBeforePost(DataSet: TDataSet);
@@ -463,9 +465,9 @@ type
     FID: Integer;
     FReportFileName: TReportFileName;
     FRateUnitLegend: String;
+    FReport: TfrxReport;
   public
     { Public declarations }
-    FReport: TfrxReport;
 
     property Report: TfrxReport read FReport write FReport;
     property ReportFileName: TReportFileName read FReportFileName write FReportFileName;

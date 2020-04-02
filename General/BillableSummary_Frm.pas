@@ -319,14 +319,14 @@ begin
   if not TFile.Exists(RepFileName) then
     raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 
-  ReportDM.FReport.LoadFromFile(RepFileName);
+  ReportDM.Report.LoadFromFile(RepFileName);
 
   DC := viewBillableSummary.DataController;
   DC.BeginUpdate;
   try
     ReportDM.frxPDFExport.FileName := dlgFileSave.FileName;
-    if ReportDM.FReport.PrepareReport(True) then
-      ReportDM.FReport.Export(ReportDM.frxPDFExport);
+    if ReportDM.Report.PrepareReport(True) then
+      ReportDM.Report.Export(ReportDM.frxPDFExport);
   finally
     if not ReportDM.cdsBillableSummary.Locate('CUSTOMER_ID', CustomerID, []) then
       ReportDM.cdsBillableSummary.First;
@@ -357,7 +357,7 @@ begin
         if lucFromPeriod.EditValue <> lucToPeriod.EditValue then
           edtBPeriod.GroupIndex := 0;
         ReportDM.cdsBillableSummary.IndexName := 'idxBillablePeriod';
-        ReportDM.FReport := ReportDM.rptBillableSummaryByPeriod;
+        ReportDM.Report := ReportDM.rptBillableSummaryByPeriod;
         RepFileName := TSDM.ShellResource.ReportFolder + 'BillableSummaryByPeriod.fr3';
       end;
     1:
@@ -365,7 +365,7 @@ begin
         if lucFromPeriod.EditValue <> lucToPeriod.EditValue then
           edtBName.GroupIndex := 0;
         ReportDM.cdsBillableSummary.IndexName := 'idxBillableCustomer';
-        ReportDM.FReport := ReportDM.rptBillableSummaryByCustomer;
+        ReportDM.Report := ReportDM.rptBillableSummaryByCustomer;
         RepFileName := TSDM.ShellResource.ReportFolder + 'BillableSummaryByCustomer.fr3';
       end;
   end;
@@ -374,23 +374,23 @@ begin
     if not TFile.Exists(RepFileName) then
       raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 
-    ReportDM.FReport.LoadFromFile({TSDM.ShellResource.ReportFolder + }RepFileName);
+    ReportDM.Report.LoadFromFile({TSDM.ShellResource.ReportFolder + }RepFileName);
 
     viewBillableSummary.DataController.BeginUpdate;
-    if ReportDM.FReport.PrepareReport then
+    if ReportDM.Report.PrepareReport then
       if TAction(Sender).Tag = 0 then
-        ReportDM.FReport.ShowPreparedReport
+        ReportDM.Report.ShowPreparedReport
       else
       begin
         if dlgPrint.Execute then
         begin
-          ReportDM.FReport.PrintOptions.Copies :=
+          ReportDM.Report.PrintOptions.Copies :=
             dlgPrint.DialogData.Copies;
 
-//              ReportDM.FReport.PrintOptions.Printer.
+//              ReportDM.Report.PrintOptions.Printer.
 //                dxPrintDevice.PrinterIndex;
 
-          ReportDM.FReport.Print;
+          ReportDM.Report.Print;
         end;
       end;
   finally
@@ -496,14 +496,14 @@ const
 begin
   inherited;
 //  case lucGroupBy.EditValue of
-//    0: ReportDM.FReport := ReportDM.rptBillableSummaryByPeriod;
-//    1: ReportDM.FReport := ReportDM.rptBillableSummaryByCustomer;
+//    0: ReportDM.Report := ReportDM.rptBillableSummaryByPeriod;
+//    1: ReportDM.Report := ReportDM.rptBillableSummaryByCustomer;
 //  end;
 
   if lucGroupBy.EditValue = 'Period' then
-    ReportDM.FReport := ReportDM.rptBillableSummaryByPeriod
+    ReportDM.Report := ReportDM.rptBillableSummaryByPeriod
   else if lucGroupBy.EditValue = 'Customer' then
-    ReportDM.FReport := ReportDM.rptBillableSummaryByCustomer;
+    ReportDM.Report := ReportDM.rptBillableSummaryByCustomer;
 
 //  if (Length(Trim(lucFromPeriod.Text)) = 0)
 //    or (Length(Trim(lucBillableToPeriod.Text)) = 0) then
@@ -752,13 +752,13 @@ begin
       begin
         edtBPeriod.GroupIndex := 0;
         ReportDM.cdsBillableSummary.IndexName := 'idxBillablePeriod';
-        ReportDM.FReport := ReportDM.rptBillableSummaryByPeriod;
+        ReportDM.Report := ReportDM.rptBillableSummaryByPeriod;
       end;
     1:
       begin
         edtBName.GroupIndex := 0;
         ReportDM.cdsBillableSummary.IndexName := 'idxBillableCustomer';
-        ReportDM.FReport := ReportDM.rptBillableSummaryByCustomer;
+        ReportDM.Report := ReportDM.rptBillableSummaryByCustomer;
       end;
   end;
   try

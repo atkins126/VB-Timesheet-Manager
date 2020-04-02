@@ -121,10 +121,11 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       TabOrder = 4
       Width = 100
     end
-    object cbxOepnDocument: TcxCheckBox [7]
+    object cbxOpenDocument: TcxCheckBox [7]
       Left = 583
       Top = 209
       Caption = 'Open document after export'
+      Properties.OnChange = cbxOepnDocumentPropertiesChange
       State = cbsChecked
       Style.HotTrack = False
       Style.TransparentBorder = False
@@ -137,6 +138,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Caption = 'Remove items with zero billable values'
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnChange = cbxRemoveZeroBillableValuesPropertiesChange
       State = cbsChecked
       Style.HotTrack = False
       Style.TransparentBorder = False
@@ -2038,7 +2040,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Parent = grpOther2
       CaptionOptions.Text = 'New Item'
       CaptionOptions.Visible = False
-      Control = cbxOepnDocument
+      Control = cbxOpenDocument
       ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 183
       ControlOptions.ShowBorder = False
@@ -3338,7 +3340,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     end
     object actGetData: TAction
       Tag = 2
-      Caption = 'To Grid'
+      Caption = 'To Screen'
       ImageIndex = 5
       OnExecute = DoPrint
     end
@@ -4206,7 +4208,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     object btnGetData: TdxBarLargeButton
       Action = actGetData
       Category = 0
-      ScreenTip = tipToGrid
+      ScreenTip = tipToScreen
       AutoGrayScale = False
     end
     object btnExcel: TdxBarLargeButton
@@ -4286,9 +4288,10 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Header.Text = 'Excel'
       Description.Text = 'Export timesheet to Excel'
     end
-    object tipToGrid: TdxScreenTip
-      Header.Text = 'To Grid'
-      Description.Text = 'Fetch data and display in grid'
+    object tipToScreen: TdxScreenTip
+      Header.Text = 'To Screen'
+      Description.Text = 'Fetch data and display in grid format on-screen'
+      Width = 315
     end
     object tipGroupedReport: TdxScreenTip
       Header.Text = 'Grouped Report'
