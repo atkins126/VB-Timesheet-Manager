@@ -19,7 +19,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     ExplicitWidth = 966
     ExplicitHeight = 647
     object lucDateType: TcxComboBox [0]
-      Left = 108
+      Left = 92
       Top = 102
       Properties.DropDownListStyle = lsFixedList
       Properties.ImmediatePost = True
@@ -35,7 +35,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Width = 100
     end
     object lucBillable: TcxComboBox [1]
-      Left = 659
+      Left = 643
       Top = 102
       Properties.DropDownListStyle = lsFixedList
       Properties.ImmediatePost = True
@@ -44,14 +44,14 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         'Billable'
         'Non-Billable'
         'All')
-      Properties.OnChange = dteFromDatePropertiesChange
+      Properties.OnChange = lucFromDatePropertiesChange
       Style.HotTrack = False
       Style.TransparentBorder = False
       TabOrder = 9
       Width = 120
     end
     object lucWorkType: TcxComboBox [2]
-      Left = 659
+      Left = 643
       Top = 127
       Properties.DropDownListStyle = lsFixedList
       Properties.ImmediatePost = True
@@ -60,28 +60,28 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         'Statndard'
         'Additional'
         'All')
-      Properties.OnChange = dteFromDatePropertiesChange
+      Properties.OnChange = lucFromDatePropertiesChange
       Style.HotTrack = False
       Style.TransparentBorder = False
       TabOrder = 10
       Width = 120
     end
-    object dteToDate: TcxDateEdit [3]
-      Left = 280
+    object lucToDate: TcxDateEdit [3]
+      Left = 264
       Top = 127
       Properties.DisplayFormat = 'dd/MM/yyyy'
       Properties.EditFormat = 'dd/MM/yyyy'
       Properties.ImmediatePost = True
       Properties.SaveTime = False
       Properties.ShowTime = False
-      Properties.OnChange = dteFromDatePropertiesChange
+      Properties.OnChange = lucFromDatePropertiesChange
       Style.HotTrack = False
       Style.TransparentBorder = False
       TabOrder = 5
       Width = 100
     end
     object lucPeriod: TcxLookupComboBox [4]
-      Left = 108
+      Left = 92
       Top = 127
       BeepOnEnter = False
       Properties.DropDownAutoSize = True
@@ -100,29 +100,29 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Width = 100
     end
     object docToolbar: TdxBarDockControl [5]
-      Left = 11
+      Left = -5
       Top = 11
       Width = 943
       Height = 54
       Align = dalNone
       BarManager = barManager
     end
-    object dteFromDate: TcxDateEdit [6]
-      Left = 280
+    object lucFromDate: TcxDateEdit [6]
+      Left = 264
       Top = 102
       Properties.DisplayFormat = 'dd/MM/yyyy'
       Properties.EditFormat = 'dd/MM/yyyy'
       Properties.ImmediatePost = True
       Properties.SaveTime = False
       Properties.ShowTime = False
-      Properties.OnChange = dteFromDatePropertiesChange
+      Properties.OnChange = lucFromDatePropertiesChange
       Style.HotTrack = False
       Style.TransparentBorder = False
       TabOrder = 4
       Width = 100
     end
     object cbxOpenDocument: TcxCheckBox [7]
-      Left = 583
+      Left = 567
       Top = 209
       Caption = 'Open document after export'
       Properties.OnChange = cbxOepnDocumentPropertiesChange
@@ -133,7 +133,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Transparent = True
     end
     object cbxRemoveZeroBillableValues: TcxCheckBox [8]
-      Left = 583
+      Left = 567
       Top = 234
       Caption = 'Remove items with zero billable values'
       Properties.ImmediatePost = True
@@ -146,7 +146,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Transparent = True
     end
     object grdSystemUser: TcxGrid [9]
-      Left = 25
+      Left = 9
       Top = 348
       Width = 355
       Height = 349
@@ -487,22 +487,22 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         GridView = viewActivityType
       end
     end
-    object lucBillCfComparison: TcxComboBox [12]
-      Left = 659
+    object lucReportType: TcxComboBox [12]
+      Left = 643
       Top = 152
       Properties.DropDownListStyle = lsFixedList
       Properties.ImmediatePost = True
       Properties.Items.Strings = (
         'Timsheet'
         'Billable/CFwd')
-      Properties.OnChange = lucBillCfComparisonPropertiesChange
+      Properties.OnChange = lucReportTypePropertiesChange
       Style.HotTrack = False
       Style.TransparentBorder = False
       TabOrder = 11
       Width = 120
     end
-    object lucReportType: TcxComboBox [13]
-      Left = 108
+    object lucSelectReportBy: TcxComboBox [13]
+      Left = 92
       Top = 152
       Properties.DropDownListStyle = lsFixedList
       Properties.ImmediatePost = True
@@ -510,8 +510,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         'User'
         'Customer'
         'Activity Type')
-      Properties.OnChange = lucReportTypePropertiesChange
-      Properties.OnEditValueChanged = lucReportTypePropertiesEditValueChanged
+      Properties.OnChange = lucSelectReportByPropertiesChange
+      Properties.OnEditValueChanged = lucSelectReportByPropertiesEditValueChanged
       Style.HotTrack = False
       Style.TransparentBorder = False
       TabOrder = 3
@@ -528,7 +528,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Font.Name = 'Verdana'
       Font.Style = []
       ParentFont = False
-      TabOrder = 18
+      TabOrder = 20
       Visible = False
       object viewBillCfwd: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
@@ -1164,7 +1164,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       end
     end
     object cbxSaveSortOrder: TcxCheckBox [15]
-      Left = 404
+      Left = 388
       Top = 274
       Caption = 'Save on Close'
       ParentShowHint = False
@@ -1178,7 +1178,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Transparent = True
     end
     object cbxGroupedReport: TcxCheckBox [16]
-      Left = 20
+      Left = 4
       Top = 177
       Caption = 'Grouped Report'
       ParentShowHint = False
@@ -1192,7 +1192,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Transparent = True
     end
     object grdSortOrder: TcxGrid [17]
-      Left = 404
+      Left = 388
       Top = 102
       Width = 155
       Height = 166
@@ -1294,14 +1294,14 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Left = 10000
       Top = 10000
       Width = 912
-      Height = 329
+      Height = 298
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
       Font.Name = 'Verdana'
       Font.Style = []
       ParentFont = False
-      TabOrder = 17
+      TabOrder = 19
       Visible = False
       object viewTimesheetBillable: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
@@ -1311,12 +1311,13 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
+        OptionsBehavior.CellHints = True
         OptionsBehavior.FocusCellOnTab = True
         OptionsBehavior.IncSearch = True
         OptionsBehavior.FocusCellOnCycle = True
         OptionsCustomize.GroupBySorting = True
         OptionsView.NoDataToDisplayInfoText = '<No Timesheet data to display>'
-        OptionsView.CellAutoHeight = True
+        OptionsView.Footer = True
         Bands = <
           item
             Caption = 'Timesheet Detail'
@@ -1381,6 +1382,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
           Properties.DisplayFormat = '######'
           Properties.EditFormat = '######'
           Properties.ReadOnly = True
+          OnGetDisplayText = edtTLoginNameGetDisplayText
           MinWidth = 60
           Options.Editing = False
           Options.IncSearch = False
@@ -1409,6 +1411,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
           PropertiesClassName = 'TcxDateEditProperties'
           Properties.Alignment.Vert = taTopJustify
           Properties.ReadOnly = True
+          OnGetDisplayText = edtTLoginNameGetDisplayText
           MinWidth = 90
           Options.Editing = False
           Options.HorzSizing = False
@@ -1877,8 +1880,30 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         GridView = viewTimesheetBillable
       end
     end
+    object btnExpandTimesheet: TcxButton [19]
+      Left = 10000
+      Top = 10000
+      Width = 90
+      Height = 25
+      Action = actExpandTimesheet
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 17
+      Visible = False
+    end
+    object btnCooapseTimesheet: TcxButton [20]
+      Left = 10000
+      Top = 10000
+      Width = 90
+      Height = 25
+      Action = actCollapseTimesheet
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 18
+      Visible = False
+    end
     inherited layMainGroup_Root: TdxLayoutGroup
-      ItemIndex = 1
+      ItemIndex = 2
     end
     object litToolbar: TdxLayoutItem
       Parent = layMainGroup_Root
@@ -1934,7 +1959,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Parent = grpDate
       AlignHorz = ahLeft
       CaptionOptions.Text = 'From Date'
-      Control = dteFromDate
+      Control = lucFromDate
       ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 100
       ControlOptions.ShowBorder = False
@@ -1944,7 +1969,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Parent = grpDate
       AlignHorz = ahLeft
       CaptionOptions.Text = 'To Date'
-      Control = dteToDate
+      Control = lucToDate
       ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 100
       ControlOptions.ShowBorder = False
@@ -2095,7 +2120,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Parent = grpOther1
       AlignHorz = ahLeft
       CaptionOptions.Text = 'Report Type'
-      Control = lucBillCfComparison
+      Control = lucReportType
       ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 120
       ControlOptions.ShowBorder = False
@@ -2121,7 +2146,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Parent = grpDateType
       AlignHorz = ahLeft
       CaptionOptions.Text = 'Select data by'
-      Control = lucReportType
+      Control = lucSelectReportBy
       ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 100
       ControlOptions.ShowBorder = False
@@ -2172,19 +2197,18 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       ControlOptions.OriginalHeight = 421
       ControlOptions.OriginalWidth = 896
       ControlOptions.ShowBorder = False
-      Index = 0
+      Index = 1
     end
     object grpTimesheetDetail: TdxLayoutGroup
       Parent = grpData
       CaptionOptions.Text = 'Timesheet details'
       ButtonOptions.Buttons = <>
-      ItemIndex = 1
       Index = 3
     end
     object litTSDetailLegend: TdxLayoutLabeledItem
       Parent = grpTimesheetDetail
       CaptionOptions.Text = 'Label'
-      Index = 1
+      Index = 2
     end
     object grp3: TdxLayoutGroup
       Parent = grp4
@@ -2198,6 +2222,35 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Parent = grpOther1
       CaptionOptions.Text = 'Separator'
       Index = 4
+    end
+    object litExpandTimesheet: TdxLayoutItem
+      Parent = grpExpandCoolapseTimesheet
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = btnExpandTimesheet
+      ControlOptions.OriginalHeight = 25
+      ControlOptions.OriginalWidth = 90
+      ControlOptions.ShowBorder = False
+      Index = 0
+    end
+    object litCollapseTimesheet: TdxLayoutItem
+      Parent = grpExpandCoolapseTimesheet
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = btnCooapseTimesheet
+      ControlOptions.OriginalHeight = 25
+      ControlOptions.OriginalWidth = 90
+      ControlOptions.ShowBorder = False
+      Index = 1
+    end
+    object grpExpandCoolapseTimesheet: TdxLayoutGroup
+      Parent = grpTimesheetDetail
+      CaptionOptions.Text = 'New Group'
+      ButtonOptions.Buttons = <>
+      ItemIndex = 1
+      LayoutDirection = ldHorizontal
+      ShowBorder = False
+      Index = 0
     end
   end
   object grdTimesheet: TcxGrid [1]
@@ -3324,6 +3377,50 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       GridView = viewCarryForwardDetail
     end
   end
+  object btnUser: TcxButton [3]
+    Left = 810
+    Top = 121
+    Width = 75
+    Height = 25
+    Caption = 'User'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 7
+    OnClick = btnUserClick
+  end
+  object btnCustomer: TcxButton [4]
+    Left = 810
+    Top = 151
+    Width = 75
+    Height = 25
+    Caption = 'Customer'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 8
+    OnClick = btnCustomerClick
+  end
+  object btnActType: TcxButton [5]
+    Left = 810
+    Top = 181
+    Width = 75
+    Height = 25
+    Caption = 'Act Type'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 9
+    OnClick = btnActTypeClick
+  end
+  object btnActDate: TcxButton [6]
+    Left = 810
+    Top = 211
+    Width = 75
+    Height = 25
+    Caption = 'Act Date'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 10
+    OnClick = btnActDateClick
+  end
   inherited styRepository: TcxStyleRepository
     Left = 260
     Top = 235
@@ -3334,38 +3431,54 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     Left = 330
     Top = 235
     object actCloseForm: TAction
+      Category = 'System'
       Caption = 'Close'
       ImageIndex = 0
       OnExecute = DoCloseForm
     end
     object actGetData: TAction
       Tag = 2
+      Category = 'Reports'
       Caption = 'To Screen'
       ImageIndex = 5
       OnExecute = DoPrint
     end
     object actPreview: TAction
+      Category = 'Reports'
       Caption = 'Preview'
       ImageIndex = 1
       OnExecute = DoPrint
     end
     object actPrint: TAction
       Tag = 1
+      Category = 'Reports'
       Caption = 'Print'
       ImageIndex = 2
       OnExecute = DoPrint
     end
     object actExcel: TAction
       Tag = 2
+      Category = 'Reports'
       Caption = 'Excel'
       ImageIndex = 3
       OnExecute = DoExcel
     end
     object actPDF: TAction
       Tag = 3
+      Category = 'Reports'
       Caption = 'PDF'
       ImageIndex = 4
       OnExecute = DoPDF
+    end
+    object actExpandTimesheet: TAction
+      Category = 'Controls'
+      Caption = 'Expand All'
+      OnExecute = DoExpandTimesheet
+    end
+    object actCollapseTimesheet: TAction
+      Category = 'Controls'
+      Caption = 'Collapse All'
+      OnExecute = DoCollapseTimesheet
     end
   end
   inherited lafLayoutList: TdxLayoutLookAndFeelList

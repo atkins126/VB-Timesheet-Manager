@@ -58,7 +58,6 @@ inherited MainFrm: TMainFrm
         OptionsBehavior.CellHints = True
         OptionsBehavior.FocusCellOnTab = True
         OptionsBehavior.IncSearch = True
-        OptionsBehavior.NavigatorHints = True
         OptionsBehavior.FocusCellOnCycle = True
         OptionsCustomize.ColumnsQuickCustomization = True
         OptionsData.Deleting = False

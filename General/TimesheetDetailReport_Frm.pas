@@ -22,14 +22,14 @@ uses
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridBandedTableView,
   cxGridDBBandedTableView, cxGridCustomView, cxGrid, cxBarEditItem, dxScreenTip,
   cxGridExportLink, dxCustomHint, cxHint, cxGridDBTableView, cxCustomListBox,
-  cxCheckListBox, cxButtons, cxGridDBDataDefinitions;
+  cxCheckListBox, cxButtons, cxGridDBDataDefinitions, dxLayoutControlAdapters;
 
 type
   TTimesheetDetailReportFrm = class(TBaseLayoutFrm)
     lucDateType: TcxComboBox;
     lucBillable: TcxComboBox;
     lucWorkType: TcxComboBox;
-    dteToDate: TcxDateEdit;
+    lucToDate: TcxDateEdit;
     lucPeriod: TcxLookupComboBox;
     actCloseForm: TAction;
     actGetData: TAction;
@@ -61,7 +61,7 @@ type
     grp2: TdxLayoutGroup;
     grpDate: TdxLayoutGroup;
     grp4: TdxLayoutGroup;
-    dteFromDate: TcxDateEdit;
+    lucFromDate: TcxDateEdit;
     dlgPrint: TdxPrintDialog;
     dlgFileSave: TSaveDialog;
     grpOther1: TdxLayoutGroup;
@@ -187,9 +187,9 @@ type
     lvlTimesheetBillable: TcxGridLevel;
     litReportType: TdxLayoutItem;
     litBillCfComparisonDescription: TdxLayoutLabeledItem;
-    lucBillCfComparison: TcxComboBox;
-    litBillCfwd: TdxLayoutItem;
     lucReportType: TcxComboBox;
+    litBillCfwd: TdxLayoutItem;
+    lucSelectReportBy: TcxComboBox;
     litGetDataBy: TdxLayoutItem;
     grdBillCfwd: TcxGrid;
     viewBillCfwd: TcxGridDBBandedTableView;
@@ -253,6 +253,17 @@ type
     litTSDetailLegend: TdxLayoutLabeledItem;
     grp3: TdxLayoutGroup;
     sep1: TdxLayoutSeparatorItem;
+    litExpandTimesheet: TdxLayoutItem;
+    litCollapseTimesheet: TdxLayoutItem;
+    grpExpandCoolapseTimesheet: TdxLayoutGroup;
+    btnExpandTimesheet: TcxButton;
+    btnCooapseTimesheet: TcxButton;
+    actExpandTimesheet: TAction;
+    actCollapseTimesheet: TAction;
+    btnUser: TcxButton;
+    btnCustomer: TcxButton;
+    btnActType: TcxButton;
+    btnActDate: TcxButton;
     procedure FormCreate(Sender: TObject);
     procedure DoCloseForm(Sender: TObject);
     procedure DoPrint(Sender: TObject);
@@ -261,16 +272,16 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure lucDateTypePropertiesEditValueChanged(Sender: TObject);
-    procedure lucReportTypePropertiesEditValueChanged(Sender: TObject);
-    procedure lucBillCfComparisonPropertiesChange(Sender: TObject);
+    procedure lucSelectReportByPropertiesEditValueChanged(Sender: TObject);
+    procedure lucReportTypePropertiesChange(Sender: TObject);
     procedure cbxSaveSortOptoionsPropertiesChange(Sender: TObject);
     procedure viewSortOrderDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure viewSortOrderStartDrag(Sender: TObject; var DragObject: TDragObject);
     procedure cbxIncludePropertiesEditValueChanged(Sender: TObject);
     procedure cbxGroupedReportPropertiesChange(Sender: TObject);
-    procedure lucReportTypePropertiesChange(Sender: TObject);
+    procedure lucSelectReportByPropertiesChange(Sender: TObject);
     procedure lucPeriodPropertiesChange(Sender: TObject);
-    procedure dteFromDatePropertiesChange(Sender: TObject);
+    procedure lucFromDatePropertiesChange(Sender: TObject);
     procedure viewSystemUserKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
 
     procedure viewSortOrderDragOver(Sender, Source: TObject; X, Y: Integer;
@@ -287,6 +298,12 @@ type
       ARecord: TcxCustomGridRecord; var AText: string);
     procedure cbxOepnDocumentPropertiesChange(Sender: TObject);
     procedure cbxRemoveZeroBillableValuesPropertiesChange(Sender: TObject);
+    procedure DoExpandTimesheet(Sender: TObject);
+    procedure DoCollapseTimesheet(Sender: TObject);
+    procedure btnUserClick(Sender: TObject);
+    procedure btnCustomerClick(Sender: TObject);
+    procedure btnActTypeClick(Sender: TObject);
+    procedure btnActDateClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -318,6 +335,7 @@ type
     procedure ReorderRows(AView: TcxGridDBTableView; ADestRow: TcxCustomGridRecord);
     procedure SetOrderValue(DataSet: TDataSet; AValue: Variant);
     function OrderByClause: string;
+    procedure SetReportGrouping;
   public
     { Public declarations }
   end;
@@ -346,10 +364,11 @@ begin
     TcxCanvas(Msg.WParam).DrawComplexFrame(TcxGridTableDataCellViewInfo(Msg.LParam).ClientBounds, clRed, clRed, cxBordersAll, 1);
 end;
 
-procedure TTimesheetDetailReportFrm.dteFromDatePropertiesChange(Sender: TObject);
+procedure TTimesheetDetailReportFrm.lucFromDatePropertiesChange(Sender: TObject);
 begin
   inherited;
-  HideTabs;
+  if not FShowingForm then
+    HideTabs;
 //  Showtabs;
   ReportDM.cdsTSBillable.Close;
   ReportDM.cdsBillCfwd.Close;
@@ -407,7 +426,7 @@ begin
   cbxGroupedReport.Checked := RegKey.ReadBool('Group Timsheet Detail Report');
   cbxOpenDocument.Checked := RegKey.ReadBool('Open Document After Export');
   cbxRemoveZeroBillableValues.Checked := RegKey.ReadBool('Remove Zero Billable Values');
-  lucReportType.ItemIndex := RegKey.ReadBool('Timesheet Detail Report Type Index');
+  lucSelectReportBy.ItemIndex := RegKey.ReadInteger('Timesheet Detail Report Type Index');
 
   if ReportDM = nil then
     ReportDM := TReportDM.Create(nil);
@@ -448,8 +467,8 @@ begin
   TcxLookupComboBoxProperties(lucCFActivityType.Properties).ListSource := ReportDM.dtsActivityType;
 
 //  FOrderByClause := ' ORDER BY 1, 6, 5, 8 ';
+  lucSelectReportBy.ItemIndex := 0;
   lucReportType.ItemIndex := 0;
-  lucBillCfComparison.ItemIndex := 0;
   PopulateSortOptions;
   GetPeriods;
 
@@ -517,7 +536,7 @@ begin
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FloatToStr(Progress))), 0);
     GetRateUnit;
 
-    ReportDM.RateUnitLegend := 'Col RU: ';
+    ReportDM.RateUnitLegend := 'Col R: ';
     while not ReportDm.cdsRateUnit.EOF do
     begin
       ReportDM.RateUnitLegend := ReportDM.RateUnitLegend +
@@ -532,8 +551,8 @@ begin
 
     litTSDetailLegend.CaptionOptions.Text := ReportDM.RateUnitLegend;
 
-//    lucReportType.SetFocus;
-//    AComboBox := TcxBarEditItemControl(lucReportType.Links[0].Control).Edit as TcxComboBox;
+//    lucSelectReportBy.SetFocus;
+//    AComboBox := TcxBarEditItemControl(lucSelectReportBy.Links[0].Control).Edit as TcxComboBox;
 //    AComboBox.ItemIndex := 0;
 
 //    Inc(I);
@@ -566,12 +585,13 @@ begin
     lucDateType.ItemIndex := 0;
     lucBillable.ItemIndex := 2;
     lucWorkType.ItemIndex := 2;
+    SetReportGrouping;
     {$IFDEF DEBUG}
     viewSortOrder.OptionsCustomize.ColumnsQuickCustomization := True;
     {$ELSE}
     viewSortOrder.OptionsCustomize.ColumnsQuickCustomization := False;
     {$ENDIF}
-    grdSortOrder.Height := 120;
+//    grdSortOrder.Height := 120;
   finally
     FreeAndNil(RegKey);
     ProgressFrm.Close;
@@ -602,8 +622,8 @@ begin
   end
   else
   begin
-    if dteFromDate.CanFocus and Self.Showing then
-      dteFromDate.SetFocus;
+    if lucFromDate.CanFocus and Self.Showing then
+      lucFromDate.SetFocus;
   end;
 
 //  litTimesheetDetail.Visible := False;
@@ -612,7 +632,32 @@ begin
   ShowTabs;
 
   WindowState := wsMaximized;
+  FShowingForm := False;
   Screen.Cursor := crDefault;
+end;
+
+procedure TTimesheetDetailReportFrm.btnActDateClick(Sender: TObject);
+begin
+  inherited;
+  edtTActivityDate.GroupIndex := 0;
+end;
+
+procedure TTimesheetDetailReportFrm.btnActTypeClick(Sender: TObject);
+begin
+  inherited;
+  edtTCustomerName.GroupIndex := 0;
+end;
+
+procedure TTimesheetDetailReportFrm.btnCustomerClick(Sender: TObject);
+begin
+  inherited;
+  edtTCustomerName.GroupIndex := 0;
+end;
+
+procedure TTimesheetDetailReportFrm.btnUserClick(Sender: TObject);
+begin
+  inherited;
+  edtTLoginName.GroupIndex := 0;
 end;
 
 procedure TTimesheetDetailReportFrm.cbxGroupedReportPropertiesChange(Sender: TObject);
@@ -789,11 +834,11 @@ begin
     1: WorkTypeClause := ' AND T.IS_ADDITIONAL_WORK = 1';
   end;
 
-//  lucReportType.SetFocus;
-//  AComboBox := TcxBarEditItemControl(lucReportType.Links[0].Control).Edit as TcxComboBox;
+//  lucSelectReportBy.SetFocus;
+//  AComboBox := TcxBarEditItemControl(lucSelectReportBy.Links[0].Control).Edit as TcxComboBox;
 
-  case lucReportType.ItemIndex of
-    0:
+  case lucSelectReportBy.ItemIndex of
+    0: // User Name
       begin
         FileName := 'Timesheet Detail by User';
 //        ReportDM.Report := ReportDM.rptTimesheetByUser;
@@ -804,8 +849,8 @@ begin
         case lucDateType.ItemIndex of
           0: DateClause := 'WHERE T.THE_PERIOD = ' + IntToStr(ReportDM.cdsPeriodListing.FieldByName('THE_PERIOD').AsInteger);
 
-          1: DateClause := 'WHERE T.ACTIVITY_DATE >= ' + AnsiQuotedStr(FormatDateTime('yyyy-mm-dd', dteFromDate.Date), '''') +
-            ' AND T.ACTIVITY_DATE <= ' + AnsiQuotedStr(FormatDateTime('yyyy-mm-dd', dteToDate.Date), '''');
+          1: DateClause := 'WHERE T.ACTIVITY_DATE >= ' + AnsiQuotedStr(FormatDateTime('yyyy-mm-dd', lucFromDate.Date), '''') +
+            ' AND T.ACTIVITY_DATE <= ' + AnsiQuotedStr(FormatDateTime('yyyy-mm-dd', lucToDate.Date), '''');
         end;
 
         if C.SelectedRecordCount <> DC.RecordCount then
@@ -821,12 +866,10 @@ begin
         end;
 
         FOrderByClause := OrderByClause;
-
-//        OrderByClause:= 'ORDER BY T.LOGIN_NAME, T.THE_PERIOD, T.ACTIVITY_DATE';
         WhereClause := DateClause + UserClause + BillableClause + WorkTypeClause + FOrderByClause;
       end;
 
-    1:
+    1: // Customer
       begin
         FileName := 'Timesheet Detail by Customer';
 //        ReportDM.Report := ReportDM.rptTimesheetByCustomer;
@@ -836,8 +879,8 @@ begin
 
         case lucDateType.ItemIndex of
           0: DateClause := 'WHERE T.THE_PERIOD = ' + IntToStr(ReportDM.cdsPeriodListing.FieldByName('THE_PERIOD').AsInteger);
-          1: DateClause := 'WHERE T.ACTIVITY_DATE >= ' + FormatDateTime('yyyy-MM-dd', dteFromDate.Date) +
-            ' AND T.ACTIVITY_DATE <= ' + FormatDateTime('yyyy-MM-dd', dteToDate.Date);
+          1: DateClause := 'WHERE T.ACTIVITY_DATE >= ' + FormatDateTime('yyyy-MM-dd', lucFromDate.Date) +
+            ' AND T.ACTIVITY_DATE <= ' + FormatDateTime('yyyy-MM-dd', lucToDate.Date);
         end;
 
         if C.SelectedRecordCount <> DC.RecordCount then
@@ -853,11 +896,10 @@ begin
         end;
 
         FOrderByClause := OrderByClause;
-//        OrderByClause := 'ORDER BY T.CUSTOMER_NAME, T.THE_PERIOD, T.LOGIN_NAME, T.ACTIVITY_DATE';
         WhereClause := DateClause + CustomerClause + BillableClause + WorkTypeClause + FOrderByClause;
       end;
 
-    2:
+    2: // Activity Type
       begin
         FileName := 'Timesheet Detail by Activity';
 //        ReportDM.Report := ReportDM.rptTimesheetByActivity;
@@ -867,8 +909,8 @@ begin
 
         case lucDateType.ItemIndex of
           0: DateClause := 'WHERE T.THE_PERIOD = ' + IntToStr(ReportDM.cdsPeriodListing.FieldByName('THE_PERIOD').AsInteger);
-          1: DateClause := 'WHERE T.ACTIVITY_DATE >= ' + FormatDateTime('yyyy-MM-dd', dteFromDate.Date) +
-            ' AND T.ACTIVITY_DATE <= ' + FormatDateTime('yyyy-MM-dd', dteToDate.Date);
+          1: DateClause := 'WHERE T.ACTIVITY_DATE >= ' + FormatDateTime('yyyy-MM-dd', lucFromDate.Date) +
+            ' AND T.ACTIVITY_DATE <= ' + FormatDateTime('yyyy-MM-dd', lucToDate.Date);
         end;
 
         if C.SelectedRecordCount <> DC.RecordCount then
@@ -884,7 +926,6 @@ begin
         end;
 
         FOrderByClause := OrderByClause;
-//        OrderByClause := 'ORDER BY T.ACTIVITY_TYPE, T.THE_PERIOD, T.LOGIN_NAME, T.ACTIVITY_DATE';
         WhereClause := DateClause + ActivityClause + BillableClause + WorkTypeClause + FOrderByClause;
       end;
   end;
@@ -922,11 +963,11 @@ begin
 //    1: WorkTypeClause := ' AND T.IS_ADDITIONAL_WORK = 1';
 //  end;
 
-//  lucReportType.SetFocus;
-//  AComboBox := TcxBarEditItemControl(lucReportType.Links[0].Control).Edit as TcxComboBox;
+//  lucSelectReportBy.SetFocus;
+//  AComboBox := TcxBarEditItemControl(lucSelectReportBy.Links[0].Control).Edit as TcxComboBox;
 
-//  case lucReportType.EditValue of
-  case lucReportType.ItemIndex of
+//  case lucSelectReportBy.EditValue of
+  case lucSelectReportBy.ItemIndex of
     0:
       begin
         FileName := 'Timesheet Detail BillCfwd by User';
@@ -938,8 +979,8 @@ begin
         case lucDateType.ItemIndex of
           0: DateClause := 'WHERE T.THE_PERIOD = ' + IntToStr(ReportDM.cdsPeriodListing.FieldByName('THE_PERIOD').AsInteger);
 
-          1: DateClause := 'WHERE T.ACTIVITY_DATE >= ' + AnsiQuotedStr(FormatDateTime('yyyy-mm-dd', dteFromDate.Date), '''') +
-            ' AND T.ACTIVITY_DATE <= ' + AnsiQuotedStr(FormatDateTime('yyyy-mm-dd', dteToDate.Date), '''');
+          1: DateClause := 'WHERE T.ACTIVITY_DATE >= ' + AnsiQuotedStr(FormatDateTime('yyyy-mm-dd', lucFromDate.Date), '''') +
+            ' AND T.ACTIVITY_DATE <= ' + AnsiQuotedStr(FormatDateTime('yyyy-mm-dd', lucToDate.Date), '''');
         end;
 
         if C.SelectedRecordCount <> DC.RecordCount then
@@ -970,8 +1011,8 @@ begin
 
         case lucDateType.ItemIndex of
           0: DateClause := 'WHERE T.THE_PERIOD = ' + IntToStr(ReportDM.cdsPeriodListing.FieldByName('THE_PERIOD').AsInteger);
-          1: DateClause := 'WHERE T.ACTIVITY_DATE >= ' + FormatDateTime('yyyy-MM-dd', dteFromDate.Date) +
-            ' AND T.ACTIVITY_DATE <= ' + FormatDateTime('yyyy-MM-dd', dteToDate.Date);
+          1: DateClause := 'WHERE T.ACTIVITY_DATE >= ' + FormatDateTime('yyyy-MM-dd', lucFromDate.Date) +
+            ' AND T.ACTIVITY_DATE <= ' + FormatDateTime('yyyy-MM-dd', lucToDate.Date);
         end;
 
         if C.SelectedRecordCount <> DC.RecordCount then
@@ -996,14 +1037,14 @@ begin
     2:
       begin
         FileName := 'Timesheet Detail by Activity';
-        ReportDM.Report := ReportDM.rptTimesheetByActivity;
+        ReportDM.Report := ReportDM.rptTimesheetByActivityTYpe;
         DC := viewActivityType.DataController;
         C := viewActivityType.Controller;
 
         case lucDateType.ItemIndex of
           0: DateClause := 'WHERE T.THE_PERIOD = ' + IntToStr(ReportDM.cdsPeriodListing.FieldByName('THE_PERIOD').AsInteger);
-          1: DateClause := 'WHERE T.ACTIVITY_DATE >= ' + FormatDateTime('yyyy-MM-dd', dteFromDate.Date) +
-            ' AND T.ACTIVITY_DATE <= ' + FormatDateTime('yyyy-MM-dd', dteToDate.Date);
+          1: DateClause := 'WHERE T.ACTIVITY_DATE >= ' + FormatDateTime('yyyy-MM-dd', lucFromDate.Date) +
+            ' AND T.ACTIVITY_DATE <= ' + FormatDateTime('yyyy-MM-dd', lucToDate.Date);
         end;
 
         if C.SelectedRecordCount <> DC.RecordCount then
@@ -1035,28 +1076,28 @@ procedure TTimesheetDetailReportFrm.HideTabs;
 var
   I: Integer;
 begin
-  for I := 0 to 2 do
+  for I := 0 to grpData.Count - 1 do
     grpData.Items[I].Visible := False;
 end;
 
 procedure TTimesheetDetailReportFrm.ShowTabs;
 begin
-  grpData.Items[0].Visible := lucReportType.ItemIndex = 0;
-  grpData.Items[3].Visible := lucReportType.ItemIndex = 1;
-  grpData.Items[4].Visible := lucReportType.ItemIndex = 2;
+  grpData.Items[0].Visible := lucSelectReportBy.ItemIndex = 0;
+  grpData.Items[1].Visible := lucSelectReportBy.ItemIndex = 1;
+  grpData.Items[2].Visible := lucSelectReportBy.ItemIndex = 2;
 end;
 
-procedure TTimesheetDetailReportFrm.lucBillCfComparisonPropertiesChange(Sender: TObject);
+procedure TTimesheetDetailReportFrm.lucReportTypePropertiesChange(Sender: TObject);
 begin
   inherited;
 //  HideTabs;
 //  Showtabs;
   ReportDM.cdsTSBillable.Close;
   ReportDM.cdsBillCfwd.Close;
-  lucBillable.Enabled := lucBillCfComparison.ItemIndex = 0;
-  lucWorkType.Enabled := lucBillCfComparison.ItemIndex = 0;
+  lucBillable.Enabled := lucReportType.ItemIndex = 0;
+  lucWorkType.Enabled := lucReportType.ItemIndex = 0;
 
-  case lucBillCfComparison.ItemIndex of
+  case lucReportType.ItemIndex of
     0:
       begin
         litBillCfComparisonDescription.CaptionOptions.Text := 'Timesheet details';
@@ -1074,14 +1115,18 @@ end;
 procedure TTimesheetDetailReportFrm.lucDateTypePropertiesEditValueChanged(Sender: TObject);
 begin
   inherited;
-  HideTabs;
-  Showtabs;
+  if not FShowingForm then
+  begin
+    HideTabs;
+    Showtabs;
+  end;
+
   ReportDM.cdsTSBillable.Close;
   ReportDM.cdsBillCfwd.Close;
 
   lucPeriod.Enabled := lucDateType.ItemIndex = 0;
-  dteFromDate.Enabled := not lucPeriod.Enabled;
-  dteToDate.Enabled := not lucPeriod.Enabled;
+  lucFromDate.Enabled := not lucPeriod.Enabled;
+  lucToDate.Enabled := not lucPeriod.Enabled;
 
   if lucDateType.ItemIndex = 0 then
   begin
@@ -1090,21 +1135,25 @@ begin
   end
   else
   begin
-    if dteFromDate.CanFocus and Self.Showing then
-      dteFromDate.SetFocus;
+    if lucFromDate.CanFocus and Self.Showing then
+      lucFromDate.SetFocus;
   end;
 end;
 
 procedure TTimesheetDetailReportFrm.lucPeriodPropertiesChange(Sender: TObject);
 begin
   inherited;
-  HideTabs;
-  Showtabs;
+  if not FShowingForm then
+  begin
+    HideTabs;
+    Showtabs;
+  end;
+
   ReportDM.cdsTSBillable.Close;
   ReportDM.cdsBillCfwd.Close;
 end;
 
-procedure TTimesheetDetailReportFrm.lucReportTypePropertiesChange(Sender: TObject);
+procedure TTimesheetDetailReportFrm.lucSelectReportByPropertiesChange(Sender: TObject);
 var
   RegKey: TRegistry;
 begin
@@ -1123,15 +1172,19 @@ begin
     end;
   end;
 
-  HideTabs;
-//  Showtabs;
-  grpData.Items[lucReportType.ItemIndex].Visible := True;
+  if not FShowingForm then
+  begin
+    HideTabs;
+    Showtabs;
+  end;
+
+  grpData.Items[lucSelectReportBy.ItemIndex].Visible := True;
 
   viewSystemUser.Controller.ClearSelection;
   viewCustomerListing.Controller.ClearSelection;
   viewActivityType.Controller.ClearSelection;
 
-  case lucBillCfComparison.ItemIndex of
+  case lucReportType.ItemIndex of
     0:
       begin
         ReportDM.cdsTSBillable.Close;
@@ -1140,47 +1193,7 @@ begin
         edtTLoginName.Visible := True;
         edtTCustomerName.Visible := True;
 
-        case lucReportType.ItemIndex of
-          0:
-            begin
-              edtTLoginName.GroupBy(0, True, True, True);
-              edtTLoginName.Position.BandIndex := 0;
-            end;
-
-          1:
-            begin
-              edtTCustomerName.GroupBy(0, True, True, True);
-              edtTCustomerName.Position.BandIndex := 0;
-            end;
-
-          2:
-            begin
-              edtTActivtyType.GroupBy(0, True, True, True);
-              edtTActivtyType.Position.BandIndex := 0;
-            end;
-        end;
-        grpData.ItemIndex := lucReportType.ItemIndex;
-      end;
-  end;
-end;
-
-procedure TTimesheetDetailReportFrm.lucReportTypePropertiesEditValueChanged(Sender: TObject);
-begin
-  inherited;
-//  HideTabs;
-//  grpData.Items[lucReportType.ItemIndex].Visible := True;
-//  viewTimesheetBillable.DataController.Groups.ClearGrouping;
-//  edtTActivtyType.Visible := True;
-//  edtTLoginName.Visible := True;
-//  edtTCustomerName.Visible := True;
-//  viewSystemUser.Controller.ClearSelection;
-//  viewCustomerListing.Controller.ClearSelection;
-//  viewActivityType.Controller.ClearSelection;
-//
-//  case lucBillCfComparison.ItemIndex of
-//    0:
-//      begin
-//        case lucReportType.ItemIndex of
+//        case lucSelectReportBy.ItemIndex of
 //          0:
 //            begin
 //              edtTLoginName.GroupBy(0, True, True, True);
@@ -1199,7 +1212,47 @@ begin
 //              edtTActivtyType.Position.BandIndex := 0;
 //            end;
 //        end;
-//        grpData.ItemIndex := lucReportType.ItemIndex;
+        grpData.ItemIndex := lucSelectReportBy.ItemIndex;
+      end;
+  end;
+end;
+
+procedure TTimesheetDetailReportFrm.lucSelectReportByPropertiesEditValueChanged(Sender: TObject);
+begin
+  inherited;
+//  HideTabs;
+//  grpData.Items[lucSelectReportBy.ItemIndex].Visible := True;
+//  viewTimesheetBillable.DataController.Groups.ClearGrouping;
+//  edtTActivtyType.Visible := True;
+//  edtTLoginName.Visible := True;
+//  edtTCustomerName.Visible := True;
+//  viewSystemUser.Controller.ClearSelection;
+//  viewCustomerListing.Controller.ClearSelection;
+//  viewActivityType.Controller.ClearSelection;
+//
+//  case lucReportType.ItemIndex of
+//    0:
+//      begin
+//        case lucSelectReportBy.ItemIndex of
+//          0:
+//            begin
+//              edtTLoginName.GroupBy(0, True, True, True);
+//              edtTLoginName.Position.BandIndex := 0;
+//            end;
+//
+//          1:
+//            begin
+//              edtTCustomerName.GroupBy(0, True, True, True);
+//              edtTCustomerName.Position.BandIndex := 0;
+//            end;
+//
+//          2:
+//            begin
+//              edtTActivtyType.GroupBy(0, True, True, True);
+//              edtTActivtyType.Position.BandIndex := 0;
+//            end;
+//        end;
+//        grpData.ItemIndex := lucSelectReportBy.ItemIndex;
 //      end;
 //  end;
 end;
@@ -1266,6 +1319,7 @@ begin
 
   ReportDM.cdsTSSortOrder.First;
   cbxGroupedReport.Caption := 'Group report by: ' + ReportDM.cdsTSSortOrder.FieldByName('SORT_BY').AsString;
+  FGroupByField := ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString;
 end;
 
 procedure TTimesheetDetailReportFrm.viewSortOrderStartDrag(Sender: TObject;
@@ -1295,12 +1349,11 @@ procedure TTimesheetDetailReportFrm.viewSortOrderDragDrop(Sender,
 var
   HT: TcxCustomGridHitTest;
 begin
-//  with TcxGridSite(Sender) do
-//  begin
   HT := TcxGridSite(Sender).ViewInfo.GetHitTest(X, Y);
   FMadChanges := True;
   ReorderRows(TcxGridDBTableView(TcxGridSite(Sender).GridView), TcxGridRecordCellHitTest(HT).GridRecord);
-//  end;
+  FGroupByField :=  ReportDM.cdsTSSortOrder. FieldByName('FIELD_NAME').AsString;
+//  SetReportGrouping;
 end;
 
 procedure TTimesheetDetailReportFrm.ReorderRows(AView: TcxGridDBTableView;
@@ -1442,6 +1495,39 @@ begin
   TFDMemTable(DataSet).CommitUpdates;
 end;
 
+procedure TTimesheetDetailReportFrm.SetReportGrouping;
+begin
+  viewTimesheetBillable.DataController.Groups.ClearGrouping;
+  edtTLoginName.GroupIndex := -1;
+  edtTCustomerName.GroupIndex := -1;
+  edtTActivtyType.GroupIndex := -1;
+  edtTActivityDate.GroupIndex := -1;
+
+  if SameText(FGroupByField, 'LOGIN_NAME') then
+  begin
+    edtTLoginName.GroupBy(0, True, True, True);
+    edtTLoginName.Position.BandIndex := 0;
+  end
+
+  else if SameText(FGroupByField, 'CUSTOMER_NAME') then
+  begin
+    edtTCustomerName.GroupBy(0, True, True, True);
+    edtTCustomerName.Position.BandIndex := 0;
+  end
+
+  else if SameText(FGroupByField, 'ACTIVITY_TYPE') then
+  begin
+    edtTActivtyType.GroupBy(0, True, True, True);
+    edtTActivtyType.Position.BandIndex := 0;
+  end
+
+  else if SameText(FGroupByField, 'ACTIVITY_DATE') then
+  begin
+    edtTActivityDate.GroupBy(0, True, True, True);
+    edtTActivityDate.Position.BandIndex := 0;
+  end;
+end;
+
 procedure TTimesheetDetailReportFrm.viewBillCfwdDataControllerSummaryFooterSummaryItemsSummary(
   ASender: TcxDataSummaryItems; Arguments: TcxSummaryEventArguments;
   var OutArguments: TcxSummaryEventOutArguments);
@@ -1574,6 +1660,7 @@ begin
   edtTLoginName.GroupIndex := -1;
   edtTCustomerName.GroupIndex := -1;
   edtTActivtyType.GroupIndex := -1;
+  edtTActivityDate.GroupIndex := -1;
   edtTLoginName.Visible := False;
   edtTCustomerName.Visible := False;
   edtTActivtyType.Visible := False;
@@ -1623,6 +1710,18 @@ begin
   finally
     viewTimesheetBillable.OptionsView.BandHeaders := True;
   end;
+end;
+
+procedure TTimesheetDetailReportFrm.DoExpandTimesheet(Sender: TObject);
+begin
+  inherited;
+  viewTimesheetBillable.ViewData.Expand(True);
+end;
+
+procedure TTimesheetDetailReportFrm.DoCollapseTimesheet(Sender: TObject);
+begin
+  inherited;
+  viewTimesheetBillable.ViewData.Collapse(True);
 end;
 
 procedure TTimesheetDetailReportFrm.DoCloseForm(Sender: TObject);
@@ -1703,7 +1802,7 @@ begin
 //  DC.BeginUpdate;
   ReportDM.cdsTSSortOrder.DisableControls;
   ReportDM.cdsTSSortOrder.First;
-  FGroupByField := ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString;
+//  FGroupByField := ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString;
 
   try
     while not ReportDM.cdsTSSortOrder.EOF do
@@ -1754,18 +1853,18 @@ begin
         end;
 
       1:
-        if VarIsNull(dteFromDate.EditValue) or VarIsNull(dteToDate.EditValue) then
+        if VarIsNull(lucFromDate.EditValue) or VarIsNull(lucToDate.EditValue) then
         begin
-          if VarIsNull(dteFromDate.EditValue) then
+          if VarIsNull(lucFromDate.EditValue) then
           begin
-            if dteFromDate.CanFocus then
-              dteFromDate.SetFocus;
+            if lucFromDate.CanFocus then
+              lucFromDate.SetFocus;
           end
 
-          else if VarIsNull(dteToDate.EditValue) then
+          else if VarIsNull(lucToDate.EditValue) then
           begin
-            if dteToDate.CanFocus then
-              dteToDate.SetFocus;
+            if lucToDate.CanFocus then
+              lucToDate.SetFocus;
           end;
           raise ESelectionException.Create('From and To dates must have a value. Please select valid From and To dates.');
         end;
@@ -1782,10 +1881,11 @@ begin
           raise ESelectionException.Create('No Activity Type selected. Please select at least one Activity Type.');
     end;
 
-    case lucBillCfComparison.ItemIndex of
+    case lucReportType.ItemIndex of
       0:
         begin
           GetTimesheetDetail;
+          SetReportGrouping;
 
           if SameText(FGroupByField, 'CUSTOMER_NAME') then
             RepFileName := 'TimesheetByCustomer.fr3'
@@ -1809,6 +1909,7 @@ begin
           ReportDM.Report.LoadFromFile(RepFileName);
           TfrxMemoView(ReportDM.Report.FindObject('bndGroupHeader')).Visible := cbxGroupedReport.Checked;
           TfrxMemoView(ReportDM.Report.FindObject('bndGroupFooter')).Visible := cbxGroupedReport.Checked;
+          SetReportGrouping;
         end;
 
       1:
@@ -1818,7 +1919,7 @@ begin
           case TAction(Sender).Tag of
             0, 1: // Previewing or printing
               begin
-                case lucReportType.ItemIndex of
+                case lucSelectReportBy.ItemIndex of
                   0: RepFileName := TSDM.ShellResource.ReportFolder + 'TimesheetBillCfwdByUser.fr3'; // ReportDM.ReportFileName[3];
                   1: RepFileName := TSDM.ShellResource.ReportFolder + 'TimesheetBillCfwdByCustomer.fr3'; //ReportDM.ReportFileName[4];
                 end;
@@ -1832,10 +1933,10 @@ begin
         end;
     end;
 
-//    litTimesheetDetail.Visible := lucBillCfComparison.ItemIndex = 0;
+//    litTimesheetDetail.Visible := lucReportType.ItemIndex = 0;
 //    litBillCfwd.Visible := not litTimesheetDetail.Visible;
 
-    grpData.Items[3].Visible := lucBillCfComparison.ItemIndex = 0;
+    grpData.Items[3].Visible := lucReportType.ItemIndex = 0;
     grpData.Items[4].Visible := not grpData.Items[3].Visible;
 
     case TAction(Sender).Tag of
@@ -1858,8 +1959,12 @@ begin
 
       2: // Display data in grid
         begin
-          case lucBillCfComparison.ItemIndex of
-            0: grpData.ItemIndex := 3;
+          case lucReportType.ItemIndex of
+            0:
+              begin
+                grpData.ItemIndex := 3;
+//                viewTimesheetBillable.ViewData.Expand(True);
+              end;
 
             1:
               begin

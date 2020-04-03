@@ -2538,7 +2538,7 @@ inherited ReportDM: TReportDM
     PrintOptions.Printer = 'Default'
     PrintOptions.PrintOnSheet = 0
     ReportOptions.CreateDate = 43494.671348414300000000
-    ReportOptions.LastChange = 43922.506811296300000000
+    ReportOptions.LastChange = 43923.503782546290000000
     ScriptLanguage = 'PascalScript'
     ScriptText.Strings = (
       'begin'
@@ -2743,7 +2743,7 @@ inherited ReportDM: TReportDM
             '[TimesheetByCustomer."ABBREVIATION"]')
         end
       end
-      object bndGrpFooterCustomer: TfrxGroupFooter
+      object bndGroupFooter: TfrxGroupFooter
         FillType = ftBrush
         Frame.Typ = [ftLeft, ftRight, ftBottom]
         Font.Charset = ANSI_CHARSET
@@ -3183,7 +3183,7 @@ inherited ReportDM: TReportDM
           Frame.Typ = [ftLeft]
           GapX = 7.000000000000000000
           Memo.UTF8W = (
-            '[TimesheetByActivity."ACTIVITY_DATE"]')
+            '[TimesheetByActivityType."ACTIVITY_DATE"]')
         end
         object TimesheetACTIVITY_TYPE: TfrxMemoView
           AllowVectorExport = True
@@ -3197,7 +3197,7 @@ inherited ReportDM: TReportDM
           Frame.Typ = [ftLeft]
           GapX = 7.000000000000000000
           Memo.UTF8W = (
-            '[TimesheetByActivity."CUSTOMER_NAME"]')
+            '[TimesheetByActivityType."CUSTOMER_NAME"]')
         end
         object TimesheetACTIVITY: TfrxMemoView
           AllowVectorExport = True
@@ -3211,7 +3211,7 @@ inherited ReportDM: TReportDM
           Frame.Typ = [ftLeft]
           GapX = 7.000000000000000000
           Memo.UTF8W = (
-            '[TimesheetByActivity."ACTIVITY"]')
+            '[TimesheetByActivityType."ACTIVITY"]')
         end
         object TimesheetTIME_SPENT: TfrxMemoView
           Align = baRight
@@ -3229,7 +3229,7 @@ inherited ReportDM: TReportDM
           GapX = 5.000000000000000000
           HAlign = haRight
           Memo.UTF8W = (
-            '[TimesheetByActivity."CARRY_FORWARD_VALUE"]')
+            '[TimesheetByActivityType."CARRY_FORWARD_VALUE"]')
         end
         object TimesheetRATE: TfrxMemoView
           AllowVectorExport = True
@@ -3246,7 +3246,7 @@ inherited ReportDM: TReportDM
           GapX = 5.000000000000000000
           HAlign = haRight
           Memo.UTF8W = (
-            '[TimesheetByActivity."ACTUAL_RATE"]')
+            '[TimesheetByActivityType."ACTUAL_RATE"]')
         end
         object TimesheetITEM_VALUE: TfrxMemoView
           AllowVectorExport = True
@@ -3263,7 +3263,7 @@ inherited ReportDM: TReportDM
           GapX = 5.000000000000000000
           HAlign = haRight
           Memo.UTF8W = (
-            '[TimesheetByActivity."ITEM_VALUE"]')
+            '[TimesheetByActivityType."ITEM_VALUE"]')
         end
         object TimesheetTIME_HOURS: TfrxMemoView
           AllowVectorExport = True
@@ -3280,7 +3280,7 @@ inherited ReportDM: TReportDM
           GapX = 5.000000000000000000
           HAlign = haRight
           Memo.UTF8W = (
-            '[TimesheetByActivity."TIME_HOURS"]')
+            '[TimesheetByActivityType."TIME_HOURS"]')
         end
         object Memo37: TfrxMemoView
           AllowVectorExport = True
@@ -3295,7 +3295,7 @@ inherited ReportDM: TReportDM
           GapX = 5.000000000000000000
           HAlign = haCenter
           Memo.UTF8W = (
-            '[TimesheetByActivity."BILLABLE_STR"]')
+            '[TimesheetByActivityType."BILLABLE_STR"]')
         end
         object Memo29: TfrxMemoView
           AllowVectorExport = True
@@ -3308,7 +3308,7 @@ inherited ReportDM: TReportDM
           Frame.Typ = [ftLeft]
           GapX = 7.000000000000000000
           Memo.UTF8W = (
-            '[TimesheetByActivity."LOGIN_NAME"]')
+            '[TimesheetByActivityType."LOGIN_NAME"]')
         end
         object Memo33: TfrxMemoView
           AllowVectorExport = True
@@ -3323,7 +3323,7 @@ inherited ReportDM: TReportDM
           GapX = 5.000000000000000000
           HAlign = haCenter
           Memo.UTF8W = (
-            '[TimesheetByActivity."ABBREVIATION"]')
+            '[TimesheetByActivityType."ABBREVIATION"]')
         end
       end
       object bndGroupFooter: TfrxGroupFooter
@@ -7777,7 +7777,7 @@ inherited ReportDM: TReportDM
     PrintOptions.Printer = 'Default'
     PrintOptions.PrintOnSheet = 0
     ReportOptions.CreateDate = 43494.671348414300000000
-    ReportOptions.LastChange = 43920.637637581000000000
+    ReportOptions.LastChange = 43923.502922534720000000
     ScriptLanguage = 'PascalScript'
     ScriptText.Strings = (
       'begin'
@@ -7838,7 +7838,7 @@ inherited ReportDM: TReportDM
           Frame.Typ = [ftLeft]
           GapX = 7.000000000000000000
           Memo.UTF8W = (
-            '[TimesheetByUser."ACTIVITY_DATE"]')
+            '[TimesheetDetail."ACTIVITY_DATE"]')
         end
         object TimesheetCUSTOMER_NAME: TfrxMemoView
           AllowVectorExport = True
@@ -7852,7 +7852,7 @@ inherited ReportDM: TReportDM
           Frame.Typ = [ftLeft]
           GapX = 7.000000000000000000
           Memo.UTF8W = (
-            '[TimesheetByUser."CUSTOMER_NAME"]')
+            '[TimesheetDetail."CUSTOMER_NAME"]')
         end
         object TimesheetACTIVITY_TYPE: TfrxMemoView
           AllowVectorExport = True
@@ -7866,7 +7866,7 @@ inherited ReportDM: TReportDM
           Frame.Typ = [ftLeft]
           GapX = 7.000000000000000000
           Memo.UTF8W = (
-            '[TimesheetByUser."ACTIVITY_TYPE"]')
+            '[TimesheetDetail."ACTIVITY_TYPE"]')
         end
         object TimesheetACTIVITY: TfrxMemoView
           AllowVectorExport = True
@@ -7880,7 +7880,7 @@ inherited ReportDM: TReportDM
           Frame.Typ = [ftLeft]
           GapX = 7.000000000000000000
           Memo.UTF8W = (
-            '[TimesheetByUser."ACTIVITY"]')
+            '[TimesheetDetail."ACTIVITY"]')
         end
         object TimesheetTIME_SPENT: TfrxMemoView
           Align = baRight
@@ -7898,7 +7898,7 @@ inherited ReportDM: TReportDM
           GapX = 5.000000000000000000
           HAlign = haRight
           Memo.UTF8W = (
-            '[TimesheetByUser."CARRY_FORWARD_VALUE"]')
+            '[TimesheetDetail."CARRY_FORWARD_VALUE"]')
         end
         object TimesheetRATE: TfrxMemoView
           AllowVectorExport = True
@@ -7915,7 +7915,7 @@ inherited ReportDM: TReportDM
           GapX = 5.000000000000000000
           HAlign = haRight
           Memo.UTF8W = (
-            '[TimesheetByUser."ACTUAL_RATE"]')
+            '[TimesheetDetail."ACTUAL_RATE"]')
         end
         object TimesheetITEM_VALUE: TfrxMemoView
           AllowVectorExport = True
@@ -7932,7 +7932,7 @@ inherited ReportDM: TReportDM
           GapX = 5.000000000000000000
           HAlign = haRight
           Memo.UTF8W = (
-            '[TimesheetByUser."ITEM_VALUE"]')
+            '[TimesheetDetail."ITEM_VALUE"]')
         end
         object TimesheetTIME_HOURS: TfrxMemoView
           AllowVectorExport = True
@@ -7949,7 +7949,7 @@ inherited ReportDM: TReportDM
           GapX = 5.000000000000000000
           HAlign = haRight
           Memo.UTF8W = (
-            '[TimesheetByUser."TIME_HOURS"]')
+            '[TimesheetDetail."TIME_HOURS"]')
         end
         object Memo37: TfrxMemoView
           AllowVectorExport = True
@@ -7964,7 +7964,7 @@ inherited ReportDM: TReportDM
           GapX = 5.000000000000000000
           HAlign = haCenter
           Memo.UTF8W = (
-            '[TimesheetByUser."BILLABLE_STR"]')
+            '[TimesheetDetail."BILLABLE_STR"]')
         end
         object Memo31: TfrxMemoView
           AllowVectorExport = True
@@ -7979,10 +7979,10 @@ inherited ReportDM: TReportDM
           GapX = 5.000000000000000000
           HAlign = haCenter
           Memo.UTF8W = (
-            '[TimesheetByUser."ABBREVIATION"]')
+            '[TimesheetDetail."ABBREVIATION"]')
         end
       end
-      object bndGrpFooterUser: TfrxGroupFooter
+      object bndGroupFooter: TfrxGroupFooter
         FillType = ftBrush
         Frame.Typ = [ftLeft, ftRight, ftBottom]
         Font.Charset = ANSI_CHARSET
@@ -8005,7 +8005,7 @@ inherited ReportDM: TReportDM
           Frame.Typ = [ftLeft]
           HAlign = haRight
           Memo.UTF8W = (
-            '[SUM(<TimesheetByUser."CARRY_FORWARD_VALUE">,bndMaster)]')
+            '[SUM(<TimesheetDetail."CARRY_FORWARD_VALUE">,bndMaster)]')
         end
         object Memo14: TfrxMemoView
           AllowVectorExport = True
@@ -8017,7 +8017,7 @@ inherited ReportDM: TReportDM
           Frame.Typ = [ftLeft]
           HAlign = haRight
           Memo.UTF8W = (
-            '[SUM(<TimesheetByUser."ITEM_VALUE">,bndMaster)]')
+            '[SUM(<TimesheetDetail."ITEM_VALUE">,bndMaster)]')
         end
         object Memo16: TfrxMemoView
           AllowVectorExport = True
@@ -8029,7 +8029,7 @@ inherited ReportDM: TReportDM
           Frame.Typ = [ftLeft]
           HAlign = haRight
           Memo.UTF8W = (
-            '[SUM(<TimesheetByUser."TIME_HOURS">,bndMaster)]')
+            '[SUM(<TimesheetDetail."TIME_HOURS">,bndMaster)]')
         end
         object Memo2: TfrxMemoView
           AllowVectorExport = True
@@ -8039,7 +8039,7 @@ inherited ReportDM: TReportDM
           Frame.Typ = []
           HAlign = haRight
           Memo.UTF8W = (
-            'Totals For: [TimesheetByUser."LOGIN_NAME"]')
+            'Totals For: [TimesheetDetail."LOGIN_NAME"]')
         end
         object Memo32: TfrxMemoView
           AllowVectorExport = True
@@ -8061,14 +8061,14 @@ inherited ReportDM: TReportDM
         ParentFont = False
         Top = 170.078850000000000000
         Width = 1046.929810000000000000
-        Condition = 'TimesheetByUser."LOGIN_NAME"'
+        Condition = 'TimesheetDetail."LOGIN_NAME"'
         KeepTogether = True
         ResetPageNumbers = True
         StartNewPage = True
         object Memo1: TfrxMemoView
           AllowVectorExport = True
           Width = 532.913730000000000000
-          Height = 22.677165354330700000
+          Height = 22.677165350000000000
           Font.Charset = ANSI_CHARSET
           Font.Color = clBlack
           Font.Height = -19
@@ -8076,7 +8076,7 @@ inherited ReportDM: TReportDM
           Font.Style = [fsBold]
           Frame.Typ = []
           Memo.UTF8W = (
-            'Timesheets for: [(<TimesheetByUser."LOGIN_NAME">)]')
+            'Timesheets for: [(<TimesheetDetail."LOGIN_NAME">)]')
           ParentFont = False
         end
       end
@@ -8323,7 +8323,7 @@ inherited ReportDM: TReportDM
           Frame.Typ = [ftLeft]
           HAlign = haRight
           Memo.UTF8W = (
-            '[SUM(<TimesheetByUser."CARRY_FORWARD_VALUE">,bndMaster)]')
+            '[SUM(<TimesheetDetail."CARRY_FORWARD_VALUE">,bndMaster)]')
         end
         object Memo6: TfrxMemoView
           AllowVectorExport = True
@@ -8335,7 +8335,7 @@ inherited ReportDM: TReportDM
           Frame.Typ = [ftLeft]
           HAlign = haRight
           Memo.UTF8W = (
-            '[SUM(<TimesheetByUser."ITEM_VALUE">,bndMaster)]')
+            '[SUM(<TimesheetDetail."ITEM_VALUE">,bndMaster)]')
         end
         object Memo7: TfrxMemoView
           AllowVectorExport = True
@@ -8347,7 +8347,7 @@ inherited ReportDM: TReportDM
           Frame.Typ = [ftLeft]
           HAlign = haRight
           Memo.UTF8W = (
-            '[SUM(<TimesheetByUser."TIME_HOURS">,bndMaster)]')
+            '[SUM(<TimesheetDetail."TIME_HOURS">,bndMaster)]')
         end
         object Memo9: TfrxMemoView
           AllowVectorExport = True
