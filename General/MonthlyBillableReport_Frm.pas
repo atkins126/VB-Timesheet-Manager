@@ -178,6 +178,7 @@ begin
       ' ORDER BY M.THE_PERIOD';
 
   viewMonthlyBilling.DataController.BeginUpdate;
+
   try
     VBBaseDM.GetData(84, ReportDM.cdsMonthlyBilling, ReportDM.cdsMonthlyBilling.Name, WhereClause,
       'C:\Data\Xml\Monthly Billing.xml', ReportDM.cdsMonthlyBilling.UpdateOptions.Generatorname,

@@ -607,9 +607,6 @@ begin
 
   if FSortOptioinsList <> nil then
     FSortOptioinsList.Free;
-
-  if Assigned(ReportDM) then
-    FreeAndNil(ReportDM);
 end;
 
 procedure TTimesheetDetailReportFrm.FormShow(Sender: TObject);
@@ -834,15 +831,22 @@ begin
     1: WorkTypeClause := ' AND T.IS_ADDITIONAL_WORK = 1';
   end;
 
-//  lucSelectReportBy.SetFocus;
-//  AComboBox := TcxBarEditItemControl(lucSelectReportBy.Links[0].Control).Edit as TcxComboBox;
+//  if SameText(FGroupByField, 'LOGIN_NAME') then
+//    ReportIndex := 0
+//  else if SameText(FGroupByField, 'CUSTOMER_NAME') then
+//    ReportIndex := 1
+//  else if SameText(FGroupByField, 'ACTIVITY_TYPE') then
+//    ReportIndex := 2
+//  else if SameText(FGroupByField, 'ACTIVITY_DATE') then
+//    ReportIndex := 3;
+  ReportDM.Report := ReportDM.rptTimesheetDetail;
 
   case lucSelectReportBy.ItemIndex of
     0: // User Name
       begin
         FileName := 'Timesheet Detail by User';
 //        ReportDM.Report := ReportDM.rptTimesheetByUser;
-        ReportDM.Report := ReportDM.rptTimesheetDetail;
+//        ReportDM.Report := ReportDM.rptTimesheetDetail;
         DC := viewSystemUser.DataController;
         C := viewSystemUser.Controller;
 
@@ -873,7 +877,7 @@ begin
       begin
         FileName := 'Timesheet Detail by Customer';
 //        ReportDM.Report := ReportDM.rptTimesheetByCustomer;
-        ReportDM.Report := ReportDM.rptTimesheetDetail;
+//        ReportDM.Report := ReportDM.rptTimesheetDetail;
         DC := viewCustomerListing.DataController;
         C := viewCustomerListing.Controller;
 
@@ -901,9 +905,9 @@ begin
 
     2: // Activity Type
       begin
-        FileName := 'Timesheet Detail by Activity';
+        FileName := 'Timesheet Detail by Activity Type';
 //        ReportDM.Report := ReportDM.rptTimesheetByActivity;
-        ReportDM.Report := ReportDM.rptTimesheetDetail;
+//        ReportDM.Report := ReportDM.rptTimesheetDetail;
         DC := viewActivityType.DataController;
         C := viewActivityType.Controller;
 
@@ -1352,7 +1356,7 @@ begin
   HT := TcxGridSite(Sender).ViewInfo.GetHitTest(X, Y);
   FMadChanges := True;
   ReorderRows(TcxGridDBTableView(TcxGridSite(Sender).GridView), TcxGridRecordCellHitTest(HT).GridRecord);
-  FGroupByField :=  ReportDM.cdsTSSortOrder. FieldByName('FIELD_NAME').AsString;
+  FGroupByField := ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString;
 //  SetReportGrouping;
 end;
 

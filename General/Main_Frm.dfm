@@ -80,6 +80,9 @@ inherited MainFrm: TMainFrm
           end
           item
             Caption = 'Other'
+          end
+          item
+            Caption = 'Carry Forward'
           end>
         object edtID: TcxGridDBBandedColumn
           DataBinding.FieldName = 'ID'
@@ -169,10 +172,9 @@ inherited MainFrm: TMainFrm
           DataBinding.FieldName = 'THE_PERIOD'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 0
-          Properties.DisplayFormat = '###0'
-          Properties.EditFormat = '###0'
+          Properties.DisplayFormat = '######'
+          Properties.EditFormat = '######'
           Properties.ReadOnly = True
-          Properties.UseDisplayFormatWhenEditing = True
           Visible = False
           MinWidth = 65
           Options.Editing = False
@@ -200,7 +202,7 @@ inherited MainFrm: TMainFrm
           Position.ColIndex = 5
           Position.RowIndex = 0
         end
-        object dteActivityDate: TcxGridDBBandedColumn
+        object edtActivityDate: TcxGridDBBandedColumn
           DataBinding.FieldName = 'ACTIVITY_DATE'
           PropertiesClassName = 'TcxDateEditProperties'
           Properties.DisplayFormat = 'dd/MM/yyyy'
@@ -342,8 +344,8 @@ inherited MainFrm: TMainFrm
         object edtTimeHours: TcxGridDBBandedColumn
           DataBinding.FieldName = 'TIME_HOURS'
           PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = '#,###0.00'
-          Properties.EditFormat = '#,###0.00'
+          Properties.DisplayFormat = '###0.00'
+          Properties.EditFormat = '###0.00'
           Properties.ReadOnly = True
           Properties.UseDisplayFormatWhenEditing = True
           Properties.UseThousandSeparator = True
@@ -618,6 +620,40 @@ inherited MainFrm: TMainFrm
           Position.ColIndex = 14
           Position.RowIndex = 0
         end
+        object edtDateCfwdReleased: TcxGridDBBandedColumn
+          AlternateCaption = 'dd/MM/yyyy'
+          DataBinding.FieldName = 'DATE_CFWD_RELEASED'
+          PropertiesClassName = 'TcxDateEditProperties'
+          Properties.DisplayFormat = 'dd/mm/yyyy'
+          Properties.EditFormat = 'dd/mm/yyyy'
+          Properties.ReadOnly = True
+          MinWidth = 90
+          Options.Editing = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 90
+          Position.BandIndex = 4
+          Position.ColIndex = 0
+          Position.RowIndex = 0
+        end
+        object edtReleaseCfwdToPeriod: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'RELEASE_CFWD_TO_PERIOD'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = '######'
+          Properties.EditFormat = '######'
+          Properties.ReadOnly = True
+          MinWidth = 65
+          Options.Editing = False
+          Options.IncSearch = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 65
+          Position.BandIndex = 4
+          Position.ColIndex = 1
+          Position.RowIndex = 0
+        end
       end
       object lvlTimesheet: TcxGridLevel
         GridView = viewTimesheet
@@ -690,7 +726,6 @@ inherited MainFrm: TMainFrm
     TabStop = False
     OnTabChanged = ribMainTabChanged
     object tabTimesheet: TdxRibbonTab
-      Active = True
       Caption = 'Timesheet'
       Groups = <
         item
@@ -699,6 +734,7 @@ inherited MainFrm: TMainFrm
       Index = 0
     end
     object tabReports: TdxRibbonTab
+      Active = True
       Caption = 'Reports'
       Groups = <
         item
@@ -717,8 +753,8 @@ inherited MainFrm: TMainFrm
     end
   end
   object grdTimesheetBillable: TcxGrid [3]
-    Left = 1406
-    Top = 180
+    Left = 1426
+    Top = 255
     Width = 1181
     Height = 421
     Font.Charset = ANSI_CHARSET

@@ -854,6 +854,15 @@ inherited TSDM: TTSDM
       Origin = 'IS_ADDITIONAL_WORK'
       Required = True
     end
+    object cdsTimesheetDATE_CFWD_RELEASED: TDateField
+      DisplayLabel = 'Released'
+      FieldName = 'DATE_CFWD_RELEASED'
+    end
+    object cdsTimesheetRELEASE_CFWD_TO_PERIOD: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'To Period'
+      FieldName = 'RELEASE_CFWD_TO_PERIOD'
+    end
   end
   object dtsTimesheet: TDataSource
     DataSet = cdsTimesheet

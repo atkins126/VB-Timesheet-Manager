@@ -447,7 +447,7 @@ inherited MonthlyBillableReportFrm: TMonthlyBillableReportFrm
     end
     object actGetData: TAction
       Tag = 2
-      Caption = 'To Grid'
+      Caption = 'To Screen'
       ImageIndex = 5
       OnExecute = DoPrint
     end

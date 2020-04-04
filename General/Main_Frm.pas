@@ -65,7 +65,7 @@ type
     edtStdRate: TcxGridDBBandedColumn;
     edtItemValue: TcxGridDBBandedColumn;
     cbxLocked: TcxGridDBBandedColumn;
-    dteActivityDate: TcxGridDBBandedColumn;
+    edtActivityDate: TcxGridDBBandedColumn;
     dteModified: TcxGridDBBandedColumn;
     edtPeriod: TcxGridDBBandedColumn;
     cbxBillable: TcxGridDBBandedColumn;
@@ -207,6 +207,8 @@ type
     actMonthlyBilling: TAction;
     btnMonthlyBilling: TdxBarLargeButton;
     tipMonthlyBilling: TdxScreenTip;
+    edtDateCfwdReleased: TcxGridDBBandedColumn;
+    edtReleaseCfwdToPeriod: TcxGridDBBandedColumn;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoEditInsertEntry(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
@@ -1088,7 +1090,7 @@ end;
 
 procedure TMainFrm.DoGetTimesheetData(Sender: TObject);
 var
-  ParamList { , WhereClause }: string;
+  WhereClause, OrderByClause: string;
   AToDateEdit: TcxDateEdit;
 begin
   inherited;
@@ -1098,9 +1100,16 @@ begin
     if FTimesheetPeriod < 201901 then
       raise EValidateException.Create('Invalid period. Please select a valid period and try again.');
 
-    ParamList := ' WHERE T.USER_ID=' + FTSUserID.ToString +
-      ' AND T.THE_PERIOD=' + FTimesheetPeriod.ToString + SEMI_COLON +
-      ONE_SPACE + SEMI_COLON + 'ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
+    WhereClause :=
+      ' WHERE T.USER_ID=' + FTSUserID.ToString +
+      ' AND T.THE_PERIOD=' + FTimesheetPeriod.ToString;
+
+    OrderByClause := ' ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
+    WhereClause := WhereClause + OrderByClause;
+
+//    ParamList := ' WHERE T.USER_ID=' + FTSUserID.ToString +
+//      ' AND T.THE_PERIOD=' + FTimesheetPeriod.ToString + SEMI_COLON +
+//      ONE_SPACE + SEMI_COLON + 'ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
   end
   else if lucViewMode.ItemIndex = 1 then
   begin
@@ -1114,10 +1123,12 @@ begin
       AToDateEdit.Date := FFromDate;
     end;
 
-    ParamList := ' WHERE T.USER_ID =' + FTSUserID.ToString +
+    WhereClause := ' WHERE T.USER_ID =' + FTSUserID.ToString +
       ' AND T.ACTIVITY_DATE >=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FFromDate), '''') +
-      ' AND T.ACTIVITY_DATE <=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FToDate), '''') + SEMI_COLON +
-      ONE_SPACE + SEMI_COLON + 'ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
+      ' AND T.ACTIVITY_DATE <=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FToDate), '''');
+
+    OrderByClause := ' ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
+    WhereClause := WhereClause + OrderByClause;
   end;
 
   viewTimesheet.DataController.BeginUpdate;
@@ -1125,7 +1136,7 @@ begin
     if (FIteration > 0) and (ProgressFrm <> nil) then
     begin
 //      SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Price List Table' + '|PROGRESS=' + FIteration.ToString)), 0);
-      SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('Opening Pricelist Table')), 0);
+      SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('Opening Timesheet Table')), 0);
       SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FIteration.ToString)), 0);
     end;
 
@@ -1133,7 +1144,7 @@ begin
 // ' AND T.THE_PERIOD=' + FTimesheetPeriod.ToString + SEMI_COLON +
 // ONE_SPACE + SEMI_COLON + 'ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
 
-    VBBaseDM.GetData(27, TSDM.cdsTimesheet, TSDM.cdsTimesheet.Name, ParamList,
+    VBBaseDM.GetData(27, TSDM.cdsTimesheet, TSDM.cdsTimesheet.Name, WhereClause {ParamList},
       'C:\Data\Xml\Timesheet.xml', TSDM.cdsTimesheet.UpdateOptions.Generatorname,
       TSDM.cdsTimesheet.UpdateOptions.UpdateTableName);
 

@@ -30,7 +30,6 @@ type
     btnPDF: TdxBarLargeButton;
     btnPreview: TdxBarLargeButton;
     btnPrint: TdxBarLargeButton;
-    lucFromPeriod: TcxBarEditItem;
     dlgPrint: TdxPrintDialog;
     dlgFileSave: TSaveDialog;
     grdSummaryByActivity: TcxGrid;
@@ -59,16 +58,24 @@ type
     actGetData: TAction;
     actExcel: TAction;
     actPDF: TAction;
+    styVerdana: TcxStyle;
+    cntPeriod: TdxBarControlContainerItem;
+    lucPeriod: TcxLookupComboBox;
+    edtDoreenMins: TcxGridDBBandedColumn;
+    edtDoreenHours: TcxGridDBBandedColumn;
+    edtDoreenValue: TcxGridDBBandedColumn;
+    btnToScreen: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure DoCloseForm(Sender: TObject);
     procedure DoPrint(Sender: TObject);
     procedure DoGetData(Sender: TObject);
     procedure DoExcel(Sender: TObject);
     procedure DoPDF(Sender: TObject);
-    procedure lucFromPeriodPropertiesEditValueChanged(Sender: TObject);
     procedure viewSummaryByActivityCustomDrawCell(
       Sender: TcxCustomGridTableView; ACanvas: TcxCanvas;
       AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
+    procedure lucPeriodPropertiesEditValueChanged(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     procedure GetPeriods;
@@ -97,10 +104,22 @@ procedure TTimesheetActivitySummaryFrm.FormCreate(Sender: TObject);
 begin
   inherited;
   Caption := 'Timesheet Summary by Activity';
-  TcxLookupComboBoxProperties(lucFromPeriod.Properties).ListSource := ReportDM.dtsPeriod;
-  lucFromPeriod.EditValue := VBBaseDM.CurrentPeriod;
+  viewSummaryByActivity.DataController.DataSource := ReportDM.dtsTSSummaryByActivity;
+  lucPeriod.Properties.ListSource := ReportDM.dtsPeriod;
   GetPeriods;
-  actGetData.Execute;
+  lucPeriod.Properties.OnEditValueChanged := nil;
+  try
+    lucPeriod.EditValue := VBBaseDM.CurrentPeriod;
+    actGetData.Execute;
+  finally
+    lucPeriod.Properties.OnEditValueChanged := lucPeriodPropertiesEditValueChanged;
+  end;
+end;
+
+procedure TTimesheetActivitySummaryFrm.FormShow(Sender: TObject);
+begin
+  inherited;
+  Self.WindowState := wsMaximized;
 end;
 
 procedure TTimesheetActivitySummaryFrm.GetPeriods;
@@ -113,7 +132,7 @@ begin
     ReportDM.cdsPeriod.Last;
 end;
 
-procedure TTimesheetActivitySummaryFrm.lucFromPeriodPropertiesEditValueChanged(Sender: TObject);
+procedure TTimesheetActivitySummaryFrm.lucPeriodPropertiesEditValueChanged(Sender: TObject);
 begin
   inherited;
   Screen.Cursor := crHourglass;
@@ -155,7 +174,6 @@ end;
 procedure TTimesheetActivitySummaryFrm.DoPDF(Sender: TObject);
 var
   FileSaved: Boolean;
-//  DC: TcxCustomDataController;
   ActivityTypeID: Integer;
   RepFileName: string;
 begin
@@ -238,9 +256,6 @@ begin
           ReportDM.Report.PrintOptions.Copies :=
             dlgPrint.DialogData.Copies;
 
-//              ReportDM.Report.PrintOptions.Printer.
-//                dxPrintDevice.PrinterIndex;
-
           ReportDM.Report.Print;
         end;
       end;
@@ -248,7 +263,6 @@ begin
     if not ReportDM.cdsTSSummaryByActivity.Locate('ACTIVITY_TYPE_ID', ActivityTypeID, []) then
       ReportDM.cdsTSSummaryByActivity.First;
 
-//    viewSummaryByActivity.ViewData.Collapse(True);
     viewSummaryByActivity.DataController.EndUpdate;
   end;
 end;
@@ -316,12 +330,23 @@ begin
 end;
 
 procedure TTimesheetActivitySummaryFrm.DoGetData(Sender: TObject);
+var
+  WhereClause, GroupByClause, OrderByClause: string;
 begin
   inherited;
-  VBBaseDM.GetData(46, ReportDM.cdsTSSummaryByActivity, ReportDM.cdsTSSummaryByActivity.Name, 'T.THE_PERIOD = ' +
-    IntToStr(lucFromPeriod.EditValue),
+  WhereClause := ' WHERE T.THE_PERIOD = ' + VarToStr(lucPeriod.EditValue);
+  GroupByClause := ' GROUP BY T.THE_PERIOD, A.ID, A."NAME" ';
+  OrderByClause := 'ORDER BY A."NAME"';
+  WhereClause := WhereClause + GroupByClause + OrderByClause;
+
+  VBBaseDM.GetData(46, ReportDM.cdsTSSummaryByActivity, ReportDM.cdsTSSummaryByActivity.Name, WhereClause,
     'C:\Data\Xml\Summary By Activity.xml', ReportDM.cdsTSSummaryByActivity.UpdateOptions.Generatorname,
     ReportDM.cdsTSSummaryByActivity.UpdateOptions.UpdateTableName);
+
+//  VBBaseDM.GetData(46, ReportDM.cdsTSSummaryByActivity, ReportDM.cdsTSSummaryByActivity.Name, 'T.THE_PERIOD = ' +
+//    IntToStr(lucPeriod.EditValue),
+//    'C:\Data\Xml\Summary By Activity.xml', ReportDM.cdsTSSummaryByActivity.UpdateOptions.Generatorname,
+//    ReportDM.cdsTSSummaryByActivity.UpdateOptions.UpdateTableName);
 end;
 
 end.

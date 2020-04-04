@@ -147,6 +147,8 @@ type
     cdsStdActivityNAME: TStringField;
     cdsRateUnitABBREVIATION: TStringField;
     cdsRatePUnitrefABBREVIATION: TStringField;
+    cdsTimesheetDATE_CFWD_RELEASED: TDateField;
+    cdsTimesheetRELEASE_CFWD_TO_PERIOD: TIntegerField;
     procedure dtsTimesheetStateChange(Sender: TObject);
     procedure cdsCustomerLookupCalcFields(DataSet: TDataSet);
     procedure cdsTimesheetNewRecord(DataSet: TDataSet);

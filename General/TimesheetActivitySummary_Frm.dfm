@@ -2,6 +2,8 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
   Caption = 'TimesheetActivitySummaryFrm'
   ClientHeight = 771
   ClientWidth = 1237
+  Constraints.MinHeight = 700
+  Constraints.MinWidth = 1000
   ExplicitWidth = 1253
   ExplicitHeight = 810
   PixelsPerInch = 96
@@ -29,6 +31,7 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
         OnCustomDrawCell = viewSummaryByActivityCustomDrawCell
+        DataController.DataSource = ReportDM.dtsTSSummaryByActivity
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -78,6 +81,18 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
             Kind = skSum
             FieldName = 'ALBERTUS_ITEM_VALUE'
             Column = edtSAAlbetusValue
+          end
+          item
+            Format = '###,##0.00'
+            Kind = skSum
+            FieldName = 'DOREEN_HRS'
+            Column = edtDoreenHours
+          end
+          item
+            Format = '###,##0.00'
+            Kind = skSum
+            FieldName = 'DOREEN_ITEM_VALUE'
+            Column = edtDoreenValue
           end>
         DataController.Summary.SummaryGroups = <>
         OptionsData.CancelOnExit = False
@@ -103,6 +118,9 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
           end
           item
             Caption = 'Albertus'
+          end
+          item
+            Caption = 'Doreen'
           end>
         object edtSAPeriod: TcxGridDBBandedColumn
           DataBinding.FieldName = 'THE_PERIOD'
@@ -160,18 +178,22 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
           AlternateCaption = 'BarCode'
           DataBinding.FieldName = 'AMANDA'
           PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = '###,###,##0.00'
-          Properties.EditFormat = '###,###,##0.00'
+          Properties.DisplayFormat = '###,##0.00'
+          Properties.EditFormat = '###,##0.00'
           Properties.ReadOnly = True
+          Properties.UseDisplayFormatWhenEditing = True
+          Properties.UseLeftAlignmentOnEditing = False
+          Properties.UseThousandSeparator = True
           Visible = False
           HeaderAlignmentHorz = taRightJustify
-          MinWidth = 64
+          MinWidth = 90
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
           Options.Grouping = False
           Options.HorzSizing = False
           Options.Moving = False
+          Width = 90
           Position.BandIndex = 1
           Position.ColIndex = 0
           Position.RowIndex = 0
@@ -179,20 +201,21 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
         object edtSAAmandaHours: TcxGridDBBandedColumn
           DataBinding.FieldName = 'AMANDA_HRS'
           PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = '#,###,##0.00'
-          Properties.EditFormat = '#,###,##0.00'
+          Properties.DisplayFormat = '###,##0.00'
+          Properties.EditFormat = '###,##0.00'
           Properties.ReadOnly = True
           Properties.UseDisplayFormatWhenEditing = True
           Properties.UseLeftAlignmentOnEditing = False
           Properties.UseThousandSeparator = True
           HeaderAlignmentHorz = taRightJustify
-          MinWidth = 64
+          MinWidth = 90
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
           Options.Grouping = False
           Options.HorzSizing = False
           Options.Moving = False
+          Width = 90
           Position.BandIndex = 1
           Position.ColIndex = 1
           Position.RowIndex = 0
@@ -200,8 +223,8 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
         object edtSAAmandaValue: TcxGridDBBandedColumn
           DataBinding.FieldName = 'AMANDA_ITEM_VALUE'
           PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = '#,###,##0.00'
-          Properties.EditFormat = '#,###,##0.00'
+          Properties.DisplayFormat = '###,##0.00'
+          Properties.EditFormat = '###,##0.00'
           Properties.ReadOnly = True
           Properties.UseDisplayFormatWhenEditing = True
           Properties.UseLeftAlignmentOnEditing = False
@@ -223,18 +246,22 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
           AlternateCaption = 'BarCode'
           DataBinding.FieldName = 'CHANEL'
           PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = '###,###,##0.00'
-          Properties.EditFormat = '###,###,##0.00'
+          Properties.DisplayFormat = '###,##0.00'
+          Properties.EditFormat = '###,##0.00'
           Properties.ReadOnly = True
+          Properties.UseDisplayFormatWhenEditing = True
+          Properties.UseLeftAlignmentOnEditing = False
+          Properties.UseThousandSeparator = True
           Visible = False
           HeaderAlignmentHorz = taRightJustify
-          MinWidth = 64
+          MinWidth = 90
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
           Options.Grouping = False
           Options.HorzSizing = False
           Options.Moving = False
+          Width = 90
           Position.BandIndex = 2
           Position.ColIndex = 0
           Position.RowIndex = 0
@@ -242,20 +269,21 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
         object edtSAChanelHours: TcxGridDBBandedColumn
           DataBinding.FieldName = 'CHANEL_HRS'
           PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = '#,###,##0.00'
-          Properties.EditFormat = '#,###,##0.00'
+          Properties.DisplayFormat = '###,##0.00'
+          Properties.EditFormat = '###,##0.00'
           Properties.ReadOnly = True
           Properties.UseDisplayFormatWhenEditing = True
           Properties.UseLeftAlignmentOnEditing = False
           Properties.UseThousandSeparator = True
           HeaderAlignmentHorz = taRightJustify
-          MinWidth = 64
+          MinWidth = 90
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
           Options.Grouping = False
           Options.HorzSizing = False
           Options.Moving = False
+          Width = 90
           Position.BandIndex = 2
           Position.ColIndex = 1
           Position.RowIndex = 0
@@ -263,8 +291,8 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
         object edtSAChanelVlaue: TcxGridDBBandedColumn
           DataBinding.FieldName = 'CHANEL_ITEM_VALUE'
           PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = '#,###,##0.00'
-          Properties.EditFormat = '#,###,##0.00'
+          Properties.DisplayFormat = '###,##0.00'
+          Properties.EditFormat = '###,##0.00'
           Properties.ReadOnly = True
           Properties.UseDisplayFormatWhenEditing = True
           Properties.UseLeftAlignmentOnEditing = False
@@ -286,18 +314,22 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
           AlternateCaption = 'BarCode'
           DataBinding.FieldName = 'CHRISTA'
           PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = '###,###,##0.00'
-          Properties.EditFormat = '###,###,##0.00'
+          Properties.DisplayFormat = '###,##0.00'
+          Properties.EditFormat = '###,##0.00'
           Properties.ReadOnly = True
+          Properties.UseDisplayFormatWhenEditing = True
+          Properties.UseLeftAlignmentOnEditing = False
+          Properties.UseThousandSeparator = True
           Visible = False
           HeaderAlignmentHorz = taRightJustify
-          MinWidth = 64
+          MinWidth = 90
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
           Options.Grouping = False
           Options.HorzSizing = False
           Options.Moving = False
+          Width = 90
           Position.BandIndex = 3
           Position.ColIndex = 0
           Position.RowIndex = 0
@@ -305,20 +337,21 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
         object edtSAChristaHours: TcxGridDBBandedColumn
           DataBinding.FieldName = 'CHRISTA_HRS'
           PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = '#,###,##0.00'
-          Properties.EditFormat = '#,###,##0.00'
+          Properties.DisplayFormat = '###,##0.00'
+          Properties.EditFormat = '###,##0.00'
           Properties.ReadOnly = True
           Properties.UseDisplayFormatWhenEditing = True
           Properties.UseLeftAlignmentOnEditing = False
           Properties.UseThousandSeparator = True
           HeaderAlignmentHorz = taRightJustify
-          MinWidth = 64
+          MinWidth = 90
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
           Options.Grouping = False
           Options.HorzSizing = False
           Options.Moving = False
+          Width = 90
           Position.BandIndex = 3
           Position.ColIndex = 1
           Position.RowIndex = 0
@@ -326,8 +359,8 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
         object edtSAChristaValue: TcxGridDBBandedColumn
           DataBinding.FieldName = 'CHRISTA_ITEM_VALUE'
           PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = '#,###,##0.00'
-          Properties.EditFormat = '#,###,##0.00'
+          Properties.DisplayFormat = '###,##0.00'
+          Properties.EditFormat = '###,##0.00'
           Properties.ReadOnly = True
           Properties.UseDisplayFormatWhenEditing = True
           Properties.UseLeftAlignmentOnEditing = False
@@ -349,18 +382,22 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
           AlternateCaption = 'BarCode'
           DataBinding.FieldName = 'ALBERTUS'
           PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = '###,###,##0.00'
-          Properties.EditFormat = '###,###,##0.00'
+          Properties.DisplayFormat = '###,##0.00'
+          Properties.EditFormat = '###,##0.00'
           Properties.ReadOnly = True
+          Properties.UseDisplayFormatWhenEditing = True
+          Properties.UseLeftAlignmentOnEditing = False
+          Properties.UseThousandSeparator = True
           Visible = False
           HeaderAlignmentHorz = taRightJustify
-          MinWidth = 64
+          MinWidth = 90
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
           Options.Grouping = False
           Options.HorzSizing = False
           Options.Moving = False
+          Width = 90
           Position.BandIndex = 4
           Position.ColIndex = 0
           Position.RowIndex = 0
@@ -368,29 +405,8 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
         object edtSAAlbertusHours: TcxGridDBBandedColumn
           DataBinding.FieldName = 'ALBERTUS_HRS'
           PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = '#,###,##0.00'
-          Properties.EditFormat = '#,###,##0.00'
-          Properties.ReadOnly = True
-          Properties.UseDisplayFormatWhenEditing = True
-          Properties.UseLeftAlignmentOnEditing = False
-          Properties.UseThousandSeparator = True
-          HeaderAlignmentHorz = taRightJustify
-          MinWidth = 64
-          Options.Editing = False
-          Options.Filtering = False
-          Options.IncSearch = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Position.BandIndex = 4
-          Position.ColIndex = 1
-          Position.RowIndex = 0
-        end
-        object edtSAAlbetusValue: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'ALBERTUS_ITEM_VALUE'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = '#,###,##0.00'
-          Properties.EditFormat = '#,###,##0.00'
+          Properties.DisplayFormat = '###,##0.00'
+          Properties.EditFormat = '###,##0.00'
           Properties.ReadOnly = True
           Properties.UseDisplayFormatWhenEditing = True
           Properties.UseLeftAlignmentOnEditing = False
@@ -405,6 +421,91 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
           Options.Moving = False
           Width = 90
           Position.BandIndex = 4
+          Position.ColIndex = 1
+          Position.RowIndex = 0
+        end
+        object edtSAAlbetusValue: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'ALBERTUS_ITEM_VALUE'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = '###,##0.00'
+          Properties.EditFormat = '###,##0.00'
+          Properties.ReadOnly = True
+          Properties.UseDisplayFormatWhenEditing = True
+          Properties.UseLeftAlignmentOnEditing = False
+          Properties.UseThousandSeparator = True
+          HeaderAlignmentHorz = taRightJustify
+          MinWidth = 90
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 90
+          Position.BandIndex = 4
+          Position.ColIndex = 2
+          Position.RowIndex = 0
+        end
+        object edtDoreenMins: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'DOREEN'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = '###,##0.00'
+          Properties.EditFormat = '###,##0.00'
+          Properties.UseDisplayFormatWhenEditing = True
+          Properties.UseLeftAlignmentOnEditing = False
+          Properties.UseThousandSeparator = True
+          Visible = False
+          MinWidth = 90
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 90
+          Position.BandIndex = 5
+          Position.ColIndex = 0
+          Position.RowIndex = 0
+        end
+        object edtDoreenHours: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'DOREEN_HRS'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = '###,##0.00'
+          Properties.EditFormat = '###,##0.00'
+          Properties.UseDisplayFormatWhenEditing = True
+          Properties.UseLeftAlignmentOnEditing = False
+          Properties.UseThousandSeparator = True
+          HeaderAlignmentHorz = taRightJustify
+          MinWidth = 90
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 90
+          Position.BandIndex = 5
+          Position.ColIndex = 1
+          Position.RowIndex = 0
+        end
+        object edtDoreenValue: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'DOREEN_ITEM_VALUE'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = '###,##0.00'
+          Properties.EditFormat = '###,##0.00'
+          Properties.UseDisplayFormatWhenEditing = True
+          Properties.UseLeftAlignmentOnEditing = False
+          Properties.UseThousandSeparator = True
+          HeaderAlignmentHorz = taRightJustify
+          MinWidth = 90
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 90
+          Position.BandIndex = 5
           Position.ColIndex = 2
           Position.RowIndex = 0
         end
@@ -435,10 +536,38 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
       Index = 0
     end
   end
+  object lucPeriod: TcxLookupComboBox [1]
+    Left = 360
+    Top = 30
+    BeepOnEnter = False
+    Properties.DropDownAutoSize = True
+    Properties.DropDownListStyle = lsFixedList
+    Properties.ImmediatePost = True
+    Properties.KeyFieldNames = 'THE_PERIOD'
+    Properties.ListColumns = <
+      item
+        FieldName = 'THE_PERIOD'
+      end>
+    Properties.ListOptions.SyncMode = True
+    Properties.ListSource = ReportDM.dtsPeriod
+    Properties.OnEditValueChanged = lucPeriodPropertiesEditValueChanged
+    Style.HotTrack = False
+    TabOrder = 5
+    Visible = False
+    Width = 100
+  end
   inherited styRepository: TcxStyleRepository
     Left = 285
     Top = 210
     PixelsPerInch = 96
+    object styVerdana: TcxStyle
+      AssignedValues = [svFont]
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Verdana'
+      Font.Style = []
+    end
   end
   inherited actList: TActionList
     Images = img32
@@ -1277,10 +1406,9 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
           ItemName = 'btnClose'
         end
         item
-          UserDefine = [udWidth]
-          UserWidth = 70
+          UserDefine = [udPaintStyle]
           Visible = True
-          ItemName = 'lucFromPeriod'
+          ItemName = 'cntPeriod'
         end
         item
           Visible = True
@@ -1332,21 +1460,18 @@ inherited TimesheetActivitySummaryFrm: TTimesheetActivitySummaryFrm
       Category = 0
       AutoGrayScale = False
     end
-    object lucFromPeriod: TcxBarEditItem
+    object cntPeriod: TdxBarControlContainerItem
       Caption = 'Period'
       Category = 0
       Hint = 'Period'
       Visible = ivAlways
-      ShowCaption = True
-      PropertiesClassName = 'TcxLookupComboBoxProperties'
-      Properties.ImmediatePost = True
-      Properties.KeyFieldNames = 'THE_PERIOD'
-      Properties.ListColumns = <
-        item
-          FieldName = 'THE_PERIOD'
-        end>
-      Properties.ListOptions.SyncMode = True
-      Properties.OnEditValueChanged = lucFromPeriodPropertiesEditValueChanged
+      Control = lucPeriod
+    end
+    object btnToScreen: TdxBarLargeButton
+      Caption = 'To Screen'
+      Category = 0
+      Hint = 'To Screen'
+      Visible = ivAlways
     end
   end
   object dlgPrint: TdxPrintDialog

@@ -41,7 +41,7 @@ type
     cbxCarryForward: TcxDBCheckBox;
     cbxBillable: TcxDBCheckBox;
     cbxAddWork: TcxDBCheckBox;
-    dteActivityDate: TcxDBDateEdit;
+    lucActivityDate: TcxDBDateEdit;
     litApproved: TdxLayoutItem;
     litCarryForward: TdxLayoutItem;
     litDate: TdxLayoutItem;
@@ -86,8 +86,16 @@ type
     edtItem: TcxDBCurrencyEdit;
     edtID: TcxDBCurrencyEdit;
     litAdWork: TdxLayoutItem;
+    grpCarryForward: TdxLayoutGroup;
+    litDateReleasedCfwd: TdxLayoutItem;
+    litReleasedToPeriod: TdxLayoutItem;
+    lucDateReleasedCfwd: TcxDBDateEdit;
+    edtReleaseToPeriod: TcxDBCurrencyEdit;
+    spc2: TdxLayoutEmptySpaceItem;
+    spc4: TdxLayoutEmptySpaceItem;
+    spc5: TdxLayoutEmptySpaceItem;
     procedure FormCreate(Sender: TObject);
-    procedure dteActivityDatePropertiesEditValueChanged(Sender: TObject);
+    procedure lucActivityDatePropertiesEditValueChanged(Sender: TObject);
     procedure btnOKClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure edtTimeSpentPropertiesChange(Sender: TObject);
@@ -102,6 +110,7 @@ type
     procedure styReadOnlyStyleChanged(Sender: TObject);
     procedure doStdActivity(Sender: TObject);
     procedure btnStdActivityClick(Sender: TObject);
+    procedure btnCancelClick(Sender: TObject);
   private
 //    FMyDataSet: TFDMemTable;
 //    FMyDataSource: TDataSource;
@@ -130,8 +139,8 @@ procedure TTimesheetEditFrm.FormCreate(Sender: TObject);
 begin
   inherited;
   // Width = 800;  Height = 405.
-  Self.Width := 800;
-  Self.Height := 555;
+  Self.Width := 830;
+  Self.Height := 580;
   Caption := 'Timesheet Data';
 end;
 
@@ -144,7 +153,7 @@ begin
     cbxAddWork.DataBinding.DataSource := VBBaseDM.MyDataSource;
 //  edtDayName.DataBinding.DataSource := VBBaseDM.MyDataSource;
     cbxBillable.DataBinding.DataSource := VBBaseDM.MyDataSource;
-    dteActivityDate.DataBinding.DataSource := VBBaseDM.MyDataSource;
+    lucActivityDate.DataBinding.DataSource := VBBaseDM.MyDataSource;
     memActivity.DataBinding.DataSource := VBBaseDM.MyDataSource;
     edtTimeSpent.DataBinding.DataSource := VBBaseDM.MyDataSource;
 //  edtHours.DataBinding.DataSource := VBBaseDM.MyDataSource;
@@ -158,6 +167,11 @@ begin
     lucActivityType.DataBinding.DataSource := VBBaseDM.MyDataSource;
     lucRateUnit.Properties.ListSource := TSDM.dtsRateUnit;
     lucRateUnit.DataBinding.DataSource := VBBaseDM.MyDataSource;
+    lucdateReleasedCfwd.DataBinding.DataSource := VBBaseDM.MyDataSource;
+    edtReleaseToPeriod.DataBinding.DataSource := VBBaseDM.MyDataSource;
+    TcxLookupComboBoxProperties(lucDateReleasedCfwd.Properties).Buttons.Items[0].Visible := False;
+    cbxCarryForward.Properties.ReadOnly := True; // TSDM.cdsTimesheet.FieldByName('CARRY_FORWARD').AsInteger = 1;
+    edtitemValue.Value := TSDM.cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat;
 
     edtItem.DataBinding.DataSource := VBBaseDM.MyDataSource;
     edtID.DataBinding.DataSource := VBBaseDM.MyDataSource;
@@ -180,9 +194,9 @@ begin
     if TSDM.TimesheetOption.HighlightLookupSearchMatch then
       lucRateUnit.Properties.IncrementalFilteringOptions := [ifoHighlightSearchText];
 
-    dteActivityDate.Properties.MinDate := StrToDate('01/01/2019');
-    dteActivityDate.Properties.MaxDate := Date;
-    dteActivityDatePropertiesEditValueChanged(nil);
+    lucActivityDate.Properties.MinDate := StrToDate('01/01/2019');
+    lucActivityDate.Properties.MaxDate := Date;
+    lucActivityDatePropertiesEditValueChanged(nil);
 
     if VarIsNull(lucCustomer.EditValue) then
       lucCustomer.SetFocus
@@ -195,14 +209,21 @@ begin
   end;
 end;
 
+procedure TTimesheetEditFrm.btnCancelClick(Sender: TObject);
+begin
+  inherited;
+  if VBBaseDM.MyDataSet.State in [dsEdit, dsInsert] then
+    VBBaseDM.MyDataSet.Cancel;
+end;
+
 procedure TTimesheetEditFrm.btnOKClick(Sender: TObject);
 var
   NextID: Integer;
 begin
   inherited;
-  if VarIsNull(dteActivityDate.EditValue) or SameText(Trim(dteActivityDate.Text), '') then
+  if VarIsNull(lucActivityDate.EditValue) or SameText(Trim(lucActivityDate.Text), '') then
   begin
-    dteActivityDate.SetFocus;
+    lucActivityDate.SetFocus;
     raise EValidateException.Create('Activity date must have a value.');
   end;
 
@@ -443,17 +464,17 @@ begin
 //
 end;
 
-procedure TTimesheetEditFrm.dteActivityDatePropertiesEditValueChanged(Sender: TObject);
+procedure TTimesheetEditFrm.lucActivityDatePropertiesEditValueChanged(Sender: TObject);
 begin
   inherited;
-  if VarIsNull(dteActivityDate.EditValue) then
+  if VarIsNull(lucActivityDate.EditValue) then
     Exit;
 
-  edtDayName.Text := DayMonthName(dteActivityDate.EditValue, ntDay, nfShort);
+  edtDayName.Text := DayMonthName(lucActivityDate.EditValue, ntDay, nfShort);
 
 //  if VBBaseDM.MyDataSet.State in [dsEdit, dsInsert] then
 //    VBBaseDM.MyDataSet.FieldByName('DAY_NAME').AsString :=
-//      DayMonthName(dteActivityDate.EditValue, ntDay, nfShort);
+//      DayMonthName(lucActivityDate.EditValue, ntDay, nfShort);
 end;
 
 procedure TTimesheetEditFrm.edtRatePropertiesChange(Sender: TObject);
@@ -499,8 +520,15 @@ begin
 //  end;
 
   if cbxBillable.Checked then
-    edtitemValue.Value :=
-      VBBaseDM.MyDataSet.FieldByName('TIME_SPENT').AsFloat * edtRate.Value
+  begin
+    if VBBaseDM.MyDataSet.FieldByName('RATE_UNIT_ID').AsInteger = 1 then
+
+      edtitemValue.Value :=
+        VBBaseDM.MyDataSet.FieldByName('TIME_SPENT').AsFloat * edtRate.Value / 60
+    else
+      edtitemValue.Value :=
+        VBBaseDM.MyDataSet.FieldByName('ACTUAL_RATE').AsFloat;
+  end
   else
     edtitemValue.Value := 0;
 end;
