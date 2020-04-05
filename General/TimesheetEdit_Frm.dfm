@@ -10,9 +10,9 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
   TextHeight = 13
   inherited layMain: TdxLayoutControl
     Width = 826
-    Height = 556
+    Height = 646
     ExplicitWidth = 826
-    ExplicitHeight = 556
+    ExplicitHeight = 646
     object cbxAproved: TcxDBCheckBox [0]
       Left = 303
       Top = 11
@@ -33,8 +33,9 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Transparent = True
     end
     object cbxCarryForward: TcxDBCheckBox [1]
-      Left = 11
-      Top = 469
+      Left = 20
+      Top = 543
+      TabStop = False
       DataBinding.DataField = 'CARRY_FORWARD'
       DataBinding.DataSource = TSDM.dtsTimesheet
       Properties.DisplayChecked = 'Yes'
@@ -211,8 +212,8 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Width = 703
     end
     object edtTimeSpent: TcxDBCurrencyEdit [10]
-      Left = 112
-      Top = 415
+      Left = 72
+      Top = 446
       DataBinding.DataField = 'TIME_SPENT'
       DataBinding.DataSource = TSDM.dtsTimesheet
       Properties.Alignment.Horz = taLeftJustify
@@ -231,8 +232,8 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Width = 50
     end
     object edtRate: TcxDBCurrencyEdit [11]
-      Left = 333
-      Top = 415
+      Left = 203
+      Top = 446
       DataBinding.DataField = 'ACTUAL_RATE'
       DataBinding.DataSource = TSDM.dtsTimesheet
       Properties.Alignment.Horz = taLeftJustify
@@ -245,12 +246,12 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Properties.OnChange = edtRatePropertiesChange
       Properties.OnEditValueChanged = edtRatePropertiesEditValueChanged
       Style.HotTrack = False
-      TabOrder = 12
+      TabOrder = 11
       Width = 80
     end
     object edtStdrate: TcxDBCurrencyEdit [12]
-      Left = 333
-      Top = 442
+      Left = 203
+      Top = 473
       TabStop = False
       DataBinding.DataField = 'STD_RATE'
       DataBinding.DataSource = TSDM.dtsTimesheet
@@ -264,12 +265,12 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Properties.UseThousandSeparator = True
       Style.HotTrack = False
       Style.StyleController = styReadOnly
-      TabOrder = 15
+      TabOrder = 14
       Width = 80
     end
     object btnOK: TcxButton [13]
       Left = 659
-      Top = 520
+      Top = 610
       Width = 75
       Height = 25
       Caption = 'OK'
@@ -281,20 +282,18 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
     end
     object btnCancel: TcxButton [14]
       Left = 740
-      Top = 520
+      Top = 610
       Width = 75
       Height = 25
-      Cancel = True
       Caption = 'Cancel'
-      ModalResult = 2
       ParentShowHint = False
       ShowHint = True
       TabOrder = 20
       OnClick = btnCancelClick
     end
     object lucRateUnit: TcxDBLookupComboBox [15]
-      Left = 468
-      Top = 415
+      Left = 358
+      Top = 446
       BeepOnEnter = False
       DataBinding.DataField = 'RATE_UNIT_ID'
       DataBinding.DataSource = TSDM.dtsTimesheet
@@ -310,7 +309,7 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Properties.PostPopupValueOnTab = True
       Properties.OnEditValueChanged = lucRateUnitPropertiesEditValueChanged
       Style.HotTrack = False
-      TabOrder = 13
+      TabOrder = 12
       Width = 150
     end
     object edtDayName: TcxTextEdit [16]
@@ -326,8 +325,8 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Width = 50
     end
     object edtHours: TcxCurrencyEdit [17]
-      Left = 207
-      Top = 415
+      Left = 72
+      Top = 473
       TabStop = False
       Properties.DisplayFormat = '#,##0.00'
       Properties.EditFormat = '#,##0.00'
@@ -336,12 +335,13 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Style.HotTrack = False
       Style.StyleController = styReadOnly
       Style.TransparentBorder = False
-      TabOrder = 11
+      TabOrder = 13
       Width = 45
     end
     object edtitemValue: TcxCurrencyEdit [18]
-      Left = 693
-      Top = 415
+      Left = 358
+      Top = 473
+      TabStop = False
       Properties.Alignment.Horz = taLeftJustify
       Properties.DisplayFormat = '#,##0.00'
       Properties.EditFormat = '#,##0.00'
@@ -351,12 +351,13 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Style.HotTrack = False
       Style.StyleController = styReadOnly
       Style.TransparentBorder = False
-      TabOrder = 14
-      Width = 100
+      TabOrder = 15
+      Width = 150
     end
     object lucDateReleasedCfwd: TcxDBDateEdit [19]
-      Left = 160
-      Top = 469
+      Left = 367
+      Top = 543
+      TabStop = False
       DataBinding.DataSource = TSDM.dtsTimesheet
       Properties.ImmediatePost = True
       Properties.ReadOnly = True
@@ -365,12 +366,13 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Style.HotTrack = False
       Style.StyleController = styReadOnly
       Style.TransparentBorder = False
-      TabOrder = 17
+      TabOrder = 18
       Width = 100
     end
     object edtReleaseToPeriod: TcxDBCurrencyEdit [20]
-      Left = 334
-      Top = 469
+      Left = 199
+      Top = 543
+      TabStop = False
       DataBinding.DataSource = TSDM.dtsTimesheet
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = '#,###,##0.00'
@@ -382,11 +384,11 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Style.HotTrack = False
       Style.StyleController = styReadOnly
       Style.TransparentBorder = False
-      TabOrder = 18
+      TabOrder = 17
       Width = 80
     end
     inherited layMainGroup_Root: TdxLayoutGroup
-      ItemIndex = 8
+      ItemIndex = 7
     end
     object grpDate: TdxLayoutGroup
       Parent = layMainGroup_Root
@@ -412,21 +414,21 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Index = 2
     end
     object grpTime: TdxLayoutGroup
-      Parent = layMainGroup_Root
+      Parent = grpValues
       CaptionOptions.Text = 'New Group'
       ButtonOptions.Buttons = <>
-      ItemIndex = 5
       LayoutDirection = ldHorizontal
       ShowBorder = False
-      Index = 6
+      Index = 0
     end
     object grpRate: TdxLayoutGroup
-      Parent = layMainGroup_Root
+      Parent = grpValues
       CaptionOptions.Text = 'New Group'
       ButtonOptions.Buttons = <>
+      ItemIndex = 3
       LayoutDirection = ldHorizontal
       ShowBorder = False
-      Index = 7
+      Index = 1
     end
     object litApproved: TdxLayoutItem
       Parent = grpGeneralInfo
@@ -666,13 +668,13 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Index = 0
     end
     object litHours: TdxLayoutItem
-      Parent = grpTime
+      Parent = grpRate
       CaptionOptions.Text = 'Hours'
       Control = edtHours
       ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 45
       ControlOptions.ShowBorder = False
-      Index = 1
+      Index = 0
     end
     object litStdRate: TdxLayoutItem
       Parent = grpRate
@@ -681,7 +683,7 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       ControlOptions.OriginalHeight = 21
       ControlOptions.OriginalWidth = 80
       ControlOptions.ShowBorder = False
-      Index = 1
+      Index = 2
     end
     object litRate: TdxLayoutItem
       Parent = grpTime
@@ -713,7 +715,7 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       ControlOptions.OriginalHeight = 21
       ControlOptions.OriginalWidth = 80
       ControlOptions.ShowBorder = False
-      Index = 3
+      Index = 2
     end
     object litRateUnit: TdxLayoutItem
       Parent = grpTime
@@ -745,16 +747,16 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       ControlOptions.OriginalHeight = 21
       ControlOptions.OriginalWidth = 150
       ControlOptions.ShowBorder = False
-      Index = 4
+      Index = 3
     end
     object litItemValue: TdxLayoutItem
-      Parent = grpTime
+      Parent = grpRate
       CaptionOptions.Text = 'Item Value'
       Control = edtitemValue
       ControlOptions.OriginalHeight = 19
-      ControlOptions.OriginalWidth = 100
+      ControlOptions.OriginalWidth = 150
       ControlOptions.ShowBorder = False
-      Index = 5
+      Index = 3
     end
     object grpActivityType: TdxLayoutGroup
       Parent = layMainGroup_Root
@@ -774,13 +776,13 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       ItemIndex = 1
       LayoutDirection = ldHorizontal
       ShowBorder = False
-      Index = 10
+      Index = 9
     end
     object sep1: TdxLayoutSeparatorItem
       Parent = layMainGroup_Root
       AlignVert = avBottom
       CaptionOptions.Text = 'Separator'
-      Index = 9
+      Index = 8
     end
     object litOK: TdxLayoutItem
       Parent = grpControls
@@ -833,9 +835,9 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
     object spc3: TdxLayoutEmptySpaceItem
       Parent = grpRate
       SizeOptions.Height = 10
-      SizeOptions.Width = 261
+      SizeOptions.Width = 19
       CaptionOptions.Text = 'Empty Space Item'
-      Index = 0
+      Index = 1
     end
     object litLegend: TdxLayoutItem
       Parent = grpControls
@@ -877,82 +879,51 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
     end
     object grpCarryForward: TdxLayoutGroup
       Parent = layMainGroup_Root
-      CaptionOptions.Text = 'New Group'
+      CaptionOptions.Text = 'Carry forward information'
       ButtonOptions.Buttons = <>
-      ItemIndex = 3
+      ItemIndex = 1
       LayoutDirection = ldHorizontal
-      ShowBorder = False
-      Index = 8
+      Index = 7
     end
     object litDateReleasedCfwd: TdxLayoutItem
       Parent = grpCarryForward
-      CaptionOptions.Text = 'Release On'
+      CaptionOptions.Text = 'Release Date'
       Control = lucDateReleasedCfwd
       ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 100
       ControlOptions.ShowBorder = False
-      Index = 2
+      Index = 3
     end
     object litReleasedToPeriod: TdxLayoutItem
       Parent = grpCarryForward
-      CaptionOptions.Text = 'To Period'
+      CaptionOptions.Text = 'Release to Period'
       Control = edtReleaseToPeriod
       ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 80
       ControlOptions.ShowBorder = False
-      Index = 4
+      Index = 2
     end
     object spc2: TdxLayoutEmptySpaceItem
       Parent = grpTime
       SizeOptions.Height = 10
       SizeOptions.Width = 16
       CaptionOptions.Text = 'Empty Space Item'
-      Index = 2
-    end
-    object spc4: TdxLayoutEmptySpaceItem
-      Parent = grpCarryForward
-      SizeOptions.Height = 10
-      SizeOptions.Width = 1
-      CaptionOptions.Text = 'Empty Space Item'
-      Index = 3
+      Index = 1
     end
     object spc5: TdxLayoutEmptySpaceItem
       Parent = grpCarryForward
       SizeOptions.Height = 10
-      SizeOptions.Width = 10
+      SizeOptions.Width = 5
       CaptionOptions.Text = 'Empty Space Item'
       Index = 1
     end
-  end
-  object edtItem: TcxDBCurrencyEdit [1]
-    Left = 693
-    Top = 440
-    DataBinding.DataField = 'ITEM_VALUE'
-    DataBinding.DataSource = TSDM.dtsTimesheet
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = '###,##0.00'
-    Properties.EditFormat = '###,##0.00'
-    Properties.ReadOnly = True
-    Properties.UseDisplayFormatWhenEditing = True
-    Properties.UseLeftAlignmentOnEditing = False
-    Properties.UseThousandSeparator = True
-    TabOrder = 1
-    Width = 100
-  end
-  object edtID: TcxDBCurrencyEdit [2]
-    Left = 207
-    Top = 440
-    DataBinding.DataField = 'TIME_HOURS'
-    DataBinding.DataSource = TSDM.dtsTimesheet
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '#,##0.00'
-    Properties.EditFormat = '#,##0.00'
-    Properties.ReadOnly = True
-    Properties.UseDisplayFormatWhenEditing = True
-    Properties.UseLeftAlignmentOnEditing = False
-    Properties.UseThousandSeparator = True
-    TabOrder = 2
-    Width = 45
+    object grpValues: TdxLayoutGroup
+      Parent = layMainGroup_Root
+      CaptionOptions.Text = 'Time && rate capture'
+      ButtonOptions.Buttons = <>
+      ItemIndex = 1
+      Index = 6
+    end
   end
   inherited styRepository: TcxStyleRepository
     PixelsPerInch = 96

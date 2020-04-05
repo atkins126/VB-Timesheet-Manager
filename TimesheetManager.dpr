@@ -38,7 +38,8 @@ uses
   TimesheetActivitySummary_Frm in 'General\TimesheetActivitySummary_Frm.pas' {TimesheetActivitySummaryFrm},
   InvoiceItem_Frm in 'General\InvoiceItem_Frm.pas' {InvoiceItemFrm},
   StdActivity_Frm in 'General\StdActivity_Frm.pas' {StdActivityFrm},
-  MonthlyBillableReport_Frm in 'General\MonthlyBillableReport_Frm.pas' {MonthlyBillableReportFrm};
+  MonthlyBillableReport_Frm in 'General\MonthlyBillableReport_Frm.pas' {MonthlyBillableReportFrm},
+  ReleaseCFwd_Frm in 'General\ReleaseCFwd_Frm.pas' {ReleaseCFwdFrm};
 
 {$R *.res}
 

@@ -937,4 +937,211 @@ inherited TSDM: TTSDM
     Left = 505
     Top = 65
   end
+  object cdsCarryForward: TFDMemTable
+    Tag = 27
+    ActiveStoredUsage = [auDesignTime]
+    FilterOptions = [foCaseInsensitive]
+    FieldDefs = <>
+    CachedUpdates = True
+    IndexDefs = <>
+    FetchOptions.AssignedValues = [evMode, evRecordCountMode]
+    FetchOptions.Mode = fmAll
+    FetchOptions.RecordCountMode = cmTotal
+    FormatOptions.AssignedValues = [fvDataSnapCompatibility]
+    FormatOptions.DataSnapCompatibility = True
+    ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
+    ResourceOptions.Persistent = True
+    ResourceOptions.StorePrettyPrint = True
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvGeneratorName, uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.GeneratorName = 'TIMESHEET_ID_GEN'
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    UpdateOptions.UpdateTableName = 'TIMESHEET'
+    UpdateOptions.KeyFields = 'ID'
+    StoreDefs = True
+    Left = 600
+    Top = 10
+    object cdsCarryForwardID: TIntegerField
+      Alignment = taLeftJustify
+      FieldName = 'ID'
+      Origin = 'ID'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+    object cdsCarryForwardUSER_ID: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'U ID'
+      FieldName = 'USER_ID'
+      Origin = 'USER_ID'
+      Required = True
+    end
+    object cdsCarryForwardCUSTOMER_ID: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'Customer'
+      FieldName = 'CUSTOMER_ID'
+      Origin = 'CUSTOMER_ID'
+      Required = True
+    end
+    object cdsCarryForwardPRICE_LIST_ITEM_ID: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'Price Item'
+      FieldName = 'PRICE_LIST_ITEM_ID'
+      Origin = 'PRICE_LIST_ITEM_ID'
+      Required = True
+    end
+    object cdsCarryForwardRATE_UNIT_ID: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'Rate Unit'
+      FieldName = 'RATE_UNIT_ID'
+      Origin = 'RATE_UNIT_ID'
+      Required = True
+    end
+    object cdsCarryForwardACTIVITY_TYPE_ID: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'Activity Type'
+      FieldName = 'ACTIVITY_TYPE_ID'
+      Origin = 'ACTIVITY_TYPE_ID'
+      Required = True
+    end
+    object cdsCarryForwardINVOICE_ID: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'Inv No'
+      FieldName = 'INVOICE_ID'
+      Origin = 'INVOICE_ID'
+      Required = True
+    end
+    object cdsCarryForwardCN_ID: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'CN No'
+      FieldName = 'CN_ID'
+      Origin = 'CN_ID'
+      Required = True
+    end
+    object cdsCarryForwardCUSTOMER_GROUP_ID: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'Customer Group'
+      FieldName = 'CUSTOMER_GROUP_ID'
+      Origin = 'CUSTOMER_GROUP_ID'
+      Required = True
+    end
+    object cdsCarryForwardACTIVITY: TStringField
+      DisplayLabel = 'Activity'
+      FieldName = 'ACTIVITY'
+      Origin = 'ACTIVITY'
+      Size = 500
+    end
+    object cdsCarryForwardTIME_SPENT: TFloatField
+      DisplayLabel = 'Spent'
+      FieldName = 'TIME_SPENT'
+    end
+    object cdsCarryForwardTIME_HOURS: TFloatField
+      DisplayLabel = 'Hrs'
+      FieldName = 'TIME_HOURS'
+      Origin = 'TIME_HOURS'
+    end
+    object cdsCarryForwardACTUAL_RATE: TFloatField
+      DisplayLabel = 'Rate'
+      FieldName = 'ACTUAL_RATE'
+      Origin = 'ACTUAL_RATE'
+      Required = True
+    end
+    object cdsCarryForwardSTD_RATE: TFloatField
+      DisplayLabel = 'Std Rate'
+      FieldName = 'STD_RATE'
+      Origin = 'STD_RATE'
+      Required = True
+    end
+    object cdsCarryForwardITEM_VALUE: TFloatField
+      DisplayLabel = 'Value'
+      FieldName = 'ITEM_VALUE'
+      Origin = 'ITEM_VALUE'
+    end
+    object cdsCarryForwardLOCKED: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'Lck'
+      FieldName = 'LOCKED'
+      Origin = 'LOCKED'
+      Required = True
+    end
+    object cdsCarryForwardACTIVITY_DATE: TDateField
+      DisplayLabel = 'Date'
+      FieldName = 'ACTIVITY_DATE'
+      Origin = 'ACTIVITY_DATE'
+      Required = True
+    end
+    object cdsCarryForwardDATE_MODIFIED: TDateField
+      DisplayLabel = 'Modified'
+      FieldName = 'DATE_MODIFIED'
+      Origin = 'DATE_MODIFIED'
+      Required = True
+    end
+    object cdsCarryForwardTHE_PERIOD: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'Period'
+      FieldName = 'THE_PERIOD'
+      Origin = 'THE_PERIOD'
+      Required = True
+    end
+    object cdsCarryForwardBILLABLE: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'Bill'
+      FieldName = 'BILLABLE'
+      Origin = 'BILLABLE'
+      Required = True
+    end
+    object cdsCarryForwardDAY_NAME: TStringField
+      DisplayLabel = 'Day'
+      FieldName = 'DAY_NAME'
+      Origin = 'DAY_NAME'
+      FixedChar = True
+      Size = 3
+    end
+    object cdsCarryForwardDAY_ORDER: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'Day Ord'
+      FieldName = 'DAY_ORDER'
+      Origin = 'DAY_ORDER'
+    end
+    object cdsCarryForwardINVOICE_DATE: TDateField
+      DisplayLabel = 'Inv Date'
+      FieldName = 'INVOICE_DATE'
+      Origin = 'INVOICE_DATE'
+    end
+    object cdsCarryForwardCARRY_FORWARD: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'CF'
+      FieldName = 'CARRY_FORWARD'
+      Origin = 'CARRY_FORWARD'
+      Required = True
+    end
+    object cdsCarryForwardAPPROVED: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'Appr'
+      FieldName = 'APPROVED'
+      Origin = 'APPROVED'
+      Required = True
+    end
+    object cdsCarryForwardIS_ADDITIONAL_WORK: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'Ad Wk'
+      FieldName = 'IS_ADDITIONAL_WORK'
+      Origin = 'IS_ADDITIONAL_WORK'
+      Required = True
+    end
+    object cdsCarryForwardDATE_CFWD_RELEASED: TDateField
+      DisplayLabel = 'Released'
+      FieldName = 'DATE_CFWD_RELEASED'
+    end
+    object cdsCarryForwardRELEASE_CFWD_TO_PERIOD: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'To Period'
+      FieldName = 'RELEASE_CFWD_TO_PERIOD'
+    end
+  end
+  object dtsCarryForward: TDataSource
+    DataSet = cdsCarryForward
+    Left = 600
+    Top = 65
+  end
 end
