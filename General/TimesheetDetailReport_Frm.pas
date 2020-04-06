@@ -319,6 +319,7 @@ type
     FSortListID: TStringList;
     FGroupByField: string;
     FShowingForm: Boolean;
+    FRepFileName: string;
 
     procedure GetPeriods;
     procedure GetSystemUser;
@@ -336,6 +337,8 @@ type
     procedure SetOrderValue(DataSet: TDataSet; AValue: Variant);
     function OrderByClause: string;
     procedure SetReportGrouping;
+    procedure CheckSelection;
+    procedure SetReportFilename;
   public
     { Public declarations }
   end;
@@ -467,7 +470,7 @@ begin
   TcxLookupComboBoxProperties(lucCFActivityType.Properties).ListSource := ReportDM.dtsActivityType;
 
 //  FOrderByClause := ' ORDER BY 1, 6, 5, 8 ';
-  lucSelectReportBy.ItemIndex := 0;
+//  lucSelectReportBy.ItemIndex := 0;
   lucReportType.ItemIndex := 0;
   PopulateSortOptions;
   GetPeriods;
@@ -733,6 +736,20 @@ begin
     RegKey.CloseKey;
   finally
     Regkey.Free;
+  end;
+end;
+
+procedure TTimesheetDetailReportFrm.CheckSelection;
+begin
+  case grpData.ItemIndex of
+    0: if viewSystemUser.Controller.SelectedRecordCount = 0 then
+        raise ESelectionException.Create('No User selected. Please select at least one User.');
+
+    1: if viewCustomerListing.Controller.SelectedRecordCount = 0 then
+        raise ESelectionException.Create('No Customer selected. Please select at least one Customer.');
+
+    2: if viewActivityType.Controller.SelectedRecordCount = 0 then
+        raise ESelectionException.Create('No Activity Type selected. Please select at least one Activity Type.');
   end;
 end;
 
@@ -1169,7 +1186,7 @@ begin
     RegKey.OpenKey(KEY_TIME_SHEET, True);
 
     try
-      RegKey.WriteBool('Timesheet Detail Report Type Index', cbxRemoveZeroBillableValues.Checked);
+      RegKey.WriteInteger('Timesheet Detail Report Type Index', VarAsType(lucSelectReportBy.EditValue, vtInteger));
       RegKey.CloseKey;
     finally
       Regkey.Free;
@@ -1499,6 +1516,26 @@ begin
   TFDMemTable(DataSet).CommitUpdates;
 end;
 
+procedure TTimesheetDetailReportFrm.SetReportFilename;
+begin
+  if SameText(FGroupByField, 'CUSTOMER_NAME') then
+    FRepFileName := 'TimesheetByCustomer.fr3'
+
+  else if SameText(FGroupByField, 'LOGIN_NAME') then
+    FRepFileName := 'TimesheetByUser.fr3'
+
+  else if SameText(FGroupByField, 'ACTIVITY_TYPE') then
+    FRepFileName := 'TimesheetByActivityType.fr3'
+
+  else if SameText(FGroupByField, 'ACTIVITY_DATE') then
+    FRepFileName := 'TimesheetByActivityDate.fr3';
+
+  FRepFileName := TSDM.ShellResource.ReportFolder + FRepFileName;
+
+  if not TFile.Exists(FRepFileName) then
+    raise EFileNotFoundException.Create('Report file: ' + FRepFileName + ' not found. Cannot load report.');
+end;
+
 procedure TTimesheetDetailReportFrm.SetReportGrouping;
 begin
   viewTimesheetBillable.DataController.Groups.ClearGrouping;
@@ -1636,6 +1673,7 @@ var
 //  ProgressDialog: TExcelExportProgressFrm;
 begin
   inherited;
+  CheckSelection;
   FolderPath := EXCEL_DOCS;
 //  FolderPath := MainFrm.FShellResource.RootFolder + '\' + FSHIFT_FOLDER + 'Export\';
   TDirectory.CreateDirectory(FolderPath);
@@ -1670,6 +1708,10 @@ begin
   edtTActivtyType.Visible := False;
 
   GetTimesheetDetail;
+  SetReportGrouping;
+  SetReportFilename;
+  ReportDM.Report.LoadFromFile(FRepFileName);
+
 //  RepFileName := TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[grpData.ItemIndex];
 //
 //  if not TFile.Exists(RepFileName) then
@@ -1709,6 +1751,11 @@ begin
       True, // Use native format
       'xlsx');
 
+    ReportDM.cdsTSBillable.First;
+    viewTimesheetBillable.ViewData.Collapse(True);
+    grpData.Items[3].Visible := lucReportType.ItemIndex = 0;
+    grpData.Items[4].Visible := not grpData.Items[3].Visible;
+
     if cbxOpenDocument.Checked then
       ShellExecute(0, 'open', PChar('Excel.exe'), PChar('"' + ExportFileName + '"'), nil, SW_SHOWNORMAL)
   finally
@@ -1747,6 +1794,7 @@ var
 //  RepFileName: string;
 begin
   inherited;
+  CheckSelection;
   ReportDM.frxPDFExport.ShowDialog := False;
   ReportDM.frxPDFExport.Background := True;
   ReportDM.frxPDFExport.OpenAfterExport := cbxOpenDocument.Checked;
@@ -1775,7 +1823,10 @@ begin
       Exit;
   end;
 
+  SetReportGrouping;
   GetTimesheetDetail;
+  SetReportFilename;
+                ReportDM.Report.LoadFromFile(FRepFileName);
 //  RepFileName := TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[grpData.ItemIndex];
 //
 //  if not TFile.Exists(RepFileName) then
@@ -1790,7 +1841,10 @@ begin
     if ReportDM.Report.PrepareReport(True) then
       ReportDM.Report.Export(ReportDM.frxPDFExport);
   finally
+    grpData.Items[3].Visible := lucReportType.ItemIndex = 0;
+    grpData.Items[4].Visible := not grpData.Items[3].Visible;
     ReportDM.cdsTSBillable.First;
+    viewTimesheetBillable.ViewData.Collapse(True);
     DC.EndUpdate;
   end;
 end;
@@ -1840,13 +1894,12 @@ begin
 end;
 
 procedure TTimesheetDetailReportFrm.DoPrint(Sender: TObject);
-var
-  RepFileName: string;
-//  AFocusedItem: TdxCustomLayoutItem;
 begin
   inherited;
   try
     Screen.Cursor := crHourglass;
+    grpData.Items[3].Visible := False;
+    grpData.Items[4].Visible := False;
 
     case lucDateType.ItemIndex of
       0:
@@ -1874,46 +1927,37 @@ begin
         end;
     end;
 
-    case grpData.ItemIndex of
-      0: if viewSystemUser.Controller.SelectedRecordCount = 0 then
-          raise ESelectionException.Create('No User selected. Please select at least one User.');
-
-      1: if viewCustomerListing.Controller.SelectedRecordCount = 0 then
-          raise ESelectionException.Create('No Customer selected. Please select at least one Customer.');
-
-      2: if viewActivityType.Controller.SelectedRecordCount = 0 then
-          raise ESelectionException.Create('No Activity Type selected. Please select at least one Activity Type.');
-    end;
+    CheckSelection;
 
     case lucReportType.ItemIndex of
       0:
         begin
-          GetTimesheetDetail;
           SetReportGrouping;
+          GetTimesheetDetail;
+          SetReportFilename;
 
-          if SameText(FGroupByField, 'CUSTOMER_NAME') then
-            RepFileName := 'TimesheetByCustomer.fr3'
+//          if SameText(FGroupByField, 'CUSTOMER_NAME') then
+//            RepFileName := 'TimesheetByCustomer.fr3'
+//
+//          else if SameText(FGroupByField, 'LOGIN_NAME') then
+//            RepFileName := 'TimesheetByUser.fr3'
+//
+//          else if SameText(FGroupByField, 'ACTIVITY_TYPE') then
+//            RepFileName := 'TimesheetByActivityType.fr3'
+//
+//          else if SameText(FGroupByField, 'ACTIVITY_DATE') then
+//            RepFileName := 'TimesheetByActivityDate.fr3';
+//
+//          RepFileName := TSDM.ShellResource.ReportFolder + RepFileName;
+//
+////          RepFileName := TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[grpData.ItemIndex];
+//
+//          if not TFile.Exists(RepFileName) then
+//            raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 
-          else if SameText(FGroupByField, 'LOGIN_NAME') then
-            RepFileName := 'TimesheetByUser.fr3'
-
-          else if SameText(FGroupByField, 'ACTIVITY_TYPE') then
-            RepFileName := 'TimesheetByActivityType.fr3'
-
-          else if SameText(FGroupByField, 'ACTIVITY_DATE') then
-            RepFileName := 'TimesheetByActivityDate.fr3';
-
-          RepFileName := TSDM.ShellResource.ReportFolder + RepFileName;
-
-//          RepFileName := TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[grpData.ItemIndex];
-
-          if not TFile.Exists(RepFileName) then
-            raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
-
-          ReportDM.Report.LoadFromFile(RepFileName);
+          ReportDM.Report.LoadFromFile(FRepFileName);
           TfrxMemoView(ReportDM.Report.FindObject('bndGroupHeader')).Visible := cbxGroupedReport.Checked;
           TfrxMemoView(ReportDM.Report.FindObject('bndGroupFooter')).Visible := cbxGroupedReport.Checked;
-          SetReportGrouping;
         end;
 
       1:
@@ -1924,14 +1968,14 @@ begin
             0, 1: // Previewing or printing
               begin
                 case lucSelectReportBy.ItemIndex of
-                  0: RepFileName := TSDM.ShellResource.ReportFolder + 'TimesheetBillCfwdByUser.fr3'; // ReportDM.ReportFileName[3];
-                  1: RepFileName := TSDM.ShellResource.ReportFolder + 'TimesheetBillCfwdByCustomer.fr3'; //ReportDM.ReportFileName[4];
+                  0: FRepFileName := TSDM.ShellResource.ReportFolder + 'TimesheetBillCfwdByUser.fr3'; // ReportDM.ReportFileName[3];
+                  1: FRepFileName := TSDM.ShellResource.ReportFolder + 'TimesheetBillCfwdByCustomer.fr3'; //ReportDM.ReportFileName[4];
                 end;
 
-                if not TFile.Exists(RepFileName) then
-                  raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
+                if not TFile.Exists(FRepFileName) then
+                  raise EFileNotFoundException.Create('Report file: ' + FRepFileName + ' not found. Cannot load report.');
 
-                ReportDM.Report.LoadFromFile(RepFileName);
+                ReportDM.Report.LoadFromFile(FRepFileName);
               end;
           end;
         end;
@@ -1946,36 +1990,56 @@ begin
     case TAction(Sender).Tag of
       0, 1: // Previewing or printing
         begin
-          if ReportDM.Report.PrepareReport then
-            if TAction(Sender).Tag = 0 then
-              ReportDM.Report.ShowPreparedReport
-            else
-            begin
-              if dlgPrint.Execute then
+          ReportDM.cdsTSBillable.DisableControls;
+          try
+            if ReportDM.Report.PrepareReport then
+              if TAction(Sender).Tag = 0 then
+                ReportDM.Report.ShowPreparedReport
+              else
               begin
-                ReportDM.Report.PrintOptions.Copies :=
-                  dlgPrint.DialogData.Copies;
+                if dlgPrint.Execute then
+                begin
+                  ReportDM.Report.PrintOptions.Copies :=
+                    dlgPrint.DialogData.Copies;
 
-                ReportDM.Report.Print;
+                  ReportDM.Report.Print;
+                end;
               end;
-            end;
+          finally
+            ReportDM.cdsTSBillable.First;
+            ReportDM.cdsTSBillable.EnableControls;
+          end;
         end;
 
-      2: // Display data in grid
-        begin
-          case lucReportType.ItemIndex of
-            0:
-              begin
-                grpData.ItemIndex := 3;
-//                viewTimesheetBillable.ViewData.Expand(True);
-              end;
+//      2: // Display data in grid
+//        begin
+//          case lucReportType.ItemIndex of
+//            0:
+//              begin
+//                grpData.ItemIndex := 3;
+////                viewTimesheetBillable.ViewData.Expand(True);
+//              end;
+//
+//            1:
+//              begin
+//                grpData.ItemIndex := 4;
+//                viewBillCfwd.ViewData.Expand(True);
+//              end;
+//          end;
+//        end;
+    end;
 
-            1:
-              begin
-                grpData.ItemIndex := 4;
-                viewBillCfwd.ViewData.Expand(True);
-              end;
-          end;
+    case lucReportType.ItemIndex of
+      0:
+        begin
+          grpData.ItemIndex := 3;
+          viewTimesheetBillable.ViewData.Collapse(True);
+        end;
+
+      1:
+        begin
+          grpData.ItemIndex := 4;
+          viewBillCfwd.ViewData.Expand(True);
         end;
     end;
   finally
