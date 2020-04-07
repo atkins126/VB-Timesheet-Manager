@@ -1163,14 +1163,14 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         GridView = viewBillCfwd
       end
     end
-    object cbxSaveSortOrder: TcxCheckBox [15]
+    object cbxRefreshData: TcxCheckBox [15]
       Left = 404
       Top = 274
-      Caption = 'Save on Close'
+      Caption = 'Refresh Data'
       ParentShowHint = False
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
-      Properties.OnChange = cbxSaveSortOptoionsPropertiesChange
+      Properties.OnChange = cbxRefreshDataPropertiesChange
       ShowHint = True
       Style.HotTrack = False
       Style.TransparentBorder = False
@@ -2169,10 +2169,9 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     end
     object litSaveSortOptions: TdxLayoutItem
       Parent = grpSortOptions
-      Visible = False
       CaptionOptions.Text = 'New Item'
       CaptionOptions.Visible = False
-      Control = cbxSaveSortOrder
+      Control = cbxRefreshData
       ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 97
       ControlOptions.ShowBorder = False
@@ -4411,9 +4410,9 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Description.Text = 'Report will be grouped by first sort column'
       Width = 285
     end
-    object tipSaveSortOrder: TdxScreenTip
-      Header.Text = 'Save Sort Order'
-      Description.Text = 'Save current sort order options on close'
+    object tipRefreshData: TdxScreenTip
+      Header.Text = 'Refresh Data'
+      Description.Text = 'Refresh data when changing sort order'
       Width = 270
     end
   end
@@ -4426,8 +4425,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         Control = cbxGroupedReport
       end
       item
-        ScreenTip = tipSaveSortOrder
-        Control = cbxSaveSortOrder
+        ScreenTip = tipRefreshData
+        Control = cbxRefreshData
       end>
     HintStyle.ScreenTipActionLinks = <>
     HintShortPause = 0

@@ -235,7 +235,7 @@ type
     litSortOptions: TdxLayoutItem;
     grpSortOptions: TdxLayoutGroup;
     litSaveSortOptions: TdxLayoutItem;
-    cbxSaveSortOrder: TcxCheckBox;
+    cbxRefreshData: TcxCheckBox;
     litReportGrouping: TdxLayoutItem;
     cbxGroupedReport: TcxCheckBox;
     grdSortOrder: TcxGrid;
@@ -246,7 +246,7 @@ type
     edtFieldName: TcxGridDBColumn;
     edtOrdValue: TcxGridDBColumn;
     tipGroupedReport: TdxScreenTip;
-    tipSaveSortOrder: TdxScreenTip;
+    tipRefreshData: TdxScreenTip;
     edtAbbreviation: TcxGridDBBandedColumn;
     litTimesheetDetail: TdxLayoutItem;
     grpTimesheetDetail: TdxLayoutGroup;
@@ -274,7 +274,6 @@ type
     procedure lucDateTypePropertiesEditValueChanged(Sender: TObject);
     procedure lucSelectReportByPropertiesEditValueChanged(Sender: TObject);
     procedure lucReportTypePropertiesChange(Sender: TObject);
-    procedure cbxSaveSortOptoionsPropertiesChange(Sender: TObject);
     procedure viewSortOrderDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure viewSortOrderStartDrag(Sender: TObject; var DragObject: TDragObject);
     procedure cbxIncludePropertiesEditValueChanged(Sender: TObject);
@@ -304,6 +303,7 @@ type
     procedure btnCustomerClick(Sender: TObject);
     procedure btnActTypeClick(Sender: TObject);
     procedure btnActDateClick(Sender: TObject);
+    procedure cbxRefreshDataPropertiesChange(Sender: TObject);
 
   private
     { Private declarations }
@@ -339,6 +339,7 @@ type
     procedure SetReportGrouping;
     procedure CheckSelection;
     procedure SetReportFilename;
+    procedure CloseTSDataSets;
   public
     { Public declarations }
   end;
@@ -373,8 +374,7 @@ begin
   if not FShowingForm then
     HideTabs;
 //  Showtabs;
-  ReportDM.cdsTSBillable.Close;
-  ReportDM.cdsBillCfwd.Close;
+  CloseTSDataSets;
 end;
 
 procedure TTimesheetDetailReportFrm.edtTLoginNameGetDisplayText(
@@ -410,8 +410,8 @@ begin
   RegKey.RootKey := HKEY_CURRENT_USER;
   RegKey.OpenKey(KEY_TIME_SHEET, True);
 
-  if not RegKey.ValueExists('Save Report Sort Order') then
-    RegKey.WriteBool('Save Report Sort Order', True);
+  if not RegKey.ValueExists('Refresh Data When Changing Sort Order') then
+    RegKey.WriteBool('Refresh Data When Changing Sort Order', True);
 
   if not RegKey.ValueExists('Group Timsheet Detail Report') then
     RegKey.WriteBool('Group Timsheet Detail Report', True);
@@ -422,14 +422,14 @@ begin
   if not RegKey.ValueExists('Remove Zero Billable Values') then
     RegKey.WriteBool('Remove Zero Billable Values', True);
 
-  if not RegKey.ValueExists('Timesheet Detail Report Type Index') then
-    RegKey.WriteInteger('Timesheet Detail Report Type Index', 0);
+  if not RegKey.ValueExists('Select Report By Index') then
+    RegKey.WriteInteger('Select Report By Index', 0);
 
-  cbxSaveSortOrder.Checked := RegKey.ReadBool('Save Report Sort Order');
+  cbxRefreshData.Checked := RegKey.ReadBool('Refresh Data When Changing Sort Order');
   cbxGroupedReport.Checked := RegKey.ReadBool('Group Timsheet Detail Report');
   cbxOpenDocument.Checked := RegKey.ReadBool('Open Document After Export');
   cbxRemoveZeroBillableValues.Checked := RegKey.ReadBool('Remove Zero Billable Values');
-  lucSelectReportBy.ItemIndex := RegKey.ReadInteger('Timesheet Detail Report Type Index');
+  lucSelectReportBy.ItemIndex := RegKey.ReadInteger('Select Report By Index');
 
   if ReportDM = nil then
     ReportDM := TReportDM.Create(nil);
@@ -704,6 +704,22 @@ begin
   end;
 end;
 
+procedure TTimesheetDetailReportFrm.cbxRefreshDataPropertiesChange(Sender: TObject);
+var
+  RegKey: TRegistry;
+begin
+  inherited;
+  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+  RegKey.RootKey := HKEY_CURRENT_USER;
+  RegKey.OpenKey(KEY_TIME_SHEET, True);
+  try
+    RegKey.WriteBool('Refresh Data When Changing Sort Order', cbxRefreshData.Checked);
+    RegKey.CloseKey;
+  finally
+    Regkey.Free;
+  end;
+end;
+
 procedure TTimesheetDetailReportFrm.cbxRemoveZeroBillableValuesPropertiesChange(Sender: TObject);
 var
   RegKey: TRegistry;
@@ -720,22 +736,6 @@ begin
     finally
       Regkey.Free;
     end;
-  end;
-end;
-
-procedure TTimesheetDetailReportFrm.cbxSaveSortOptoionsPropertiesChange(Sender: TObject);
-var
-  RegKey: TRegistry;
-begin
-  inherited;
-  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
-  RegKey.RootKey := HKEY_CURRENT_USER;
-  RegKey.OpenKey(KEY_TIME_SHEET, True);
-  try
-    RegKey.WriteBool('Save Report Sort Order', cbxSaveSortOrder.Checked);
-    RegKey.CloseKey;
-  finally
-    Regkey.Free;
   end;
 end;
 
@@ -768,6 +768,15 @@ begin
   ReportDM.cdsSystemUser.Close;
   ReportDM.cdsRateUnit.Close;
 //  ReportDM.cdsTSBillable.Close;
+end;
+
+procedure TTimesheetDetailReportFrm.CloseTSDataSets;
+begin
+  if ReportDM.cdsTSBillable.Active then
+    ReportDM.cdsTSBillable.Close;
+
+  if reportdm.cdsBillCfwd.Active then
+    ReportDM.cdsBillCfwd.Close;
 end;
 
 procedure TTimesheetDetailReportFrm.GetActivityType;
@@ -1106,6 +1115,8 @@ begin
   grpData.Items[0].Visible := lucSelectReportBy.ItemIndex = 0;
   grpData.Items[1].Visible := lucSelectReportBy.ItemIndex = 1;
   grpData.Items[2].Visible := lucSelectReportBy.ItemIndex = 2;
+  grpData.Items[3].Visible := lucReportType.ItemIndex = 0;
+  grpData.Items[4].Visible := not grpData.Items[3].Visible;
 end;
 
 procedure TTimesheetDetailReportFrm.lucReportTypePropertiesChange(Sender: TObject);
@@ -1113,10 +1124,11 @@ begin
   inherited;
 //  HideTabs;
 //  Showtabs;
-  ReportDM.cdsTSBillable.Close;
-  ReportDM.cdsBillCfwd.Close;
+  CloseTSDataSets;
   lucBillable.Enabled := lucReportType.ItemIndex = 0;
   lucWorkType.Enabled := lucReportType.ItemIndex = 0;
+  grpData.Items[3].Visible := lucReportType.ItemIndex = 0;
+  grpData.Items[4].Visible := not grpData.Items[3].Visible;
 
   case lucReportType.ItemIndex of
     0:
@@ -1142,6 +1154,7 @@ begin
     Showtabs;
   end;
 
+  CloseTSDataSets;
   ReportDM.cdsTSBillable.Close;
   ReportDM.cdsBillCfwd.Close;
 
@@ -1170,8 +1183,7 @@ begin
     Showtabs;
   end;
 
-  ReportDM.cdsTSBillable.Close;
-  ReportDM.cdsBillCfwd.Close;
+  CloseTSDataSets;
 end;
 
 procedure TTimesheetDetailReportFrm.lucSelectReportByPropertiesChange(Sender: TObject);
@@ -1179,6 +1191,8 @@ var
   RegKey: TRegistry;
 begin
   inherited;
+  CloseTSDataSets;
+
   if not FShowingForm then
   begin
     RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
@@ -1186,7 +1200,7 @@ begin
     RegKey.OpenKey(KEY_TIME_SHEET, True);
 
     try
-      RegKey.WriteInteger('Timesheet Detail Report Type Index', VarAsType(lucSelectReportBy.EditValue, vtInteger));
+      RegKey.WriteInteger('Select Report By Index', lucSelectReportBy.ItemIndex);
       RegKey.CloseKey;
     finally
       Regkey.Free;
@@ -1374,7 +1388,9 @@ begin
   FMadChanges := True;
   ReorderRows(TcxGridDBTableView(TcxGridSite(Sender).GridView), TcxGridRecordCellHitTest(HT).GridRecord);
   FGroupByField := ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString;
-//  SetReportGrouping;
+
+  if cbxRefreshData.Checked then
+    actGetData.Execute;
 end;
 
 procedure TTimesheetDetailReportFrm.ReorderRows(AView: TcxGridDBTableView;
@@ -1518,6 +1534,9 @@ end;
 
 procedure TTimesheetDetailReportFrm.SetReportFilename;
 begin
+  case lucReportType.ItemIndex of
+  0:
+  begin
   if SameText(FGroupByField, 'CUSTOMER_NAME') then
     FRepFileName := 'TimesheetByCustomer.fr3'
 
@@ -1534,38 +1553,50 @@ begin
 
   if not TFile.Exists(FRepFileName) then
     raise EFileNotFoundException.Create('Report file: ' + FRepFileName + ' not found. Cannot load report.');
+  end;
+
+  1:
+  begin
+
+  end;
+  end;
 end;
 
 procedure TTimesheetDetailReportFrm.SetReportGrouping;
 begin
-  viewTimesheetBillable.DataController.Groups.ClearGrouping;
-  edtTLoginName.GroupIndex := -1;
-  edtTCustomerName.GroupIndex := -1;
-  edtTActivtyType.GroupIndex := -1;
-  edtTActivityDate.GroupIndex := -1;
+  case lucReportType.ItemIndex of
+    0: // Timesheeet details
+      begin
+        viewTimesheetBillable.DataController.Groups.ClearGrouping;
+        edtTLoginName.GroupIndex := -1;
+        edtTCustomerName.GroupIndex := -1;
+        edtTActivtyType.GroupIndex := -1;
+        edtTActivityDate.GroupIndex := -1;
 
-  if SameText(FGroupByField, 'LOGIN_NAME') then
-  begin
-    edtTLoginName.GroupBy(0, True, True, True);
-    edtTLoginName.Position.BandIndex := 0;
-  end
+        if SameText(FGroupByField, 'LOGIN_NAME') then
+        begin
+          edtTLoginName.GroupBy(0, True, True, True);
+          edtTLoginName.Position.BandIndex := 0;
+        end
 
-  else if SameText(FGroupByField, 'CUSTOMER_NAME') then
-  begin
-    edtTCustomerName.GroupBy(0, True, True, True);
-    edtTCustomerName.Position.BandIndex := 0;
-  end
+        else if SameText(FGroupByField, 'CUSTOMER_NAME') then
+        begin
+          edtTCustomerName.GroupBy(0, True, True, True);
+          edtTCustomerName.Position.BandIndex := 0;
+        end
 
-  else if SameText(FGroupByField, 'ACTIVITY_TYPE') then
-  begin
-    edtTActivtyType.GroupBy(0, True, True, True);
-    edtTActivtyType.Position.BandIndex := 0;
-  end
+        else if SameText(FGroupByField, 'ACTIVITY_TYPE') then
+        begin
+          edtTActivtyType.GroupBy(0, True, True, True);
+          edtTActivtyType.Position.BandIndex := 0;
+        end
 
-  else if SameText(FGroupByField, 'ACTIVITY_DATE') then
-  begin
-    edtTActivityDate.GroupBy(0, True, True, True);
-    edtTActivityDate.Position.BandIndex := 0;
+        else if SameText(FGroupByField, 'ACTIVITY_DATE') then
+        begin
+          edtTActivityDate.GroupBy(0, True, True, True);
+          edtTActivityDate.Position.BandIndex := 0;
+        end;
+      end;
   end;
 end;
 
@@ -1708,7 +1739,7 @@ begin
   edtTActivtyType.Visible := False;
 
   GetTimesheetDetail;
-  SetReportGrouping;
+//  SetReportGrouping;
   SetReportFilename;
   ReportDM.Report.LoadFromFile(FRepFileName);
 
@@ -1753,8 +1784,8 @@ begin
 
     ReportDM.cdsTSBillable.First;
     viewTimesheetBillable.ViewData.Collapse(True);
-    grpData.Items[3].Visible := lucReportType.ItemIndex = 0;
-    grpData.Items[4].Visible := not grpData.Items[3].Visible;
+//    grpData.Items[3].Visible := lucReportType.ItemIndex = 0;
+//    grpData.Items[4].Visible := not grpData.Items[3].Visible;
 
     if cbxOpenDocument.Checked then
       ShellExecute(0, 'open', PChar('Excel.exe'), PChar('"' + ExportFileName + '"'), nil, SW_SHOWNORMAL)
@@ -1780,7 +1811,7 @@ begin
   inherited;
   CloseDataSets;
 
-  if cbxSaveSortOrder.Checked then
+  if cbxRefreshData.Checked then
     if FMadChanges then
       ReportDM.cdsTSSortOrder.SaveToFile(TSDM.ShellResource.ResourceFolder + 'TS Report Sort Order.xml');
 
@@ -1823,10 +1854,10 @@ begin
       Exit;
   end;
 
-  SetReportGrouping;
+//  SetReportGrouping;
   GetTimesheetDetail;
   SetReportFilename;
-                ReportDM.Report.LoadFromFile(FRepFileName);
+  ReportDM.Report.LoadFromFile(FRepFileName);
 //  RepFileName := TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[grpData.ItemIndex];
 //
 //  if not TFile.Exists(RepFileName) then
@@ -1841,8 +1872,8 @@ begin
     if ReportDM.Report.PrepareReport(True) then
       ReportDM.Report.Export(ReportDM.frxPDFExport);
   finally
-    grpData.Items[3].Visible := lucReportType.ItemIndex = 0;
-    grpData.Items[4].Visible := not grpData.Items[3].Visible;
+//    grpData.Items[3].Visible := lucReportType.ItemIndex = 0;
+//    grpData.Items[4].Visible := not grpData.Items[3].Visible;
     ReportDM.cdsTSBillable.First;
     viewTimesheetBillable.ViewData.Collapse(True);
     DC.EndUpdate;
@@ -1898,8 +1929,6 @@ begin
   inherited;
   try
     Screen.Cursor := crHourglass;
-    grpData.Items[3].Visible := False;
-    grpData.Items[4].Visible := False;
 
     case lucDateType.ItemIndex of
       0:
@@ -1963,6 +1992,7 @@ begin
       1:
         begin
           GetBillCfwd;
+          SetReportFilename;
 
           case TAction(Sender).Tag of
             0, 1: // Previewing or printing
@@ -1984,8 +2014,8 @@ begin
 //    litTimesheetDetail.Visible := lucReportType.ItemIndex = 0;
 //    litBillCfwd.Visible := not litTimesheetDetail.Visible;
 
-    grpData.Items[3].Visible := lucReportType.ItemIndex = 0;
-    grpData.Items[4].Visible := not grpData.Items[3].Visible;
+//    grpData.Items[3].Visible := lucReportType.ItemIndex = 0;
+//    grpData.Items[4].Visible := not grpData.Items[3].Visible;
 
     case TAction(Sender).Tag of
       0, 1: // Previewing or printing
