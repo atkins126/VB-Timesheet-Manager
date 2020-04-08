@@ -534,7 +534,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
         OnCustomDrawCell = viewSystemUserCustomDrawCell
-        DataController.DataSource = ReportDM.dtsBillCfwd
+        DataController.DataSource = ReportDM.dtsBillCFwd
         DataController.Summary.DefaultGroupSummaryItems = <
           item
             Format = '#.##0.00'
@@ -1284,6 +1284,25 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
           Options.HorzSizing = False
           Options.Moving = False
           Width = 30
+        end
+        object edtFieldIndex: TcxGridDBColumn
+          DataBinding.FieldName = 'FIELD_INDEX'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = '##0'
+          Properties.EditFormat = '##0'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 40
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.ExpressionEditing = False
+          Options.GroupFooters = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 40
         end
       end
       object lvlSortOrder: TcxGridLevel
@@ -3375,50 +3394,6 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     object lvlCarryForwardDetail: TcxGridLevel
       GridView = viewCarryForwardDetail
     end
-  end
-  object btnUser: TcxButton [3]
-    Left = 810
-    Top = 121
-    Width = 75
-    Height = 25
-    Caption = 'User'
-    ParentShowHint = False
-    ShowHint = True
-    TabOrder = 3
-    OnClick = btnUserClick
-  end
-  object btnCustomer: TcxButton [4]
-    Left = 810
-    Top = 151
-    Width = 75
-    Height = 25
-    Caption = 'Customer'
-    ParentShowHint = False
-    ShowHint = True
-    TabOrder = 4
-    OnClick = btnCustomerClick
-  end
-  object btnActType: TcxButton [5]
-    Left = 810
-    Top = 181
-    Width = 75
-    Height = 25
-    Caption = 'Act Type'
-    ParentShowHint = False
-    ShowHint = True
-    TabOrder = 5
-    OnClick = btnActTypeClick
-  end
-  object btnActDate: TcxButton [6]
-    Left = 810
-    Top = 211
-    Width = 75
-    Height = 25
-    Caption = 'Act Date'
-    ParentShowHint = False
-    ShowHint = True
-    TabOrder = 6
-    OnClick = btnActDateClick
   end
   inherited styRepository: TcxStyleRepository
     Left = 260
