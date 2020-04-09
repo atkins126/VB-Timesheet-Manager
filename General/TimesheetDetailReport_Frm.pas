@@ -22,7 +22,8 @@ uses
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridBandedTableView,
   cxGridDBBandedTableView, cxGridCustomView, cxGrid, cxBarEditItem, dxScreenTip,
   cxGridExportLink, dxCustomHint, cxHint, cxGridDBTableView, cxCustomListBox,
-  cxCheckListBox, cxButtons, cxGridDBDataDefinitions, dxLayoutControlAdapters;
+  cxCheckListBox, cxButtons, cxGridDBDataDefinitions, dxLayoutControlAdapters,
+  dxCoreClasses, dxHashUtils;
 
 type
   TTimesheetDetailReportFrm = class(TBaseLayoutFrm)
@@ -261,6 +262,78 @@ type
     actExpandTimesheet: TAction;
     actCollapseTimesheet: TAction;
     edtFieldIndex: TcxGridDBColumn;
+    litExportSelectedOnlyToExcel: TdxLayoutItem;
+    cbxExportSelectedOnlyToExcel: TcxCheckBox;
+    grdTimesheetBillableExcel: TcxGrid;
+    viewTimesheetBillableExcel: TcxGridDBBandedTableView;
+    edtTIDX: TcxGridDBBandedColumn;
+    edtTFirstNameX: TcxGridDBBandedColumn;
+    edtTLastNameX: TcxGridDBBandedColumn;
+    edtTThePeriodX: TcxGridDBBandedColumn;
+    edtTLoginNameX: TcxGridDBBandedColumn;
+    edtTActivityDateX: TcxGridDBBandedColumn;
+    edtTCustomerTypeX: TcxGridDBBandedColumn;
+    edtTCustomerNameX: TcxGridDBBandedColumn;
+    edtTActivtyTypeX: TcxGridDBBandedColumn;
+    edtTAActivtyX: TcxGridDBBandedColumn;
+    edtTPriceItemX: TcxGridDBBandedColumn;
+    edtTTimeSpentX: TcxGridDBBandedColumn;
+    edtTHoursX: TcxGridDBBandedColumn;
+    edtTRateX: TcxGridDBBandedColumn;
+    edtTStdRateX: TcxGridDBBandedColumn;
+    edtAbbreviationX: TcxGridDBBandedColumn;
+    edtTItemValueX: TcxGridDBBandedColumn;
+    edtTCFwdValueX: TcxGridDBBandedColumn;
+    X: TcxGridDBBandedColumn;
+    edtTBillableX: TcxGridDBBandedColumn;
+    edtTBillableStrX: TcxGridDBBandedColumn;
+    edtTInvoiceNoX: TcxGridDBBandedColumn;
+    edtTInvDateX: TcxGridDBBandedColumn;
+    edtTCreditNoteNoX: TcxGridDBBandedColumn;
+    edtTLockedX: TcxGridDBBandedColumn;
+    edtTLockedStrX: TcxGridDBBandedColumn;
+    edtTCFwdX: TcxGridDBBandedColumn;
+    edtTCFwdStrX: TcxGridDBBandedColumn;
+    edtTAddWorkX: TcxGridDBBandedColumn;
+    edtTAddWorkStrX: TcxGridDBBandedColumn;
+    lvlTimesheetBillableExcel: TcxGridLevel;
+    litExportFormattedGridToExcel: TdxLayoutItem;
+    cbxFormatExcelData: TcxCheckBox;
+    tipExportFormattedExcelData: TdxScreenTip;
+    btnSpreadSheet: TcxButton;
+    grdBillCfwdExcel: TcxGrid;
+    viewBillCfwdExcel: TcxGridDBBandedTableView;
+    edtBillCfwdX: TcxGridDBBandedColumn;
+    edtBCIDX: TcxGridDBBandedColumn;
+    edtBCFirstNameX: TcxGridDBBandedColumn;
+    edtBCLastNameX: TcxGridDBBandedColumn;
+    edtBCThePeriodX: TcxGridDBBandedColumn;
+    edtBCLoginNameX: TcxGridDBBandedColumn;
+    edtBCActivityDateX: TcxGridDBBandedColumn;
+    edtBCCustomerTypeX: TcxGridDBBandedColumn;
+    edtBCCustomerNameX: TcxGridDBBandedColumn;
+    edtBCActivtyTypeX: TcxGridDBBandedColumn;
+    edtBCAActivtyX: TcxGridDBBandedColumn;
+    edtBCPriceItemX: TcxGridDBBandedColumn;
+    edtBCTimeSpentX: TcxGridDBBandedColumn;
+    edtBCHoursX: TcxGridDBBandedColumn;
+    edtBCRateX: TcxGridDBBandedColumn;
+    edtBCStdRateX: TcxGridDBBandedColumn;
+    edtBCItemValueX: TcxGridDBBandedColumn;
+    edtBCCFwdValueX: TcxGridDBBandedColumn;
+    edtBCWeekEndingX: TcxGridDBBandedColumn;
+    edtBCBillableX: TcxGridDBBandedColumn;
+    edtBCBillableStrX: TcxGridDBBandedColumn;
+    edtBCInvoiceNoX: TcxGridDBBandedColumn;
+    edtBCInvDateX: TcxGridDBBandedColumn;
+    edtBCCreditNoteNoX: TcxGridDBBandedColumn;
+    edtBCLockedX: TcxGridDBBandedColumn;
+    edtBCLockedStrX: TcxGridDBBandedColumn;
+    edtBCCFwdX: TcxGridDBBandedColumn;
+    edtBCCFwdStrX: TcxGridDBBandedColumn;
+    edtBCAddWorkX: TcxGridDBBandedColumn;
+    edtBCAddWorkStrX: TcxGridDBBandedColumn;
+    lvlBillCfwdExcel: TcxGridLevel;
     procedure FormCreate(Sender: TObject);
     procedure DoCloseForm(Sender: TObject);
     procedure DoPrint(Sender: TObject);
@@ -297,6 +370,9 @@ type
     procedure DoExpandTimesheet(Sender: TObject);
     procedure DoCollapseTimesheet(Sender: TObject);
     procedure cbxRefreshDataPropertiesChange(Sender: TObject);
+    procedure cbxExportSelectedOnlyToExcelPropertiesChange(Sender: TObject);
+    procedure cbxFormatExcelDataPropertiesChange(Sender: TObject);
+    procedure btnSpreadSheetClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -332,6 +408,8 @@ type
     procedure CheckSelection;
     procedure SetReportFilename;
     procedure CloseTSDataSets;
+    procedure ExportTimesheetDetails;
+    procedure ExportBillCFwd;
   public
     { Public declarations }
   end;
@@ -373,8 +451,8 @@ procedure TTimesheetDetailReportFrm.edtTLoginNameGetDisplayText(
   Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord; var AText: string);
 begin
   inherited;
-  if ARecord is TcxGridGroupRow then
-    AText := TcxGridGroupRow(ARecord).Value;
+//  if ARecord is TcxGridGroupRow then
+//    AText := TcxGridGroupRow(ARecord).Value;
 end;
 
 procedure TTimesheetDetailReportFrm.FormCreate(Sender: TObject);
@@ -416,11 +494,19 @@ begin
   if not RegKey.ValueExists('Select Report By Index') then
     RegKey.WriteInteger('Select Report By Index', 0);
 
+  if not RegKey.ValueExists('Export Selcted Timesheets Only') then
+    RegKey.WriteBool('Export Selcted Timesheets Only', False);
+
+  if not RegKey.ValueExists('Export Formatted Data To Excel') then
+    RegKey.WriteBool('Export Formatted Data To Excel', True);
+
   cbxRefreshData.Checked := RegKey.ReadBool('Refresh Data When Changing Sort Order');
   cbxGroupedReport.Checked := RegKey.ReadBool('Group Timsheet Detail Report');
   cbxOpenDocument.Checked := RegKey.ReadBool('Open Document After Export');
   cbxRemoveZeroBillableValues.Checked := RegKey.ReadBool('Remove Zero Billable Values');
   lucSelectReportBy.ItemIndex := RegKey.ReadInteger('Select Report By Index');
+  cbxExportSelectedOnlyToExcel.Checked := RegKey.ReadBool('Export Selcted Timesheets Only');
+  cbxFormatExcelData.Checked := RegKey.ReadBool('Export Formatted Data To Excel');
 
   if ReportDM = nil then
     ReportDM := TReportDM.Create(nil);
@@ -442,10 +528,11 @@ begin
   viewCustomerListing.DataController.DataSource := ReportDM.dtsTSCustomer;
   viewActivityType.DataController.DataSource := ReportDM.dtsActivityType;
   viewTimesheetBillable.DataController.DataSource := ReportDM.dtsTSBillable;
-//  viewSummaryByActivity.DataController.DataSource := ReportDM.dtsTSSummaryByActivity;
+//  viewTimesheetBillableExcel.DataController.DataSource := ReportDM.dtsTSBillableExcel;
   viewTimesheet.DataController.DataSource := ReportDM.dtsTimesheet;
   viewCarryForwardDetail.DataController.DataSource := ReportDM.dtsCarryForwardDetail;
   viewBillCfwd.DataController.DataSource := ReportDM.dtsBillCfwd;
+  viewBillCfwdExcel.DataController.DataSource := ReportDM.dtsBillCFwdExcel;
   viewSortOrder.DataController.DataSource := ReportDM.dtsTSSortOrder;
 
   TcxLookupComboBoxProperties(lucSystemUser.Properties).ListSource := ReportDM.dtsSystemUser;
@@ -625,6 +712,50 @@ begin
   WindowState := wsMaximized;
   FShowingForm := False;
   Screen.Cursor := crDefault;
+end;
+
+procedure TTimesheetDetailReportFrm.btnSpreadSheetClick(Sender: TObject);
+begin
+  inherited;
+//  shtBillCFwd.SaveToFile('C:\Data\VB\Test.xlsx');
+end;
+
+procedure TTimesheetDetailReportFrm.cbxExportSelectedOnlyToExcelPropertiesChange(Sender: TObject);
+var
+  RegKey: TRegistry;
+begin
+  inherited;
+  if not FShowingForm then
+  begin
+    RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+    RegKey.RootKey := HKEY_CURRENT_USER;
+    RegKey.OpenKey(KEY_TIME_SHEET, True);
+    try
+      RegKey.WriteBool('Export Selcted Timesheets Only', cbxExportSelectedOnlyToExcel.Checked);
+      RegKey.CloseKey;
+    finally
+      Regkey.Free;
+    end;
+  end;
+end;
+
+procedure TTimesheetDetailReportFrm.cbxFormatExcelDataPropertiesChange(Sender: TObject);
+var
+  RegKey: TRegistry;
+begin
+  inherited;
+  if not FShowingForm then
+  begin
+    RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+    RegKey.RootKey := HKEY_CURRENT_USER;
+    RegKey.OpenKey(KEY_TIME_SHEET, True);
+    try
+      RegKey.WriteBool('Export Formatted Data To Excel', cbxOpenDocument.Checked);
+      RegKey.CloseKey;
+    finally
+      Regkey.Free;
+    end;
+  end;
 end;
 
 procedure TTimesheetDetailReportFrm.cbxGroupedReportPropertiesChange(Sender: TObject);
@@ -930,6 +1061,14 @@ begin
   VBBaseDM.GetData(45, ReportDM.cdsTSBillable, ReportDM.cdsTSBillable.Name, WhereClause,
     'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsTSBillable.UpdateOptions.Generatorname,
     ReportDM.cdsTSBillable.UpdateOptions.UpdateTableName);
+
+  ReportDM.cdsTSBillableExcel.Close;
+
+  if not ReportDM.cdsTSBillable.IsEmpty then
+    ReportDm.cdsTSBillableExcel.Data := ReportDM.cdsTSBillable.Data;
+
+  grpData.ItemIndex := 4;
+//  viewTimesheetBillable.ViewData.Collapse(True);
 end;
 
 procedure TTimesheetDetailReportFrm.GetBillCfwd;
@@ -1072,6 +1211,14 @@ begin
   VBBaseDM.GetData(83, ReportDM.cdsBillCfwd, ReportDM.cdsBillCfwd.Name, WhereClause1 + ';' + WhereClause2,
     'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsBillCfwd.UpdateOptions.Generatorname,
     ReportDM.cdsBillCfwd.UpdateOptions.UpdateTableName);
+
+  ReportDM.cdsBillCFwdExcel.Close;
+
+  if not ReportDM.cdsBillCFwd.IsEmpty then
+    ReportDm.cdsBillCFwdExcel.Data := ReportDM.cdsBillCFwd.Data;
+
+  grpData.ItemIndex := 4;
+  viewBillCfwd.ViewData.Collapse(True);
 end;
 
 procedure TTimesheetDetailReportFrm.HideTabs;
@@ -1577,6 +1724,36 @@ begin
           edtTActivityDate.GroupBy(0, True, True, True);
           edtTActivityDate.Position.BandIndex := 0;
         end;
+
+        viewTimesheetBillableExcel.DataController.Groups.ClearGrouping;
+        edtTLoginNameX.GroupIndex := -1;
+        edtTCustomerNameX.GroupIndex := -1;
+        edtTActivtyTypeX.GroupIndex := -1;
+        edtTActivityDateX.GroupIndex := -1;
+
+        if SameText(FGroupByField, 'LOGIN_NAME') then
+        begin
+          edtTLoginNameX.GroupBy(0, True, True, True);
+          edtTLoginNameX.Position.BandIndex := 0;
+        end
+
+        else if SameText(FGroupByField, 'CUSTOMER_NAME') then
+        begin
+          edtTCustomerNameX.GroupBy(0, True, True, True);
+          edtTCustomerNameX.Position.BandIndex := 0;
+        end
+
+        else if SameText(FGroupByField, 'ACTIVITY_TYPE') then
+        begin
+          edtTActivtyTypeX.GroupBy(0, True, True, True);
+          edtTActivtyTypeX.Position.BandIndex := 0;
+        end
+
+        else if SameText(FGroupByField, 'ACTIVITY_DATE') then
+        begin
+          edtTActivityDateX.GroupBy(0, True, True, True);
+          edtTActivityDateX.Position.BandIndex := 0;
+        end;
       end;
   end;
 end;
@@ -1601,44 +1778,56 @@ begin
       1: // Summarize only C/Fwd values
         OutArguments.Done := AValue = 0;
     end;
-  end;
+  end
 
-  if SummaryItem.Column = edtBCItemValue then
+  else if SummaryItem.Column = edtBCHours then
   begin
     AValue := Arguments.SummaryItem.DataController.Values[Arguments.RecordIndex, 26];
 
     case SummaryItem.ID of
-      0: // Summarize only billed values
+      6{0}: // Summarize only billed values
         OutArguments.Done := AValue = 1;
-      1: // Summarize only C/Fwd values
+      7{1}: // Summarize only C/Fwd values
         OutArguments.Done := AValue = 0;
     end;
 
-  end;
+  end
 
-  if SummaryItem.Column = edtBCItemValue then
+  else if SummaryItem.Column = edtBCCFwdValue then
   begin
     AValue := Arguments.SummaryItem.DataController.Values[Arguments.RecordIndex, 26];
 
     case SummaryItem.ID of
-      0: // Summarize only billed values
+      9{0}: // Summarize only billed values
         OutArguments.Done := AValue = 1;
-      1: // Summarize only C/Fwd values
+      10{1}: // Summarize only C/Fwd values
         OutArguments.Done := AValue = 0;
     end;
   end;
 
-  if SummaryItem.Column = edtBCHours then
-  begin
-    AValue := Arguments.SummaryItem.DataController.Values[Arguments.RecordIndex, 26];
-
-    case SummaryItem.ID of
-      6: // Summarize only billed values
-        OutArguments.Done := AValue = 1;
-      7: // Summarize only C/Fwd values
-        OutArguments.Done := AValue = 0;
-    end;
-  end;
+//  if SummaryItem.Column = edtBCHours then
+//  begin
+//    AValue := Arguments.SummaryItem.DataController.Values[Arguments.RecordIndex, 26];
+//
+//    case SummaryItem.ID of
+//      6: // Summarize only billed values
+//        OutArguments.Done := AValue = 1;
+//      7: // Summarize only C/Fwd values
+//        OutArguments.Done := AValue = 0;
+//    end;
+//  end;
+//
+//  if SummaryItem.Column = edtBCHours then
+//  begin
+//    AValue := Arguments.SummaryItem.DataController.Values[Arguments.RecordIndex, 26];
+//
+//    case SummaryItem.ID of
+//      6: // Summarize only billed values
+//        OutArguments.Done := AValue = 1;
+//      7: // Summarize only C/Fwd values
+//        OutArguments.Done := AValue = 0;
+//    end;
+//  end;
 end;
 
 procedure TTimesheetDetailReportFrm.viewSystemUserCustomDrawCell(
@@ -1678,14 +1867,134 @@ begin
 end;
 
 procedure TTimesheetDetailReportFrm.DoExcel(Sender: TObject);
+//var
+//  FolderPath, ExportFileName: string;
+//  FileSaved: Boolean;
+////  RepFileName: string;
+////  ProgressDialog: TExcelExportProgressFrm;
+begin
+  inherited;
+  case lucReportType.ItemIndex of
+    0: ExportTimesheetDetails;
+    1: ExportBillCFwd;
+  end;
+
+//  CheckSelection;
+////  SetReportGrouping;
+//  if not ReportDM.cdsTSBillable.Active then
+//    GetTimesheetDetail;
+////  SetReportFilename;
+//
+//  case lucReportType.ItemIndex of
+//    0:
+//      if (viewTimesheetBillable.DataController.RecordCount = 0)
+//        and (cbxExportSelectedOnlyToExcel.Checked)
+//        and (viewTimesheetBillable.Controller.SelectedRecordCount = 0) then
+//        raise ESelectionException.Create('No timesheets items selected for export.' + CRLF +
+//          'Please select at least one timesheet item.');
+//
+////    1:
+//  end;
+//
+//  FolderPath := EXCEL_DOCS;
+//  TDirectory.CreateDirectory(FolderPath);
+//  dlgFileSave.DefaultExt := 'xlsx';
+//  dlgFileSave.InitialDir := FolderPath;
+//  dlgFileSave.FileName := '*.xlsx';
+//  FileSaved := dlgFileSave.Execute;
+//
+//  if not FileSaved then
+//    Exit;
+//
+//  if TFile.Exists(dlgFileSave.FileName) then
+//  begin
+//    Beep;
+//    if DisplayMsg(Application.Title,
+//      'File Overwrite',
+//      'The file ' + dlgFileSave.FileName + ' already exists.' + CRLF +
+//      'Do you want to overwrite this file?',
+//      mtConfirmation,
+//      [mbYes, mbNo]
+//      ) = mrNo then
+//      Exit;
+//  end;
+//
+//  case lucReportType.ItemIndex of
+//    0:
+//      begin
+//        edtTLoginName.GroupIndex := -1;
+//        edtTCustomerName.GroupIndex := -1;
+//        edtTActivtyType.GroupIndex := -1;
+//        edtTActivityDate.GroupIndex := -1;
+//        edtTLoginName.Visible := False;
+//        edtTCustomerName.Visible := False;
+//        edtTActivtyType.Visible := False;
+//        GetTimesheetDetail;
+//        SetReportFilename;
+//        ReportDM.Report.LoadFromFile(FRepFileName);
+//
+//        case grpData.ItemIndex of
+//          0:
+//            begin
+//              edtTCustomerName.Visible := True;
+//              edtTLoginName.GroupIndex := 0;
+//            end;
+//          1:
+//            begin
+//              edtTLoginName.Visible := True;
+//              edtTActivtyType.Visible := True;
+//              edtTCustomerName.GroupIndex := 0;
+//            end;
+//          2:
+//            begin
+//              edtTLoginName.Visible := True;
+//              edtTCustomerName.Visible := True;
+//              edtTActivtyType.GroupIndex := 0;
+//            end;
+//        end;
+//
+//        viewTimesheetBillable.OptionsView.BandHeaders := False;
+//
+//        try
+//          ExportFileName := dlgFileSave.FileName;
+//          ExportGridToXLSX(
+//            ExportFileName, //       Filename to export
+//            grdTimesheetBillable, // Grid whose data must be exported
+//            True, //                 Expand groups
+//            True, //                 Save all records (Selected and un-selected ones)
+//            True, //                 Use native format
+//            'xlsx');
+//
+//          ReportDM.cdsTSBillable.First;
+//          viewTimesheetBillable.ViewData.Collapse(True);
+//        finally
+//          viewTimesheetBillable.OptionsView.BandHeaders := True;
+//        end;
+//      end;
+//  end;
+//
+//  if cbxOpenDocument.Checked then
+//    ShellExecute(0, 'open', PChar('Excel.exe'), PChar('"' + ExportFileName + '"'), nil, SW_SHOWNORMAL)
+end;
+
+procedure TTimesheetDetailReportFrm.ExportTimesheetDetails;
 var
   FolderPath, ExportFileName: string;
   FileSaved: Boolean;
-//  RepFileName: string;
-//  ProgressDialog: TExcelExportProgressFrm;
 begin
   inherited;
   CheckSelection;
+  SetReportGrouping;
+  GetTimesheetDetail;
+
+  if ReportDM.cdsTSBillable.IsEmpty then
+    raise ENoDataException.Create('No data to export.');
+
+//  if (cbxExportSelectedOnlyToExcel.Checked)
+//    and (viewTimesheetBillable.Controller.SelectedRecordCount = 0) then
+//    raise ESelectionException.Create('No timesheets items selected for export.' + CRLF +
+//      'Please select at least one timesheet item.');
+
   FolderPath := EXCEL_DOCS;
   TDirectory.CreateDirectory(FolderPath);
   dlgFileSave.DefaultExt := 'xlsx';
@@ -1696,7 +2005,6 @@ begin
   if not FileSaved then
     Exit;
 
-//  if dlgFileSave.Execute then
   if TFile.Exists(dlgFileSave.FileName) then
   begin
     Beep;
@@ -1710,76 +2018,146 @@ begin
       Exit;
   end;
 
-  case lucReportType.ItemIndex of
-    0:
-      begin
-        edtTLoginName.GroupIndex := -1;
-        edtTCustomerName.GroupIndex := -1;
-        edtTActivtyType.GroupIndex := -1;
-        edtTActivityDate.GroupIndex := -1;
-        edtTLoginName.Visible := False;
-        edtTCustomerName.Visible := False;
-        edtTActivtyType.Visible := False;
+//  edtTLoginName.GroupIndex := -1;
+//  edtTCustomerName.GroupIndex := -1;
+//  edtTActivtyType.GroupIndex := -1;
+//  edtTActivityDate.GroupIndex := -1;
+//  edtTLoginName.Visible := False;
+//  edtTCustomerName.Visible := False;
+//  edtTActivtyType.Visible := False;
 
-        GetTimesheetDetail;
+//  GetTimesheetDetail;
+//  SetReportFilename;
+//  ReportDM.Report.LoadFromFile(FRepFileName);
+
+//  case lucSelectReportBy.ItemIndex of
+//    0:
+//      begin
+//        edtTCustomerName.Visible := True;
+//        edtTActivtyType.Visible := True;
+//        edtTLoginName.GroupIndex := 0;
+//      end;
+//    1:
+//      begin
+//        edtTLoginName.Visible := True;
+//        edtTActivtyType.Visible := True;
+//        edtTCustomerName.GroupIndex := 0;
+//      end;
+//    2:
+//      begin
+//        edtTLoginName.Visible := True;
+//        edtTCustomerName.Visible := True;
+//        edtTActivtyType.GroupIndex := 0;
+//      end;
+//  end;
+
+//  viewTimesheetBillable.OptionsView.BandHeaders := False;
+
+  viewTimesheetBillableExcel.ViewData.Expand(True);
+  viewTimesheetBillableExcel.DataController.BeginUpdate;
+  try
+    ExportFileName := dlgFileSave.FileName;
+    if cbxFormatExcelData.Checked then
+      // Export formatted grid
+      ExportGridToXLSX(
+        ExportFileName, // Filename to export
+        grdTimesheetBillableExcel, // Grid whose data must be exported
+        True, // Expand groups
+        True, // Save all records (Selected and un-selected ones)
+        True, // Use native format
+        'xlsx')
+    else
+      // Expport un-formatted grid
+      ExportGridDataToXLSX(
+        ExportFileName, // Filename to export
+        grdTimesheetBillableExcel, // Grid whose data must be exported
+        True, // Expand groups
+        True, // Save all records (Selected and un-selected ones)
+        True, // Use native format
+        'xlsx');
+
+//    ReportDM.cdsTSBillable.First;
+
+    if cbxOpenDocument.Checked then
+      ShellExecute(0, 'open', PChar('Excel.exe'), PChar('"' + ExportFileName + '"'), nil, SW_SHOWNORMAL)
+  finally
+    ReportDm.cdsTSBillableExcel.Close;
+    viewTimesheetBillableExcel.DataController.EndUpdate;
+  end;
+end;
+
+procedure TTimesheetDetailReportFrm.ExportBillCFwd;
+var
+  FolderPath, ExportFileName: string;
+  FileSaved: Boolean;
+begin
+  inherited;
+  CheckSelection;
 //  SetReportGrouping;
-        SetReportFilename;
-        ReportDM.Report.LoadFromFile(FRepFileName);
+  GetBillCfwd;
 
-//  RepFileName := TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[grpData.ItemIndex];
-//
-//  if not TFile.Exists(RepFileName) then
-//    raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
-//
-//  ReportDM.Report.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[grpData.ItemIndex]);
+  if ReportDM.cdsBillCFwdExcel.IsEmpty then
+    raise ENoDataException.Create('No data to export.');
 
-        case grpData.ItemIndex of
-          0:
-            begin
-              edtTCustomerName.Visible := True;
-              edtTLoginName.GroupIndex := 0;
-            end;
-          1:
-            begin
-              edtTLoginName.Visible := True;
-              edtTActivtyType.Visible := True;
-              edtTCustomerName.GroupIndex := 0;
-            end;
-          2:
-            begin
-              edtTLoginName.Visible := True;
-              edtTCustomerName.Visible := True;
-              edtTActivtyType.GroupIndex := 0;
-            end;
-        end;
+//  if (cbxExportSelectedOnlyToExcel.Checked)
+//    and (viewTimesheetBillable.Controller.SelectedRecordCount = 0) then
+//    raise ESelectionException.Create('No timesheets items selected for export.' + CRLF +
+//      'Please select at least one timesheet item.');
 
-        viewTimesheetBillable.OptionsView.BandHeaders := False;
+  FolderPath := EXCEL_DOCS;
+  TDirectory.CreateDirectory(FolderPath);
+  dlgFileSave.DefaultExt := 'xlsx';
+  dlgFileSave.InitialDir := FolderPath;
+  dlgFileSave.FileName := '*.xlsx';
+  FileSaved := dlgFileSave.Execute;
 
-        try
-          ExportFileName := dlgFileSave.FileName;
-          ExportGridToXLSX(
-            ExportFileName, // Filename to export
-            grdTimesheetBillable, // Grid whose data must be exported
-            True, // Expand groups
-            True, // Save all records (Selected and un-selected ones)
-            True, // Use native format
-            'xlsx');
+  if not FileSaved then
+    Exit;
 
-          ReportDM.cdsTSBillable.First;
-          viewTimesheetBillable.ViewData.Collapse(True);
-//    grpData.Items[3].Visible := lucReportType.ItemIndex = 0;
-//    grpData.Items[4].Visible := not grpData.Items[3].Visible;
-
-//    if cbxOpenDocument.Checked then
-//      ShellExecute(0, 'open', PChar('Excel.exe'), PChar('"' + ExportFileName + '"'), nil, SW_SHOWNORMAL)
-        finally
-          viewTimesheetBillable.OptionsView.BandHeaders := True;
-        end;
-      end;
+  if TFile.Exists(dlgFileSave.FileName) then
+  begin
+    Beep;
+    if DisplayMsg(Application.Title,
+      'File Overwrite',
+      'The file ' + dlgFileSave.FileName + ' already exists.' + CRLF +
+      'Do you want to overwrite this file?',
+      mtConfirmation,
+      [mbYes, mbNo]
+      ) = mrNo then
+      Exit;
   end;
 
-  if cbxOpenDocument.Checked then
-    ShellExecute(0, 'open', PChar('Excel.exe'), PChar('"' + ExportFileName + '"'), nil, SW_SHOWNORMAL)
+  viewBillCfwdExcel.ViewData.Expand(True);
+  viewBillCfwdExcel.DataController.BeginUpdate;
+  try
+    ExportFileName := dlgFileSave.FileName;
+    if cbxFormatExcelData.Checked then
+      // Export formatted grid
+      ExportGridToXLSX(
+        ExportFileName, // Filename to export
+        grdBillCfwd, // Grid whose data must be exported
+        True, // Expand groups
+        True, // Save all records (Selected and un-selected ones)
+        True, // Use native format
+        'xlsx')
+    else
+      // Expport un-formatted grid
+      ExportGridDataToXLSX(
+        ExportFileName, // Filename to export
+        grdBillCfwd, // Grid whose data must be exported
+        True, // Expand groups
+        True, // Save all records (Selected and un-selected ones)
+        True, // Use native format
+        'xlsx');
+
+//    ReportDM.cdsTSBillable.First;
+
+    if cbxOpenDocument.Checked then
+      ShellExecute(0, 'open', PChar('Excel.exe'), PChar('"' + ExportFileName + '"'), nil, SW_SHOWNORMAL)
+  finally
+    ReportDm.cdsBillCFwdExcel.Close;
+    viewBillCfwdExcel.DataController.EndUpdate;
+  end;
 end;
 
 procedure TTimesheetDetailReportFrm.DoExpandTimesheet(Sender: TObject);
@@ -2056,19 +2434,19 @@ begin
 //        end;
     end;
 
-    case lucReportType.ItemIndex of
-      0:
-        begin
-          grpData.ItemIndex := 3;
-          viewTimesheetBillable.ViewData.Collapse(True);
-        end;
-
-      1:
-        begin
-          grpData.ItemIndex := 4;
-          viewBillCfwd.ViewData.Collapse(True);
-        end;
-    end;
+//    case lucReportType.ItemIndex of
+//      0:
+//        begin
+//          grpData.ItemIndex := 3;
+//          viewTimesheetBillable.ViewData.Collapse(True);
+//        end;
+//
+//      1:
+//        begin
+//          grpData.ItemIndex := 4;
+//          viewBillCfwd.ViewData.Collapse(True);
+//        end;
+//    end;
   finally
     Screen.Cursor := crDefault;
   end;
