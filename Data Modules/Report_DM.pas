@@ -16,7 +16,6 @@ unit Report_DM;
  rptBillCfwdByUser                MonthlyBilling.fr3
 }
 
-
 interface
 
 uses
@@ -258,7 +257,7 @@ type
     cdsSystemUserPASSWORD: TStringField;
     cdsSystemUserACCOUNT_ENABLED: TIntegerField;
     dtsSystemUser: TDataSource;
-    rptBillCfwdByUser: TfrxReport;
+    rptBillCFwd: TfrxReport;
     cdsTimesheetDetail: TFDMemTable;
     dtsTimesheetDetail: TDataSource;
     cdsTimesheetCF: TFDMemTable;
@@ -395,38 +394,37 @@ type
     IntegerField26: TIntegerField;
     StringField21: TStringField;
     dtsActivityType2: TDataSource;
-    cdsBillCfwd: TFDMemTable;
-    dtsBillCfwd: TDataSource;
-    cdsBillCfwdID: TIntegerField;
-    cdsBillCfwdFIRST_NAME: TStringField;
-    cdsBillCfwdLAST_NAME: TStringField;
-    cdsBillCfwdLOGIN_NAME: TStringField;
-    cdsBillCfwdACTIVITY_DATE: TDateField;
-    cdsBillCfwdCUSTOMER_TYPE: TStringField;
-    cdsBillCfwdCUSTOMER_NAME: TStringField;
-    cdsBillCfwdACTIVITY_TYPE: TStringField;
-    cdsBillCfwdACTIVITY: TStringField;
-    cdsBillCfwdPRICE_LIST_ITEM: TStringField;
-    cdsBillCfwdTIME_SPENT: TFloatField;
-    cdsBillCfwdTIME_HOURS: TFloatField;
-    cdsBillCfwdACTUAL_RATE: TFloatField;
-    cdsBillCfwdSTD_RATE: TFloatField;
-    cdsBillCfwdITEM_VALUE: TFloatField;
-    cdsBillCfwdTHE_PERIOD: TIntegerField;
-    cdsBillCfwdBILLABLE: TIntegerField;
-    cdsBillCfwdBILLABLE_STR: TStringField;
-    cdsBillCfwdINVOICE_ID: TIntegerField;
-    cdsBillCfwdCN_ID: TIntegerField;
-    cdsBillCfwdLOCKED: TIntegerField;
-    cdsBillCfwdLOCKED_STR: TStringField;
-    cdsBillCfwdINVOICE_DATE: TDateField;
-    cdsBillCfwdCARRY_FORWARD: TIntegerField;
-    cdsBillCfwdCARRY_FORWARD_STR: TStringField;
-    cdsBillCfwdIS_ADDITIONAL_WORK: TIntegerField;
-    cdsBillCfwdIS_ADDITIONAL_WORK_STR: TStringField;
-    cdsBillCfwdTOTAL_CARRY_FORWARD: TFloatField;
-    cdsBillCfwdBILL_CFWD: TStringField;
-    fdsBillCfwd: TfrxDBDataset;
+    cdsBillCFwd: TFDMemTable;
+    dtsBillCFwd: TDataSource;
+    cdsBillCFwdID: TIntegerField;
+    cdsBillCFwdFIRST_NAME: TStringField;
+    cdsBillCFwdLAST_NAME: TStringField;
+    cdsBillCFwdLOGIN_NAME: TStringField;
+    cdsBillCFwdACTIVITY_DATE: TDateField;
+    cdsBillCFwdCUSTOMER_TYPE: TStringField;
+    cdsBillCFwdCUSTOMER_NAME: TStringField;
+    cdsBillCFwdACTIVITY_TYPE: TStringField;
+    cdsBillCFwdACTIVITY: TStringField;
+    cdsBillCFwdPRICE_LIST_ITEM: TStringField;
+    cdsBillCFwdTIME_SPENT: TFloatField;
+    cdsBillCFwdTIME_HOURS: TFloatField;
+    cdsBillCFwdACTUAL_RATE: TFloatField;
+    cdsBillCFwdSTD_RATE: TFloatField;
+    cdsBillCFwdITEM_VALUE: TFloatField;
+    cdsBillCFwdTHE_PERIOD: TIntegerField;
+    cdsBillCFwdBILLABLE: TIntegerField;
+    cdsBillCFwdBILLABLE_STR: TStringField;
+    cdsBillCFwdINVOICE_ID: TIntegerField;
+    cdsBillCFwdCN_ID: TIntegerField;
+    cdsBillCFwdLOCKED: TIntegerField;
+    cdsBillCFwdLOCKED_STR: TStringField;
+    cdsBillCFwdINVOICE_DATE: TDateField;
+    cdsBillCFwdCARRY_FORWARD: TIntegerField;
+    cdsBillCFwdCARRY_FORWARD_STR: TStringField;
+    cdsBillCFwdIS_ADDITIONAL_WORK: TIntegerField;
+    cdsBillCFwdIS_ADDITIONAL_WORK_STR: TStringField;
+    cdsBillCFwdBILL_CFWD: TStringField;
+    BillCFwd: TfrxDBDataset;
     cdsMonthlyBilling: TFDMemTable;
     rptMonthlyBilling: TfrxReport;
     fdsMonthlyBilling: TfrxDBDataset;
@@ -452,6 +450,74 @@ type
     rptTimesheetDetailGrouped: TfrxReport;
     rptTimesheetByActivityDate: TfrxReport;
     fdsTimesheetByActivityDate: TfrxDBDataset;
+    cdsTSSummaryByActivityDOREEN: TFloatField;
+    cdsTSSummaryByActivityDOREEN_HRS: TFloatField;
+    cdsTSSummaryByActivityDOREEN_ITEM_VALUE: TFloatField;
+    cdsTSSortOrderFIELD_INDEX: TIntegerField;
+    cdsBillCFwdCARRY_FORWARD_VALUE: TFloatField;
+    dtsTSBillableExcel: TDataSource;
+    cdsTSBillableExcel: TFDMemTable;
+    cdsTSBillableExcelID: TIntegerField;
+    cdsTSBillableExcelFIRST_NAME: TStringField;
+    cdsTSBillableExcelLAST_NAME: TStringField;
+    cdsTSBillableExcelLOGIN_NAME: TStringField;
+    cdsTSBillableExcelACTIVITY_DATE: TDateField;
+    cdsTSBillableExcelCUSTOMER_TYPE: TStringField;
+    cdsTSBillableExcelCUSTOMER_NAME: TStringField;
+    cdsTSBillableExcelACTIVITY_TYPE: TStringField;
+    cdsTSBillableExcelACTIVITY: TStringField;
+    cdsTSBillableExcelPRICE_LIST_ITEM: TStringField;
+    cdsTSBillableExcelTIME_SPENT: TFloatField;
+    cdsTSBillableExcelTIME_HOURS: TFloatField;
+    cdsTSBillableExcelACTUAL_RATE: TFloatField;
+    cdsTSBillableExcelSTD_RATE: TFloatField;
+    cdsTSBillableExcelABBREVIATION: TStringField;
+    cdsTSBillableExcelITEM_VALUE: TFloatField;
+    cdsTSBillableExcelTHE_PERIOD: TIntegerField;
+    cdsTSBillableExcelBILLABLE: TIntegerField;
+    cdsTSBillableExcelBILLABLE_STR: TStringField;
+    cdsTSBillableExcelINVOICE_ID: TIntegerField;
+    cdsTSBillableExcelCN_ID: TIntegerField;
+    cdsTSBillableExcelLOCKED: TIntegerField;
+    cdsTSBillableExcelLOCKED_STR: TStringField;
+    cdsTSBillableExcelINVOICE_DATE: TDateField;
+    cdsTSBillableExcelCARRY_FORWARD: TIntegerField;
+    cdsTSBillableExcelCARRY_FORWARD_STR: TStringField;
+    cdsTSBillableExcelIS_ADDITIONAL_WORK: TIntegerField;
+    cdsTSBillableExcelIS_ADDITIONAL_WORK_STR: TStringField;
+    cdsTSBillableExcelCARRY_FORWARD_VALUE: TFloatField;
+    cdsBillCFwdExcel: TFDMemTable;
+    dtsBillCFwdExcel: TDataSource;
+    cdsBillCFwdExcelBILL_CFWD: TStringField;
+    cdsBillCFwdExcelCUSTOMER_NAME: TStringField;
+    cdsBillCFwdExcelLOGIN_NAME: TStringField;
+    cdsBillCFwdExcelACTIVITY_DATE: TDateField;
+    cdsBillCFwdExcelACTIVITY_TYPE: TStringField;
+    cdsBillCFwdExcelID: TIntegerField;
+    cdsBillCFwdExcelFIRST_NAME: TStringField;
+    cdsBillCFwdExcelLAST_NAME: TStringField;
+    cdsBillCFwdExcelCUSTOMER_TYPE: TStringField;
+    cdsBillCFwdExcelACTIVITY: TStringField;
+    cdsBillCFwdExcelPRICE_LIST_ITEM: TStringField;
+    cdsBillCFwdExcelTIME_SPENT: TFloatField;
+    cdsBillCFwdExcelTIME_HOURS: TFloatField;
+    cdsBillCFwdExcelACTUAL_RATE: TFloatField;
+    cdsBillCFwdExcelSTD_RATE: TFloatField;
+    cdsBillCFwdExcelITEM_VALUE: TFloatField;
+    cdsBillCFwdExcelTHE_PERIOD: TIntegerField;
+    cdsBillCFwdExcelBILLABLE: TIntegerField;
+    cdsBillCFwdExcelBILLABLE_STR: TStringField;
+    cdsBillCFwdExcelINVOICE_ID: TIntegerField;
+    cdsBillCFwdExcelCN_ID: TIntegerField;
+    cdsBillCFwdExcelLOCKED: TIntegerField;
+    cdsBillCFwdExcelLOCKED_STR: TStringField;
+    cdsBillCFwdExcelINVOICE_DATE: TDateField;
+    cdsBillCFwdExcelCARRY_FORWARD: TIntegerField;
+    cdsBillCFwdExcelCARRY_FORWARD_STR: TStringField;
+    cdsBillCFwdExcelIS_ADDITIONAL_WORK: TIntegerField;
+    cdsBillCFwdExcelIS_ADDITIONAL_WORK_STR: TStringField;
+    cdsBillCFwdExcelCARRY_FORWARD_VALUE: TFloatField;
+    rptTimesheetByCustomerType: TfrxReport;
     procedure cdsTimesheetCalcFields(DataSet: TDataSet);
     procedure cdsTimesheetAfterPost(DataSet: TDataSet);
     procedure cdsTimesheetBeforePost(DataSet: TDataSet);
@@ -464,14 +530,15 @@ type
     { Private declarations }
     FID: Integer;
     FReportFileName: TReportFileName;
-    FRateUnitLegend: String;
+    FRateUnitLegend: string;
     FReport: TfrxReport;
   public
     { Public declarations }
 
     property Report: TfrxReport read FReport write FReport;
     property ReportFileName: TReportFileName read FReportFileName write FReportFileName;
-    property RateUnitLegend: String read FRateUnitLegend write FRateUnitLegend;
+    property RateUnitLegend: string read FRateUnitLegend write FRateUnitLegend;
+    procedure CreateIndex(ReportTypeIndex: Integer; FieldNames: string);
   end;
 
 var
@@ -570,7 +637,33 @@ begin
     DataSet.FieldByName('LAST_NAME').AsString;
 end;
 
+procedure TReportDM.CreateIndex(ReportTypeIndex: Integer; FieldNames: string);
+var
+  Index: TFDIndex;
+begin
+  case ReportTypeIndex of
+    0:
+      begin
+        cdsTSBillable.Indexes.Clear;
+        Index := cdsTSBillable.Indexes.Add;
+        Index.Name := 'idxTSDetail';
+        Index.Fields := FieldNames;
+        Index.FilterOptions := [ekNoCase];
+        Index.Options := [soNoCase]; // := True;
+        Index.Active := True;
+        Index.Selected := True;
+      end;
+
+    1:
+      begin
+
+      end;
+  end;
+end;
+
 procedure TReportDM.DataModuleCreate(Sender: TObject);
+var
+  IDX: TFDIndex;
 begin
   inherited;
   SetLength(FReportFileName, REPORT_COUNT);

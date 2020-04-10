@@ -209,6 +209,9 @@ type
     tipMonthlyBilling: TdxScreenTip;
     edtDateCfwdReleased: TcxGridDBBandedColumn;
     edtReleaseCfwdToPeriod: TcxGridDBBandedColumn;
+    btnReleaseCarryForwarManager: TdxBarLargeButton;
+    actReleaseCarryForward: TAction;
+    tipReleaseCFwdManager: TdxScreenTip;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoEditInsertEntry(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
@@ -248,6 +251,7 @@ type
     procedure cbxApprovedCustomDrawCell(Sender: TcxCustomGridTableView;
       ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
     procedure DoMonthlyBilling(Sender: TObject);
+    procedure DoReleaseCarryForwardManager(Sender: TObject);
   private
     { Private declarations }
     FTSUserID: Integer;
@@ -296,7 +300,9 @@ uses
   TimesheetDetailReport_Frm,
   BillableSummary_Frm,
   TimesheetActivitySummary_Frm,
-  InvoiceItem_Frm, MonthlyBillableReport_Frm;
+  InvoiceItem_Frm,
+  MonthlyBillableReport_Frm,
+  ReleaseCFwd_Frm;
 
 procedure TMainFrm.DrawCellBorder(var Msg: TMessage);
 begin
@@ -596,6 +602,21 @@ begin
   end;
 end;
 
+procedure TMainFrm.DoReleaseCarryForwardManager(Sender: TObject);
+begin
+  inherited;
+  Screen.Cursor := crHourglass;
+  try
+    if ReleaseCFwdFrm = nil then
+      ReleaseCFwdFrm := TReleaseCFwdFrm.Create(nil);
+    ReleaseCFwdFrm.ShowModal;
+    ReleaseCFwdFrm.Close;
+    FreeAndNil(ReleaseCFwdFrm);
+  finally
+    Screen.Cursor := crDefault;
+  end;
+end;
+
 procedure TMainFrm.DoTimeSheetDetail(Sender: TObject);
 begin
   inherited;
@@ -692,7 +713,7 @@ begin
 //        DisplayMsg(
 //          Application.Title,
 //          'Data Validation Error',
-//          'One or more items could not be invoiced.' + CRLF + CRLF +
+//          'One or more items was not be invoiced.' + CRLF + CRLF +
 //          'Possible reason(s):' + CRLF +
 //          'Item is locked.' + CRLF +
 //          'Item has not yet been approved.' + CRLF +
@@ -808,6 +829,7 @@ begin
   inherited;
   DC := viewTimesheet.DataController;
   C := viewTimesheet.Controller;
+  ChangeCount := 0;
 //  DC.BeginUpdate;
 
 //  try

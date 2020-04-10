@@ -361,17 +361,17 @@ inherited TSDM: TTSDM
   object dtsRateUnit: TDataSource
     DataSet = cdsRateUnit
     Left = 226
-    Top = 180
+    Top = 175
   end
   object dtsTSPeriod: TDataSource
     DataSet = cdsTSPeriod
     Left = 322
-    Top = 180
+    Top = 175
   end
   object dtsSytemUser: TDataSource
     DataSet = cdsSystemUser
     Left = 418
-    Top = 180
+    Top = 175
   end
   object VbliveConnection: TFDConnection
     Params.Strings = (
@@ -434,7 +434,7 @@ inherited TSDM: TTSDM
   end
   object dtsCustomerGroup: TDataSource
     Left = 130
-    Top = 180
+    Top = 175
   end
   object cdsCustomerLookupPref: TFDMemTable
     ActiveStoredUsage = [auDesignTime]
@@ -603,12 +603,12 @@ inherited TSDM: TTSDM
   object dtsCustomerLookupPref: TDataSource
     DataSet = cdsCustomerLookupPref
     Left = 226
-    Top = 305
+    Top = 300
   end
   object dtsPriceListPref: TDataSource
     DataSet = cdsPriceListPref
     Left = 357
-    Top = 305
+    Top = 300
   end
   object cdsRatePUnitref: TFDMemTable
     ActiveStoredUsage = [auDesignTime]
@@ -657,7 +657,7 @@ inherited TSDM: TTSDM
   object dtsRateUnitPref: TDataSource
     DataSet = cdsRatePUnitref
     Left = 461
-    Top = 305
+    Top = 300
   end
   object cdsTimesheet: TFDMemTable
     Tag = 27
@@ -1143,5 +1143,316 @@ inherited TSDM: TTSDM
     DataSet = cdsCarryForward
     Left = 600
     Top = 65
+  end
+  object cdsReleaseCFwd: TFDMemTable
+    ActiveStoredUsage = [auDesignTime]
+    FieldDefs = <>
+    CachedUpdates = True
+    IndexDefs = <>
+    Indexes = <
+      item
+        Active = True
+        Name = 'idxTimesheet'
+        Fields = 'CUSTOMER_NAME;ACTIVITY_DATE;LOGIN_NAME;ACTIVITY_TYPE'
+        Options = [soNoCase]
+        FilterOptions = [ekNoCase]
+      end>
+    FetchOptions.AssignedValues = [evMode, evRecordCountMode]
+    FetchOptions.Mode = fmAll
+    FetchOptions.RecordCountMode = cmTotal
+    FormatOptions.AssignedValues = [fvDataSnapCompatibility]
+    FormatOptions.DataSnapCompatibility = True
+    ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
+    ResourceOptions.Persistent = True
+    ResourceOptions.StorePrettyPrint = True
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    StoreDefs = True
+    Left = 575
+    Top = 250
+    object cdsReleaseCFwdID: TIntegerField
+      Alignment = taLeftJustify
+      FieldName = 'ID'
+      Origin = 'ID'
+    end
+    object cdsReleaseCFwdFIRST_NAME: TStringField
+      DisplayLabel = 'First Name'
+      FieldName = 'FIRST_NAME'
+      Origin = 'FIRST_NAME'
+      Size = 30
+    end
+    object cdsReleaseCFwdLAST_NAME: TStringField
+      DisplayLabel = 'Last Name'
+      FieldName = 'LAST_NAME'
+      Origin = 'LAST_NAME'
+      Size = 30
+    end
+    object cdsReleaseCFwdLOGIN_NAME: TStringField
+      DisplayLabel = 'User Name'
+      FieldName = 'LOGIN_NAME'
+      Origin = 'LOGIN_NAME'
+    end
+    object cdsReleaseCFwdACTIVITY_DATE: TDateField
+      DisplayLabel = 'Date'
+      FieldName = 'ACTIVITY_DATE'
+      Origin = 'ACTIVITY_DATE'
+    end
+    object cdsReleaseCFwdCUSTOMER_TYPE: TStringField
+      DisplayLabel = 'Customer Type'
+      FieldName = 'CUSTOMER_TYPE'
+      Origin = 'CUSTOMER_TYPE'
+      Size = 30
+    end
+    object cdsReleaseCFwdCUSTOMER_NAME: TStringField
+      DisplayLabel = 'Customer'
+      FieldName = 'CUSTOMER_NAME'
+      Origin = 'CUSTOMER_NAME'
+      Size = 100
+    end
+    object cdsReleaseCFwdACTIVITY_TYPE: TStringField
+      DisplayLabel = 'Activity Type'
+      FieldName = 'ACTIVITY_TYPE'
+      Origin = 'ACTIVITY_TYPE'
+      Size = 50
+    end
+    object cdsReleaseCFwdACTIVITY: TStringField
+      DisplayLabel = 'Activity'
+      FieldName = 'ACTIVITY'
+      Origin = 'ACTIVITY'
+      Size = 500
+    end
+    object cdsReleaseCFwdPRICE_LIST_ITEM: TStringField
+      DisplayLabel = 'Item Type'
+      FieldName = 'PRICE_LIST_ITEM'
+      Origin = 'PRICE_LIST_ITEM'
+      Size = 200
+    end
+    object cdsReleaseCFwdTIME_SPENT: TFloatField
+      DisplayLabel = 'Mins'
+      FieldName = 'TIME_SPENT'
+      Origin = 'TIME_SPENT'
+    end
+    object cdsReleaseCFwdTIME_HOURS: TFloatField
+      DisplayLabel = 'Hours'
+      FieldName = 'TIME_HOURS'
+      Origin = 'TIME_HOURS'
+    end
+    object cdsReleaseCFwdACTUAL_RATE: TFloatField
+      DisplayLabel = 'Rate'
+      FieldName = 'ACTUAL_RATE'
+      Origin = 'ACTUAL_RATE'
+    end
+    object cdsReleaseCFwdSTD_RATE: TFloatField
+      DisplayLabel = 'Std Rate'
+      FieldName = 'STD_RATE'
+      Origin = 'STD_RATE'
+    end
+    object cdsReleaseCFwdABBREVIATION: TStringField
+      Alignment = taCenter
+      DisplayLabel = 'RU'
+      FieldName = 'ABBREVIATION'
+      Size = 5
+    end
+    object cdsReleaseCFwdITEM_VALUE: TFloatField
+      DisplayLabel = 'Value'
+      FieldName = 'ITEM_VALUE'
+      Origin = 'ITEM_VALUE'
+    end
+    object cdsReleaseCFwdTHE_PERIOD: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'Period'
+      FieldName = 'THE_PERIOD'
+      Origin = 'THE_PERIOD'
+    end
+    object cdsReleaseCFwdBILLABLE: TIntegerField
+      Alignment = taCenter
+      DisplayLabel = 'Bill'
+      FieldName = 'BILLABLE'
+      Origin = 'BILLABLE'
+    end
+    object cdsReleaseCFwdBILLABLE_STR: TStringField
+      Alignment = taCenter
+      DisplayLabel = 'Bill'
+      FieldName = 'BILLABLE_STR'
+      Origin = 'BILLABLE_STR'
+      FixedChar = True
+      Size = 1
+    end
+    object cdsReleaseCFwdINVOICE_ID: TIntegerField
+      DisplayLabel = 'Inv No'
+      FieldName = 'INVOICE_ID'
+      Origin = 'INVOICE_ID'
+    end
+    object cdsReleaseCFwdCN_ID: TIntegerField
+      DisplayLabel = 'CN No'
+      FieldName = 'CN_ID'
+      Origin = 'CN_ID'
+    end
+    object cdsReleaseCFwdLOCKED: TIntegerField
+      DisplayLabel = 'Lock'
+      FieldName = 'LOCKED'
+      Origin = 'LOCKED'
+    end
+    object cdsReleaseCFwdLOCKED_STR: TStringField
+      DisplayLabel = 'Lock'
+      FieldName = 'LOCKED_STR'
+      Size = 1
+    end
+    object cdsReleaseCFwdINVOICE_DATE: TDateField
+      DisplayLabel = 'Inv Date'
+      FieldName = 'INVOICE_DATE'
+      Origin = 'INVOICE_DATE'
+    end
+    object cdsReleaseCFwdCARRY_FORWARD: TIntegerField
+      DisplayLabel = 'C Fwd'
+      FieldName = 'CARRY_FORWARD'
+      Origin = 'CARRY_FORWARD'
+    end
+    object cdsReleaseCFwdCARRY_FORWARD_STR: TStringField
+      Alignment = taRightJustify
+      DisplayLabel = 'C Fwd'
+      FieldName = 'CARRY_FORWARD_STR'
+      Origin = 'CARRY_FORWARD_STR'
+      FixedChar = True
+      Size = 1
+    end
+    object cdsReleaseCFwdIS_ADDITIONAL_WORK: TIntegerField
+      Alignment = taCenter
+      DisplayLabel = 'Add Wk'
+      FieldName = 'IS_ADDITIONAL_WORK'
+      Origin = 'IS_ADDITIONAL_WORK'
+    end
+    object cdsReleaseCFwdIS_ADDITIONAL_WORK_STR: TStringField
+      Alignment = taCenter
+      DisplayLabel = 'Add Wk'
+      FieldName = 'IS_ADDITIONAL_WORK_STR'
+      Origin = 'IS_ADDITIONAL_WORK_STR'
+      FixedChar = True
+      Size = 1
+    end
+    object cdsReleaseCFwdCARRY_FORWARD_VALUE: TFloatField
+      DisplayLabel = 'C/Fwd'
+      FieldName = 'CARRY_FORWARD_VALUE'
+    end
+  end
+  object dtsReleaseCFwd: TDataSource
+    DataSet = cdsReleaseCFwd
+    Left = 575
+    Top = 300
+  end
+  object cdsPeriod: TFDMemTable
+    ActiveStoredUsage = [auDesignTime]
+    FieldDefs = <>
+    CachedUpdates = True
+    IndexDefs = <>
+    Indexes = <
+      item
+        Active = True
+        Selected = True
+        Name = 'idxFromPeriod'
+        Fields = 'THE_PERIOD'
+      end>
+    IndexName = 'idxFromPeriod'
+    FetchOptions.AssignedValues = [evMode, evRecordCountMode]
+    FetchOptions.Mode = fmAll
+    FetchOptions.RecordCountMode = cmTotal
+    FormatOptions.AssignedValues = [fvDataSnapCompatibility]
+    FormatOptions.DataSnapCompatibility = True
+    ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
+    ResourceOptions.Persistent = True
+    ResourceOptions.StorePrettyPrint = True
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    StoreDefs = True
+    Left = 505
+    Top = 125
+    object cdsPeriodTHE_PERIOD: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'Period'
+      FieldName = 'THE_PERIOD'
+    end
+  end
+  object cdsReleaseToPeriod: TFDMemTable
+    ActiveStoredUsage = [auDesignTime]
+    CachedUpdates = True
+    Indexes = <
+      item
+        Active = True
+        Selected = True
+        Name = 'idxToperiod'
+        Fields = 'THE_PERIOD'
+      end>
+    IndexName = 'idxToperiod'
+    FetchOptions.AssignedValues = [evMode, evRecordCountMode]
+    FetchOptions.Mode = fmAll
+    FetchOptions.RecordCountMode = cmTotal
+    FormatOptions.AssignedValues = [fvDataSnapCompatibility]
+    FormatOptions.DataSnapCompatibility = True
+    ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
+    ResourceOptions.StorePrettyPrint = True
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvGeneratorName, uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.GeneratorName = 'PERIOD_ID_GEN'
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    UpdateOptions.UpdateTableName = 'PERIOD'
+    Left = 690
+    Top = 125
+    object cdsReleaseToPeriodTHE_PERIOD: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'Period'
+      FieldName = 'THE_PERIOD'
+    end
+  end
+  object dtsPeriod: TDataSource
+    DataSet = cdsPeriod
+    Left = 505
+    Top = 175
+  end
+  object dtsReleaseToPeriod: TDataSource
+    DataSet = cdsReleaseToPeriod
+    Left = 690
+    Top = 175
+  end
+  object cdsToPeriod: TFDMemTable
+    ActiveStoredUsage = [auDesignTime]
+    CachedUpdates = True
+    Indexes = <
+      item
+        Active = True
+        Selected = True
+        Name = 'idxToperiod'
+        Fields = 'THE_PERIOD'
+      end>
+    IndexName = 'idxToperiod'
+    FetchOptions.AssignedValues = [evMode, evRecordCountMode]
+    FetchOptions.Mode = fmAll
+    FetchOptions.RecordCountMode = cmTotal
+    FormatOptions.AssignedValues = [fvDataSnapCompatibility]
+    FormatOptions.DataSnapCompatibility = True
+    ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
+    ResourceOptions.StorePrettyPrint = True
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvGeneratorName, uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.GeneratorName = 'PERIOD_ID_GEN'
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    UpdateOptions.UpdateTableName = 'PERIOD'
+    Left = 585
+    Top = 125
+    object cdsToPeriodTHE_PERIOD: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'Period'
+      FieldName = 'THE_PERIOD'
+    end
+  end
+  object dtsToPeriod: TDataSource
+    DataSet = cdsReleaseToPeriod
+    Left = 585
+    Top = 175
   end
 end

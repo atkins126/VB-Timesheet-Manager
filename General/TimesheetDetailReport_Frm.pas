@@ -72,62 +72,6 @@ type
     litOpenDoc: TdxLayoutItem;
     litRemoveZeroBillable: TdxLayoutItem;
     litUser: TdxLayoutItem;
-    grdTimesheet: TcxGrid;
-    viewTimesheet: TcxGridDBBandedTableView;
-    edtTSID: TcxGridDBBandedColumn;
-    edtTSCID: TcxGridDBBandedColumn;
-    edtTSPID: TcxGridDBBandedColumn;
-    lucSystemUser: TcxGridDBBandedColumn;
-    edtTSPeriod: TcxGridDBBandedColumn;
-    lucTSActivityDate: TcxGridDBBandedColumn;
-    lucPriceList: TcxGridDBBandedColumn;
-    lucRateUnit: TcxGridDBBandedColumn;
-    lucActivityType: TcxGridDBBandedColumn;
-    edtTSActivity: TcxGridDBBandedColumn;
-    edtTSTimeMins: TcxGridDBBandedColumn;
-    edtTSTimeHours: TcxGridDBBandedColumn;
-    edtTSRate: TcxGridDBBandedColumn;
-    edtTSStdRate: TcxGridDBBandedColumn;
-    edtTSItemValue: TcxGridDBBandedColumn;
-    edtTSInvID: TcxGridDBBandedColumn;
-    edtTSCreditnoteID: TcxGridDBBandedColumn;
-    cbxTSLocked: TcxGridDBBandedColumn;
-    edtTSModified: TcxGridDBBandedColumn;
-    cbxTSBillable: TcxGridDBBandedColumn;
-    edtTSInvoiceDate: TcxGridDBBandedColumn;
-    cbxTSCarryForward: TcxGridDBBandedColumn;
-    cbxTSApproved: TcxGridDBBandedColumn;
-    cbxTSAddWork: TcxGridDBBandedColumn;
-    edtTSCGrpID: TcxGridDBBandedColumn;
-    lvlTimesheet: TcxGridLevel;
-    grdCarryForwardDetail: TcxGrid;
-    viewCarryForwardDetail: TcxGridDBBandedTableView;
-    edtCFID: TcxGridDBBandedColumn;
-    edtCFCustomerID: TcxGridDBBandedColumn;
-    edtCFPIID: TcxGridDBBandedColumn;
-    lucCFSystemuser: TcxGridDBBandedColumn;
-    edtCFPeriod: TcxGridDBBandedColumn;
-    lucCFActivityDate: TcxGridDBBandedColumn;
-    lucCFPriceList: TcxGridDBBandedColumn;
-    lucCFRateUnit: TcxGridDBBandedColumn;
-    lucCFActivityType: TcxGridDBBandedColumn;
-    edtCFActivity: TcxGridDBBandedColumn;
-    edtCFTimeMins: TcxGridDBBandedColumn;
-    edtCFTimeHours: TcxGridDBBandedColumn;
-    edtCFRate: TcxGridDBBandedColumn;
-    edtCFStdRate: TcxGridDBBandedColumn;
-    edtCFItemValue: TcxGridDBBandedColumn;
-    edtCFInvID: TcxGridDBBandedColumn;
-    edtCFCreditnoteID: TcxGridDBBandedColumn;
-    cbxCFLocked: TcxGridDBBandedColumn;
-    lucCFModified: TcxGridDBBandedColumn;
-    cbxCFBillable: TcxGridDBBandedColumn;
-    edtCFInvoiceDate: TcxGridDBBandedColumn;
-    cbxCFCarryForward: TcxGridDBBandedColumn;
-    cbxCFApproved: TcxGridDBBandedColumn;
-    cbxCFAddWork: TcxGridDBBandedColumn;
-    edtCFCGID: TcxGridDBBandedColumn;
-    lvlCarryForwardDetail: TcxGridLevel;
     grdSystemUser: TcxGrid;
     viewSystemUser: TcxGridDBBandedTableView;
     edtUID: TcxGridDBBandedColumn;
@@ -154,8 +98,8 @@ type
     edtAID: TcxGridDBBandedColumn;
     edtAName: TcxGridDBBandedColumn;
     lvlActivityType: TcxGridLevel;
-    grdTimesheetBillable: TcxGrid;
-    viewTimesheetBillable: TcxGridDBBandedTableView;
+    grdTimesheet: TcxGrid;
+    viewTimesheet: TcxGridDBBandedTableView;
     edtTID: TcxGridDBBandedColumn;
     edtTFirstName: TcxGridDBBandedColumn;
     edtTLastName: TcxGridDBBandedColumn;
@@ -173,7 +117,6 @@ type
     edtTStdRate: TcxGridDBBandedColumn;
     edtTItemValue: TcxGridDBBandedColumn;
     edtTCFwdValue: TcxGridDBBandedColumn;
-    edtTWeekEnding: TcxGridDBBandedColumn;
     edtTBillable: TcxGridDBBandedColumn;
     edtTBillableStr: TcxGridDBBandedColumn;
     edtTInvoiceNo: TcxGridDBBandedColumn;
@@ -185,7 +128,7 @@ type
     edtTCFwdStr: TcxGridDBBandedColumn;
     edtTAddWork: TcxGridDBBandedColumn;
     edtTAddWorkStr: TcxGridDBBandedColumn;
-    lvlTimesheetBillable: TcxGridLevel;
+    lvlTimesheet: TcxGridLevel;
     litReportType: TdxLayoutItem;
     litBillCfComparisonDescription: TdxLayoutLabeledItem;
     lucReportType: TcxComboBox;
@@ -264,8 +207,8 @@ type
     edtFieldIndex: TcxGridDBColumn;
     litExportSelectedOnlyToExcel: TdxLayoutItem;
     cbxExportSelectedOnlyToExcel: TcxCheckBox;
-    grdTimesheetBillableExcel: TcxGrid;
-    viewTimesheetBillableExcel: TcxGridDBBandedTableView;
+    grdTimesheetExcel: TcxGrid;
+    viewTimesheetExcel: TcxGridDBBandedTableView;
     edtTIDX: TcxGridDBBandedColumn;
     edtTFirstNameX: TcxGridDBBandedColumn;
     edtTLastNameX: TcxGridDBBandedColumn;
@@ -284,7 +227,6 @@ type
     edtAbbreviationX: TcxGridDBBandedColumn;
     edtTItemValueX: TcxGridDBBandedColumn;
     edtTCFwdValueX: TcxGridDBBandedColumn;
-    X: TcxGridDBBandedColumn;
     edtTBillableX: TcxGridDBBandedColumn;
     edtTBillableStrX: TcxGridDBBandedColumn;
     edtTInvoiceNoX: TcxGridDBBandedColumn;
@@ -296,7 +238,7 @@ type
     edtTCFwdStrX: TcxGridDBBandedColumn;
     edtTAddWorkX: TcxGridDBBandedColumn;
     edtTAddWorkStrX: TcxGridDBBandedColumn;
-    lvlTimesheetBillableExcel: TcxGridLevel;
+    lvlTimesheetExcel: TcxGridLevel;
     litExportFormattedGridToExcel: TdxLayoutItem;
     cbxFormatExcelData: TcxCheckBox;
     tipExportFormattedExcelData: TdxScreenTip;
@@ -378,11 +320,11 @@ type
     { Private declarations }
 //    FReportFileName: TReportFileName;
     FOrderByClause: string;
-    FDragRecord: Integer;
-    FItem: TcxCustomGridTableItem;
+//    FDragRecord: Integer;
+//    FItem: TcxCustomGridTableItem;
     FSortOptioinsList: TStringlist;
-    FSourceRecordIndex: Integer;
-    FDestRecordIndex: Integer;
+//    FSourceRecordIndex: Integer;
+//    FDestRecordIndex: Integer;
     FID: Integer;
     FSortListID: TStringList;
     FGroupByField: string;
@@ -408,8 +350,11 @@ type
     procedure CheckSelection;
     procedure SetReportFilename;
     procedure CloseTSDataSets;
-    procedure ExportTimesheetDetails;
-    procedure ExportBillCFwd;
+    procedure ExportTimesheetDetailsToExcel;
+    procedure ExportBillCFwdToExcel;
+    procedure ExportTimesheetDetailsToPDF;
+    procedure ExportBillCFwdToPDF;
+//    procedure CreateIndex(ReportTypeIndex: Integer);
   public
     { Public declarations }
   end;
@@ -442,17 +387,17 @@ procedure TTimesheetDetailReportFrm.lucFromDatePropertiesChange(Sender: TObject)
 begin
   inherited;
   if not FShowingForm then
-    HideTabs;
+//    HideTabs;
 //  Showtabs;
-  CloseTSDataSets;
+    CloseTSDataSets;
 end;
 
 procedure TTimesheetDetailReportFrm.edtTLoginNameGetDisplayText(
   Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord; var AText: string);
 begin
   inherited;
-//  if ARecord is TcxGridGroupRow then
-//    AText := TcxGridGroupRow(ARecord).Value;
+  if ARecord is TcxGridGroupRow then
+    AText := TcxGridGroupRow(ARecord).Value;
 end;
 
 procedure TTimesheetDetailReportFrm.FormCreate(Sender: TObject);
@@ -468,8 +413,8 @@ begin
   Height := 800;
   layMain.Align := alClient;
   layMain.LayoutLookAndFeel := lafCustomSkin;
-  TcxDateEditProperties(lucTSActivityDate.Properties).MinDate := StrToDate('01/01/2019');
-  TcxDateEditProperties(lucTSActivityDate.Properties).MaxDate := Date;
+//  TcxDateEditProperties(lucTSActivityDate.Properties).MinDate := StrToDate('01/01/2019');
+//  TcxDateEditProperties(lucTSActivityDate.Properties).MaxDate := Date;
   FSortOptioinsList := RUtils.CreateStringList(COMMA, SINGLE_QUOTE);
   edtOrdValue.SortOrder := soAscending;
   FSortListID := RUtils.CreateStringList(COMMA, SINGLE_QUOTE);
@@ -511,44 +456,14 @@ begin
   if ReportDM = nil then
     ReportDM := TReportDM.Create(nil);
 
-//  cbxAlwaysMaximize.Checked := RegKey.ReadBool('Maximize Report Form');
-//  PopulateReportSelectionList;
-
-//  SetLength(ReportDM.ReportFileName, REPORT_COUNT);
-//
-//  ReportDM.ReportFileName[0] := 'TimesheetUser.fr3';
-//  ReportDM.ReportFileName[1] := 'TimesheetCustomer.fr3';
-//  ReportDM.ReportFileName[2] := 'TimesheetActivityType.fr3';
-//  ReportDM.ReportFileName[3] := 'TimesheetBillCfwdByUser.fr3';
-//  ReportDM.ReportFileName[4] := 'TimesheetBillCfwdByCustomer.fr3';
-//  ReportDM.ReportFileName[5] := 'rptMonthlyBilling.fr3';
-
   lucPeriod.Properties.ListSource := ReportDM.dtsPeriodListing;
   viewSystemUser.DataController.DataSource := ReportDM.dtsSystemUser;
   viewCustomerListing.DataController.DataSource := ReportDM.dtsTSCustomer;
   viewActivityType.DataController.DataSource := ReportDM.dtsActivityType;
-  viewTimesheetBillable.DataController.DataSource := ReportDM.dtsTSBillable;
-//  viewTimesheetBillableExcel.DataController.DataSource := ReportDM.dtsTSBillableExcel;
-  viewTimesheet.DataController.DataSource := ReportDM.dtsTimesheet;
-  viewCarryForwardDetail.DataController.DataSource := ReportDM.dtsCarryForwardDetail;
+  viewTimesheet.DataController.DataSource := ReportDM.dtsTSBillable;
   viewBillCfwd.DataController.DataSource := ReportDM.dtsBillCfwd;
   viewBillCfwdExcel.DataController.DataSource := ReportDM.dtsBillCFwdExcel;
   viewSortOrder.DataController.DataSource := ReportDM.dtsTSSortOrder;
-
-  TcxLookupComboBoxProperties(lucSystemUser.Properties).ListSource := ReportDM.dtsSystemUser;
-  TcxLookupComboBoxProperties(lucCFSystemuser.Properties).ListSource := ReportDM.dtsSystemUser;
-
-  TcxLookupComboBoxProperties(lucPriceList.Properties).ListSource := ReportDM.dtsPriceListView;
-  TcxLookupComboBoxProperties(lucCFPriceList.Properties).ListSource := ReportDM.dtsPriceListView;
-
-  TcxLookupComboBoxProperties(lucRateUnit.Properties).ListSource := ReportDM.dtsRateUnit;
-  TcxLookupComboBoxProperties(lucCFRateUnit.Properties).ListSource := ReportDM.dtsRateUnit;
-
-  TcxLookupComboBoxProperties(lucActivityType.Properties).ListSource := ReportDM.dtsActivityType;
-  TcxLookupComboBoxProperties(lucCFActivityType.Properties).ListSource := ReportDM.dtsActivityType;
-
-//  FOrderByClause := ' ORDER BY 1, 6, 5, 8 ';
-//  lucSelectReportBy.ItemIndex := 0;
   lucReportType.ItemIndex := 0;
   PopulateSortOptions;
   GetPeriods;
@@ -1067,8 +982,8 @@ begin
   if not ReportDM.cdsTSBillable.IsEmpty then
     ReportDm.cdsTSBillableExcel.Data := ReportDM.cdsTSBillable.Data;
 
-  grpData.ItemIndex := 4;
-//  viewTimesheetBillable.ViewData.Collapse(True);
+  grpData.ItemIndex := 3;
+//  viewTimesheet.ViewData.Collapse(True);
 end;
 
 procedure TTimesheetDetailReportFrm.GetBillCfwd;
@@ -1077,6 +992,7 @@ var
   C: TcxGridBandedTableController;
   I: Integer;
   WhereClause1, WhereClause2, UserClause, DateClause, CustomerClause: string;
+  BillableClause, WorkTypeClause: string;
   ActivityClause, BillCfwdClause1, BillCfwdClause2, FileName: string;
 //  AComboBox: TcxComboBox;
 begin
@@ -1089,15 +1005,15 @@ begin
   BillCfwdClause1 := ' AND T.CARRY_FORWARD = 0 ';
   BillCfwdClause2 := ' AND T.CARRY_FORWARD = 1 ';
 
-//  case lucBillable.ItemIndex of
-//    0: BillableClause := ' AND T.BILLABLE = 1';
-//    1: BillableClause := ' AND T.BILLABLE = 0';
-//  end;
-//
-//  case lucWorkType.ItemIndex of
-//    0: WorkTypeClause := ' AND T.IS_ADDITIONAL_WORK = 0';
-//    1: WorkTypeClause := ' AND T.IS_ADDITIONAL_WORK = 1';
-//  end;
+  case lucBillable.ItemIndex of
+    0: BillableClause := ' AND T.BILLABLE = 1';
+    1: BillableClause := ' AND T.BILLABLE = 0';
+  end;
+
+  case lucWorkType.ItemIndex of
+    0: WorkTypeClause := ' AND T.IS_ADDITIONAL_WORK = 0';
+    1: WorkTypeClause := ' AND T.IS_ADDITIONAL_WORK = 1';
+  end;
 
 //  lucSelectReportBy.SetFocus;
 //  AComboBox := TcxBarEditItemControl(lucSelectReportBy.Links[0].Control).Edit as TcxComboBox;
@@ -1138,9 +1054,10 @@ begin
 //        OrderByClause := 'ORDER BY T.LOGIN_NAME, T.THE_PERIOD, T.ACTIVITY_DATE';
 //               Field index order =   5             18            6
 //        OrderByClause := ' ORDER BY 1, 6 ';
-        WhereClause1 := DateClause + UserClause + BillCfwdClause1;
-        FOrderByClause := OrderByClause;
-        WhereClause2 := DateClause + UserClause + BillCfwdClause2 + FOrderByClause;
+
+//        WhereClause1 := DateClause + UserClause + BillCfwdClause1 + BillableClause + WorkTypeClause;
+//        FOrderByClause := OrderByClause;
+//        WhereClause2 := DateClause + UserClause + BillCfwdClause2 + BillableClause + WorkTypeClause + FOrderByClause;
       end;
 
     1:
@@ -1170,9 +1087,10 @@ begin
 //        OrderByClause := 'ORDER BY T.CUSTOMER_NAME, T.THE_PERIOD, T.LOGIN_NAME, T.ACTIVITY_DATE';
 //               Field index order =   8                18                          6
 //        OrderByClause := ' ORDER BY 1, 8, 18, 6 ';
-        WhereClause1 := DateClause + CustomerClause + BillCfwdClause1;
-        FOrderByClause := OrderByClause;
-        WhereClause2 := DateClause + CustomerClause + BillCfwdClause2 + FOrderByClause;
+
+//        WhereClause1 := DateClause + CustomerClause + BillCfwdClause1;
+//        FOrderByClause := OrderByClause;
+//        WhereClause2 := DateClause + CustomerClause + BillCfwdClause2 + FOrderByClause;
       end;
 
     2:
@@ -1202,11 +1120,16 @@ begin
 //        OrderByClause := 'ORDER BY T.ACTIVITY_TYPE, T.THE_PERIOD, T.LOGIN_NAME, T.ACTIVITY_DATE';
 //               Field index order =   9                18                          6
 //        OrderByClause := ' ORDER BY 1, 9, 18, 6 ';
-        WhereClause1 := DateClause + ActivityClause + BillCfwdClause1;
-        FOrderByClause := OrderByClause;
-        WhereClause2 := DateClause + ActivityClause + BillCfwdClause2 + FOrderByClause;
+
+//        WhereClause1 := DateClause + ActivityClause + BillCfwdClause1;
+//        FOrderByClause := OrderByClause;
+//        WhereClause2 := DateClause + ActivityClause + BillCfwdClause2 + FOrderByClause;
       end;
   end;
+
+  WhereClause1 := DateClause + UserClause + BillCfwdClause1 + BillableClause + WorkTypeClause;
+  FOrderByClause := OrderByClause;
+  WhereClause2 := DateClause + UserClause + BillCfwdClause2 + BillableClause + WorkTypeClause + FOrderByClause;
 
   VBBaseDM.GetData(83, ReportDM.cdsBillCfwd, ReportDM.cdsBillCfwd.Name, WhereClause1 + ';' + WhereClause2,
     'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsBillCfwd.UpdateOptions.Generatorname,
@@ -1244,8 +1167,8 @@ begin
 //  HideTabs;
 //  Showtabs;
   CloseTSDataSets;
-  lucBillable.Enabled := lucReportType.ItemIndex = 0;
-  lucWorkType.Enabled := lucReportType.ItemIndex = 0;
+//  lucBillable.Enabled := lucReportType.ItemIndex = 0;
+//  lucWorkType.Enabled := lucReportType.ItemIndex = 0;
   grpData.Items[3].Visible := lucReportType.ItemIndex = 0;
   grpData.Items[4].Visible := not grpData.Items[3].Visible;
 
@@ -1342,10 +1265,17 @@ begin
     0:
       begin
         ReportDM.cdsTSBillable.Close;
-        viewTimesheetBillable.DataController.Groups.ClearGrouping;
+        viewTimesheet.DataController.Groups.ClearGrouping;
         edtTActivtyType.Visible := True;
         edtTLoginName.Visible := True;
         edtTCustomerName.Visible := True;
+        edtTCustomerType.Visible := True;
+
+        viewTimesheetExcel.DataController.Groups.ClearGrouping;
+        edtTActivtyTypeX.Visible := True;
+        edtTLoginNameX.Visible := True;
+        edtTCustomerNameX.Visible := True;
+        edtTCustomerTypeX.Visible := True;
 
 //        case lucSelectReportBy.ItemIndex of
 //          0:
@@ -1376,7 +1306,7 @@ begin
   inherited;
 //  HideTabs;
 //  grpData.Items[lucSelectReportBy.ItemIndex].Visible := True;
-//  viewTimesheetBillable.DataController.Groups.ClearGrouping;
+//  viewTimesheet.DataController.Groups.ClearGrouping;
 //  edtTActivtyType.Visible := True;
 //  edtTLoginName.Visible := True;
 //  edtTCustomerName.Visible := True;
@@ -1414,8 +1344,6 @@ end;
 procedure TTimesheetDetailReportFrm.PopulateSortOptions;
 var
   I, ID: Integer;
-  AnItem: TcxCheckListBoxItem;
-  DC: TcxGridDBDataController;
 begin
   // Union field order
   // 4 = User Name
@@ -1432,7 +1360,6 @@ begin
     ReportDM.cdsTSSortOrder.CreateDataSet;
     ReportDM.cdsTSSortOrder.Append;
     ReportDM.cdsTSSortOrder.FieldByName('ID').AsInteger := ID;
-//    ReportDM.cdsTSSortOrder.FieldByName('INCLUDE').AsBoolean := False;
     ReportDM.cdsTSSortOrder.FieldByName('SORT_BY').AsString := 'Customer Name';
     ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString := 'CUSTOMER_NAME';
     ReportDM.cdsTSSortOrder.FieldByName('ORD_VALUE').AsInteger := ID;
@@ -1443,7 +1370,6 @@ begin
     FSortListID.Add(I.ToString);
     ReportDM.cdsTSSortOrder.Append;
     ReportDM.cdsTSSortOrder.FieldByName('ID').AsInteger := ID;
-//    ReportDM.cdsTSSortOrder.FieldByName('INCLUDE').AsBoolean := True;
     ReportDM.cdsTSSortOrder.FieldByName('SORT_BY').AsString := 'Login Name';
     ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString := 'LOGIN_NAME';
     ReportDM.cdsTSSortOrder.FieldByName('ORD_VALUE').AsInteger := ID;
@@ -1454,7 +1380,6 @@ begin
     FSortListID.Add(I.ToString);
     ReportDM.cdsTSSortOrder.Append;
     ReportDM.cdsTSSortOrder.FieldByName('ID').AsInteger := ID;
-//    ReportDM.cdsTSSortOrder.FieldByName('INCLUDE').AsBoolean := True;
     ReportDM.cdsTSSortOrder.FieldByName('SORT_BY').AsString := 'Activity Date';
     ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString := 'ACTIVITY_DATE';
     ReportDM.cdsTSSortOrder.FieldByName('ORD_VALUE').AsInteger := ID;
@@ -1465,12 +1390,22 @@ begin
     FSortListID.Add(I.ToString);
     ReportDM.cdsTSSortOrder.Append;
     ReportDM.cdsTSSortOrder.FieldByName('ID').AsInteger := ID;
-//    ReportDM.cdsTSSortOrder.FieldByName('INCLUDE').AsBoolean := False;
     ReportDM.cdsTSSortOrder.FieldByName('SORT_BY').AsString := 'Activity Type';
     ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString := 'ACTIVITY_TYPE';
     ReportDM.cdsTSSortOrder.FieldByName('ORD_VALUE').AsInteger := ID;
     ReportDM.cdsTSSortOrder.FieldByName('FIELD_INDEX').AsInteger := 5;
     ReportDM.cdsTSSortOrder.Post;
+
+    Inc(ID);
+    FSortListID.Add(I.ToString);
+    ReportDM.cdsTSSortOrder.Append;
+    ReportDM.cdsTSSortOrder.FieldByName('ID').AsInteger := ID;
+    ReportDM.cdsTSSortOrder.FieldByName('SORT_BY').AsString := 'Customer Type';
+    ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString := 'CUSTOMER_TYPE';
+    ReportDM.cdsTSSortOrder.FieldByName('ORD_VALUE').AsInteger := ID;
+    ReportDM.cdsTSSortOrder.FieldByName('FIELD_INDEX').AsInteger := 6;
+    ReportDM.cdsTSSortOrder.Post;
+
     ReportDM.cdsTSSortOrder.First;
     ReportDM.cdsTSSortOrder.SaveToFile(TSDM.ShellResource.ResourceFolder + 'TS Report Sort Order.xml');
   end;
@@ -1671,7 +1606,10 @@ begin
           FRepFileName := 'TimesheetByActivityType.fr3'
 
         else if SameText(FGroupByField, 'ACTIVITY_DATE') then
-          FRepFileName := 'TimesheetByActivityDate.fr3';
+          FRepFileName := 'TimesheetByActivityDate.fr3'
+
+        else if SameText(FGroupByField, 'CUSTOMER_TYPE') then
+          FRepFileName := 'TimesheetByCustomerType.fr3';
 
         FRepFileName := TSDM.ShellResource.ReportFolder + FRepFileName;
 
@@ -1695,11 +1633,16 @@ begin
   case lucReportType.ItemIndex of
     0: // Timesheeet details
       begin
-        viewTimesheetBillable.DataController.Groups.ClearGrouping;
+        viewTimesheet.DataController.Groups.ClearGrouping;
         edtTLoginName.GroupIndex := -1;
         edtTCustomerName.GroupIndex := -1;
         edtTActivtyType.GroupIndex := -1;
         edtTActivityDate.GroupIndex := -1;
+        edtTCustomerType.GroupIndex := -1;
+        edtTActivtyType.Visible := True;
+        edtTLoginName.Visible := True;
+        edtTCustomerName.Visible := True;
+        edtTCustomerType.Visible := True;
 
         if SameText(FGroupByField, 'LOGIN_NAME') then
         begin
@@ -1723,13 +1666,24 @@ begin
         begin
           edtTActivityDate.GroupBy(0, True, True, True);
           edtTActivityDate.Position.BandIndex := 0;
+        end
+
+        else if SameText(FGroupByField, 'CUSTOMER_TYPE') then
+        begin
+          edtTCustomerType.GroupBy(0, True, True, True);
+          edtTCustomerType.Position.BandIndex := 0;
         end;
 
-        viewTimesheetBillableExcel.DataController.Groups.ClearGrouping;
+        viewTimesheetExcel.DataController.Groups.ClearGrouping;
         edtTLoginNameX.GroupIndex := -1;
         edtTCustomerNameX.GroupIndex := -1;
         edtTActivtyTypeX.GroupIndex := -1;
         edtTActivityDateX.GroupIndex := -1;
+        edtTCustomerTypeX.GroupIndex := -1;
+        edtTActivtyTypeX.Visible := True;
+        edtTLoginNameX.Visible := True;
+        edtTCustomerNameX.Visible := True;
+        edtTCustomerTypeX.Visible := True;
 
         if SameText(FGroupByField, 'LOGIN_NAME') then
         begin
@@ -1753,6 +1707,12 @@ begin
         begin
           edtTActivityDateX.GroupBy(0, True, True, True);
           edtTActivityDateX.Position.BandIndex := 0;
+        end
+
+        else if SameText(FGroupByField, 'CUSTOMER_TYPE') then
+        begin
+          edtTCustomerTypeX.GroupBy(0, True, True, True);
+          edtTCustomerTypeX.Position.BandIndex := 0;
         end;
       end;
   end;
@@ -1785,9 +1745,9 @@ begin
     AValue := Arguments.SummaryItem.DataController.Values[Arguments.RecordIndex, 26];
 
     case SummaryItem.ID of
-      6{0}: // Summarize only billed values
+      6 {0}: // Summarize only billed values
         OutArguments.Done := AValue = 1;
-      7{1}: // Summarize only C/Fwd values
+      7 {1}: // Summarize only C/Fwd values
         OutArguments.Done := AValue = 0;
     end;
 
@@ -1798,9 +1758,9 @@ begin
     AValue := Arguments.SummaryItem.DataController.Values[Arguments.RecordIndex, 26];
 
     case SummaryItem.ID of
-      9{0}: // Summarize only billed values
+      9 {0}: // Summarize only billed values
         OutArguments.Done := AValue = 1;
-      10{1}: // Summarize only C/Fwd values
+      10 {1}: // Summarize only C/Fwd values
         OutArguments.Done := AValue = 0;
     end;
   end;
@@ -1867,131 +1827,34 @@ begin
 end;
 
 procedure TTimesheetDetailReportFrm.DoExcel(Sender: TObject);
-//var
-//  FolderPath, ExportFileName: string;
-//  FileSaved: Boolean;
-////  RepFileName: string;
-////  ProgressDialog: TExcelExportProgressFrm;
 begin
   inherited;
   case lucReportType.ItemIndex of
-    0: ExportTimesheetDetails;
-    1: ExportBillCFwd;
+    0: ExportTimesheetDetailsToExcel;
+    1: ExportBillCFwdToExcel;
   end;
-
-//  CheckSelection;
-////  SetReportGrouping;
-//  if not ReportDM.cdsTSBillable.Active then
-//    GetTimesheetDetail;
-////  SetReportFilename;
-//
-//  case lucReportType.ItemIndex of
-//    0:
-//      if (viewTimesheetBillable.DataController.RecordCount = 0)
-//        and (cbxExportSelectedOnlyToExcel.Checked)
-//        and (viewTimesheetBillable.Controller.SelectedRecordCount = 0) then
-//        raise ESelectionException.Create('No timesheets items selected for export.' + CRLF +
-//          'Please select at least one timesheet item.');
-//
-////    1:
-//  end;
-//
-//  FolderPath := EXCEL_DOCS;
-//  TDirectory.CreateDirectory(FolderPath);
-//  dlgFileSave.DefaultExt := 'xlsx';
-//  dlgFileSave.InitialDir := FolderPath;
-//  dlgFileSave.FileName := '*.xlsx';
-//  FileSaved := dlgFileSave.Execute;
-//
-//  if not FileSaved then
-//    Exit;
-//
-//  if TFile.Exists(dlgFileSave.FileName) then
-//  begin
-//    Beep;
-//    if DisplayMsg(Application.Title,
-//      'File Overwrite',
-//      'The file ' + dlgFileSave.FileName + ' already exists.' + CRLF +
-//      'Do you want to overwrite this file?',
-//      mtConfirmation,
-//      [mbYes, mbNo]
-//      ) = mrNo then
-//      Exit;
-//  end;
-//
-//  case lucReportType.ItemIndex of
-//    0:
-//      begin
-//        edtTLoginName.GroupIndex := -1;
-//        edtTCustomerName.GroupIndex := -1;
-//        edtTActivtyType.GroupIndex := -1;
-//        edtTActivityDate.GroupIndex := -1;
-//        edtTLoginName.Visible := False;
-//        edtTCustomerName.Visible := False;
-//        edtTActivtyType.Visible := False;
-//        GetTimesheetDetail;
-//        SetReportFilename;
-//        ReportDM.Report.LoadFromFile(FRepFileName);
-//
-//        case grpData.ItemIndex of
-//          0:
-//            begin
-//              edtTCustomerName.Visible := True;
-//              edtTLoginName.GroupIndex := 0;
-//            end;
-//          1:
-//            begin
-//              edtTLoginName.Visible := True;
-//              edtTActivtyType.Visible := True;
-//              edtTCustomerName.GroupIndex := 0;
-//            end;
-//          2:
-//            begin
-//              edtTLoginName.Visible := True;
-//              edtTCustomerName.Visible := True;
-//              edtTActivtyType.GroupIndex := 0;
-//            end;
-//        end;
-//
-//        viewTimesheetBillable.OptionsView.BandHeaders := False;
-//
-//        try
-//          ExportFileName := dlgFileSave.FileName;
-//          ExportGridToXLSX(
-//            ExportFileName, //       Filename to export
-//            grdTimesheetBillable, // Grid whose data must be exported
-//            True, //                 Expand groups
-//            True, //                 Save all records (Selected and un-selected ones)
-//            True, //                 Use native format
-//            'xlsx');
-//
-//          ReportDM.cdsTSBillable.First;
-//          viewTimesheetBillable.ViewData.Collapse(True);
-//        finally
-//          viewTimesheetBillable.OptionsView.BandHeaders := True;
-//        end;
-//      end;
-//  end;
-//
-//  if cbxOpenDocument.Checked then
-//    ShellExecute(0, 'open', PChar('Excel.exe'), PChar('"' + ExportFileName + '"'), nil, SW_SHOWNORMAL)
 end;
 
-procedure TTimesheetDetailReportFrm.ExportTimesheetDetails;
+procedure TTimesheetDetailReportFrm.ExportTimesheetDetailsToExcel;
 var
   FolderPath, ExportFileName: string;
   FileSaved: Boolean;
 begin
   inherited;
-  CheckSelection;
-  SetReportGrouping;
-  GetTimesheetDetail;
+  grdTimesheet.Visible := False;
+  try
+    CheckSelection;
+    SetReportGrouping;
+    GetTimesheetDetail;
+  finally
+    grdTimesheet.Visible := True;
+  end;
 
   if ReportDM.cdsTSBillable.IsEmpty then
     raise ENoDataException.Create('No data to export.');
 
 //  if (cbxExportSelectedOnlyToExcel.Checked)
-//    and (viewTimesheetBillable.Controller.SelectedRecordCount = 0) then
+//    and (viewTimesheet.Controller.SelectedRecordCount = 0) then
 //    raise ESelectionException.Create('No timesheets items selected for export.' + CRLF +
 //      'Please select at least one timesheet item.');
 
@@ -2051,17 +1914,17 @@ begin
 //      end;
 //  end;
 
-//  viewTimesheetBillable.OptionsView.BandHeaders := False;
+//  viewTimesheet.OptionsView.BandHeaders := False;
 
-  viewTimesheetBillableExcel.ViewData.Expand(True);
-  viewTimesheetBillableExcel.DataController.BeginUpdate;
+  viewTimesheetExcel.ViewData.Expand(True);
+  viewTimesheetExcel.DataController.BeginUpdate;
   try
     ExportFileName := dlgFileSave.FileName;
     if cbxFormatExcelData.Checked then
       // Export formatted grid
       ExportGridToXLSX(
         ExportFileName, // Filename to export
-        grdTimesheetBillableExcel, // Grid whose data must be exported
+        grdTimesheetExcel, // Grid whose data must be exported
         True, // Expand groups
         True, // Save all records (Selected and un-selected ones)
         True, // Use native format
@@ -2070,7 +1933,7 @@ begin
       // Expport un-formatted grid
       ExportGridDataToXLSX(
         ExportFileName, // Filename to export
-        grdTimesheetBillableExcel, // Grid whose data must be exported
+        grdTimesheetExcel, // Grid whose data must be exported
         True, // Expand groups
         True, // Save all records (Selected and un-selected ones)
         True, // Use native format
@@ -2082,27 +1945,23 @@ begin
       ShellExecute(0, 'open', PChar('Excel.exe'), PChar('"' + ExportFileName + '"'), nil, SW_SHOWNORMAL)
   finally
     ReportDm.cdsTSBillableExcel.Close;
-    viewTimesheetBillableExcel.DataController.EndUpdate;
+    viewTimesheetExcel.DataController.EndUpdate;
   end;
 end;
 
-procedure TTimesheetDetailReportFrm.ExportBillCFwd;
+procedure TTimesheetDetailReportFrm.ExportBillCFwdToExcel;
 var
   FolderPath, ExportFileName: string;
   FileSaved: Boolean;
 begin
   inherited;
-  CheckSelection;
-//  SetReportGrouping;
-  GetBillCfwd;
-
-  if ReportDM.cdsBillCFwdExcel.IsEmpty then
-    raise ENoDataException.Create('No data to export.');
-
-//  if (cbxExportSelectedOnlyToExcel.Checked)
-//    and (viewTimesheetBillable.Controller.SelectedRecordCount = 0) then
-//    raise ESelectionException.Create('No timesheets items selected for export.' + CRLF +
-//      'Please select at least one timesheet item.');
+  Screen.Cursor := crHourglass;
+//  grdTimesheet.Visible := False;
+//  CheckSelection;
+//  GetBillCfwd;
+//
+//  if ReportDM.cdsBillCFwdExcel.IsEmpty then
+//    raise ENoDataException.Create('No data to export.');
 
   FolderPath := EXCEL_DOCS;
   TDirectory.CreateDirectory(FolderPath);
@@ -2127,15 +1986,22 @@ begin
       Exit;
   end;
 
-  viewBillCfwdExcel.ViewData.Expand(True);
-  viewBillCfwdExcel.DataController.BeginUpdate;
   try
+    grdTimesheet.Visible := False;
+    CheckSelection;
+    GetBillCfwd;
+
+    if ReportDM.cdsBillCFwdExcel.IsEmpty then
+      raise ENoDataException.Create('No data to export.');
+
+    viewBillCfwdExcel.ViewData.Expand(True);
+    viewBillCfwdExcel.DataController.BeginUpdate;
     ExportFileName := dlgFileSave.FileName;
     if cbxFormatExcelData.Checked then
       // Export formatted grid
       ExportGridToXLSX(
         ExportFileName, // Filename to export
-        grdBillCfwd, // Grid whose data must be exported
+        grdBillCfwdExcel, // Grid whose data must be exported
         True, // Expand groups
         True, // Save all records (Selected and un-selected ones)
         True, // Use native format
@@ -2144,7 +2010,7 @@ begin
       // Expport un-formatted grid
       ExportGridDataToXLSX(
         ExportFileName, // Filename to export
-        grdBillCfwd, // Grid whose data must be exported
+        grdBillCfwdExcel, // Grid whose data must be exported
         True, // Expand groups
         True, // Save all records (Selected and un-selected ones)
         True, // Use native format
@@ -2157,19 +2023,20 @@ begin
   finally
     ReportDm.cdsBillCFwdExcel.Close;
     viewBillCfwdExcel.DataController.EndUpdate;
+    Screen.Cursor := crDefault;
   end;
 end;
 
 procedure TTimesheetDetailReportFrm.DoExpandTimesheet(Sender: TObject);
 begin
   inherited;
-  viewTimesheetBillable.ViewData.Expand(True);
+  viewTimesheet.ViewData.Expand(True);
 end;
 
 procedure TTimesheetDetailReportFrm.DoCollapseTimesheet(Sender: TObject);
 begin
   inherited;
-  viewTimesheetBillable.ViewData.Collapse(True);
+  viewTimesheet.ViewData.Collapse(True);
 end;
 
 procedure TTimesheetDetailReportFrm.DoCloseForm(Sender: TObject);
@@ -2180,6 +2047,142 @@ begin
 end;
 
 procedure TTimesheetDetailReportFrm.DoPDF(Sender: TObject);
+begin
+  inherited;
+  Screen.Cursor := crHourglass;
+  grdTimesheet.Visible := False;
+  CheckSelection;
+
+  try
+    case lucReportType.ItemIndex of
+      0: ExportTimesheetDetailsToPDF;
+      1: ExportBillCFwdToPDF;
+    end;
+  finally
+    grdTimesheet.Visible := True;
+  end;
+
+//  ReportDM.frxPDFExport.ShowDialog := False;
+//  ReportDM.frxPDFExport.Background := True;
+//  ReportDM.frxPDFExport.OpenAfterExport := cbxOpenDocument.Checked;
+//  ReportDM.frxPDFExport.OverwritePrompt := True;
+//  ReportDM.frxPDFExport.ShowProgress := True;
+////  TfrxGroupHeader(ReportDM.rptBillableSummaryByCustomer.FindObject('bndCustomerHeader')).Visible := False;
+////  TfrxMemoView(ReportDM.rptBillableSummaryByCustomer.FindObject('lblCustomerHeader')).Visible := False;
+//  dlgFileSave.DefaultExt := 'pdf';
+//  dlgFileSave.InitialDir := PDF_DOCS;
+//  dlgFileSave.FileName := '*.pdf';
+//
+//  FileSaved := dlgFileSave.Execute;
+//
+//  if not FileSaved then
+//    Exit;
+//
+//  if TFile.Exists(dlgFileSave.FileName) then
+//  begin
+//    Beep;
+//    if DisplayMsg(Application.Title,
+//      'File Overwrite',
+//      'The file ' + dlgFileSave.FileName + ' already exists. Do you want to overwrite this file?',
+//      mtConfirmation,
+//      [mbYes, mbNo]
+//      ) = mrNo then
+//      Exit;
+//  end;
+//
+////  SetReportGrouping;
+//  GetTimesheetDetail;
+//  SetReportFilename;
+//  ReportDM.Report.LoadFromFile(FRepFileName);
+////  RepFileName := TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[grpData.ItemIndex];
+////
+////  if not TFile.Exists(RepFileName) then
+////    raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
+////
+////  ReportDM.Report.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[grpData.ItemIndex]);
+//
+//  DC := viewTimesheet.DataController;
+//  DC.BeginUpdate;
+//  try
+//    ReportDM.frxPDFExport.FileName := dlgFileSave.FileName;
+//    if ReportDM.Report.PrepareReport(True) then
+//      ReportDM.Report.Export(ReportDM.frxPDFExport);
+//  finally
+////    grpData.Items[3].Visible := lucReportType.ItemIndex = 0;
+////    grpData.Items[4].Visible := not grpData.Items[3].Visible;
+//    ReportDM.cdsTSBillable.First;
+//    viewTimesheet.ViewData.Collapse(True);
+//    DC.EndUpdate;
+//  end;
+end;
+
+procedure TTimesheetDetailReportFrm.ExportTimesheetDetailsToPDF;
+var
+  FileSaved: Boolean;
+  DC: TcxCustomDataController;
+//  RepFileName: string;
+begin
+  inherited;
+  grdTimesheet.Visible := False;
+  CheckSelection;
+  ReportDM.frxPDFExport.ShowDialog := False;
+  ReportDM.frxPDFExport.Background := True;
+  ReportDM.frxPDFExport.OpenAfterExport := cbxOpenDocument.Checked;
+  ReportDM.frxPDFExport.OverwritePrompt := True;
+  ReportDM.frxPDFExport.ShowProgress := True;
+//  TfrxGroupHeader(ReportDM.rptBillableSummaryByCustomer.FindObject('bndCustomerHeader')).Visible := False;
+//  TfrxMemoView(ReportDM.rptBillableSummaryByCustomer.FindObject('lblCustomerHeader')).Visible := False;
+  dlgFileSave.DefaultExt := 'pdf';
+  dlgFileSave.InitialDir := PDF_DOCS;
+  dlgFileSave.FileName := '*.pdf';
+
+  FileSaved := dlgFileSave.Execute;
+
+  if not FileSaved then
+    Exit;
+
+  if TFile.Exists(dlgFileSave.FileName) then
+  begin
+    Beep;
+    if DisplayMsg(Application.Title,
+      'File Overwrite',
+      'The file ' + dlgFileSave.FileName + ' already exists. Do you want to overwrite this file?',
+      mtConfirmation,
+      [mbYes, mbNo]
+      ) = mrNo then
+      Exit;
+  end;
+
+  DC := viewTimesheet.DataController;
+  DC.BeginUpdate;
+
+  try
+//  SetReportGrouping;
+    GetTimesheetDetail;
+    SetReportFilename;
+    ReportDM.Report.LoadFromFile(FRepFileName);
+//  RepFileName := TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[grpData.ItemIndex];
+//
+//  if not TFile.Exists(RepFileName) then
+//    raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
+//
+//  ReportDM.Report.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[grpData.ItemIndex]);
+
+    ReportDM.frxPDFExport.FileName := dlgFileSave.FileName;
+    if ReportDM.Report.PrepareReport(True) then
+      ReportDM.Report.Export(ReportDM.frxPDFExport);
+  finally
+//    grpData.Items[3].Visible := lucReportType.ItemIndex = 0;
+//    grpData.Items[4].Visible := not grpData.Items[3].Visible;
+    ReportDM.cdsTSBillable.First;
+    grdTimesheet.Visible := True;
+    viewTimesheet.ViewData.Collapse(True);
+    DC.EndUpdate;
+    Screen.Cursor := crDefault;
+  end;
+end;
+
+procedure TTimesheetDetailReportFrm.ExportBillCFwdToPDF;
 var
   FileSaved: Boolean;
   DC: TcxCustomDataController;
@@ -2216,7 +2219,7 @@ begin
   end;
 
 //  SetReportGrouping;
-  GetTimesheetDetail;
+  GetBillCfwd;
   SetReportFilename;
   ReportDM.Report.LoadFromFile(FRepFileName);
 //  RepFileName := TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[grpData.ItemIndex];
@@ -2226,7 +2229,7 @@ begin
 //
 //  ReportDM.Report.LoadFromFile(TSDM.ShellResource.ReportFolder + ReportDM.ReportFileName[grpData.ItemIndex]);
 
-  DC := viewTimesheetBillable.DataController;
+  DC := viewBillCfwd.DataController;
   DC.BeginUpdate;
   try
     ReportDM.frxPDFExport.FileName := dlgFileSave.FileName;
@@ -2236,7 +2239,7 @@ begin
 //    grpData.Items[3].Visible := lucReportType.ItemIndex = 0;
 //    grpData.Items[4].Visible := not grpData.Items[3].Visible;
     ReportDM.cdsTSBillable.First;
-    viewTimesheetBillable.ViewData.Collapse(True);
+    viewBillCfwd.ViewData.Collapse(True);
     DC.EndUpdate;
   end;
 end;
@@ -2244,13 +2247,14 @@ end;
 function TTimesheetDetailReportFrm.OrderByClause: string;
 var
 //  DC: TcxCustomDataController;
-  I: Integer;
+  FieldNames: string;
 begin
 //  DC := viewSortOrder.DataController;
   Result := ' ORDER BY ';
   if lucReportType.ItemIndex = 1 then
     Result := Result + ' 1, ';
 
+  FieldNames := '';
   ReportDM.cdsTSSortOrder.DisableControls;
   ReportDM.cdsTSSortOrder.First;
 
@@ -2261,23 +2265,48 @@ begin
         0: Result := Result + ' T.' + ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString;
         1: Result := Result + ' ' + IntToStr(ReportDM.cdsTSSortOrder.FieldByName('FIELD_INDEX').AsInteger);
       end;
+
+      FieldNames := FieldNames + ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString;
+
       ReportDM.cdsTSSortOrder.Next;
 
       if not ReportDM.cdsTSSortOrder.EOF then
+      begin
         Result := Result + ',';
+        FieldNames := FieldNames + ';';
+      end;
     end;
+
+    ReportDM.CreateIndex(lucReportType.ItemIndex, FieldNames);
   finally
     ReportDM.cdsTSSortOrder.First;
     ReportDM.cdsTSSortOrder.EnableControls;
   end;
 end;
 
+//procedure TTimesheetDetailReportFrm.CreateIndex(ReportTypeIndex: Integer);
+//var
+//  IDX: TFDIndex;
+//begin
+//  case ReportTypeIndex of
+//    0:
+//      begin
+//        ReportDM.cdsTSBillable.Indexes.Clear;
+//      end;
+//
+//    1:
+//      begin
+//
+//      end;
+//  end;
+//end;
+
 procedure TTimesheetDetailReportFrm.DoPrint(Sender: TObject);
 begin
   inherited;
+  Screen.Cursor := crHourglass;
+  grdTimesheet.Visible := False;
   try
-    Screen.Cursor := crHourglass;
-
     case lucDateType.ItemIndex of
       0:
         if lucPeriod.ItemIndex < 0 then
@@ -2422,7 +2451,7 @@ begin
 //            0:
 //              begin
 //                grpData.ItemIndex := 3;
-////                viewTimesheetBillable.ViewData.Expand(True);
+////                viewTimesheet.ViewData.Expand(True);
 //              end;
 //
 //            1:
@@ -2438,7 +2467,7 @@ begin
 //      0:
 //        begin
 //          grpData.ItemIndex := 3;
-//          viewTimesheetBillable.ViewData.Collapse(True);
+//          viewTimesheet.ViewData.Collapse(True);
 //        end;
 //
 //      1:
@@ -2448,6 +2477,7 @@ begin
 //        end;
 //    end;
   finally
+    grdTimesheet.Visible := True;
     Screen.Cursor := crDefault;
   end;
 end;

@@ -973,7 +973,7 @@ begin
   if not AFocusedRecord.IsData then
   begin
     ReportDM.cdsTimesheetDetail.Close;
-    ReportDM.CDSCarryForwardDetail.Close;
+    ReportDM.cdsCarryForwardDetail.Close;
 //    Exit;
   end
   else if not FShowingForm then
