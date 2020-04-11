@@ -273,6 +273,11 @@ inherited TSDM: TTSDM
       FieldName = 'THE_PERIOD'
       Origin = 'THE_PERIOD'
     end
+    object cdsTSPeriodPERIOD_NAME: TStringField
+      DisplayLabel = 'Period'
+      FieldName = 'PERIOD_NAME'
+      Size = 10
+    end
   end
   object cdsSystemUser: TFDMemTable
     Tag = 24
@@ -808,6 +813,11 @@ inherited TSDM: TTSDM
       Origin = 'THE_PERIOD'
       Required = True
     end
+    object cdsTimesheetPERIOD_NAME: TStringField
+      DisplayLabel = 'Period'
+      FieldName = 'PERIOD_NAME'
+      Size = 10
+    end
     object cdsTimesheetEditBILLABLE: TIntegerField
       Alignment = taLeftJustify
       DisplayLabel = 'Bill'
@@ -1083,6 +1093,11 @@ inherited TSDM: TTSDM
       Origin = 'THE_PERIOD'
       Required = True
     end
+    object cdsCarryForwardPERIOD_NAME: TStringField
+      DisplayLabel = 'Period'
+      FieldName = 'PERIOD_NAME'
+      Size = 10
+    end
     object cdsCarryForwardBILLABLE: TIntegerField
       Alignment = taLeftJustify
       DisplayLabel = 'Bill'
@@ -1266,6 +1281,11 @@ inherited TSDM: TTSDM
       FieldName = 'THE_PERIOD'
       Origin = 'THE_PERIOD'
     end
+    object cdsReleaseCFwdPERIOD_NAME: TStringField
+      DisplayLabel = 'Period'
+      FieldName = 'PERIOD_NAME'
+      Size = 10
+    end
     object cdsReleaseCFwdBILLABLE: TIntegerField
       Alignment = taCenter
       DisplayLabel = 'Bill'
@@ -1375,6 +1395,11 @@ inherited TSDM: TTSDM
       DisplayLabel = 'Period'
       FieldName = 'THE_PERIOD'
     end
+    object cdsPeriodPERIOD_NAME: TStringField
+      DisplayLabel = 'Period'
+      FieldName = 'PERIOD_NAME'
+      Size = 10
+    end
   end
   object cdsReleaseToPeriod: TFDMemTable
     ActiveStoredUsage = [auDesignTime]
@@ -1406,6 +1431,11 @@ inherited TSDM: TTSDM
       Alignment = taLeftJustify
       DisplayLabel = 'Period'
       FieldName = 'THE_PERIOD'
+    end
+    object cdsReleaseToPeriodPERIOD_NAME: TStringField
+      DisplayLabel = 'Period'
+      FieldName = 'PERIOD_NAME'
+      Size = 10
     end
   end
   object dtsPeriod: TDataSource
@@ -1449,9 +1479,14 @@ inherited TSDM: TTSDM
       DisplayLabel = 'Period'
       FieldName = 'THE_PERIOD'
     end
+    object cdsToPeriodPERIOD_NAME: TStringField
+      DisplayLabel = 'Period'
+      FieldName = 'PERIOD_NAME'
+      Size = 10
+    end
   end
   object dtsToPeriod: TDataSource
-    DataSet = cdsReleaseToPeriod
+    DataSet = cdsToPeriod
     Left = 585
     Top = 175
   end

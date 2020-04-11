@@ -116,6 +116,11 @@ inherited ReportDM: TReportDM
       DisplayLabel = 'Period'
       FieldName = 'THE_PERIOD'
     end
+    object cdsPeriodPERIOD_NAME: TStringField
+      DisplayLabel = 'Period'
+      FieldName = 'PERIOD_NAME'
+      Size = 10
+    end
   end
   object cdsToPeriod: TFDMemTable
     ActiveStoredUsage = [auDesignTime]
@@ -147,6 +152,11 @@ inherited ReportDM: TReportDM
       Alignment = taLeftJustify
       DisplayLabel = 'Period'
       FieldName = 'THE_PERIOD'
+    end
+    object cdsToPeriodPERIOD_NAME: TStringField
+      DisplayLabel = 'Period'
+      FieldName = 'PERIOD_NAME'
+      Size = 10
     end
   end
   object dtsPeriod: TDataSource
@@ -313,6 +323,11 @@ inherited ReportDM: TReportDM
       DisplayLabel = 'Period'
       FieldName = 'THE_PERIOD'
       Origin = 'THE_PERIOD'
+    end
+    object cdsTSBillablePERIOD_NAME: TStringField
+      DisplayLabel = 'Period'
+      FieldName = 'PERIOD_NAME'
+      Size = 10
     end
     object cdsTSBillableBILLABLE: TIntegerField
       Alignment = taCenter
@@ -1531,6 +1546,7 @@ inherited ReportDM: TReportDM
       'ABBREVIATION=ABBREVIATION'
       'ITEM_VALUE=ITEM_VALUE'
       'THE_PERIOD=THE_PERIOD'
+      'PERIOD_NAME=PERIOD_NAME'
       'BILLABLE=BILLABLE'
       'BILLABLE_STR=BILLABLE_STR'
       'INVOICE_ID=INVOICE_ID'
@@ -2038,6 +2054,11 @@ inherited ReportDM: TReportDM
       Alignment = taLeftJustify
       DisplayLabel = 'Period'
       FieldName = 'THE_PERIOD'
+    end
+    object cdsPeriodListingPERIOD_NAME: TStringField
+      DisplayLabel = 'Period'
+      FieldName = 'PERIOD_NAME'
+      Size = 10
     end
   end
   object dtsPeriodListing: TDataSource
@@ -2552,6 +2573,11 @@ inherited ReportDM: TReportDM
       Alignment = taLeftJustify
       DisplayLabel = 'Period'
       FieldName = 'THE_PERIOD'
+    end
+    object cdsSumByActivityPeriodPERIOD_NAME: TStringField
+      DisplayLabel = 'Period'
+      FieldName = 'PERIOD_NAME'
+      Size = 10
     end
   end
   object dtsSumByActivityPeriod: TDataSource
@@ -3759,6 +3785,7 @@ inherited ReportDM: TReportDM
       'ABBREVIATION=ABBREVIATION'
       'ITEM_VALUE=ITEM_VALUE'
       'THE_PERIOD=THE_PERIOD'
+      'PERIOD_NAME=PERIOD_NAME'
       'BILLABLE=BILLABLE'
       'BILLABLE_STR=BILLABLE_STR'
       'INVOICE_ID=INVOICE_ID'
@@ -3797,6 +3824,7 @@ inherited ReportDM: TReportDM
       'ABBREVIATION=ABBREVIATION'
       'ITEM_VALUE=ITEM_VALUE'
       'THE_PERIOD=THE_PERIOD'
+      'PERIOD_NAME=PERIOD_NAME'
       'BILLABLE=BILLABLE'
       'BILLABLE_STR=BILLABLE_STR'
       'INVOICE_ID=INVOICE_ID'
@@ -4719,6 +4747,11 @@ inherited ReportDM: TReportDM
       Origin = 'THE_PERIOD'
       Required = True
     end
+    object cdsTimesheetPERIOD_NAME: TStringField
+      DisplayLabel = 'Period'
+      FieldName = 'PERIOD_NAME'
+      Size = 10
+    end
     object cdsTimesheetBILLABLE: TIntegerField
       Alignment = taCenter
       DisplayLabel = 'Bill'
@@ -4932,6 +4965,11 @@ inherited ReportDM: TReportDM
       FieldName = 'THE_PERIOD'
       Origin = 'THE_PERIOD'
       Required = True
+    end
+    object cdsCarryForwardDetailPERIOD_NAME: TStringField
+      DisplayLabel = 'Period'
+      FieldName = 'PERIOD_NAME'
+      Size = 10
     end
     object IntegerField12: TIntegerField
       Alignment = taCenter
@@ -6304,6 +6342,11 @@ inherited ReportDM: TReportDM
       FieldName = 'THE_PERIOD'
       Origin = 'THE_PERIOD'
     end
+    object cdsTimesheetDetailPERIOD_NAME: TStringField
+      DisplayLabel = 'Period'
+      FieldName = 'PERIOD_NAME'
+      Size = 10
+    end
     object cdsTimesheetDetailBILLABLE: TIntegerField
       Alignment = taCenter
       DisplayLabel = 'Bill'
@@ -6580,6 +6623,11 @@ inherited ReportDM: TReportDM
       DisplayLabel = 'Period'
       FieldName = 'THE_PERIOD'
       Origin = 'THE_PERIOD'
+    end
+    object cdsTimesheetCFPERIOD_NAME: TStringField
+      DisplayLabel = 'Period'
+      FieldName = 'PERIOD_NAME'
+      Size = 10
     end
     object cdsTimesheetCFBILLABLE: TIntegerField
       Alignment = taCenter
@@ -7264,6 +7312,11 @@ inherited ReportDM: TReportDM
       FieldName = 'THE_PERIOD'
       Origin = 'THE_PERIOD'
     end
+    object cdsBillCFwdPERIOD_NAME: TStringField
+      DisplayLabel = 'Period'
+      FieldName = 'PERIOD_NAME'
+      Size = 10
+    end
     object cdsBillCFwdBILLABLE: TIntegerField
       Alignment = taCenter
       DisplayLabel = 'Bill'
@@ -7361,6 +7414,7 @@ inherited ReportDM: TReportDM
       'STD_RATE=STD_RATE'
       'ITEM_VALUE=ITEM_VALUE'
       'THE_PERIOD=THE_PERIOD'
+      'PERIOD_NAME=PERIOD_NAME'
       'BILLABLE=BILLABLE'
       'BILLABLE_STR=BILLABLE_STR'
       'INVOICE_ID=INVOICE_ID'
@@ -7404,6 +7458,11 @@ inherited ReportDM: TReportDM
       DisplayLabel = 'Period'
       FieldName = 'THE_PERIOD'
       Origin = 'THE_PERIOD'
+    end
+    object cdsMonthlyBillingPERIOD_NAME: TStringField
+      DisplayLabel = 'Period'
+      FieldName = 'PERIOD_NAME'
+      Size = 10
     end
     object cdsMonthlyBillingTHE_YEAR: TIntegerField
       DisplayLabel = 'Year'
@@ -7810,11 +7869,12 @@ inherited ReportDM: TReportDM
     CloseDataSource = False
     FieldAliases.Strings = (
       'THE_PERIOD=THE_PERIOD'
+      'PERIOD_NAME=PERIOD_NAME'
+      'THE_YEAR=THE_YEAR'
+      'THE_MONTH=THE_MONTH'
       'TOTAL_BILLABLE=TOTAL_BILLABLE'
       'TOTAL_CARRY_FORWARD=TOTAL_CARRY_FORWARD'
-      'TOTAL_HOURS_BILLABLE=TOTAL_HOURS_BILLABLE'
-      'THE_MONTH=THE_MONTH'
-      'THE_YEAR=THE_YEAR')
+      'TOTAL_HOURS_BILLABLE=TOTAL_HOURS_BILLABLE')
     DataSet = cdsMonthlyBilling
     BCDToCurrency = False
     Left = 355
@@ -9163,6 +9223,7 @@ inherited ReportDM: TReportDM
       'ABBREVIATION=ABBREVIATION'
       'ITEM_VALUE=ITEM_VALUE'
       'THE_PERIOD=THE_PERIOD'
+      'PERIOD_NAME=PERIOD_NAME'
       'BILLABLE=BILLABLE'
       'BILLABLE_STR=BILLABLE_STR'
       'INVOICE_ID=INVOICE_ID'
@@ -9298,6 +9359,11 @@ inherited ReportDM: TReportDM
       DisplayLabel = 'Period'
       FieldName = 'THE_PERIOD'
       Origin = 'THE_PERIOD'
+    end
+    object cdsTSBillableExcelPERIOD_NAME: TStringField
+      DisplayLabel = 'Period'
+      FieldName = 'PERIOD_NAME'
+      Size = 10
     end
     object cdsTSBillableExcelBILLABLE: TIntegerField
       Alignment = taCenter
@@ -9482,6 +9548,11 @@ inherited ReportDM: TReportDM
       DisplayLabel = 'Period'
       FieldName = 'THE_PERIOD'
       Origin = 'THE_PERIOD'
+    end
+    object cdsBillCFwdExcelPERIOD_NAME: TStringField
+      DisplayLabel = 'Period'
+      FieldName = 'PERIOD_NAME'
+      Size = 10
     end
     object cdsBillCFwdExcelBILLABLE: TIntegerField
       Alignment = taCenter

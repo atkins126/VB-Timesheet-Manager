@@ -22,7 +22,7 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
       Font.Name = 'Verdana'
       Font.Style = []
       ParentFont = False
-      TabOrder = 8
+      TabOrder = 9
       object viewTimesheet: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
@@ -48,24 +48,6 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
             Format = '#,##0.00'
             Kind = skSum
             Position = spFooter
-            FieldName = 'CARRY_FORWARD_VALUE'
-            Column = edtTCFwdValue
-          end
-          item
-            Format = '#,##0.00'
-            Kind = skSum
-            FieldName = 'TIME_HOURS'
-            Column = edtTHours
-          end
-          item
-            Format = '#,##0.00'
-            Kind = skSum
-            FieldName = 'ITEM_VALUE'
-            Column = edtTItemValue
-          end
-          item
-            Format = '#,##0.00'
-            Kind = skSum
             FieldName = 'CARRY_FORWARD_VALUE'
             Column = edtTCFwdValue
           end>
@@ -196,7 +178,6 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
           Properties.ReadOnly = True
           Visible = False
           OnGetDisplayText = edtTThePeriodGetDisplayText
-          GroupIndex = 0
           MinWidth = 60
           Options.Editing = False
           Options.IncSearch = False
@@ -204,6 +185,21 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
           Width = 60
           Position.BandIndex = 1
           Position.ColIndex = 3
+          Position.RowIndex = 0
+        end
+        object edtTPeriodName: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'PERIOD_NAME'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          Visible = False
+          OnGetDisplayText = edtTThePeriodGetDisplayText
+          GroupIndex = 0
+          MinWidth = 70
+          Options.Editing = False
+          Options.HorzSizing = False
+          Width = 70
+          Position.BandIndex = 1
+          Position.ColIndex = 4
           Position.RowIndex = 0
         end
         object edtTLoginName: TcxGridDBBandedColumn
@@ -217,7 +213,7 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
           Options.HorzSizing = False
           Width = 120
           Position.BandIndex = 1
-          Position.ColIndex = 5
+          Position.ColIndex = 6
           Position.RowIndex = 0
         end
         object edtTActivityDate: TcxGridDBBandedColumn
@@ -231,7 +227,7 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
           Options.HorzSizing = False
           Width = 90
           Position.BandIndex = 1
-          Position.ColIndex = 4
+          Position.ColIndex = 5
           Position.RowIndex = 0
         end
         object edtTCustomerType: TcxGridDBBandedColumn
@@ -245,7 +241,7 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
           Options.HorzSizing = False
           Width = 200
           Position.BandIndex = 1
-          Position.ColIndex = 6
+          Position.ColIndex = 7
           Position.RowIndex = 0
         end
         object edtTCustomerName: TcxGridDBBandedColumn
@@ -259,7 +255,7 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
           Options.HorzSizing = False
           Width = 400
           Position.BandIndex = 1
-          Position.ColIndex = 7
+          Position.ColIndex = 8
           Position.RowIndex = 0
         end
         object edtTActivtyType: TcxGridDBBandedColumn
@@ -273,7 +269,7 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
           Options.HorzSizing = False
           Width = 250
           Position.BandIndex = 1
-          Position.ColIndex = 8
+          Position.ColIndex = 9
           Position.RowIndex = 0
         end
         object edtTAActivty: TcxGridDBBandedColumn
@@ -289,7 +285,7 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
           Options.Sorting = False
           Width = 500
           Position.BandIndex = 1
-          Position.ColIndex = 9
+          Position.ColIndex = 10
           Position.RowIndex = 0
         end
         object edtTPriceItem: TcxGridDBBandedColumn
@@ -305,7 +301,7 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
           Options.Moving = False
           Width = 400
           Position.BandIndex = 1
-          Position.ColIndex = 10
+          Position.ColIndex = 11
           Position.RowIndex = 0
         end
         object edtTTimeSpent: TcxGridDBBandedColumn
@@ -685,7 +681,7 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
       Properties.KeyFieldNames = 'THE_PERIOD'
       Properties.ListColumns = <
         item
-          FieldName = 'THE_PERIOD'
+          FieldName = 'PERIOD_NAME'
         end>
       Properties.ListOptions.SyncMode = True
       Properties.ListSource = TSDM.dtsPeriod
@@ -713,10 +709,10 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
       Properties.KeyFieldNames = 'THE_PERIOD'
       Properties.ListColumns = <
         item
-          FieldName = 'THE_PERIOD'
+          FieldName = 'PERIOD_NAME'
         end>
       Properties.ListOptions.SyncMode = True
-      Properties.ListSource = TSDM.dtsTSPeriod
+      Properties.ListSource = TSDM.dtsToPeriod
       Properties.OnInitPopup = lucFromPeriodPropertiesInitPopup
       Style.HotTrack = False
       Style.TransparentBorder = False
@@ -738,7 +734,7 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
       Transparent = True
     end
     object lucReleaseToPeriod: TcxLookupComboBox [5]
-      Left = 827
+      Left = 826
       Top = 71
       BeepOnEnter = False
       Properties.DropDownAutoSize = True
@@ -747,22 +743,20 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
       Properties.KeyFieldNames = 'THE_PERIOD'
       Properties.ListColumns = <
         item
-          FieldName = 'THE_PERIOD'
+          FieldName = 'PERIOD_NAME'
         end>
       Properties.ListOptions.SyncMode = True
-      Properties.ListSource = TSDM.dtsPeriod
+      Properties.ListSource = TSDM.dtsReleaseToPeriod
       Properties.OnInitPopup = lucReleaseToPeriodPropertiesInitPopup
       Style.HotTrack = False
       Style.TransparentBorder = False
-      TabOrder = 5
+      TabOrder = 6
       Width = 100
     end
     object cbxReleaseToCurrentPeriod: TcxCheckBox [6]
       Left = 426
       Top = 71
-      Caption = 
-        'Release selected items to current period or selecect billing per' +
-        'iod'
+      Caption = 'Release selected items to current period'
       ParentShowHint = False
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
@@ -781,7 +775,7 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
       Caption = 'Expand All'
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 6
+      TabOrder = 7
       OnClick = btnExpandAllClick
     end
     object btnCollapseAll: TcxButton [8]
@@ -792,11 +786,21 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
       Caption = 'Collapse All'
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 7
+      TabOrder = 8
       OnClick = btnCollapseAllClick
     end
+    object lblOR: TcxLabel [9]
+      Left = 684
+      Top = 73
+      Caption = 'OR'
+      ParentFont = False
+      Style.HotTrack = False
+      Style.StyleController = styOR
+      Style.TransparentBorder = False
+      Transparent = True
+    end
     inherited layMainGroup_Root: TdxLayoutGroup
-      ItemIndex = 2
+      ItemIndex = 1
     end
     object litToolbar: TdxLayoutItem
       Parent = layMainGroup_Root
@@ -812,7 +816,7 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
       Parent = layMainGroup_Root
       CaptionOptions.Text = 'New Group'
       ButtonOptions.Buttons = <>
-      ItemIndex = 4
+      ItemIndex = 6
       LayoutDirection = ldHorizontal
       ShowBorder = False
       Index = 1
@@ -858,12 +862,12 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
     end
     object litReleaseToPeriod: TdxLayoutItem
       Parent = grpPeriodSelection
-      CaptionOptions.Visible = False
+      CaptionOptions.Text = 'select billing period'
       Control = lucReleaseToPeriod
       ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 100
       ControlOptions.ShowBorder = False
-      Index = 5
+      Index = 6
     end
     object sep1: TdxLayoutSeparatorItem
       Parent = grpPeriodSelection
@@ -877,7 +881,7 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
       CaptionOptions.Visible = False
       Control = cbxReleaseToCurrentPeriod
       ControlOptions.OriginalHeight = 19
-      ControlOptions.OriginalWidth = 395
+      ControlOptions.OriginalWidth = 252
       ControlOptions.ShowBorder = False
       Index = 4
     end
@@ -909,6 +913,23 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
       ControlOptions.OriginalWidth = 90
       ControlOptions.ShowBorder = False
       Index = 1
+    end
+    object spc1: TdxLayoutEmptySpaceItem
+      SizeOptions.Height = 10
+      SizeOptions.Width = 10
+      CaptionOptions.Text = 'Empty Space Item'
+      Index = -1
+    end
+    object litOrLabel: TdxLayoutItem
+      Parent = grpPeriodSelection
+      AlignVert = avCenter
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = lblOR
+      ControlOptions.OriginalHeight = 14
+      ControlOptions.OriginalWidth = 20
+      ControlOptions.ShowBorder = False
+      Index = 5
     end
   end
   inherited styRepository: TcxStyleRepository
@@ -1864,8 +1885,21 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
   end
   object styReadOnly: TcxEditStyleController
     Style.Color = 15132415
-    Left = 375
-    Top = 145
+    Left = 365
+    Top = 250
+    PixelsPerInch = 96
+  end
+  object styOR: TcxEditStyleController
+    Style.Color = clBtnFace
+    Style.Font.Charset = ANSI_CHARSET
+    Style.Font.Color = clRed
+    Style.Font.Height = -12
+    Style.Font.Name = 'Verdana'
+    Style.Font.Style = [fsBold]
+    Style.TextColor = clRed
+    Style.IsFontAssigned = True
+    Left = 705
+    Top = 285
     PixelsPerInch = 96
   end
 end

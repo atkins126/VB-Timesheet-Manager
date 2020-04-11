@@ -337,7 +337,7 @@ begin
       Exit;
   end;
 
-  ThePeriod := ReportDM.cdsMonthlyBilling.FieldByName('THE_PEIROD').AsInteger;
+  ThePeriod := ReportDM.cdsMonthlyBilling.FieldByName('THE_PERIOD').AsInteger;
 
   if not TFile.Exists(RepFileName) then
     raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');

@@ -90,7 +90,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Properties.KeyFieldNames = 'THE_PERIOD'
       Properties.ListColumns = <
         item
-          FieldName = 'THE_PERIOD'
+          FieldName = 'PERIOD_NAME'
         end>
       Properties.ListOptions.SyncMode = True
       Properties.ListSource = ReportDM.dtsPeriodListing

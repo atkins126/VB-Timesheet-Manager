@@ -5,7 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Forms,
   System.Classes, Vcl.Graphics, System.Actions, Vcl.ActnList, Vcl.Controls,
-  Vcl.Dialogs, System.ImageList, Vcl.ImgList, Data.DB,
+  Vcl.Dialogs, System.ImageList, Vcl.ImgList, Data.DB, System.Math,
+  Vcl.Menus, Vcl.StdCtrls,
 
   frxClass, FireDAC.Comp.Client,
 
@@ -20,7 +21,7 @@ uses
   cxGridDBBandedTableView, cxGridCustomView, dxScreenTip, dxPrnDev, dxPrnDlg,
   dxCustomHint, cxHint, cxContainer, cxMaskEdit, cxDropDownEdit, cxLookupEdit,
   cxDBLookupEdit, cxDBLookupComboBox, dxBar, dxLayoutcxEditAdapters,
-  dxLayoutControlAdapters, Vcl.Menus, Vcl.StdCtrls, cxButtons;
+  dxLayoutControlAdapters, cxButtons, cxLabel;
 
 type
   TReleaseCFwdFrm = class(TBaseLayoutFrm)
@@ -99,6 +100,11 @@ type
     tipExpandAll: TdxScreenTip;
     tipCollapseAll: TdxScreenTip;
     styGroupFormat: TcxStyle;
+    spc1: TdxLayoutEmptySpaceItem;
+    litOrLabel: TdxLayoutItem;
+    lblOR: TcxLabel;
+    styOR: TcxEditStyleController;
+    edtTPeriodName: TcxGridDBBandedColumn;
     procedure FormCreate(Sender: TObject);
     procedure cbxAllPeriodsPropertiesChange(Sender: TObject);
     procedure DoCloseForm(Sender: TObject);
@@ -148,10 +154,22 @@ end;
 
 procedure TReleaseCFwdFrm.edtTThePeriodGetDisplayText(
   Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord; var AText: string);
+var
+  TheYear, TheMonth: Integer;
 begin
   inherited;
   if ARecord is TcxGridGroupRow then
-    AText := TcxGridGroupRow(ARecord).Value;
+  begin
+    if TcxCustomGridTableItem(Sender).Name = 'edtTThePeriod' then
+    begin
+      TheYear := TcxGridGroupRow(ARecord).Value div 100;
+      TheMonth := TcxGridGroupRow(ARecord).Value mod 100;
+      AText := ShortMonths[TheMonth] + ' ' + TheYear.ToString;
+    end
+    else
+      AText := TcxGridGroupRow(ARecord).Value;
+  end;
+//    AText := TcxGridGroupRow(ARecord).Values[edtTPeriodName.Index];
 end;
 
 procedure TReleaseCFwdFrm.FormCreate(Sender: TObject);
@@ -161,16 +179,17 @@ begin
   viewTimesheet.DataController.DataSource := TSDM.dtsReleaseCFwd;
   lucFromPeriod.Properties.ListSource := TSDM.dtsPeriod;
   lucToPeriod.Properties.ListSource := TSDM.dtsToPeriod;
+  lucReleaseToPeriod.Properties.ListSource := TSDM.dtsReleaseToPeriod;
   layMain.Align := alClient;
   layMain.LayoutLookAndFeel := lafCustomSkin;
-  cbxAllPeriods.Checked := True;
-  cbxReleaseToCurrentPeriod.Checked := True;
 
   if ReportDM = nil then
     ReportDM := TReportDM.Create(nil);
 
   GetPeriods;
   actToScreen.Execute;
+  cbxAllPeriods.Checked := True;
+  cbxReleaseToCurrentPeriod.Checked := True;
 end;
 
 procedure TReleaseCFwdFrm.FormShow(Sender: TObject);
@@ -191,6 +210,17 @@ begin
     lucReleaseToPeriod.Style.StyleController := styReadOnly
   else
     lucReleaseToPeriod.Style.StyleController := nil;
+
+  if cbxReleaseToCurrentPeriod.Checked then
+  begin
+    if not TSDM.cdsReleaseToPeriod.Locate('THE_PERIOD', VBBaseDM.CurrentPeriod, []) then
+    begin
+      TSDM.cdsReleaseToPeriod.Last;
+      lucReleaseToPeriod.EditValue := TSDM.cdsReleaseToPeriod.FieldByName('THE_PERIOD').AsInteger;
+    end
+    else
+      lucReleaseToPeriod.EditValue := VBBaseDM.CurrentPeriod;
+  end;
 end;
 
 procedure TReleaseCFwdFrm.DoCloseForm(Sender: TObject);
@@ -238,8 +268,13 @@ end;
 procedure TReleaseCFwdFrm.DoGetTimesheetData(Sender: TObject);
 begin
   inherited;
-  GetTimesheetData;
-  viewTimesheet.ViewData.Expand(True);
+  Screen.Cursor := crHourglass;
+  try
+    GetTimesheetData;
+    viewTimesheet.ViewData.Expand(True);
+  finally
+    Screen.Cursor := crDefault;
+  end;
 end;
 
 procedure TReleaseCFwdFrm.GetPeriods;
@@ -258,12 +293,18 @@ begin
   TSDM.cdsPeriod.First;
 
 //  if not TSDM.cdsToPeriod.Locate('THE_PERIOD', VBBaseDM.CurrentPeriod, []) then
-  TSDM.cdsToPeriod.First;
-  TSDM.cdsReleaseToPeriod.First;
+  TSDM.cdsToPeriod.Last;
 
   lucFromPeriod.EditValue := TSDM.cdsPeriod.FieldByName('THE_PERIOD').Asinteger;
   lucToPeriod.EditValue := TSDM.cdsToPeriod.FieldByName('THE_PERIOD').Asinteger;
-  lucReleaseToPeriod.EditValue := VBBaseDM.CurrentPeriod;
+
+  if not TSDM.cdsReleaseToPeriod.Locate('THE_PERIOD', VBBaseDM.CurrentPeriod, []) then
+  begin
+    TSDM.cdsReleaseToPeriod.First;
+    lucReleaseToPeriod.EditValue := TSDM.cdsReleaseToPeriod.FieldByName('THE_PERIOD').AsInteger;
+  end
+  else
+    lucReleaseToPeriod.EditValue := VBBaseDM.CurrentPeriod;
 end;
 
 procedure TReleaseCFwdFrm.GetTimesheetData;
@@ -276,7 +317,7 @@ begin
     DateClause := ''
   else
     DateClause := 'AND T.THE_PERIOD >= ' + IntToStr(TSDM.cdsPeriod.FieldByName('THE_PERIOD').AsInteger) +
-      ' AND T.THE_PEIROD <= ' + IntToStr(TSDM.cdstOPeriod.FieldByName('THE_PERIOD').AsInteger);
+      ' AND T.THE_PERIOD <= ' + IntToStr(TSDM.cdsToPeriod.FieldByName('THE_PERIOD').AsInteger);
 
   OrderByClause := ' ORDER BY T.THE_PERIOD, T.CUSTOMER_NAME';
   FileName := 'Carry Forward Items';
@@ -312,26 +353,31 @@ begin
   if AViewInfo.GridRecord = nil then
     Exit;
 
-  if AViewInfo.GridRecord.Focused then
+  try
+    if AViewInfo.GridRecord.Focused then
   // This renders the background and font colours of the focused record
-  begin
-    if AViewInfo.Item <> nil then
-      if AViewInfo.Item.Focused then
-      begin
+    begin
+      if AViewInfo.Item <> nil then
+        if AViewInfo.Item.Focused then
+        begin
         // This renders the background and border colour of the focused cell
-        ACanvas.Brush.Color := $B6EDFA;
-        ACanvas.Font.Color := RootLookAndFeel.SkinPainter.DefaultSelectionColor;
-        PostMessage(Handle, CM_DRAWBORDER, Integer(ACanvas), Integer(AViewInfo));
-      end;
+          ACanvas.Brush.Color := $B6EDFA;
+          ACanvas.Font.Color := RootLookAndFeel.SkinPainter.DefaultSelectionColor;
+          PostMessage(Handle, CM_DRAWBORDER, Integer(ACanvas), Integer(AViewInfo));
+        end;
+    end;
+  except
+
   end;
 end;
 
 procedure TReleaseCFwdFrm.viewTimesheetStylesGetGroupStyle(
-  Sender: TcxGridTableView; ARecord: TcxCustomGridRecord; ALevel: Integer;  var AStyle: TcxStyle);
+  Sender: TcxGridTableView; ARecord: TcxCustomGridRecord; ALevel: Integer; var AStyle: TcxStyle);
 begin
   inherited;
   if ARecord is TcxGridGroupRow then
-    AStyle :=  styGroupFormat;
+    if ARecord.Expanded then
+      AStyle := styGroupFormat;
 end;
 
 end.
