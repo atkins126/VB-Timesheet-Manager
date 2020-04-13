@@ -1,4 +1,4 @@
-unit TimesheetPrefrrences_Frm;
+unit TimesheetOptions_Frm;
 
 interface
 
@@ -16,10 +16,10 @@ uses
   dxLayoutcxEditAdapters, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxLookupEdit,
   cxDBLookupEdit, cxDBLookupComboBox, cxCurrencyEdit, cxGroupBox, cxRadioGroup,
   cxButtons, dxLayoutControlAdapters, VBCommonValues, dxScreenTip, dxCustomHint,
-  cxHint;
+  cxHint, cxLabel;
 
 type
-  TTimesheetPrefrrencesFrm = class(TBaseLayoutFrm)
+  TTimesheetOptionsFrm = class(TBaseLayoutFrm)
     grpTimesheetOptionsTab: TdxLayoutGroup;
     grpControls: TdxLayoutGroup;
     litDefaultCustomer: TdxLayoutItem;
@@ -66,6 +66,48 @@ type
     litHighlightSearchMatch: TdxLayoutItem;
     spc2: TdxLayoutEmptySpaceItem;
     grpHighlightSearchMatch: TdxLayoutGroup;
+    grpReleaseCarryForwardOptions: TdxLayoutGroup;
+    litAllPeriods: TdxLayoutItem;
+    cbxAllPeriods: TcxCheckBox;
+    cbxSavePeriodSelection: TcxCheckBox;
+    cbxSaveBillableStatusSelection: TcxCheckBox;
+    litSavePeriodSelection: TdxLayoutItem;
+    litSaveBillableSatusSelection: TdxLayoutItem;
+    litAllPeriodsExplanation: TdxLayoutItem;
+    grpAllPeriodsExplanation: TdxLayoutGroup;
+    lblAllPeriodsExplanation: TcxLabel;
+    spc3: TdxLayoutEmptySpaceItem;
+    cbxExpandGrid: TcxCheckBox;
+    litExpandGrid: TdxLayoutItem;
+    cbxReleaseToCurrentPeriod: TcxCheckBox;
+    litCarryForwardToCurrenPeriod: TdxLayoutItem;
+    grpTimesheetDetailreport: TdxLayoutGroup;
+    cbxSaveDateTypeSelection: TcxCheckBox;
+    cbxSaveReportPeriodSelection: TcxCheckBox;
+    cbxSaveSelectionBy: TcxCheckBox;
+    cbxSaveGroupedSelection: TcxCheckBox;
+    cbxSaveSortOrderOptions: TcxCheckBox;
+    cbxSaveReportBillableSelection: TcxCheckBox;
+    cbxSaveWorkTypeSelection: TcxCheckBox;
+    cbxSaveReportTypeSelection: TcxCheckBox;
+    cbxOpenDocumentAfterexport: TcxCheckBox;
+    cbxExportFormattedExcelData: TcxCheckBox;
+    cbxRemoveZeroBillableItems: TcxCheckBox;
+    grpReleaseMain: TdxLayoutGroup;
+    grpRelease2: TdxLayoutGroup;
+    grpRelease1: TdxLayoutGroup;
+    litSaveDateTypeSelection: TdxLayoutItem;
+    litSaveReportPeriodSelection: TdxLayoutItem;
+    litSaveSelectionBy: TdxLayoutItem;
+    litSaveGroupedSelection: TdxLayoutItem;
+    litSveSortOrderOptions: TdxLayoutItem;
+    litSaveReportBillableSelection: TdxLayoutItem;
+    litSaveWorkTypeSelection: TdxLayoutItem;
+    litSaveReportTypeSelection: TdxLayoutItem;
+    litOpenDocumentAfterexport: TdxLayoutItem;
+    litExportFormattedExcelData: TdxLayoutItem;
+    litRemoveZeroBillableitems: TdxLayoutItem;
+    grpReleaseOptions: TdxLayoutGroup;
     procedure FormCreate(Sender: TObject);
     procedure lucPriceItemPropertiesEditValueChanged(Sender: TObject);
     procedure cbxUseDefaultRatePropertiesEditValueChanged(Sender: TObject);
@@ -82,14 +124,16 @@ type
     { Private declarations }
     FMadeChanges: Boolean;
     FShowingForm: Boolean;
+    FOptionsTabindex: Integer;
 
     procedure SetControlValues;
   public
     { Public declarations }
+    property OptionsTabindex: Integer read FOptionsTabindex write FOptionsTabindex;
   end;
 
 var
-  TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm;
+  TimesheetOptionsFrm: TTimesheetOptionsFrm;
 
 implementation
 
@@ -99,7 +143,7 @@ uses
   TS_DM,
   CommonValues;
 
-procedure TTimesheetPrefrrencesFrm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+procedure TTimesheetOptionsFrm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   inherited;
 //  CanClose := not FMadeChanges;
@@ -119,7 +163,7 @@ begin
 //    end;
 end;
 
-procedure TTimesheetPrefrrencesFrm.FormCreate(Sender: TObject);
+procedure TTimesheetOptionsFrm.FormCreate(Sender: TObject);
 begin
   inherited;
   // Width = 800;  Height = 490
@@ -135,16 +179,17 @@ begin
   Screen.Cursor := crDefault;
 end;
 
-procedure TTimesheetPrefrrencesFrm.FormShow(Sender: TObject);
+procedure TTimesheetOptionsFrm.FormShow(Sender: TObject);
 begin
   inherited;
   SetControlValues;
   FShowingForm := False;
   FMadeChanges := False;
   btnOK.Enabled := FMadeChanges;
+  grpTimesheetOptionsTab.ItemIndex := FOptionsTabindex;
 end;
 
-procedure TTimesheetPrefrrencesFrm.SetControlValues;
+procedure TTimesheetOptionsFrm.SetControlValues;
 var
   RegKey: TRegistry;
 begin
@@ -179,7 +224,7 @@ begin
   end;
 end;
 
-procedure TTimesheetPrefrrencesFrm.btnCancelClick(Sender: TObject);
+procedure TTimesheetOptionsFrm.btnCancelClick(Sender: TObject);
 begin
   inherited;
   if FMadeChanges then
@@ -202,7 +247,7 @@ begin
     Self.ModalResult := mrCancel;
 end;
 
-procedure TTimesheetPrefrrencesFrm.btnOKClick(Sender: TObject);
+procedure TTimesheetOptionsFrm.btnOKClick(Sender: TObject);
 var
   RegKey: TRegistry;
 begin
@@ -257,7 +302,7 @@ begin
   end;
 end;
 
-procedure TTimesheetPrefrrencesFrm.cbxIncrementalFilteringPropertiesEditValueChanged(Sender: TObject);
+procedure TTimesheetOptionsFrm.cbxIncrementalFilteringPropertiesEditValueChanged(Sender: TObject);
 begin
   inherited;
   cbxHighlightSearchMatch.Enabled := cbxIncrementalFiltering.Checked;
@@ -265,14 +310,14 @@ begin
     cbxHighlightSearchMatch.Checked := False;
 end;
 
-procedure TTimesheetPrefrrencesFrm.cbxUseDefaultCustomerPropertiesChange(Sender: TObject);
+procedure TTimesheetOptionsFrm.cbxUseDefaultCustomerPropertiesChange(Sender: TObject);
 begin
   inherited;
   FMadeChanges := True;
   btnOK.Enabled := FMadeChanges;
 end;
 
-procedure TTimesheetPrefrrencesFrm.cbxUseDefaultCustomerPropertiesEditValueChanged(Sender: TObject);
+procedure TTimesheetOptionsFrm.cbxUseDefaultCustomerPropertiesEditValueChanged(Sender: TObject);
 begin
   inherited;
   lucCustomer.Properties.ReadOnly := not cbxUseDefaultCustomer.Checked;
@@ -284,7 +329,7 @@ begin
       lucCustomer.SetFocus;
 end;
 
-procedure TTimesheetPrefrrencesFrm.cbxUseDefaultPriceItemPropertiesEditValueChanged(Sender: TObject);
+procedure TTimesheetOptionsFrm.cbxUseDefaultPriceItemPropertiesEditValueChanged(Sender: TObject);
 begin
   inherited;
   lucPriceItem.Properties.ReadOnly := not cbxUseDefaultPriceItem.Checked;
@@ -299,7 +344,7 @@ begin
       lucPriceItem.SetFocus;
 end;
 
-procedure TTimesheetPrefrrencesFrm.cbxUseDefaultRatePropertiesEditValueChanged(Sender: TObject);
+procedure TTimesheetOptionsFrm.cbxUseDefaultRatePropertiesEditValueChanged(Sender: TObject);
 begin
   inherited;
 //  edtDefaultRate.Properties.ReadOnly := cbxUseDefaultRate.Checked;
@@ -311,7 +356,7 @@ begin
   end;
 end;
 
-procedure TTimesheetPrefrrencesFrm.DoGetDefaultRate(Sender: TObject);
+procedure TTimesheetOptionsFrm.DoGetDefaultRate(Sender: TObject);
 begin
   inherited;
   if lucPriceItem.EditValue <= 0 then
@@ -321,7 +366,7 @@ begin
   lucRateUnit.EditValue := TSDM.cdsPriceListPref.FieldByName('RATE_UNIT_ID').AsInteger;
 end;
 
-procedure TTimesheetPrefrrencesFrm.lucPriceItemPropertiesEditValueChanged(Sender: TObject);
+procedure TTimesheetOptionsFrm.lucPriceItemPropertiesEditValueChanged(Sender: TObject);
 begin
   inherited;
   edtDefaultRate.Value := TSDM.cdsPriceListPref.FieldByName('RATE').AsFloat;

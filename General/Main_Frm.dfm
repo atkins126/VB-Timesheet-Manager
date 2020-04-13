@@ -186,6 +186,19 @@ inherited MainFrm: TMainFrm
           Position.ColIndex = 4
           Position.RowIndex = 0
         end
+        object edtPeriodName: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'PERIOD_NAME'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 70
+          Options.Editing = False
+          Options.HorzSizing = False
+          Width = 70
+          Position.BandIndex = 0
+          Position.ColIndex = 5
+          Position.RowIndex = 0
+        end
         object edtDayname: TcxGridDBBandedColumn
           DataBinding.FieldName = 'DAY_NAME'
           PropertiesClassName = 'TcxTextEditProperties'
@@ -199,7 +212,7 @@ inherited MainFrm: TMainFrm
           Options.Sorting = False
           Width = 35
           Position.BandIndex = 0
-          Position.ColIndex = 5
+          Position.ColIndex = 6
           Position.RowIndex = 0
         end
         object edtActivityDate: TcxGridDBBandedColumn
@@ -216,7 +229,7 @@ inherited MainFrm: TMainFrm
           Options.HorzSizing = False
           Width = 90
           Position.BandIndex = 0
-          Position.ColIndex = 6
+          Position.ColIndex = 7
           Position.RowIndex = 0
         end
         object lucCustomer: TcxGridDBBandedColumn
@@ -236,7 +249,7 @@ inherited MainFrm: TMainFrm
           Options.HorzSizing = False
           Width = 300
           Position.BandIndex = 0
-          Position.ColIndex = 7
+          Position.ColIndex = 8
           Position.RowIndex = 0
         end
         object lucPriceItem: TcxGridDBBandedColumn
@@ -258,7 +271,7 @@ inherited MainFrm: TMainFrm
           Options.HorzSizing = False
           Width = 300
           Position.BandIndex = 0
-          Position.ColIndex = 8
+          Position.ColIndex = 9
           Position.RowIndex = 0
         end
         object lucActivityType: TcxGridDBBandedColumn
@@ -278,7 +291,7 @@ inherited MainFrm: TMainFrm
           Options.HorzSizing = False
           Width = 200
           Position.BandIndex = 0
-          Position.ColIndex = 9
+          Position.ColIndex = 10
           Position.RowIndex = 0
         end
         object memActivity: TcxGridDBBandedColumn
@@ -295,7 +308,7 @@ inherited MainFrm: TMainFrm
           Options.Sorting = False
           Width = 300
           Position.BandIndex = 0
-          Position.ColIndex = 10
+          Position.ColIndex = 11
           Position.RowIndex = 0
         end
         object cbxBillable: TcxGridDBBandedColumn
@@ -551,7 +564,7 @@ inherited MainFrm: TMainFrm
           Options.Moving = False
           Width = 60
           Position.BandIndex = 0
-          Position.ColIndex = 12
+          Position.ColIndex = 13
           Position.RowIndex = 0
         end
         object cbxLocked: TcxGridDBBandedColumn
@@ -573,7 +586,7 @@ inherited MainFrm: TMainFrm
           Options.HorzSizing = False
           Width = 30
           Position.BandIndex = 0
-          Position.ColIndex = 11
+          Position.ColIndex = 12
           Position.RowIndex = 0
         end
         object dteModified: TcxGridDBBandedColumn
@@ -595,7 +608,7 @@ inherited MainFrm: TMainFrm
           Options.Moving = False
           VisibleForCustomization = False
           Position.BandIndex = 0
-          Position.ColIndex = 13
+          Position.ColIndex = 14
           Position.RowIndex = 0
         end
         object edtDayOrder: TcxGridDBBandedColumn
@@ -617,7 +630,7 @@ inherited MainFrm: TMainFrm
           VisibleForCustomization = False
           Width = 60
           Position.BandIndex = 0
-          Position.ColIndex = 14
+          Position.ColIndex = 15
           Position.RowIndex = 0
         end
         object edtDateCfwdReleased: TcxGridDBBandedColumn
@@ -7573,12 +7586,12 @@ inherited MainFrm: TMainFrm
       Properties.KeyFieldNames = 'THE_PERIOD'
       Properties.ListColumns = <
         item
-          Width = 70
-          FieldName = 'THE_PERIOD'
+          FieldName = 'PERIOD_NAME'
         end>
       Properties.ListOptions.CaseInsensitive = True
       Properties.ListOptions.GridLines = glNone
       Properties.ListOptions.ShowHeader = False
+      Properties.ListOptions.SyncMode = True
       Properties.ListSource = TSDM.dtsTSPeriod
       Properties.PostPopupValueOnTab = True
       Properties.OnEditValueChanged = lucPeriodPropertiesEditValueChanged

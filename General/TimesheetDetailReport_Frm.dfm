@@ -3145,18 +3145,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       GridView = viewTimesheetExcel
     end
   end
-  object btnSpreadSheet: TcxButton [2]
-    Left = 815
-    Top = 121
-    Width = 90
-    Height = 25
-    Caption = 'Spreadsheet'
-    ParentShowHint = False
-    ShowHint = True
-    TabOrder = 2
-    OnClick = btnSpreadSheetClick
-  end
-  object grdBillCfwdExcel: TcxGrid [3]
+  object grdBillCfwdExcel: TcxGrid [2]
     Left = 1044
     Top = 446
     Width = 913
@@ -3167,7 +3156,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     Font.Name = 'Calibri'
     Font.Style = []
     ParentFont = False
-    TabOrder = 3
+    TabOrder = 2
     Visible = False
     object viewBillCfwdExcel: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
@@ -3910,6 +3899,11 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Category = 'Controls'
       Caption = 'Collapse All'
       OnExecute = DoCollapseTimesheet
+    end
+    object actOptions: TAction
+      Category = 'System'
+      Caption = 'Options'
+      OnExecute = DoOptions
     end
   end
   inherited lafLayoutList: TdxLayoutLookAndFeelList
@@ -4733,6 +4727,10 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         item
           Visible = True
           ItemName = 'btnPDF'
+        end
+        item
+          Visible = True
+          ItemName = 'btnOptions'
         end>
       MultiLine = True
       NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
@@ -4778,6 +4776,12 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Category = 0
       ScreenTip = tipPrint
       AutoGrayScale = False
+    end
+    object btnOptions: TdxBarLargeButton
+      Caption = 'Options'
+      Category = 0
+      Hint = 'Options'
+      Visible = ivAlways
     end
   end
   object dlgPrint: TdxPrintDialog

@@ -1,7 +1,7 @@
-inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
+inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
-  Caption = 'TimesheetPrefrrencesFrm'
+  Caption = 'TimesheetOptionsFrm'
   ClientHeight = 555
   ClientWidth = 938
   OnCloseQuery = FormCloseQuery
@@ -188,7 +188,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       Default = True
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 13
+      TabOrder = 30
       OnClick = btnOKClick
     end
     object btnCancel: TcxButton [10]
@@ -200,7 +200,7 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       Caption = 'Cancel'
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 14
+      TabOrder = 31
       OnClick = btnCancelClick
     end
     object btnGetDefaultRate: TcxButton [11]
@@ -254,6 +254,241 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       Style.HotTrack = False
       TabOrder = 11
       Transparent = True
+    end
+    object cbxAllPeriods: TcxCheckBox [15]
+      Left = 10000
+      Top = 10000
+      Caption = 'Always fetch timesheets fo all periods when opening screen'
+      ParentShowHint = False
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
+      ShowHint = True
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 24
+      Transparent = True
+      Visible = False
+    end
+    object cbxSavePeriodSelection: TcxCheckBox [16]
+      Left = 10000
+      Top = 10000
+      Caption = 'Save period selection for future use'
+      ParentShowHint = False
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
+      ShowHint = True
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 27
+      Transparent = True
+      Visible = False
+    end
+    object cbxSaveBillableStatusSelection: TcxCheckBox [17]
+      Left = 10000
+      Top = 10000
+      Caption = 'Save billable status selection for future use'
+      ParentShowHint = False
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
+      ShowHint = True
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 28
+      Transparent = True
+      Visible = False
+    end
+    object lblAllPeriodsExplanation: TcxLabel [18]
+      Left = 10000
+      Top = 10000
+      Caption = 
+        'If this option is un-checked, the last From and To periods selec' +
+        'ted will be used'
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      Transparent = True
+      Visible = False
+    end
+    object cbxExpandGrid: TcxCheckBox [19]
+      Left = 10000
+      Top = 10000
+      Caption = 'Always expand data grid when fetching data'
+      ParentShowHint = False
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
+      ShowHint = True
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 29
+      Transparent = True
+      Visible = False
+    end
+    object cbxReleaseToCurrentPeriod: TcxCheckBox [20]
+      Left = 10000
+      Top = 10000
+      Caption = 'Always release items to current period'
+      ParentShowHint = False
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
+      ShowHint = True
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 26
+      Transparent = True
+      Visible = False
+    end
+    object cbxSaveDateTypeSelection: TcxCheckBox [21]
+      Left = 10000
+      Top = 10000
+      Caption = 'Save date type selection'
+      ParentShowHint = False
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
+      ShowHint = True
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 13
+      Transparent = True
+      Visible = False
+    end
+    object cbxSaveReportPeriodSelection: TcxCheckBox [22]
+      Left = 10000
+      Top = 10000
+      Caption = 'Save period selection'
+      ParentShowHint = False
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
+      ShowHint = True
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 14
+      Transparent = True
+      Visible = False
+    end
+    object cbxSaveSelectionBy: TcxCheckBox [23]
+      Left = 10000
+      Top = 10000
+      Caption = 'Save selection by setting'
+      ParentShowHint = False
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
+      ShowHint = True
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 16
+      Transparent = True
+      Visible = False
+    end
+    object cbxSaveGroupedSelection: TcxCheckBox [24]
+      Left = 10000
+      Top = 10000
+      Caption = 'Save grouped report selection setting'
+      ParentShowHint = False
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
+      ShowHint = True
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 15
+      Transparent = True
+      Visible = False
+    end
+    object cbxSaveSortOrderOptions: TcxCheckBox [25]
+      Left = 10000
+      Top = 10000
+      Caption = 'Save report sort order settings'
+      ParentShowHint = False
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
+      ShowHint = True
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 17
+      Transparent = True
+      Visible = False
+    end
+    object cbxSaveReportBillableSelection: TcxCheckBox [26]
+      Left = 10000
+      Top = 10000
+      Caption = 'Save billable satus report selection'
+      ParentShowHint = False
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
+      ShowHint = True
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 18
+      Transparent = True
+      Visible = False
+    end
+    object cbxSaveWorkTypeSelection: TcxCheckBox [27]
+      Left = 10000
+      Top = 10000
+      Caption = 'Save work type selection setting'
+      ParentShowHint = False
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
+      ShowHint = True
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 21
+      Transparent = True
+      Visible = False
+    end
+    object cbxSaveReportTypeSelection: TcxCheckBox [28]
+      Left = 10000
+      Top = 10000
+      Caption = 'Save report type selection'
+      ParentShowHint = False
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
+      ShowHint = True
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 20
+      Transparent = True
+      Visible = False
+    end
+    object cbxOpenDocumentAfterexport: TcxCheckBox [29]
+      Left = 10000
+      Top = 10000
+      Caption = 'Open document after Excel or PDF export'
+      ParentShowHint = False
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
+      ShowHint = True
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 22
+      Transparent = True
+      Visible = False
+    end
+    object cbxExportFormattedExcelData: TcxCheckBox [30]
+      Left = 10000
+      Top = 10000
+      Caption = 'Export Excel data as formated retaining gird fomatting'
+      ParentShowHint = False
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
+      ShowHint = True
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 23
+      Transparent = True
+      Visible = False
+    end
+    object cbxRemoveZeroBillableItems: TcxCheckBox [31]
+      Left = 10000
+      Top = 10000
+      Caption = 'Remove items with zero billable value'
+      ParentShowHint = False
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
+      ShowHint = True
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 19
+      Transparent = True
+      Visible = False
     end
     object grpTimesheetOptionsTab: TdxLayoutGroup
       Parent = layMainGroup_Root
@@ -501,6 +736,233 @@ inherited TimesheetPrefrrencesFrm: TTimesheetPrefrrencesFrm
       LayoutDirection = ldHorizontal
       ShowBorder = False
       Index = 2
+    end
+    object grpReleaseCarryForwardOptions: TdxLayoutGroup
+      Parent = grpTimesheetOptionsTab
+      CaptionOptions.Text = 'Release Carry Forward Optoins'
+      ButtonOptions.Buttons = <>
+      Index = 2
+    end
+    object litAllPeriods: TdxLayoutItem
+      Parent = grpReleaseOptions
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = cbxAllPeriods
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 362
+      ControlOptions.ShowBorder = False
+      Index = 0
+    end
+    object litSavePeriodSelection: TdxLayoutItem
+      Parent = grpReleaseOptions
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = cbxSavePeriodSelection
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 226
+      ControlOptions.ShowBorder = False
+      Index = 3
+    end
+    object litSaveBillableSatusSelection: TdxLayoutItem
+      Parent = grpReleaseOptions
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = cbxSaveBillableStatusSelection
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 268
+      ControlOptions.ShowBorder = False
+      Index = 4
+    end
+    object litAllPeriodsExplanation: TdxLayoutItem
+      Parent = grpAllPeriodsExplanation
+      CaptionOptions.Text = 'lblAllPeriodsExplanation'
+      CaptionOptions.Visible = False
+      Control = lblAllPeriodsExplanation
+      ControlOptions.OriginalHeight = 13
+      ControlOptions.OriginalWidth = 448
+      ControlOptions.ShowBorder = False
+      Index = 1
+    end
+    object grpAllPeriodsExplanation: TdxLayoutGroup
+      Parent = grpReleaseOptions
+      CaptionOptions.Text = 'New Group'
+      ButtonOptions.Buttons = <>
+      ItemIndex = 1
+      LayoutDirection = ldHorizontal
+      ShowBorder = False
+      Index = 1
+    end
+    object spc3: TdxLayoutEmptySpaceItem
+      Parent = grpAllPeriodsExplanation
+      SizeOptions.Height = 10
+      SizeOptions.Width = 12
+      CaptionOptions.Text = 'Empty Space Item'
+      Index = 0
+    end
+    object litExpandGrid: TdxLayoutItem
+      Parent = grpReleaseOptions
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = cbxExpandGrid
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 274
+      ControlOptions.ShowBorder = False
+      Index = 5
+    end
+    object litCarryForwardToCurrenPeriod: TdxLayoutItem
+      Parent = grpReleaseOptions
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = cbxReleaseToCurrentPeriod
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 278
+      ControlOptions.ShowBorder = False
+      Index = 2
+    end
+    object grpTimesheetDetailreport: TdxLayoutGroup
+      Parent = grpTimesheetOptionsTab
+      CaptionOptions.Text = 'Timesheet Detail Report Options'
+      ButtonOptions.Buttons = <>
+      Index = 1
+    end
+    object grpReleaseMain: TdxLayoutGroup
+      Parent = grpTimesheetDetailreport
+      CaptionOptions.Text = 'New Group'
+      ButtonOptions.Buttons = <>
+      ItemIndex = 1
+      LayoutDirection = ldHorizontal
+      ShowBorder = False
+      Index = 0
+    end
+    object grpRelease2: TdxLayoutGroup
+      Parent = grpReleaseMain
+      CaptionOptions.Text = 'Other Options'
+      ButtonOptions.Buttons = <>
+      ItemIndex = 1
+      Index = 1
+    end
+    object grpRelease1: TdxLayoutGroup
+      Parent = grpReleaseMain
+      CaptionOptions.Text = 'Data manipulation options'
+      ButtonOptions.Buttons = <>
+      Index = 0
+    end
+    object litSaveDateTypeSelection: TdxLayoutItem
+      Parent = grpRelease1
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = cbxSaveDateTypeSelection
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 162
+      ControlOptions.ShowBorder = False
+      Index = 0
+    end
+    object litSaveReportPeriodSelection: TdxLayoutItem
+      Parent = grpRelease1
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = cbxSaveReportPeriodSelection
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 144
+      ControlOptions.ShowBorder = False
+      Index = 1
+    end
+    object litSaveSelectionBy: TdxLayoutItem
+      Parent = grpRelease1
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = cbxSaveSelectionBy
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 164
+      ControlOptions.ShowBorder = False
+      Index = 3
+    end
+    object litSaveGroupedSelection: TdxLayoutItem
+      Parent = grpRelease1
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = cbxSaveGroupedSelection
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 236
+      ControlOptions.ShowBorder = False
+      Index = 2
+    end
+    object litSveSortOrderOptions: TdxLayoutItem
+      Parent = grpRelease1
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = cbxSaveSortOrderOptions
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 198
+      ControlOptions.ShowBorder = False
+      Index = 4
+    end
+    object litSaveReportBillableSelection: TdxLayoutItem
+      Parent = grpRelease2
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = cbxSaveReportBillableSelection
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 221
+      ControlOptions.ShowBorder = False
+      Index = 0
+    end
+    object litSaveWorkTypeSelection: TdxLayoutItem
+      Parent = grpRelease2
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = cbxSaveWorkTypeSelection
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 207
+      ControlOptions.ShowBorder = False
+      Index = 3
+    end
+    object litSaveReportTypeSelection: TdxLayoutItem
+      Parent = grpRelease2
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = cbxSaveReportTypeSelection
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 172
+      ControlOptions.ShowBorder = False
+      Index = 2
+    end
+    object litOpenDocumentAfterexport: TdxLayoutItem
+      Parent = grpRelease2
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = cbxOpenDocumentAfterexport
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 259
+      ControlOptions.ShowBorder = False
+      Index = 4
+    end
+    object litExportFormattedExcelData: TdxLayoutItem
+      Parent = grpRelease2
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = cbxExportFormattedExcelData
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 332
+      ControlOptions.ShowBorder = False
+      Index = 5
+    end
+    object litRemoveZeroBillableitems: TdxLayoutItem
+      Parent = grpRelease2
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = cbxRemoveZeroBillableItems
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 238
+      ControlOptions.ShowBorder = False
+      Index = 1
+    end
+    object grpReleaseOptions: TdxLayoutGroup
+      Parent = grpReleaseCarryForwardOptions
+      CaptionOptions.Text = 'General Optoins'
+      ButtonOptions.Buttons = <>
+      ItemIndex = 5
+      Index = 0
     end
   end
   inherited styRepository: TcxStyleRepository

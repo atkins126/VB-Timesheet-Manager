@@ -30,7 +30,7 @@ uses
   TS_DM in 'Data Modules\TS_DM.pas' {TSDM: TDataModule},
   VBCommonValues in '..\..\Lib\VBCommonValues.pas',
   TimesheetEdit_Frm in 'General\TimesheetEdit_Frm.pas' {TimesheetEditFrm},
-  TimesheetPrefrrences_Frm in 'General\TimesheetPrefrrences_Frm.pas' {TimesheetPrefrrencesFrm},
+  TimesheetOptions_Frm in 'General\TimesheetOptions_Frm.pas' {TimesheetOptionsFrm},
   VBProxyClass in '..\Lib\VBProxyClass.pas',
   TimesheetDetailReport_Frm in 'General\TimesheetDetailReport_Frm.pas' {TimesheetDetailReportFrm},
   BillableSummary_Frm in 'General\BillableSummary_Frm.pas' {BillableSummaryFrm},

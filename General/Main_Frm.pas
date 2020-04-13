@@ -212,6 +212,7 @@ type
     btnReleaseCarryForwarManager: TdxBarLargeButton;
     actReleaseCarryForward: TAction;
     tipReleaseCFwdManager: TdxScreenTip;
+    edtPeriodName: TcxGridDBBandedColumn;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoEditInsertEntry(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
@@ -296,7 +297,7 @@ uses
   Progress_Frm,
   Report_DM,
   TimesheetEdit_Frm,
-  TimesheetPrefrrences_Frm,
+  TimesheetOptions_Frm,
   TimesheetDetailReport_Frm,
   BillableSummary_Frm,
   TimesheetActivitySummary_Frm,
@@ -1584,7 +1585,10 @@ var
   RegKey: TRegistry;
 begin
   inherited;
+  // This still works!
   FTimesheetPeriod := lucPeriod.EditValue;
+  // This also works.
+//  FTimesheetPeriod := TSDM.cdsTSPeriod.FieldByName('THE_PERIOD').AsInteger;
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   try
     RegKey.RootKey := HKEY_CURRENT_USER;
@@ -1798,11 +1802,11 @@ begin
   inherited;
   Screen.Cursor := crHourglass;
   try
-    if TimesheetPrefrrencesFrm = nil then
-      TimesheetPrefrrencesFrm := TTimesheetPrefrrencesFrm.Create(nil);
-    TimesheetPrefrrencesFrm.ShowModal;
-    TimesheetPrefrrencesFrm.Close;
-    FreeAndNil(TimesheetPrefrrencesFrm);
+    if TimesheetOptionsFrm = nil then
+      TimesheetOptionsFrm := TTimesheetOptionsFrm.Create(nil);
+    TimesheetOptionsFrm.ShowModal;
+    TimesheetOptionsFrm.Close;
+    FreeAndNil(TimesheetOptionsFrm);
   finally
     Screen.Cursor := crDefault;
   end;

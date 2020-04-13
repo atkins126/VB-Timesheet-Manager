@@ -242,7 +242,6 @@ type
     litExportFormattedGridToExcel: TdxLayoutItem;
     cbxFormatExcelData: TcxCheckBox;
     tipExportFormattedExcelData: TdxScreenTip;
-    btnSpreadSheet: TcxButton;
     grdBillCfwdExcel: TcxGrid;
     viewBillCfwdExcel: TcxGridDBBandedTableView;
     edtBillCfwdX: TcxGridDBBandedColumn;
@@ -276,6 +275,8 @@ type
     edtBCAddWorkX: TcxGridDBBandedColumn;
     edtBCAddWorkStrX: TcxGridDBBandedColumn;
     lvlBillCfwdExcel: TcxGridLevel;
+    actOptions: TAction;
+    btnOptions: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure DoCloseForm(Sender: TObject);
     procedure DoPrint(Sender: TObject);
@@ -314,7 +315,7 @@ type
     procedure cbxRefreshDataPropertiesChange(Sender: TObject);
     procedure cbxExportSelectedOnlyToExcelPropertiesChange(Sender: TObject);
     procedure cbxFormatExcelDataPropertiesChange(Sender: TObject);
-    procedure btnSpreadSheetClick(Sender: TObject);
+    procedure DoOptions(Sender: TObject);
 
   private
     { Private declarations }
@@ -374,7 +375,7 @@ uses
   TS_DM,
   RUtils,
   Report_DM,
-  Progress_Frm;
+  Progress_Frm, TimesheetOptions_Frm;
 
 procedure TTimesheetDetailReportFrm.DrawCellBorder(var Msg: TMessage);
 begin
@@ -422,7 +423,7 @@ begin
 
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   RegKey.RootKey := HKEY_CURRENT_USER;
-  RegKey.OpenKey(KEY_TIME_SHEET, True);
+  RegKey.OpenKey(KEY_TIME_SHEET_TIMESHEET_DETAIL_REPORT, True);
 
   if not RegKey.ValueExists('Refresh Data When Changing Sort Order') then
     RegKey.WriteBool('Refresh Data When Changing Sort Order', True);
@@ -629,12 +630,6 @@ begin
   Screen.Cursor := crDefault;
 end;
 
-procedure TTimesheetDetailReportFrm.btnSpreadSheetClick(Sender: TObject);
-begin
-  inherited;
-//  shtBillCFwd.SaveToFile('C:\Data\VB\Test.xlsx');
-end;
-
 procedure TTimesheetDetailReportFrm.cbxExportSelectedOnlyToExcelPropertiesChange(Sender: TObject);
 var
   RegKey: TRegistry;
@@ -644,7 +639,7 @@ begin
   begin
     RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
     RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIME_SHEET, True);
+    RegKey.OpenKey(KEY_TIME_SHEET_TIMESHEET_DETAIL_REPORT, True);
     try
       RegKey.WriteBool('Export Selcted Timesheets Only', cbxExportSelectedOnlyToExcel.Checked);
       RegKey.CloseKey;
@@ -663,7 +658,7 @@ begin
   begin
     RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
     RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIME_SHEET, True);
+    RegKey.OpenKey(KEY_TIME_SHEET_TIMESHEET_DETAIL_REPORT, True);
     try
       RegKey.WriteBool('Export Formatted Data To Excel', cbxOpenDocument.Checked);
       RegKey.CloseKey;
@@ -682,7 +677,7 @@ begin
   begin
     RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
     RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIME_SHEET, True);
+    RegKey.OpenKey(KEY_TIME_SHEET_TIMESHEET_DETAIL_REPORT, True);
     try
       RegKey.WriteBool('Group Timsheet Detail Report', cbxGroupedReport.Checked);
       RegKey.CloseKey;
@@ -707,7 +702,7 @@ begin
   begin
     RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
     RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIME_SHEET, True);
+    RegKey.OpenKey(KEY_TIME_SHEET_TIMESHEET_DETAIL_REPORT, True);
     try
       RegKey.WriteBool('Group Timsheet Detail Report', cbxOpenDocument.Checked);
       RegKey.CloseKey;
@@ -724,7 +719,7 @@ begin
   inherited;
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   RegKey.RootKey := HKEY_CURRENT_USER;
-  RegKey.OpenKey(KEY_TIME_SHEET, True);
+  RegKey.OpenKey(KEY_TIME_SHEET_TIMESHEET_DETAIL_REPORT, True);
   try
     RegKey.WriteBool('Refresh Data When Changing Sort Order', cbxRefreshData.Checked);
     RegKey.CloseKey;
@@ -742,7 +737,7 @@ begin
   begin
     RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
     RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIME_SHEET, True);
+    RegKey.OpenKey(KEY_TIME_SHEET_TIMESHEET_DETAIL_REPORT, True);
     try
       RegKey.WriteBool('Remove Zero Billable Values', cbxRemoveZeroBillableValues.Checked);
       RegKey.CloseKey;
@@ -1239,7 +1234,7 @@ begin
   begin
     RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
     RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIME_SHEET, True);
+    RegKey.OpenKey(KEY_TIME_SHEET_TIMESHEET_DETAIL_REPORT, True);
 
     try
       RegKey.WriteInteger('Select Report By Index', lucSelectReportBy.ItemIndex);
@@ -2031,6 +2026,23 @@ procedure TTimesheetDetailReportFrm.DoExpandTimesheet(Sender: TObject);
 begin
   inherited;
   viewTimesheet.ViewData.Expand(True);
+end;
+
+procedure TTimesheetDetailReportFrm.DoOptions(Sender: TObject);
+begin
+  inherited;
+  Screen.Cursor := crHourglass;
+  try
+    if TimesheetOptionsFrm = nil then
+      TimesheetOptionsFrm := TTimesheetOptionsFrm.Create(nil);
+
+    TimesheetOptionsFrm.OptionsTabindex := 1;
+    TimesheetOptionsFrm.ShowModal;
+    TimesheetOptionsFrm.Close;
+    FreeAndNil(TimesheetOptionsFrm);
+  finally
+    Screen.Cursor := crDefault;
+  end;
 end;
 
 procedure TTimesheetDetailReportFrm.DoCollapseTimesheet(Sender: TObject);

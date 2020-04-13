@@ -161,8 +161,8 @@
             <Form>TimesheetEditFrm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="General\TimesheetPrefrrences_Frm.pas">
-            <Form>TimesheetPrefrrencesFrm</Form>
+        <DCCReference Include="General\TimesheetOptions_Frm.pas">
+            <Form>TimesheetOptionsFrm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\Lib\VBProxyClass.pas"/>
