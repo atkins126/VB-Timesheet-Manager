@@ -2,22 +2,22 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'TimesheetOptionsFrm'
-  ClientHeight = 555
+  ClientHeight = 702
   ClientWidth = 938
   OnCloseQuery = FormCloseQuery
   ExplicitWidth = 944
-  ExplicitHeight = 584
+  ExplicitHeight = 731
   PixelsPerInch = 96
   TextHeight = 13
   inherited layMain: TdxLayoutControl
     Left = -2
     Top = -2
     Width = 800
-    Height = 518
+    Height = 593
     ExplicitLeft = -2
     ExplicitTop = -2
     ExplicitWidth = 800
-    ExplicitHeight = 518
+    ExplicitHeight = 593
     object cbxUseDefaultCustomer: TcxCheckBox [0]
       Left = 34
       Top = 79
@@ -29,8 +29,11 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       Style.HotTrack = False
       TabOrder = 0
       Transparent = True
+      OnMouseEnter = cbxUseDefaultCustomerMouseEnter
+      OnMouseLeave = cbxUseDefaultCustomerMouseLeave
     end
     object cbxUseDefaultPriceItem: TcxCheckBox [1]
+      Tag = 2
       Left = 34
       Top = 106
       Caption = 'Use default price item'
@@ -41,8 +44,11 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       Style.HotTrack = False
       TabOrder = 2
       Transparent = True
+      OnMouseEnter = cbxUseDefaultCustomerMouseEnter
+      OnMouseLeave = cbxUseDefaultCustomerMouseLeave
     end
     object cbxUseDefaultRate: TcxCheckBox [2]
+      Tag = 4
       Left = 34
       Top = 136
       Caption = 'Use default rate'
@@ -53,8 +59,11 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       Style.HotTrack = False
       TabOrder = 4
       Transparent = True
+      OnMouseEnter = cbxUseDefaultCustomerMouseEnter
+      OnMouseLeave = cbxUseDefaultCustomerMouseLeave
     end
     object lucCustomer: TcxLookupComboBox [3]
+      Tag = 1
       Left = 252
       Top = 79
       BeepOnEnter = False
@@ -82,6 +91,7 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       Width = 511
     end
     object lucPriceItem: TcxLookupComboBox [4]
+      Tag = 3
       Left = 251
       Top = 106
       BeepOnEnter = False
@@ -114,6 +124,7 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       Width = 512
     end
     object edtDefaultRate: TcxCurrencyEdit [5]
+      Tag = 5
       Left = 184
       Top = 135
       Properties.DisplayFormat = '#,##0.00'
@@ -126,6 +137,7 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       Width = 120
     end
     object radPriceItemOption: TcxRadioGroup [6]
+      Tag = 7
       Left = 34
       Top = 164
       Caption = 'When selecting a pricelist item'
@@ -158,6 +170,7 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       Width = 729
     end
     object cbxUseTodaysDate: TcxCheckBox [7]
+      Tag = 8
       Left = 34
       Top = 333
       Caption = 'Use today'#39's date when adding a new timesheet item'
@@ -167,8 +180,11 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       Style.HotTrack = False
       TabOrder = 9
       Transparent = True
+      OnMouseEnter = cbxUseDefaultCustomerMouseEnter
+      OnMouseLeave = cbxUseDefaultCustomerMouseLeave
     end
     object cbxSaveGridLayout: TcxCheckBox [8]
+      Tag = 11
       Left = 34
       Top = 408
       Caption = 'Save grid layout when exiting'
@@ -178,29 +194,31 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       Style.HotTrack = False
       TabOrder = 12
       Transparent = True
+      OnMouseEnter = cbxUseDefaultCustomerMouseEnter
+      OnMouseLeave = cbxUseDefaultCustomerMouseLeave
     end
     object btnOK: TcxButton [9]
       Left = 633
-      Top = 482
+      Top = 557
       Width = 75
       Height = 25
       Caption = 'OK'
       Default = True
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 30
+      TabOrder = 34
       OnClick = btnOKClick
     end
     object btnCancel: TcxButton [10]
       Left = 714
-      Top = 482
+      Top = 557
       Width = 75
       Height = 25
       Cancel = True
       Caption = 'Cancel'
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 31
+      TabOrder = 35
       OnClick = btnCancelClick
     end
     object btnGetDefaultRate: TcxButton [11]
@@ -214,6 +232,7 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       TabOrder = 7
     end
     object lucRateUnit: TcxLookupComboBox [12]
+      Tag = 6
       Left = 338
       Top = 135
       BeepOnEnter = False
@@ -233,6 +252,7 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       Width = 140
     end
     object cbxIncrementalFiltering: TcxCheckBox [13]
+      Tag = 9
       Left = 34
       Top = 358
       Caption = 'Use incremental filtering in lookup lists'
@@ -243,8 +263,11 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       Style.HotTrack = False
       TabOrder = 10
       Transparent = True
+      OnMouseEnter = cbxUseDefaultCustomerMouseEnter
+      OnMouseLeave = cbxUseDefaultCustomerMouseLeave
     end
     object cbxHighlightSearchMatch: TcxCheckBox [14]
+      Tag = 10
       Left = 50
       Top = 383
       Caption = 'Higlight search match in lookup lists'
@@ -254,6 +277,8 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       Style.HotTrack = False
       TabOrder = 11
       Transparent = True
+      OnMouseEnter = cbxUseDefaultCustomerMouseEnter
+      OnMouseLeave = cbxUseDefaultCustomerMouseLeave
     end
     object cbxAllPeriods: TcxCheckBox [15]
       Left = 10000
@@ -262,10 +287,11 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       ParentShowHint = False
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       ShowHint = True
       Style.HotTrack = False
       Style.TransparentBorder = False
-      TabOrder = 24
+      TabOrder = 27
       Transparent = True
       Visible = False
     end
@@ -276,10 +302,11 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       ParentShowHint = False
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       ShowHint = True
       Style.HotTrack = False
       Style.TransparentBorder = False
-      TabOrder = 27
+      TabOrder = 30
       Transparent = True
       Visible = False
     end
@@ -290,10 +317,11 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       ParentShowHint = False
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       ShowHint = True
       Style.HotTrack = False
       Style.TransparentBorder = False
-      TabOrder = 28
+      TabOrder = 31
       Transparent = True
       Visible = False
     end
@@ -303,7 +331,9 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       Caption = 
         'If this option is un-checked, the last From and To periods selec' +
         'ted will be used'
+      ParentFont = False
       Style.HotTrack = False
+      Style.StyleController = styHighlight
       Style.TransparentBorder = False
       Transparent = True
       Visible = False
@@ -315,10 +345,11 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       ParentShowHint = False
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       ShowHint = True
       Style.HotTrack = False
       Style.TransparentBorder = False
-      TabOrder = 29
+      TabOrder = 32
       Transparent = True
       Visible = False
     end
@@ -329,10 +360,11 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       ParentShowHint = False
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       ShowHint = True
       Style.HotTrack = False
       Style.TransparentBorder = False
-      TabOrder = 26
+      TabOrder = 29
       Transparent = True
       Visible = False
     end
@@ -343,6 +375,7 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       ParentShowHint = False
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       ShowHint = True
       Style.HotTrack = False
       Style.TransparentBorder = False
@@ -357,6 +390,7 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       ParentShowHint = False
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       ShowHint = True
       Style.HotTrack = False
       Style.TransparentBorder = False
@@ -364,13 +398,14 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       Transparent = True
       Visible = False
     end
-    object cbxSaveSelectionBy: TcxCheckBox [23]
+    object cbxSaveSelectDataBy: TcxCheckBox [23]
       Left = 10000
       Top = 10000
-      Caption = 'Save selection by setting'
+      Caption = 'Save select data by setting'
       ParentShowHint = False
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       ShowHint = True
       Style.HotTrack = False
       Style.TransparentBorder = False
@@ -385,6 +420,7 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       ParentShowHint = False
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       ShowHint = True
       Style.HotTrack = False
       Style.TransparentBorder = False
@@ -399,6 +435,7 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       ParentShowHint = False
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       ShowHint = True
       Style.HotTrack = False
       Style.TransparentBorder = False
@@ -413,10 +450,11 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       ParentShowHint = False
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       ShowHint = True
       Style.HotTrack = False
       Style.TransparentBorder = False
-      TabOrder = 18
+      TabOrder = 20
       Transparent = True
       Visible = False
     end
@@ -427,10 +465,11 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       ParentShowHint = False
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       ShowHint = True
       Style.HotTrack = False
       Style.TransparentBorder = False
-      TabOrder = 21
+      TabOrder = 23
       Transparent = True
       Visible = False
     end
@@ -441,10 +480,11 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       ParentShowHint = False
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       ShowHint = True
       Style.HotTrack = False
       Style.TransparentBorder = False
-      TabOrder = 20
+      TabOrder = 22
       Transparent = True
       Visible = False
     end
@@ -455,24 +495,26 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       ParentShowHint = False
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       ShowHint = True
       Style.HotTrack = False
       Style.TransparentBorder = False
-      TabOrder = 22
+      TabOrder = 24
       Transparent = True
       Visible = False
     end
-    object cbxExportFormattedExcelData: TcxCheckBox [30]
+    object cbxFormatExcelData: TcxCheckBox [30]
       Left = 10000
       Top = 10000
       Caption = 'Export Excel data as formated retaining gird fomatting'
       ParentShowHint = False
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       ShowHint = True
       Style.HotTrack = False
       Style.TransparentBorder = False
-      TabOrder = 23
+      TabOrder = 26
       Transparent = True
       Visible = False
     end
@@ -483,12 +525,70 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       ParentShowHint = False
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
+      ShowHint = True
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 21
+      Transparent = True
+      Visible = False
+    end
+    object cbxRefreshData: TcxCheckBox [32]
+      Left = 10000
+      Top = 10000
+      Caption = 'Refresh data when changing sort order'
+      ParentShowHint = False
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
+      ShowHint = True
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 18
+      Transparent = True
+      Visible = False
+    end
+    object cbxGroupedReport: TcxCheckBox [33]
+      Left = 10000
+      Top = 10000
+      Caption = 'Group timsheet detail report'
+      ParentShowHint = False
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
       ShowHint = True
       Style.HotTrack = False
       Style.TransparentBorder = False
       TabOrder = 19
       Transparent = True
       Visible = False
+    end
+    object cbxExportSelectedOnlyToExcel: TcxCheckBox [34]
+      Left = 10000
+      Top = 10000
+      Caption = 'Export only selected records to Excel'
+      ParentShowHint = False
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
+      ShowHint = True
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 25
+      Transparent = True
+      Visible = False
+    end
+    object memDescription: TcxMemo [35]
+      Left = 11
+      Top = 478
+      Properties.ReadOnly = True
+      Properties.ScrollBars = ssVertical
+      Style.HotTrack = False
+      Style.StyleController = styReadOnly
+      Style.TransparentBorder = False
+      TabOrder = 33
+      Height = 73
+      Width = 778
+    end
+    inherited layMainGroup_Root: TdxLayoutGroup
+      ItemIndex = 1
     end
     object grpTimesheetOptionsTab: TdxLayoutGroup
       Parent = layMainGroup_Root
@@ -507,7 +607,7 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       ButtonOptions.Buttons = <>
       LayoutDirection = ldHorizontal
       ShowBorder = False
-      Index = 1
+      Index = 2
     end
     object litDefaultCustomer: TdxLayoutItem
       Parent = grpCustomerOptions
@@ -779,7 +879,7 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       CaptionOptions.Visible = False
       Control = lblAllPeriodsExplanation
       ControlOptions.OriginalHeight = 13
-      ControlOptions.OriginalWidth = 448
+      ControlOptions.OriginalWidth = 515
       ControlOptions.ShowBorder = False
       Index = 1
     end
@@ -829,7 +929,6 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       Parent = grpTimesheetDetailreport
       CaptionOptions.Text = 'New Group'
       ButtonOptions.Buttons = <>
-      ItemIndex = 1
       LayoutDirection = ldHorizontal
       ShowBorder = False
       Index = 0
@@ -838,13 +937,14 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       Parent = grpReleaseMain
       CaptionOptions.Text = 'Other Options'
       ButtonOptions.Buttons = <>
-      ItemIndex = 1
+      ItemIndex = 5
       Index = 1
     end
     object grpRelease1: TdxLayoutGroup
       Parent = grpReleaseMain
       CaptionOptions.Text = 'Data manipulation options'
       ButtonOptions.Buttons = <>
+      ItemIndex = 6
       Index = 0
     end
     object litSaveDateTypeSelection: TdxLayoutItem
@@ -871,7 +971,7 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       Parent = grpRelease1
       CaptionOptions.Text = 'New Item'
       CaptionOptions.Visible = False
-      Control = cbxSaveSelectionBy
+      Control = cbxSaveSelectDataBy
       ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 164
       ControlOptions.ShowBorder = False
@@ -927,7 +1027,7 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       ControlOptions.ShowBorder = False
       Index = 2
     end
-    object litOpenDocumentAfterexport: TdxLayoutItem
+    object litOpenDocumentAfterExport: TdxLayoutItem
       Parent = grpRelease2
       CaptionOptions.Text = 'New Item'
       CaptionOptions.Visible = False
@@ -941,13 +1041,13 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       Parent = grpRelease2
       CaptionOptions.Text = 'New Item'
       CaptionOptions.Visible = False
-      Control = cbxExportFormattedExcelData
+      Control = cbxFormatExcelData
       ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 332
       ControlOptions.ShowBorder = False
-      Index = 5
+      Index = 6
     end
-    object litRemoveZeroBillableitems: TdxLayoutItem
+    object litRemoveZeroBillableItems: TdxLayoutItem
       Parent = grpRelease2
       CaptionOptions.Text = 'New Item'
       CaptionOptions.Visible = False
@@ -963,6 +1063,47 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       ButtonOptions.Buttons = <>
       ItemIndex = 5
       Index = 0
+    end
+    object litRefreshDataWhenChangingSortOrder: TdxLayoutItem
+      Parent = grpRelease1
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = cbxRefreshData
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 244
+      ControlOptions.ShowBorder = False
+      Index = 5
+    end
+    object litGroupTimsheetDetailReport: TdxLayoutItem
+      Parent = grpRelease1
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = cbxGroupedReport
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 183
+      ControlOptions.ShowBorder = False
+      Index = 6
+    end
+    object litExportSelectedOnlyToExcel: TdxLayoutItem
+      Parent = grpRelease2
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = cbxExportSelectedOnlyToExcel
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 233
+      ControlOptions.ShowBorder = False
+      Index = 5
+    end
+    object litOptioinDescription: TdxLayoutItem
+      Parent = layMainGroup_Root
+      AlignHorz = ahClient
+      AlignVert = avClient
+      CaptionOptions.Visible = False
+      Control = memDescription
+      ControlOptions.OriginalHeight = 70
+      ControlOptions.OriginalWidth = 778
+      ControlOptions.ShowBorder = False
+      Index = 1
     end
   end
   inherited styRepository: TcxStyleRepository
@@ -1025,5 +1166,22 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
     HintHidePause = 3000
     Left = 620
     Top = 199
+  end
+  object styHighlight: TcxEditStyleController
+    Style.Font.Charset = ANSI_CHARSET
+    Style.Font.Color = clWindowText
+    Style.Font.Height = -11
+    Style.Font.Name = 'Verdana'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
+    Left = 280
+    Top = 275
+    PixelsPerInch = 96
+  end
+  object styReadOnly: TcxEditStyleController
+    Style.Color = clBtnFace
+    Left = 190
+    Top = 280
+    PixelsPerInch = 96
   end
 end

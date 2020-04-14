@@ -423,7 +423,7 @@ begin
 
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   RegKey.RootKey := HKEY_CURRENT_USER;
-  RegKey.OpenKey(KEY_TIME_SHEET_TIMESHEET_DETAIL_REPORT, True);
+  RegKey.OpenKey(KEY_TIMESHEET_DETAIL_REPORT, True);
 
   if not RegKey.ValueExists('Refresh Data When Changing Sort Order') then
     RegKey.WriteBool('Refresh Data When Changing Sort Order', True);
@@ -639,7 +639,7 @@ begin
   begin
     RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
     RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIME_SHEET_TIMESHEET_DETAIL_REPORT, True);
+    RegKey.OpenKey(KEY_TIMESHEET_DETAIL_REPORT, True);
     try
       RegKey.WriteBool('Export Selcted Timesheets Only', cbxExportSelectedOnlyToExcel.Checked);
       RegKey.CloseKey;
@@ -658,7 +658,7 @@ begin
   begin
     RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
     RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIME_SHEET_TIMESHEET_DETAIL_REPORT, True);
+    RegKey.OpenKey(KEY_TIMESHEET_DETAIL_REPORT, True);
     try
       RegKey.WriteBool('Export Formatted Data To Excel', cbxOpenDocument.Checked);
       RegKey.CloseKey;
@@ -677,7 +677,7 @@ begin
   begin
     RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
     RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIME_SHEET_TIMESHEET_DETAIL_REPORT, True);
+    RegKey.OpenKey(KEY_TIMESHEET_DETAIL_REPORT, True);
     try
       RegKey.WriteBool('Group Timsheet Detail Report', cbxGroupedReport.Checked);
       RegKey.CloseKey;
@@ -702,7 +702,7 @@ begin
   begin
     RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
     RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIME_SHEET_TIMESHEET_DETAIL_REPORT, True);
+    RegKey.OpenKey(KEY_TIMESHEET_DETAIL_REPORT, True);
     try
       RegKey.WriteBool('Group Timsheet Detail Report', cbxOpenDocument.Checked);
       RegKey.CloseKey;
@@ -719,7 +719,7 @@ begin
   inherited;
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   RegKey.RootKey := HKEY_CURRENT_USER;
-  RegKey.OpenKey(KEY_TIME_SHEET_TIMESHEET_DETAIL_REPORT, True);
+  RegKey.OpenKey(KEY_TIMESHEET_DETAIL_REPORT, True);
   try
     RegKey.WriteBool('Refresh Data When Changing Sort Order', cbxRefreshData.Checked);
     RegKey.CloseKey;
@@ -737,7 +737,7 @@ begin
   begin
     RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
     RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIME_SHEET_TIMESHEET_DETAIL_REPORT, True);
+    RegKey.OpenKey(KEY_TIMESHEET_DETAIL_REPORT, True);
     try
       RegKey.WriteBool('Remove Zero Billable Values', cbxRemoveZeroBillableValues.Checked);
       RegKey.CloseKey;
@@ -1234,7 +1234,7 @@ begin
   begin
     RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
     RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIME_SHEET_TIMESHEET_DETAIL_REPORT, True);
+    RegKey.OpenKey(KEY_TIMESHEET_DETAIL_REPORT, True);
 
     try
       RegKey.WriteInteger('Select Report By Index', lucSelectReportBy.ItemIndex);

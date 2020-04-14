@@ -8,17 +8,18 @@ uses
   Vcl.ImgList, System.Actions, Vcl.ActnList, Vcl.Menus, Vcl.StdCtrls,
   System.Win.Registry,
 
-  BaseLayout_Frm, CommonFunctions,
+  BaseLayout_Frm, CommonFunctions, VBCommonValues,
 
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore,
   dxSkinsDefaultPainters, cxImageList, dxLayoutLookAndFeels, cxClasses, cxStyles,
-  dxLayoutContainer, dxLayoutControl, cxContainer, cxEdit, cxCheckBox,
+  dxLayoutContainer, dxLayoutControl, cxContainer, cxEdit, cxCheckBox, cxLabel,
   dxLayoutcxEditAdapters, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxLookupEdit,
   cxDBLookupEdit, cxDBLookupComboBox, cxCurrencyEdit, cxGroupBox, cxRadioGroup,
-  cxButtons, dxLayoutControlAdapters, VBCommonValues, dxScreenTip, dxCustomHint,
-  cxHint, cxLabel;
+  cxButtons, dxLayoutControlAdapters, dxScreenTip, dxCustomHint, cxHint, cxMemo;
 
 type
+  THintArray = array of string;
+
   TTimesheetOptionsFrm = class(TBaseLayoutFrm)
     grpTimesheetOptionsTab: TdxLayoutGroup;
     grpControls: TdxLayoutGroup;
@@ -84,14 +85,14 @@ type
     grpTimesheetDetailreport: TdxLayoutGroup;
     cbxSaveDateTypeSelection: TcxCheckBox;
     cbxSaveReportPeriodSelection: TcxCheckBox;
-    cbxSaveSelectionBy: TcxCheckBox;
+    cbxSaveSelectDataBy: TcxCheckBox;
     cbxSaveGroupedSelection: TcxCheckBox;
     cbxSaveSortOrderOptions: TcxCheckBox;
     cbxSaveReportBillableSelection: TcxCheckBox;
     cbxSaveWorkTypeSelection: TcxCheckBox;
     cbxSaveReportTypeSelection: TcxCheckBox;
     cbxOpenDocumentAfterexport: TcxCheckBox;
-    cbxExportFormattedExcelData: TcxCheckBox;
+    cbxFormatExcelData: TcxCheckBox;
     cbxRemoveZeroBillableItems: TcxCheckBox;
     grpReleaseMain: TdxLayoutGroup;
     grpRelease2: TdxLayoutGroup;
@@ -104,10 +105,20 @@ type
     litSaveReportBillableSelection: TdxLayoutItem;
     litSaveWorkTypeSelection: TdxLayoutItem;
     litSaveReportTypeSelection: TdxLayoutItem;
-    litOpenDocumentAfterexport: TdxLayoutItem;
+    litOpenDocumentAfterExport: TdxLayoutItem;
     litExportFormattedExcelData: TdxLayoutItem;
-    litRemoveZeroBillableitems: TdxLayoutItem;
+    litRemoveZeroBillableItems: TdxLayoutItem;
     grpReleaseOptions: TdxLayoutGroup;
+    styHighlight: TcxEditStyleController;
+    cbxRefreshData: TcxCheckBox;
+    litRefreshDataWhenChangingSortOrder: TdxLayoutItem;
+    cbxGroupedReport: TcxCheckBox;
+    litGroupTimsheetDetailReport: TdxLayoutItem;
+    cbxExportSelectedOnlyToExcel: TcxCheckBox;
+    litExportSelectedOnlyToExcel: TdxLayoutItem;
+    litOptioinDescription: TdxLayoutItem;
+    memDescription: TcxMemo;
+    styReadOnly: TcxEditStyleController;
     procedure FormCreate(Sender: TObject);
     procedure lucPriceItemPropertiesEditValueChanged(Sender: TObject);
     procedure cbxUseDefaultRatePropertiesEditValueChanged(Sender: TObject);
@@ -120,13 +131,22 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormShow(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
+    procedure cbxUseDefaultCustomerMouseEnter(Sender: TObject);
+    procedure cbxUseDefaultCustomerMouseLeave(Sender: TObject);
   private
     { Private declarations }
     FMadeChanges: Boolean;
     FShowingForm: Boolean;
     FOptionsTabindex: Integer;
+    FHintArray: THintArray;
 
     procedure SetControlValues;
+    procedure ReadTimesheetRegValues;
+    procedure ReadTSDetailReportRegValues;
+    procedure ReadReleaseCFwdRegValues;
+    procedure PopulateHintArray;
+    procedure DoOnMouseEnter(Sender: TObject);
+    procedure DoOnMouseLeave(Sender: TObject);
   public
     { Public declarations }
     property OptionsTabindex: Integer read FOptionsTabindex write FOptionsTabindex;
@@ -168,14 +188,29 @@ begin
   inherited;
   // Width = 800;  Height = 490
   Self.Width := 800;
-  Self.Height := 530;
+  Self.Height := 600;
   Caption := 'Timesheet Default Options';
   layMain.LayoutLookAndFeel := lafCustomSkin;
   layMain.Align := alClient;
   lucCustomer.Properties.ListSource := TSDM.dtsCustomerLookupPref;
   lucPriceItem.Properties.ListSource := TSDM.dtsPriceListPref;
   lucRateUnit.Properties.ListSource := TSDM.dtsRateUnitPref;
+  grpTimesheetOptionsTab.ItemIndex := 0;
   FShowingForm := True;
+  PopulateHintArray;
+
+  lucCustomer.OnMouseEnter := DoOnMouseEnter;
+  lucCustomer.OnMouseLeave := DoOnMouseLeave;
+  lucPriceItem.OnMouseEnter := DoOnMouseEnter;
+  lucPriceItem.OnMouseLeave := DoOnMouseLeave;
+  edtDefaultRate.OnMouseEnter := DoOnMouseEnter;
+  edtDefaultRate.OnMouseLeave := DoOnMouseLeave;
+  lucRateUnit.OnMouseEnter := DoOnMouseEnter;
+  lucRateUnit.OnMouseLeave := DoOnMouseLeave;
+
+  styHighlight.Style.Font.Color := RootLookAndFeel.SkinPainter.DefaultSelectionColor;
+  styHighlight.Style.TextColor := RootLookAndFeel.SkinPainter.DefaultSelectionColor;
+  styReadOnly.Style.Color := RootLookAndFeel.SkinPainter.DefaultContentColor;
   Screen.Cursor := crDefault;
 end;
 
@@ -183,6 +218,10 @@ procedure TTimesheetOptionsFrm.FormShow(Sender: TObject);
 begin
   inherited;
   SetControlValues;
+  ReadTimesheetRegValues;
+//  cbxUseDefaultCustomerPropertiesEditValueChanged(nil);
+//  cbxUseDefaultPriceItemPropertiesEditValueChanged(nil);
+
   FShowingForm := False;
   FMadeChanges := False;
   btnOK.Enabled := FMadeChanges;
@@ -190,38 +229,20 @@ begin
 end;
 
 procedure TTimesheetOptionsFrm.SetControlValues;
-var
-  RegKey: TRegistry;
+//var
+//  RegKey: TRegistry;
 begin
-  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
-  try
-    TSDM.cdsCustomerLookupPref.Close;
-    TSDM.cdsPriceListPref.Close;
-    TSDM.cdsRatePUnitref.Close;
-    TSDM.cdsCustomerLookupPref.Data := TSDM.cdsCustomerLookup.Data;
-    TSDM.cdsPriceListPref.Data := TSDM.cdsPriceList.Data;
-    TSDM.cdsRatePUnitref.Data := TSDM.cdsRateUnit;
-    RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIME_SHEET, True);
-    cbxUseDefaultCustomer.Checked := TSDM.TimesheetOption.UseDefaultCustomer;
-    cbxUseDefaultPriceItem.Checked := TSDM.TimesheetOption.UseDefaultPriceItem;
-    cbxUseDefaultRate.Checked := TSDM.TimesheetOption.UseDefaultRate;
-    cbxUseTodaysDate.Checked := TSDM.TimesheetOption.UseTodaysDate;
-    cbxSaveGridLayout.Checked := TSDM.TimesheetOption.SaveGridLayout;
-    lucCustomer.EditValue := TSDM.TimesheetOption.DefaultCustomerID;
-    lucPriceItem.EditValue := TSDM.TimesheetOption.DefaultPriceItemID;
-    edtDefaultRate.EditValue := TSDM.TimesheetOption.DefaultRate;
-    lucRateUnit.EditValue := TSDM.TimesheetOption.RateUnitID;
-    radPriceItemOption.ItemIndex := TSDM.TimesheetOption.PriceListItemActionIndex;
-    cbxIncrementalFiltering.Checked := TSDM.TimesheetOption.IncrementalLookupFitlering;
-    cbxHighlightSearchMatch.Checked := TSDM.TimesheetOption.HighlightLookupSearchMatch;
-    cbxHighlightSearchMatch.Enabled := cbxIncrementalFiltering.Checked;
-
-    cbxUseDefaultCustomerPropertiesEditValueChanged(nil);
-    cbxUseDefaultPriceItemPropertiesEditValueChanged(nil);
-  finally
-    RegKey.Free
-  end;
+//  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+//  try
+  TSDM.cdsCustomerLookupPref.Close;
+  TSDM.cdsPriceListPref.Close;
+  TSDM.cdsRatePUnitref.Close;
+  TSDM.cdsCustomerLookupPref.Data := TSDM.cdsCustomerLookup.Data;
+  TSDM.cdsPriceListPref.Data := TSDM.cdsPriceList.Data;
+  TSDM.cdsRatePUnitref.Data := TSDM.cdsRateUnit;
+//  finally
+//    RegKey.Free
+//  end;
 end;
 
 procedure TTimesheetOptionsFrm.btnCancelClick(Sender: TObject);
@@ -269,7 +290,7 @@ begin
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   try
     RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIME_SHEET, True);
+    RegKey.OpenKey(KEY_TIMESHEET, True);
 
     TSDM.TimesheetOption.UseDefaultCustomer := cbxUseDefaultCustomer.Checked;
     TSDM.TimesheetOption.UseDefaultPriceItem := cbxUseDefaultPriceItem.Checked;
@@ -308,6 +329,32 @@ begin
   cbxHighlightSearchMatch.Enabled := cbxIncrementalFiltering.Checked;
   if not cbxIncrementalFiltering.Checked then
     cbxHighlightSearchMatch.Checked := False;
+end;
+
+procedure TTimesheetOptionsFrm.cbxUseDefaultCustomerMouseEnter(Sender: TObject);
+begin
+  inherited;
+  if Sender is TcxCheckBox then
+    memDescription.Text := FHintArray[TcxCheckBox(Sender).Tag];
+end;
+
+procedure TTimesheetOptionsFrm.DoOnMouseEnter(Sender: TObject);
+begin
+  if Sender is TcxLookupComboBox then
+    memDescription.Text := FHintArray[TcxLookupComboBox(Sender).Tag]
+  else if Sender is TcxCurrencyEdit then
+    memDescription.Text := FHintArray[TcxCurrencyEdit(Sender).Tag];
+end;
+
+procedure TTimesheetOptionsFrm.DoOnMouseLeave(Sender: TObject);
+begin
+  memDescription.Lines.Clear;
+end;
+
+procedure TTimesheetOptionsFrm.cbxUseDefaultCustomerMouseLeave(Sender: TObject);
+begin
+  inherited;
+  memDescription.Lines.Clear;
 end;
 
 procedure TTimesheetOptionsFrm.cbxUseDefaultCustomerPropertiesChange(Sender: TObject);
@@ -371,6 +418,79 @@ begin
   inherited;
   edtDefaultRate.Value := TSDM.cdsPriceListPref.FieldByName('RATE').AsFloat;
   lucRateUnit.EditValue := TSDM.cdsPriceListPref.FieldByName('RATE_UNIT_ID').AsInteger;
+end;
+
+procedure TTimesheetOptionsFrm.PopulateHintArray;
+begin
+  Setlength(FHintArray, 12);
+  FHintArray[0] := ' When capturing a new timesheet item use the default customer.' +
+    ' If this option is un-checked you will need to select a customer whenever capturing a new timesheet item';
+
+  FHintArray[1] := ' The default customer to use whenever capturing a new timesheet item';
+
+  FHintArray[2] := ' When capturing a new timesheet item use the default price item.' +
+    ' If this option is un-checked you will need to select a price item whenever capturing a new timesheet item';
+
+  FHintArray[3] := ' The default price item to use whenever capturing a new timesheet item';
+
+  FHintArray[4] := ' When capturing a new timesheet item use the default rate value.' +
+    ' If this option is un-checked you will need to enter a rate value whenever capturing a new timesheet item';
+
+  FHintArray[5] := ' The default rate value to use whenever capturing a new timesheet item';
+end;
+
+procedure TTimesheetOptionsFrm.ReadTimesheetRegValues;
+var
+  RegKey: TRegistry;
+begin
+  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+  RegKey.RootKey := HKEY_CURRENT_USER;
+  RegKey.OpenKey(KEY_TIMESHEET, True);
+
+  try
+    cbxUseDefaultCustomer.Checked := TSDM.TimesheetOption.UseDefaultCustomer;
+    cbxUseDefaultPriceItem.Checked := TSDM.TimesheetOption.UseDefaultPriceItem;
+    cbxUseDefaultRate.Checked := TSDM.TimesheetOption.UseDefaultRate;
+    cbxUseTodaysDate.Checked := TSDM.TimesheetOption.UseTodaysDate;
+    cbxSaveGridLayout.Checked := TSDM.TimesheetOption.SaveGridLayout;
+    lucCustomer.EditValue := TSDM.TimesheetOption.DefaultCustomerID;
+    lucPriceItem.EditValue := TSDM.TimesheetOption.DefaultPriceItemID;
+    edtDefaultRate.EditValue := TSDM.TimesheetOption.DefaultRate;
+    lucRateUnit.EditValue := TSDM.TimesheetOption.RateUnitID;
+    radPriceItemOption.ItemIndex := TSDM.TimesheetOption.PriceListItemActionIndex;
+    cbxIncrementalFiltering.Checked := TSDM.TimesheetOption.IncrementalLookupFitlering;
+    cbxHighlightSearchMatch.Checked := TSDM.TimesheetOption.HighlightLookupSearchMatch;
+    cbxHighlightSearchMatch.Enabled := cbxIncrementalFiltering.Checked;
+    RegKey.CloseKey;
+  finally
+    Regkey.Free;
+  end;
+end;
+
+procedure TTimesheetOptionsFrm.ReadTSDetailReportRegValues;
+var
+  RegKey: TRegistry;
+begin
+  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+  RegKey.RootKey := HKEY_CURRENT_USER;
+  RegKey.OpenKey(KEY_TIMESHEET_DETAIL_REPORT, True);
+
+  cbxRefreshData.Checked := RegKey.ReadBool('Refresh Data When Changing Sort Order');
+  cbxGroupedReport.Checked := RegKey.ReadBool('Group Timsheet Detail Report');
+  cbxOpenDocumentAfterExport.Checked := RegKey.ReadBool('Open Document After Export');
+  cbxRemoveZeroBillableItems.Checked := RegKey.ReadBool('Remove Zero Billable Values');
+  cbxSaveReportTypeSelection.Checked := RegKey.ReadBool('Save Report Type Selection');
+  cbxExportSelectedOnlyToExcel.Checked := RegKey.ReadBool('Export Selcted Timesheets Only');
+  cbxFormatExcelData.Checked := RegKey.ReadBool('Export Formatted Data To Excel');
+end;
+
+procedure TTimesheetOptionsFrm.ReadReleaseCFwdRegValues;
+var
+  RegKey: TRegistry;
+begin
+  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+  RegKey.RootKey := HKEY_CURRENT_USER;
+  RegKey.OpenKey(KEY_TIMESHEET_DETAIL_REPORT, True);
 end;
 
 end.

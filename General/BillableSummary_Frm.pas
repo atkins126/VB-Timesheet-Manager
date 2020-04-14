@@ -480,7 +480,7 @@ begin
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   RegKey.RootKey := HKEY_CURRENT_USER;
   try
-    RegKey.OpenKey(KEY_TIME_SHEET, True);
+    RegKey.OpenKey(KEY_TIMESHEET, True);
 
     if not RegKey.ValueExists('To Period same as From Period') then
       RegKey.WriteBool('To Period same as From Period', True);
@@ -887,7 +887,7 @@ begin
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   RegKey.RootKey := HKEY_CURRENT_USER;
   try
-    RegKey.OpenKey(KEY_TIME_SHEET, True);
+    RegKey.OpenKey(KEY_TIMESHEET, True);
     RegKey.WriteBool('To Period same as From Period', cbxSamePeriod.EditValue);
     RegKey.CloseKey;
     lucToPeriod.Properties.ReadOnly := cbxSamePeriod.EditValue;

@@ -227,7 +227,7 @@ begin
 
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   RegKey.RootKey := HKEY_CURRENT_USER;
-  RegKey.OpenKey(KEY_TIME_SHEET_RELEASE_CFWD_MANAGER, True);
+  RegKey.OpenKey(KEY_TIMESHEET_RELEASE_CFWD_MANAGER, True);
 
   try
     if not RegKey.ValueExists('From Period') then
@@ -292,7 +292,7 @@ begin
   begin
     RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
     RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIME_SHEET_RELEASE_CFWD_MANAGER, True);
+    RegKey.OpenKey(KEY_TIMESHEET_RELEASE_CFWD_MANAGER, True);
 
     try
       RegKey.WriteBool('Always Release To Current Period', cbxAllPeriods.Checked);
@@ -351,7 +351,7 @@ begin
   begin
     RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
     RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIME_SHEET_RELEASE_CFWD_MANAGER, True);
+    RegKey.OpenKey(KEY_TIMESHEET_RELEASE_CFWD_MANAGER, True);
 
     try
       RegKey.WriteBool('Billable Status Index', cbxAllPeriods.Checked);
@@ -391,7 +391,7 @@ begin
   begin
     RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
     RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIME_SHEET_RELEASE_CFWD_MANAGER, True);
+    RegKey.OpenKey(KEY_TIMESHEET_RELEASE_CFWD_MANAGER, True);
 
     try
       RegKey.WriteBool('Expand Grid When Fetching Data', cbxExpandGrid.Checked);
@@ -601,7 +601,7 @@ begin
   begin
     RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
     RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIME_SHEET_RELEASE_CFWD_MANAGER, True);
+    RegKey.OpenKey(KEY_TIMESHEET_RELEASE_CFWD_MANAGER, True);
     try
       RegKey.WriteInteger('Billable Status Index', lucBillable.ItemIndex);
       RegKey.CloseKey;
@@ -643,7 +643,7 @@ begin
 
     RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
     RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIME_SHEET_RELEASE_CFWD_MANAGER, True);
+    RegKey.OpenKey(KEY_TIMESHEET_RELEASE_CFWD_MANAGER, True);
 
     try
       if SameText(TcxLookupComboBox(Sender).Name, 'lucFromPeriod') then
@@ -700,7 +700,7 @@ begin
   begin
     RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
     RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIME_SHEET_RELEASE_CFWD_MANAGER, True);
+    RegKey.OpenKey(KEY_TIMESHEET_RELEASE_CFWD_MANAGER, True);
 
     try
       RegKey.WriteInteger('Release To period', lucReleaseToPeriod.EditValue);

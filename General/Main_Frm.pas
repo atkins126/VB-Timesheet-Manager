@@ -423,7 +423,8 @@ begin
       RegKey.CloseKey;
       VerifyRegistry;
       ReadRegValues;
-      RegKey.OpenKey(KEY_TIME_SHEET, True);
+
+      RegKey.OpenKey(KEY_TIMESHEET, True);
       FFromDate := RegKey.ReadDate('From Date');
       dteFromDate.EditValue := FFromDate;
       FToDate := RegKey.ReadDate('To Date');
@@ -1218,7 +1219,7 @@ begin
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   try
     RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIME_SHEET, True);
+    RegKey.OpenKey(KEY_TIMESHEET, True);
 
     if not RegKey.ValueExists('View Mode Index') then
       RegKey.WriteInteger('View Mode Index', 0);
@@ -1279,7 +1280,7 @@ begin
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   try
     RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIME_SHEET, True);
+    RegKey.OpenKey(KEY_TIMESHEET, True);
     TSDM.TimesheetOption.UseDefaultCustomer := RegKey.ReadBool('Use Default Customer');
     TSDM.TimesheetOption.UseDefaultPriceItem := RegKey.ReadBool('Use Default Price Item');
     TSDM.TimesheetOption.UseDefaultRate := RegKey.ReadBool('Use Default Rate');
@@ -1592,7 +1593,7 @@ begin
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   try
     RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIME_SHEET, True);
+    RegKey.OpenKey(KEY_TIMESHEET, True);
     RegKey.WriteInteger('Period', FTimesheetPeriod);
     RegKey.CloseKey;
   finally
@@ -1624,7 +1625,7 @@ begin
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   try
     RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIME_SHEET, True);
+    RegKey.OpenKey(KEY_TIMESHEET, True);
 
     if not FShowingForm then
     begin
@@ -1651,7 +1652,7 @@ begin
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   try
     RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIME_SHEET, True);
+    RegKey.OpenKey(KEY_TIMESHEET, True);
 
     if not FShowingForm then
     begin
@@ -1704,7 +1705,7 @@ begin
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   try
     RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIME_SHEET, True);
+    RegKey.OpenKey(KEY_TIMESHEET, True);
     RegKey.WriteInteger('View Mode Index', lucViewMode.ItemIndex);
   finally
     RegKey.Free
@@ -1759,7 +1760,7 @@ begin
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   try
     RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIME_SHEET, True);
+    RegKey.OpenKey(KEY_TIMESHEET, True);
     RegKey.WriteInteger('View Mode Index', lucViewMode.ItemIndex);
   finally
     RegKey.Free
