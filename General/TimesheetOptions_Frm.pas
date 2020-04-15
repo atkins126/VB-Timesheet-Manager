@@ -422,21 +422,45 @@ end;
 
 procedure TTimesheetOptionsFrm.PopulateHintArray;
 begin
-  Setlength(FHintArray, 12);
-  FHintArray[0] := ' When capturing a new timesheet item use the default customer.' +
-    ' If this option is un-checked you will need to select a customer whenever capturing a new timesheet item';
+  Setlength(FHintArray, 25);
+  // General timesheet options
+  FHintArray[0] := 'When capturing a new timesheet item use the default customer.' +
+    ' If this option is un-checked you will need to select a customer whenever capturing a new timesheet item.';
 
-  FHintArray[1] := ' The default customer to use whenever capturing a new timesheet item';
+  FHintArray[1] := 'The default customer to use whenever capturing a new timesheet item.';
 
-  FHintArray[2] := ' When capturing a new timesheet item use the default price item.' +
-    ' If this option is un-checked you will need to select a price item whenever capturing a new timesheet item';
+  FHintArray[2] := 'When capturing a new timesheet item use the default price item.' +
+    ' If this option is un-checked you will need to select a price item whenever capturing a new timesheet item.';
 
-  FHintArray[3] := ' The default price item to use whenever capturing a new timesheet item';
+  FHintArray[3] := 'The default price item to use whenever capturing a new timesheet item.';
 
-  FHintArray[4] := ' When capturing a new timesheet item use the default rate value.' +
-    ' If this option is un-checked you will need to enter a rate value whenever capturing a new timesheet item';
+  FHintArray[4] := 'When capturing a new timesheet item use the default rate value.' +
+    ' If this option is un-checked you will need to enter a rate value whenever capturing a new timesheet item.';
 
-  FHintArray[5] := ' The default rate value to use whenever capturing a new timesheet item';
+  FHintArray[5] := 'The default rate value to use whenever capturing a new timesheet item.';
+  FHintArray[6] := 'The default rate unit to use whenever capturing a new timesheet item.';
+  FHintArray[7] := 'Use the current datae whenever capturing a new timesheet item.';
+  FHintArray[8] := 'When selecting an item from a lookup list, the list will filter out ' +
+    'items that match the text what you are typing.';
+  FHintArray[9] := 'When selecting an item from a lookup list, the matching item will be highlited. ';
+  FHintArray[10] := 'Save the tiemsheet grid layout whenever you exit the timesheet manaager.';
+  // Timesheet detail report options
+  FHintArray[11] := 'Save the Date/Period value for future use.';
+  FHintArray[12] := 'Save the Date/Period type selection for future use.';
+  FHintArray[13] := 'Save the report grouping selection option.';
+  FHintArray[14] := 'Save the manner in which to fetch data.';
+  FHintArray[15] := 'Save current data sort order. The sort order is used when fetching, printing or exporting data.';
+  FHintArray[16] := 'Re-fetch data whenever changing the data sort order.';
+  FHintArray[17] := 'When this option is checked data will be grouped by the first item in the sort order list.' +
+    ' This applies to printing and exporting of data.';
+  FHintArray[18] := 'Save the billable status option setting for future use.';
+  FHintArray[19] := 'When fetching data for the billable summary report, exclude items that have a zero billable value.';
+  FHintArray[20] := 'Save the report type selection setting.';
+  FHintArray[21] := 'Save the work type selection setting.';
+  FHintArray[22] := 'Always attempt to open the saved document after exorting to Excel or PDF.';
+  FHintArray[23] := 'When exporting to Excel, export only records that are selected. If this option is un-cheked, all recoreds are exported.';
+  FHintArray[24] := 'When exporting to Excel, export the data formatted as seen in the grid. If this option is un-checked ' +
+    ' the data is exported as plain text/numeric raw data.';
 end;
 
 procedure TTimesheetOptionsFrm.ReadTimesheetRegValues;
