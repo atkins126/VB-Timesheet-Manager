@@ -1511,14 +1511,14 @@ inherited MainFrm: TMainFrm
       Category = 'Carry Forward'
       Caption = 'Carry Forward'
       ImageIndex = 34
-      OnExecute = DoCarryForward
+      OnExecute = DoReleaseCFwdManager
     end
-    object actClearCarryForward: TAction
+    object actReleaseCFwdManagaer: TAction
       Tag = 131
       Category = 'Carry Forward'
-      Caption = 'Clear Carry Forward'
+      Caption = 'Release CFwd Manager'
       ImageIndex = 35
-      OnExecute = DoCarryForward
+      OnExecute = DoReleaseCarryForwardManager
     end
     object actMonthlyBilling: TAction
       Category = 'Reports'
@@ -7516,10 +7516,6 @@ inherited MainFrm: TMainFrm
         end
         item
           Visible = True
-          ItemName = 'btnReleaseCarryForwarManager'
-        end
-        item
-          Visible = True
           ItemName = 'btnLayoutManager'
         end>
       OneOnRow = True
@@ -7799,7 +7795,7 @@ inherited MainFrm: TMainFrm
       LargeImageIndex = 14
     end
     object btnClearCarryForwrd: TdxBarButton
-      Action = actClearCarryForward
+      Action = actReleaseCFwdManagaer
       Category = 0
       Hint = 'Cllear carry forward for selected item(s)'
       ImageIndex = 15
@@ -7823,11 +7819,6 @@ inherited MainFrm: TMainFrm
       Action = actMonthlyBilling
       Category = 0
       ScreenTip = tipMonthlyBilling
-    end
-    object btnReleaseCarryForwarManager: TdxBarLargeButton
-      Action = actReleaseCarryForward
-      Category = 0
-      ScreenTip = tipReleaseCFwdManager
     end
   end
   object imgNav32: TcxImageList
@@ -9535,7 +9526,7 @@ inherited MainFrm: TMainFrm
       ImageIndex = 14
     end
     object ClearCarryForward1: TMenuItem
-      Action = actClearCarryForward
+      Action = actReleaseCFwdManagaer
       ImageIndex = 15
     end
   end

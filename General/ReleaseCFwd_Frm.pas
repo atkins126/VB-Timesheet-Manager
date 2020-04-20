@@ -21,7 +21,7 @@ uses
   cxGridDBBandedTableView, cxGridCustomView, dxScreenTip, dxPrnDev, dxPrnDlg,
   dxCustomHint, cxHint, cxContainer, cxMaskEdit, cxDropDownEdit, cxLookupEdit,
   cxDBLookupEdit, cxDBLookupComboBox, dxBar, dxLayoutcxEditAdapters,
-  dxLayoutControlAdapters, cxButtons, cxLabel;
+  dxLayoutControlAdapters, cxButtons, cxLabel, dxBarExtItems;
 
 type
 //  TcxLookupComboBoxAccess = class (TcxLookupComboBox);
@@ -117,8 +117,9 @@ type
     litAlwaysExpand: TdxLayoutItem;
     cbxExpandGrid: TcxCheckBox;
     spc2: TdxLayoutEmptySpaceItem;
+    cbxSaveSettingsOnExit: TcxCheckBox;
+    cntSaveSettingsonExit: TdxBarControlContainerItem;
     procedure FormCreate(Sender: TObject);
-    procedure cbxAllPeriodsPropertiesChange(Sender: TObject);
     procedure DoCloseForm(Sender: TObject);
     procedure DoGetTimesheetData(Sender: TObject);
     procedure viewTimesheetCustomDrawCell(Sender: TcxCustomGridTableView;
@@ -127,7 +128,6 @@ type
     procedure FormShow(Sender: TObject);
     procedure edtTThePeriodGetDisplayText(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AText: string);
-    procedure cbxReleaseToCurrentPeriodPropertiesChange(Sender: TObject);
     procedure lucFromPeriodPropertiesInitPopup(Sender: TObject);
     procedure lucReleaseToPeriodPropertiesInitPopup(Sender: TObject);
     procedure btnExpandAllClick(Sender: TObject);
@@ -143,8 +143,9 @@ type
     procedure lucFromPeriodPropertiesPopup(Sender: TObject);
     procedure lucFromPeriodPropertiesCloseUp(Sender: TObject);
     procedure DoOptions(Sender: TObject);
-    procedure lucReleaseToPeriodPropertiesEditValueChanged(Sender: TObject);
-    procedure cbxExpandGridPropertiesChange(Sender: TObject);
+    procedure cbxAllPeriodsPropertiesEditValueChanged(Sender: TObject);
+    procedure cbxReleaseToCurrentPeriodPropertiesEditValueChanged(
+      Sender: TObject);
   private
     { Private declarations }
     FShowingForm: Boolean;
@@ -230,17 +231,20 @@ begin
   RegKey.OpenKey(KEY_TIMESHEET_RELEASE_CFWD_MANAGER, True);
 
   try
+    if not RegKey.ValueExists('Save Settings On Exit') then
+      RegKey.WriteBool('Save Settings On Exit', True);
+
     if not RegKey.ValueExists('From Period') then
       RegKey.WriteInteger('From Period', VBBaseDM.CurrentPeriod);
 
     if not RegKey.ValueExists('To Period') then
       RegKey.WriteInteger('To Period', VBBaseDM.CurrentPeriod);
 
-    if not RegKey.ValueExists('Billable Status Index') then
-      RegKey.WriteInteger('Billable Status Index', 0);
-
     if not RegKey.ValueExists('Fetch All Periods') then
       RegKey.WriteBool('Fetch All Periods', True);
+
+    if not RegKey.ValueExists('Billable Status Index') then
+      RegKey.WriteInteger('Billable Status Index', 0);
 
     if not RegKey.ValueExists('Release To Period') then
       RegKey.WriteInteger('Release To Period', VBBaseDM.CurrentPeriod);
@@ -248,9 +252,13 @@ begin
     if not RegKey.ValueExists('Always Release To Current Period') then
       RegKey.WriteBool('Always Release To Current Period', True);
 
+    if not RegKey.ValueExists('Always Expand Grid') then
+      RegKey.WriteBool('Always Expand Grid', True);
+
     FFromPeriod := RegKey.ReadInteger('From Period');
     FToPeriod := RegKey.ReadInteger('To Period');
 
+    cbxSaveSettingsOnExit.Checked := RegKey.ReadBool('Save Settings On Exit');
     cbxAllPeriods.Checked := RegKey.ReadBool('Fetch All Periods');
 //    cbxReleaseToCurrentPeriod.Checked := RegKey.ReadBool('Always Release To Current Period');
     lucBillable.ItemIndex := RegKey.ReadInteger('Billable Status Index');
@@ -268,6 +276,8 @@ begin
       end;
     end;
 
+    cbxExpandGrid.Checked := RegKey.ReadBool('Always Expand Grid');
+
     actGetTimeSheetData.Execute;
   finally
     RegKey.CloseKey;
@@ -283,25 +293,9 @@ begin
   Screen.Cursor := crDefault;
 end;
 
-procedure TReleaseCFwdFrm.cbxReleaseToCurrentPeriodPropertiesChange(Sender: TObject);
-var
-  RegKey: TRegistry;
+procedure TReleaseCFwdFrm.cbxReleaseToCurrentPeriodPropertiesEditValueChanged(Sender: TObject);
 begin
   inherited;
-  if not FShowingForm then
-  begin
-    RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
-    RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIMESHEET_RELEASE_CFWD_MANAGER, True);
-
-    try
-      RegKey.WriteBool('Always Release To Current Period', cbxAllPeriods.Checked);
-      RegKey.CloseKey;
-    finally
-      RegKey.Free;
-    end;
-  end;
-
   lucReleaseToPeriod.Properties.ReadOnly := cbxReleaseToCurrentPeriod.Checked;
 
   TcxCustomEditProperties(lucReleaseToPeriod.Properties).Buttons.Items[0].Visible :=
@@ -325,9 +319,30 @@ begin
 end;
 
 procedure TReleaseCFwdFrm.DoCloseForm(Sender: TObject);
+var
+  RegKey: TRegistry;
 begin
   inherited;
-  Self.ModalResult := mrOK;
+  if cbxSaveSettingsOnExit.Checked then
+    try
+      RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+      RegKey.RootKey := HKEY_CURRENT_USER;
+      RegKey.OpenKey(KEY_TIMESHEET_RELEASE_CFWD_MANAGER, True);
+
+      RegKey.WriteBool('Save Settings On Exit', cbxSaveSettingsOnExit.Checked);
+      RegKey.WriteInteger('From Period', lucFromPeriod.EditValue);
+      RegKey.WriteInteger('To Period', lucToPeriod.EditValue);
+      RegKey.WriteBool('Fetch All Periods', cbxAllPeriods.Checked);
+      RegKey.WriteInteger('Billable Status Index', lucBillable.ItemIndex);
+      RegKey.WriteInteger('Release To Period', lucReleaseToPeriod.EditValue);
+      RegKey.WriteBool('Always Release To Current Period', cbxReleaseToCurrentPeriod.Checked);
+      RegKey.WriteBool('Always Expand Grid', cbxExpandGrid.Checked);
+      RegKey.CloseKey;
+    finally
+      RegKey.Free;
+    end;
+
+  Self.Close;
 end;
 
 procedure TReleaseCFwdFrm.btnExpandAllClick(Sender: TObject);
@@ -342,25 +357,9 @@ begin
   viewTimesheet.ViewData.Collapse(True);
 end;
 
-procedure TReleaseCFwdFrm.cbxAllPeriodsPropertiesChange(Sender: TObject);
-var
-  RegKey: TRegistry;
+procedure TReleaseCFwdFrm.cbxAllPeriodsPropertiesEditValueChanged(Sender: TObject);
 begin
   inherited;
-  if not FShowingForm then
-  begin
-    RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
-    RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIMESHEET_RELEASE_CFWD_MANAGER, True);
-
-    try
-      RegKey.WriteBool('Billable Status Index', cbxAllPeriods.Checked);
-      RegKey.CloseKey;
-    finally
-      RegKey.Free;
-    end;
-  end;
-
   lucFromPeriod.Properties.ReadOnly := cbxAllPeriods.Checked;
   lucToPeriod.Properties.ReadOnly := cbxAllPeriods.Checked;
 
@@ -382,26 +381,6 @@ begin
   end;
 end;
 
-procedure TReleaseCFwdFrm.cbxExpandGridPropertiesChange(Sender: TObject);
-var
-  RegKey: TRegistry;
-begin
-  inherited;
-  if not FShowingForm then
-  begin
-    RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
-    RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIMESHEET_RELEASE_CFWD_MANAGER, True);
-
-    try
-      RegKey.WriteBool('Expand Grid When Fetching Data', cbxExpandGrid.Checked);
-      RegKey.CloseKey;
-    finally
-      RegKey.Free;
-    end;
-  end;
-end;
-
 procedure TReleaseCFwdFrm.DoGetTimesheetData(Sender: TObject);
 begin
   inherited;
@@ -417,18 +396,18 @@ end;
 procedure TReleaseCFwdFrm.DoOptions(Sender: TObject);
 begin
   inherited;
-  Screen.Cursor := crHourglass;
-  try
-    if TimesheetOptionsFrm = nil then
-      TimesheetOptionsFrm := TTimesheetOptionsFrm.Create(nil);
-
-    TimesheetOptionsFrm.OptionsTabindex := 2;
-    TimesheetOptionsFrm.ShowModal;
-    TimesheetOptionsFrm.Close;
-    FreeAndNil(TimesheetOptionsFrm);
-  finally
-    Screen.Cursor := crDefault;
-  end;
+//  Screen.Cursor := crHourglass;
+//  try
+//    if TimesheetOptionsFrm = nil then
+//      TimesheetOptionsFrm := TTimesheetOptionsFrm.Create(nil);
+//
+//    TimesheetOptionsFrm.OptionsTabindex := 2;
+//    TimesheetOptionsFrm.ShowModal;
+//    TimesheetOptionsFrm.Close;
+//    FreeAndNil(TimesheetOptionsFrm);
+//  finally
+//    Screen.Cursor := crDefault;
+//  end;
 end;
 
 procedure TReleaseCFwdFrm.DoRelease(Sender: TObject);
@@ -549,6 +528,9 @@ begin
     if not TSDM.cdsToPeriod.Locate('THE_PERIOD', FToPeriod, []) then
       TSDM.cdsToPeriod.Last;
   end;
+
+  lucFromPeriod.EditValue := FFromPeriod;
+  lucToPeriod.EditValue := FToPeriod;
 end;
 
 procedure TReleaseCFwdFrm.GetTimesheetData;
@@ -641,32 +623,32 @@ begin
     if not TcxLookupComboBox(Sender).DroppedDown then
       Abort;
 
-    RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
-    RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIMESHEET_RELEASE_CFWD_MANAGER, True);
-
-    try
-      if SameText(TcxLookupComboBox(Sender).Name, 'lucFromPeriod') then
-        RegKey.WriteInteger('From Period', lucFromPeriod.EditValue)
-
-      else if SameText(TcxLookupComboBox(Sender).Name, 'lucToPeriod') then
-        RegKey.WriteInteger('To Period', lucToPeriod.EditValue)
-
-      else if SameText(TcxLookupComboBox(Sender).Name, 'lucReleaseToPeriod') then
-        RegKey.WriteInteger('Release To Period', lucReleaseToPeriod.EditValue)
-
-      else if SameText(TcxLookupComboBox(Sender).Name, 'lucBillable') then
-        RegKey.WriteInteger('Billable Status Index', lucBillable.ItemIndex);
-
-      lucBillable.ItemIndex := RegKey.ReadInteger('Billable Status Index');
-      FFromPeriod := RegKey.ReadInteger('From Period');
-      FToPeriod := RegKey.ReadInteger('To Period');
-      FReleaseToPeriod := RegKey.ReadInteger('Release To Period');
-
-      RegKey.CloseKey;
-    finally
-      RegKey.Free;
-    end;
+//    RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+//    RegKey.RootKey := HKEY_CURRENT_USER;
+//    RegKey.OpenKey(KEY_TIMESHEET_RELEASE_CFWD_MANAGER, True);
+//
+//    try
+//      if SameText(TcxLookupComboBox(Sender).Name, 'lucFromPeriod') then
+//        RegKey.WriteInteger('From Period', lucFromPeriod.EditValue)
+//
+//      else if SameText(TcxLookupComboBox(Sender).Name, 'lucToPeriod') then
+//        RegKey.WriteInteger('To Period', lucToPeriod.EditValue)
+//
+//      else if SameText(TcxLookupComboBox(Sender).Name, 'lucReleaseToPeriod') then
+//        RegKey.WriteInteger('Release To Period', lucReleaseToPeriod.EditValue)
+//
+//      else if SameText(TcxLookupComboBox(Sender).Name, 'lucBillable') then
+//        RegKey.WriteInteger('Billable Status Index', lucBillable.ItemIndex);
+//
+//      lucBillable.ItemIndex := RegKey.ReadInteger('Billable Status Index');
+//      FFromPeriod := RegKey.ReadInteger('From Period');
+//      FToPeriod := RegKey.ReadInteger('To Period');
+//      FReleaseToPeriod := RegKey.ReadInteger('Release To Period');
+//
+//      RegKey.CloseKey;
+//    finally
+//      RegKey.Free;
+//    end;
 
     actGetTimesheetData.Execute;
   end;
@@ -689,26 +671,6 @@ begin
     DoMouseWheel(TcxLookupComboBox(Sender), True)
   else
     DoMouseWheel(TcxLookupComboBox(Sender), False)
-end;
-
-procedure TReleaseCFwdFrm.lucReleaseToPeriodPropertiesEditValueChanged(Sender: TObject);
-var
-  RegKey: TRegistry;
-begin
-  inherited;
-  if not FShowingForm then
-  begin
-    RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
-    RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIMESHEET_RELEASE_CFWD_MANAGER, True);
-
-    try
-      RegKey.WriteInteger('Release To period', lucReleaseToPeriod.EditValue);
-      RegKey.CloseKey;
-    finally
-      RegKey.Free;
-    end;
-  end;
 end;
 
 procedure TReleaseCFwdFrm.lucReleaseToPeriodPropertiesInitPopup(Sender: TObject);

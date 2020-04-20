@@ -195,7 +195,7 @@ type
     UnInvoice1: TMenuItem;
     popCarryForward: TdxBarPopupMenu;
     actCarryForward: TAction;
-    actClearCarryForward: TAction;
+    actReleaseCFwdManagaer: TAction;
     btnCarryForward: TdxBarButton;
     btnClearCarryForwrd: TdxBarButton;
     btnCarryFwd: TdxBarLargeButton;
@@ -209,7 +209,6 @@ type
     tipMonthlyBilling: TdxScreenTip;
     edtDateCfwdReleased: TcxGridDBBandedColumn;
     edtReleaseCfwdToPeriod: TcxGridDBBandedColumn;
-    btnReleaseCarryForwarManager: TdxBarLargeButton;
     actReleaseCarryForward: TAction;
     tipReleaseCFwdManager: TdxScreenTip;
     edtPeriodName: TcxGridDBBandedColumn;
@@ -247,7 +246,7 @@ type
     procedure btnApproveClick(Sender: TObject);
     procedure DoBillable(Sender: TObject);
     procedure DoInvoiceItem(Sender: TObject);
-    procedure DoCarryForward(Sender: TObject);
+    procedure DoReleaseCFwdManager(Sender: TObject);
 
     procedure cbxApprovedCustomDrawCell(Sender: TcxCustomGridTableView;
       ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
@@ -627,7 +626,7 @@ begin
     if TimesheetDetailReportFrm = nil then
       TimesheetDetailReportFrm := TTimesheetDetailReportFrm.Create(nil);
     TimesheetDetailReportFrm.ShowModal;
-    TimesheetDetailReportFrm.Close;
+//    TimesheetDetailReportFrm.Close;
     FreeAndNil(TimesheetDetailReportFrm);
   finally
     Screen.Cursor := crDefault;
@@ -741,71 +740,71 @@ begin
 //  end;
 end;
 
-procedure TMainFrm.DoCarryForward(Sender: TObject);
+procedure TMainFrm.DoReleaseCFwdManager(Sender: TObject);
 begin
   inherited;
-  CarryForwardItem(TAction(Sender).Tag);
+//  CarryForwardItem(TAction(Sender).Tag);
 end;
 
 procedure TMainFrm.CarryForwardItem(ATag: Integer);
-var
-  DC: TcxDBDataController;
-  C: TcxCustomGridTableController;
-  I, RecIndex, ChangeCount: Integer;
+//var
+//  DC: TcxDBDataController;
+//  C: TcxCustomGridTableController;
+//  I, RecIndex, ChangeCount: Integer;
 begin
-  inherited;
-  DC := viewTimesheet.DataController;
-  C := viewTimesheet.Controller;
-//  DC.BeginUpdate;
-  ChangeCount := 0;
-
-//  try
+//  inherited;
+//  DC := viewTimesheet.DataController;
+//  C := viewTimesheet.Controller;
+////  DC.BeginUpdate;
+//  ChangeCount := 0;
+//
+////  try
+////  begin
+//  for I := 0 to C.SelectedRecordCount - 1 do
 //  begin
-  for I := 0 to C.SelectedRecordCount - 1 do
-  begin
-    RecIndex := C.SelectedRecords[I].RecordIndex;
-    DC.FocusedRecordIndex := RecIndex;
-    DC.Edit;
-
-    case ATag of
-      130: // Carry forward
-        begin
-//            DC.Values[C.SelectedRecords[I].RecordIndex, cbxCarryForward.Index] := 1;
-//            DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] := 0;
-
-          if DC.Values[C.SelectedRecords[I].RecordIndex, cbxCarryForward.Index] = 0 then
-          begin
-            DC.SetEditValue(cbxCarryForward.Index, 1, evsValue);
-            DC.SetEditValue(edtInvoiceID.Index, 0, evsValue);
-            DC.Post(True);
-//      DC.PostEditingData;
-            Inc(ChangeCount);
-          end;
-        end;
-
-      131: // Release carry forward
-        begin
-//            DC.Values[RecIndex, cbxCarryForward.Index] := 0;
-//            DC.Values[RecIndex, edtInvoiceID.Index] := -1;
-
-          if DC.Values[C.SelectedRecords[I].RecordIndex, cbxCarryForward.Index] = 1 then
-          begin
-            DC.SetEditValue(cbxCarryForward.Index, 0, evsValue);
-            DC.SetEditValue(edtInvoiceID.Index, -1, evsValue);
-            DC.Post(True);
-//      DC.PostEditingData;
-            Inc(ChangeCount);
-          end;
-        end;
-    end;
-  end;
+//    RecIndex := C.SelectedRecords[I].RecordIndex;
+//    DC.FocusedRecordIndex := RecIndex;
+//    DC.Edit;
+//
+//    case ATag of
+//      130: // Carry forward
+//        begin
+////            DC.Values[C.SelectedRecords[I].RecordIndex, cbxCarryForward.Index] := 1;
+////            DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] := 0;
+//
+//          if DC.Values[C.SelectedRecords[I].RecordIndex, cbxCarryForward.Index] = 0 then
+//          begin
+//            DC.SetEditValue(cbxCarryForward.Index, 1, evsValue);
+//            DC.SetEditValue(edtInvoiceID.Index, 0, evsValue);
+//            DC.Post(True);
+////      DC.PostEditingData;
+//            Inc(ChangeCount);
+//          end;
+//        end;
+//
+//      131: // Release carry forward
+//        begin
+////            DC.Values[RecIndex, cbxCarryForward.Index] := 0;
+////            DC.Values[RecIndex, edtInvoiceID.Index] := -1;
+//
+//          if DC.Values[C.SelectedRecords[I].RecordIndex, cbxCarryForward.Index] = 1 then
+//          begin
+//            DC.SetEditValue(cbxCarryForward.Index, 0, evsValue);
+//            DC.SetEditValue(edtInvoiceID.Index, -1, evsValue);
+//            DC.Post(True);
+////      DC.PostEditingData;
+//            Inc(ChangeCount);
+//          end;
+//        end;
+//    end;
 //  end;
-
-  if ChangeCount > 0 then
-    TSDM.PostData(TSDM.cdsTimesheet);
-//  finally
-//    DC.EndUpdate;
-//  end;
+////  end;
+//
+//  if ChangeCount > 0 then
+//    TSDM.PostData(TSDM.cdsTimesheet);
+////  finally
+////    DC.EndUpdate;
+////  end;
 end;
 
 procedure TMainFrm.DoBillable(Sender: TObject);
@@ -922,8 +921,9 @@ begin
   if InvoiceItemFrm = nil then
     InvoiceItemFrm := TInvoiceItemFrm.Create(nil);
 
-  if InvoiceItemFrm.ShowModal = mrOK then
-    try
+  try
+    if InvoiceItemFrm.ShowModal = mrOK then
+    begin
 //      InvoiceDate := VarAsType(InvoiceItemFrm.dteInvoiceDate.EditValue, varDate);
       InvoiceDate := TSDM.DefaultInvoiceDate;
       DC := viewTimesheet.DataController;
@@ -974,13 +974,14 @@ begin
         TSDM.PostData(TSDM.cdsTimesheet);
 //        actRefresh.Execute;
 //      end;
-    finally
-      if Assigned(InvoiceItemFrm) then
-      begin
-        InvoiceItemFrm.Close;
-        FreeAndNil(InvoiceItemFrm);
-      end;
     end;
+  finally
+    if Assigned(InvoiceItemFrm) then
+    begin
+      InvoiceItemFrm.Close;
+      FreeAndNil(InvoiceItemFrm);
+    end;
+  end;
 end;
 
 procedure TMainFrm.UnInvoiceTimesheetItem;

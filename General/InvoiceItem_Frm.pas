@@ -14,11 +14,11 @@ uses
   dxSkinsDefaultPainters, cxImageList, dxLayoutLookAndFeels, cxClasses, cxStyles,
   dxLayoutContainer, dxLayoutControl, dxLayoutcxEditAdapters, cxContainer, cxEdit,
   dxCore, cxDateUtils, cxMemo, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxButtons,
-  cxCalendar, dxLayoutControlAdapters, cxCurrencyEdit;
+  cxCalendar, dxLayoutControlAdapters, cxCurrencyEdit, cxLabel;
 
 type
   TInvoiceItemFrm = class(TBaseLayoutFrm)
-    dteInvoiceDate: TcxDateEdit;
+    lucInvoiceDate: TcxDateEdit;
     litInvoiceDate: TdxLayoutItem;
     litDescription: TdxLayoutItem;
     memDescription: TcxMemo;
@@ -31,6 +31,11 @@ type
     litInvoiceNo: TdxLayoutItem;
     litSetSessionDate: TdxLayoutItem;
     btnSetDefaultDate: TcxButton;
+    memWarning: TcxMemo;
+    litWarningLabel: TdxLayoutItem;
+    litWarning: TdxLayoutItem;
+    lblWarning: TcxLabel;
+    styWarning: TcxEditStyleController;
     procedure FormCreate(Sender: TObject);
     procedure dteInvoiceDatePropertiesEditValueChanged(Sender: TObject);
     procedure btnSetDefaultDateClick(Sender: TObject);
@@ -56,10 +61,10 @@ begin
   inherited;
   Caption := 'Invoice Date';
   Width := 250;
-  Height := 180;
-  dteInvoiceDate.EditValue := TSDM.DefaultInvoiceDate;
-  dteInvoiceDate.Properties.MinDate := TSDM.DefaultInvoiceDate;
-  dteInvoiceDate.Properties.MaxDate := Date;
+  Height := 300;
+  lucInvoiceDate.EditValue := TSDM.DefaultInvoiceDate;
+  lucInvoiceDate.Properties.MinDate := TSDM.DefaultInvoiceDate;
+  lucInvoiceDate.Properties.MaxDate := Date;
 end;
 
 procedure TInvoiceItemFrm.btnOKClick(Sender: TObject);
@@ -71,7 +76,7 @@ begin
   if edtInvoicNo.Value <= 1 then
     raise EValidateException.Create('Invalid invoice number.');
 
-  if VarIsNull(dteInvoiceDate.EditValue) then
+  if VarIsNull(lucInvoiceDate.EditValue) then
     raise EValidateException.Create('Invalid invoice date.');
 
   Self.ModalResult := mrOK;
@@ -80,14 +85,14 @@ end;
 procedure TInvoiceItemFrm.btnSetDefaultDateClick(Sender: TObject);
 begin
   inherited;
-  dteInvoiceDate.EditValue := TSDM.GetDefaulttInvoiceDate;
-  TSDM.DefaultInvoiceDate := dteInvoiceDate.Date;
+  lucInvoiceDate.EditValue := TSDM.GetDefaulttInvoiceDate;
+  TSDM.DefaultInvoiceDate := lucInvoiceDate.Date;
 end;
 
 procedure TInvoiceItemFrm.dteInvoiceDatePropertiesEditValueChanged(Sender: TObject);
 begin
   inherited;
-  TSDM.DefaultInvoiceDate := dteInvoiceDate.Date;
+  TSDM.DefaultInvoiceDate := lucInvoiceDate.Date;
 end;
 
 end.

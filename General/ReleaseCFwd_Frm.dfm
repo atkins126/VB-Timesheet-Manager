@@ -736,7 +736,7 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
       ParentShowHint = False
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
-      Properties.OnChange = cbxAllPeriodsPropertiesChange
+      Properties.OnEditValueChanged = cbxAllPeriodsPropertiesEditValueChanged
       ShowHint = True
       Style.HotTrack = False
       Style.TransparentBorder = False
@@ -757,7 +757,6 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
         end>
       Properties.ListOptions.SyncMode = True
       Properties.ListSource = TSDM.dtsReleaseToPeriod
-      Properties.OnEditValueChanged = lucReleaseToPeriodPropertiesEditValueChanged
       Properties.OnInitPopup = lucReleaseToPeriodPropertiesInitPopup
       Style.HotTrack = False
       Style.TransparentBorder = False
@@ -771,7 +770,7 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
       ParentShowHint = False
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
-      Properties.OnChange = cbxReleaseToCurrentPeriodPropertiesChange
+      Properties.OnEditValueChanged = cbxReleaseToCurrentPeriodPropertiesEditValueChanged
       ShowHint = True
       Style.HotTrack = False
       Style.TransparentBorder = False
@@ -837,7 +836,6 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
       ParentShowHint = False
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
-      Properties.OnChange = cbxExpandGridPropertiesChange
       ShowHint = True
       Style.HotTrack = False
       Style.TransparentBorder = False
@@ -1005,6 +1003,18 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
       CaptionOptions.Text = 'Empty Space Item'
       Index = 4
     end
+  end
+  object cbxSaveSettingsOnExit: TcxCheckBox [1]
+    Left = 425
+    Top = 225
+    Caption = 'Save settings on exit'
+    ParentShowHint = False
+    Properties.ImmediatePost = True
+    Properties.UseAlignmentWhenInplace = True
+    ShowHint = True
+    Style.TransparentBorder = False
+    TabOrder = 1
+    Transparent = True
   end
   inherited styRepository: TcxStyleRepository
     Left = 455
@@ -2227,6 +2237,10 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
         item
           Visible = True
           ItemName = 'btnOptions'
+        end
+        item
+          Visible = True
+          ItemName = 'cntSaveSettingsonExit'
         end>
       MultiLine = True
       OneOnRow = True
@@ -2256,7 +2270,15 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
     object btnOptions: TdxBarLargeButton
       Action = actOptions
       Category = 0
+      Visible = ivNever
       AutoGrayScale = False
+    end
+    object cntSaveSettingsonExit: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cbxSaveSettingsOnExit
     end
   end
   object styReadOnly: TcxEditStyleController

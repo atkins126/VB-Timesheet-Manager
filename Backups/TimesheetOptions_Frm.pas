@@ -67,7 +67,55 @@ type
     litHighlightSearchMatch: TdxLayoutItem;
     spc2: TdxLayoutEmptySpaceItem;
     grpHighlightSearchMatch: TdxLayoutGroup;
+    grpReleaseCarryForwardOptions: TdxLayoutGroup;
+    litAllPeriods: TdxLayoutItem;
+    cbxAllPeriods: TcxCheckBox;
+    cbxSavePeriodSelection: TcxCheckBox;
+    cbxSaveBillableStatusSelection: TcxCheckBox;
+    litSavePeriodSelection: TdxLayoutItem;
+    litSaveBillableSatusSelection: TdxLayoutItem;
+    litAllPeriodsExplanation: TdxLayoutItem;
+    grpAllPeriodsExplanation: TdxLayoutGroup;
+    lblAllPeriodsExplanation: TcxLabel;
+    spc3: TdxLayoutEmptySpaceItem;
+    cbxExpandGrid: TcxCheckBox;
+    litExpandGrid: TdxLayoutItem;
+    cbxReleaseToCurrentPeriod: TcxCheckBox;
+    litCarryForwardToCurrenPeriod: TdxLayoutItem;
+    grpTimesheetDetailreport: TdxLayoutGroup;
+    cbxSaveDateTypeSelection: TcxCheckBox;
+    cbxSaveReportPeriodSelection: TcxCheckBox;
+    cbxSaveSelectDataBy: TcxCheckBox;
+    cbxSaveGroupedSelection: TcxCheckBox;
+    cbxSaveSortOrderOptions: TcxCheckBox;
+    cbxSaveReportBillableSelection: TcxCheckBox;
+    cbxSaveWorkTypeSelection: TcxCheckBox;
+    cbxSaveReportTypeSelection: TcxCheckBox;
+    cbxOpenDocumentAfterexport: TcxCheckBox;
+    cbxFormatExcelData: TcxCheckBox;
+    cbxRemoveZeroBillableItems: TcxCheckBox;
+    grpReleaseMain: TdxLayoutGroup;
+    grpRelease2: TdxLayoutGroup;
+    grpRelease1: TdxLayoutGroup;
+    litSaveDateTypeSelection: TdxLayoutItem;
+    litSaveReportPeriodSelection: TdxLayoutItem;
+    litSaveSelectionBy: TdxLayoutItem;
+    litSaveGroupedSelection: TdxLayoutItem;
+    litSveSortOrderOptions: TdxLayoutItem;
+    litSaveReportBillableSelection: TdxLayoutItem;
+    litSaveWorkTypeSelection: TdxLayoutItem;
+    litSaveReportTypeSelection: TdxLayoutItem;
+    litOpenDocumentAfterExport: TdxLayoutItem;
+    litExportFormattedExcelData: TdxLayoutItem;
+    litRemoveZeroBillableItems: TdxLayoutItem;
+    grpReleaseOptions: TdxLayoutGroup;
     styHighlight: TcxEditStyleController;
+    cbxRefreshData: TcxCheckBox;
+    litRefreshDataWhenChangingSortOrder: TdxLayoutItem;
+    cbxGroupedReport: TcxCheckBox;
+    litGroupTimsheetDetailReport: TdxLayoutItem;
+    cbxExportSelectedOnlyToExcel: TcxCheckBox;
+    litExportSelectedOnlyToExcel: TdxLayoutItem;
     litOptioinDescription: TdxLayoutItem;
     memDescription: TcxMemo;
     styReadOnly: TcxEditStyleController;
@@ -94,8 +142,8 @@ type
 
     procedure SetControlValues;
     procedure ReadTimesheetRegValues;
-//    procedure ReadTSDetailReportRegValues;
-//    procedure ReadReleaseCFwdRegValues;
+    procedure ReadTSDetailReportRegValues;
+    procedure ReadReleaseCFwdRegValues;
     procedure PopulateHintArray;
     procedure DoOnMouseEnter(Sender: TObject);
     procedure DoOnMouseLeave(Sender: TObject);
@@ -374,7 +422,7 @@ end;
 
 procedure TTimesheetOptionsFrm.PopulateHintArray;
 begin
-  Setlength(FHintArray, 11);
+  Setlength(FHintArray, 25);
   // General timesheet options
   FHintArray[0] := 'When capturing a new timesheet item use the default customer.' +
     ' If this option is un-checked you will need to select a customer whenever capturing a new timesheet item.';
@@ -397,22 +445,22 @@ begin
   FHintArray[9] := 'When selecting an item from a lookup list, the matching item will be highlited. ';
   FHintArray[10] := 'Save the tiemsheet grid layout whenever you exit the timesheet manaager.';
   // Timesheet detail report options
-//  FHintArray[11] := 'Save the Date/Period value for future use.';
-//  FHintArray[12] := 'Save the Date/Period type selection for future use.';
-//  FHintArray[13] := 'Save the report grouping selection option.';
-//  FHintArray[14] := 'Save the manner in which to fetch data.';
-//  FHintArray[15] := 'Save current data sort order. The sort order is used when fetching, printing or exporting data.';
-//  FHintArray[16] := 'Re-fetch data whenever changing the data sort order.';
-//  FHintArray[17] := 'When this option is checked data will be grouped by the first item in the sort order list.' +
-//    ' This applies to printing and exporting of data.';
-//  FHintArray[18] := 'Save the billable status option setting for future use.';
-//  FHintArray[19] := 'When fetching data for the billable summary report, exclude items that have a zero billable value.';
-//  FHintArray[20] := 'Save the report type selection setting.';
-//  FHintArray[21] := 'Save the work type selection setting.';
-//  FHintArray[22] := 'Always attempt to open the saved document after exorting to Excel or PDF.';
-//  FHintArray[23] := 'When exporting to Excel, export only records that are selected. If this option is un-cheked, all recoreds are exported.';
-//  FHintArray[24] := 'When exporting to Excel, export the data formatted as seen in the grid. If this option is un-checked ' +
-//    ' the data is exported as plain text/numeric raw data.';
+  FHintArray[11] := 'Save the Date/Period value for future use.';
+  FHintArray[12] := 'Save the Date/Period type selection for future use.';
+  FHintArray[13] := 'Save the report grouping selection option.';
+  FHintArray[14] := 'Save the manner in which to fetch data.';
+  FHintArray[15] := 'Save current data sort order. The sort order is used when fetching, printing or exporting data.';
+  FHintArray[16] := 'Re-fetch data whenever changing the data sort order.';
+  FHintArray[17] := 'When this option is checked data will be grouped by the first item in the sort order list.' +
+    ' This applies to printing and exporting of data.';
+  FHintArray[18] := 'Save the billable status option setting for future use.';
+  FHintArray[19] := 'When fetching data for the billable summary report, exclude items that have a zero billable value.';
+  FHintArray[20] := 'Save the report type selection setting.';
+  FHintArray[21] := 'Save the work type selection setting.';
+  FHintArray[22] := 'Always attempt to open the saved document after exorting to Excel or PDF.';
+  FHintArray[23] := 'When exporting to Excel, export only records that are selected. If this option is un-cheked, all recoreds are exported.';
+  FHintArray[24] := 'When exporting to Excel, export the data formatted as seen in the grid. If this option is un-checked ' +
+    ' the data is exported as plain text/numeric raw data.';
 end;
 
 procedure TTimesheetOptionsFrm.ReadTimesheetRegValues;
@@ -443,31 +491,31 @@ begin
   end;
 end;
 
-//procedure TTimesheetOptionsFrm.ReadTSDetailReportRegValues;
-//var
-//  RegKey: TRegistry;
-//begin
-//  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
-//  RegKey.RootKey := HKEY_CURRENT_USER;
-//  RegKey.OpenKey(KEY_TIMESHEET_DETAIL_REPORT, True);
-//
-//  cbxRefreshData.Checked := RegKey.ReadBool('Refresh Data When Changing Sort Order');
-//  cbxGroupedReport.Checked := RegKey.ReadBool('Group Timsheet Detail Report');
-//  cbxOpenDocumentAfterExport.Checked := RegKey.ReadBool('Open Document After Export');
-//  cbxRemoveZeroBillableItems.Checked := RegKey.ReadBool('Remove Zero Billable Values');
-//  cbxSaveReportTypeSelection.Checked := RegKey.ReadBool('Save Report Type Selection');
-//  cbxExportSelectedOnlyToExcel.Checked := RegKey.ReadBool('Export Selcted Timesheets Only');
-//  cbxFormatExcelData.Checked := RegKey.ReadBool('Export Formatted Data To Excel');
-//end;
-//
-//procedure TTimesheetOptionsFrm.ReadReleaseCFwdRegValues;
-//var
-//  RegKey: TRegistry;
-//begin
-//  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
-//  RegKey.RootKey := HKEY_CURRENT_USER;
-//  RegKey.OpenKey(KEY_TIMESHEET_DETAIL_REPORT, True);
-//end;
+procedure TTimesheetOptionsFrm.ReadTSDetailReportRegValues;
+var
+  RegKey: TRegistry;
+begin
+  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+  RegKey.RootKey := HKEY_CURRENT_USER;
+  RegKey.OpenKey(KEY_TIMESHEET_DETAIL_REPORT, True);
+
+  cbxRefreshData.Checked := RegKey.ReadBool('Refresh Data When Changing Sort Order');
+  cbxGroupedReport.Checked := RegKey.ReadBool('Group Timsheet Detail Report');
+  cbxOpenDocumentAfterExport.Checked := RegKey.ReadBool('Open Document After Export');
+  cbxRemoveZeroBillableItems.Checked := RegKey.ReadBool('Remove Zero Billable Values');
+  cbxSaveReportTypeSelection.Checked := RegKey.ReadBool('Save Report Type Selection');
+  cbxExportSelectedOnlyToExcel.Checked := RegKey.ReadBool('Export Selcted Timesheets Only');
+  cbxFormatExcelData.Checked := RegKey.ReadBool('Export Formatted Data To Excel');
+end;
+
+procedure TTimesheetOptionsFrm.ReadReleaseCFwdRegValues;
+var
+  RegKey: TRegistry;
+begin
+  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+  RegKey.RootKey := HKEY_CURRENT_USER;
+  RegKey.OpenKey(KEY_TIMESHEET_DETAIL_REPORT, True);
+end;
 
 end.
 

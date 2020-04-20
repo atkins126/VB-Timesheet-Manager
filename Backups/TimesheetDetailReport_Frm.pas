@@ -7,7 +7,6 @@ uses
   System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Dialogs, System.ImageList,
   Vcl.ImgList, System.Actions, Vcl.ActnList, System.Win.Registry, System.IOUtils,
   Vcl.ComCtrls, Data.DB, WinApi.ShellApi, Vcl.Menus, Vcl.StdCtrls, System.Math,
-  System.DateUtils,
 
   frxClass, FireDAC.Comp.Client,
 
@@ -277,10 +276,7 @@ type
     edtBCAddWorkStrX: TcxGridDBBandedColumn;
     lvlBillCfwdExcel: TcxGridLevel;
     actOptions: TAction;
-    cntSaveSettingsOnExit: TdxBarControlContainerItem;
-    cbxSaveSettingsOnExit: TcxCheckBox;
-    cbxExportSelectedRecordsOnly: TcxCheckBox;
-    litExportSelectedRecordsOnly: TdxLayoutItem;
+    btnOptions: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure DoCloseForm(Sender: TObject);
     procedure DoPrint(Sender: TObject);
@@ -290,9 +286,14 @@ type
     procedure FormShow(Sender: TObject);
     procedure lucDateTypePropertiesEditValueChanged(Sender: TObject);
     procedure lucSelectReportByPropertiesEditValueChanged(Sender: TObject);
+    procedure lucReportTypePropertiesChange(Sender: TObject);
     procedure viewSortOrderDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure viewSortOrderStartDrag(Sender: TObject; var DragObject: TDragObject);
     procedure cbxIncludePropertiesEditValueChanged(Sender: TObject);
+    procedure cbxGroupedReportPropertiesChange(Sender: TObject);
+    procedure lucSelectReportByPropertiesChange(Sender: TObject);
+    procedure lucPeriodPropertiesChange(Sender: TObject);
+    procedure lucFromDatePropertiesChange(Sender: TObject);
     procedure viewSystemUserKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
 
     procedure viewSortOrderDragOver(Sender, Source: TObject; X, Y: Integer;
@@ -307,14 +308,14 @@ type
 
     procedure edtTLoginNameGetDisplayText(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AText: string);
+    procedure cbxOepnDocumentPropertiesChange(Sender: TObject);
+    procedure cbxRemoveZeroBillableValuesPropertiesChange(Sender: TObject);
     procedure DoExpandTimesheet(Sender: TObject);
     procedure DoCollapseTimesheet(Sender: TObject);
+    procedure cbxRefreshDataPropertiesChange(Sender: TObject);
     procedure cbxExportSelectedOnlyToExcelPropertiesChange(Sender: TObject);
+    procedure cbxFormatExcelDataPropertiesChange(Sender: TObject);
     procedure DoOptions(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure lucPeriodPropertiesEditValueChanged(Sender: TObject);
-    procedure lucFromDatePropertiesEditValueChanged(Sender: TObject);
-    procedure lucReportTypePropertiesEditValueChanged(Sender: TObject);
 
   private
     { Private declarations }
@@ -383,12 +384,30 @@ begin
     TcxCanvas(Msg.WParam).DrawComplexFrame(TcxGridTableDataCellViewInfo(Msg.LParam).ClientBounds, clRed, clRed, cxBordersAll, 1);
 end;
 
+procedure TTimesheetDetailReportFrm.lucFromDatePropertiesChange(Sender: TObject);
+begin
+  inherited;
+  if not FShowingForm then
+//    HideTabs;
+//  Showtabs;
+    CloseTSDataSets;
+end;
+
+procedure TTimesheetDetailReportFrm.edtTLoginNameGetDisplayText(
+  Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord; var AText: string);
+begin
+  inherited;
+  if ARecord is TcxGridGroupRow then
+    AText := TcxGridGroupRow(ARecord).Value;
+end;
+
 procedure TTimesheetDetailReportFrm.FormCreate(Sender: TObject);
 var
   I: Integer;
   Progress: Extended;
   RegKey: TRegistry;
   DownloadCaption: string;
+//  AComboBox: TcxComboBox;
 begin
   inherited;
   Width := 1300;
@@ -402,6 +421,39 @@ begin
   FSortListID := RUtils.CreateStringList(COMMA, SINGLE_QUOTE);
   FShowingForm := True;
 
+  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+  RegKey.RootKey := HKEY_CURRENT_USER;
+  RegKey.OpenKey(KEY_TIMESHEET_DETAIL_REPORT, True);
+
+  if not RegKey.ValueExists('Refresh Data When Changing Sort Order') then
+    RegKey.WriteBool('Refresh Data When Changing Sort Order', True);
+
+  if not RegKey.ValueExists('Group Timsheet Detail Report') then
+    RegKey.WriteBool('Group Timsheet Detail Report', True);
+
+  if not RegKey.ValueExists('Open Document After Export') then
+    RegKey.WriteBool('Open Document After Export', True);
+
+  if not RegKey.ValueExists('Remove Zero Billable Values') then
+    RegKey.WriteBool('Remove Zero Billable Values', True);
+
+  if not RegKey.ValueExists('Select Report By Index') then
+    RegKey.WriteInteger('Select Report By Index', 0);
+
+  if not RegKey.ValueExists('Export Selcted Timesheets Only') then
+    RegKey.WriteBool('Export Selcted Timesheets Only', False);
+
+  if not RegKey.ValueExists('Export Formatted Data To Excel') then
+    RegKey.WriteBool('Export Formatted Data To Excel', True);
+
+  cbxRefreshData.Checked := RegKey.ReadBool('Refresh Data When Changing Sort Order');
+  cbxGroupedReport.Checked := RegKey.ReadBool('Group Timsheet Detail Report');
+  cbxOpenDocument.Checked := RegKey.ReadBool('Open Document After Export');
+  cbxRemoveZeroBillableValues.Checked := RegKey.ReadBool('Remove Zero Billable Values');
+  lucSelectReportBy.ItemIndex := RegKey.ReadInteger('Select Report By Index');
+  cbxExportSelectedOnlyToExcel.Checked := RegKey.ReadBool('Export Selcted Timesheets Only');
+  cbxFormatExcelData.Checked := RegKey.ReadBool('Export Formatted Data To Excel');
+
   if ReportDM = nil then
     ReportDM := TReportDM.Create(nil);
 
@@ -413,77 +465,14 @@ begin
   viewBillCfwd.DataController.DataSource := ReportDM.dtsBillCfwd;
   viewBillCfwdExcel.DataController.DataSource := ReportDM.dtsBillCFwdExcel;
   viewSortOrder.DataController.DataSource := ReportDM.dtsTSSortOrder;
-
-  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
-  RegKey.RootKey := HKEY_CURRENT_USER;
-  RegKey.OpenKey(KEY_TIMESHEET_DETAIL_REPORT, True);
-
-  if not RegKey.ValueExists('Save settings on exit') then
-    RegKey.WriteBool('Save settings on exit', True);
-
-  if not RegKey.ValueExists('Period') then
-    RegKey.WriteInteger('Period', VBBaseDM.CurrentPeriod);
-
-  if not RegKey.ValueExists('Date Type') then
-    RegKey.WriteInteger('Date Type', 0);
-
-//  if not RegKey.ValueExists('From Date') then
-//    RegKey.WriteDate('From Date', lucFromDate.EditValue);
-//
-//  if not RegKey.ValueExists('To Date') then
-//    RegKey.WriteDate('To Date', lucToDate.EditValue);
-
-  if not RegKey.ValueExists('Select Report By Index') then
-    RegKey.WriteInteger('Select Report By Index', 0);
-
-  if not RegKey.ValueExists('Group Timsheet Detail Report') then
-    RegKey.WriteBool('Group Timsheet Detail Report', True);
-
-  if not RegKey.ValueExists('Refresh Data When Changing Sort Order') then
-    RegKey.WriteBool('Refresh Data When Changing Sort Order', True);
-
-  if not RegKey.ValueExists('Billable Status Index') then
-    RegKey.WriteInteger('Billable Status Index', 0);
-
-  if not RegKey.ValueExists('Work Type Index') then
-    RegKey.WriteInteger('Work Type Index', 0);
-
-  if not RegKey.ValueExists('Report Type Index') then
-    RegKey.WriteInteger('Report Type Index', 0);
-
-  if not RegKey.ValueExists('Open Document After Export') then
-    RegKey.WriteBool('Open Document After Export', True);
-
-  if not RegKey.ValueExists('Remove Zero Billable Values') then
-    RegKey.WriteBool('Remove Zero Billable Values', True);
-
-  if not RegKey.ValueExists('Export Selcted Timesheets Only') then
-    RegKey.WriteBool('Export Selcted Timesheets Only', False);
-
-  if not RegKey.ValueExists('Export Formatted Data To Excel') then
-    RegKey.WriteBool('Export Formatted Data To Excel', True);
-
-  cbxSaveSettingsOnExit.Checked := RegKey.ReadBool('Save settings on exit');
-  lucDateType.ItemIndex := RegKey.ReadInteger('Date Type');
-  lucPeriod.EditValue := RegKey.ReadInteger('Period');
-  lucFromDate.EditValue := GetMonthStartDate(lucPeriod.EditValue);
-  lucToDate.EditValue := GetMonthEndDate(lucPeriod.EditValue);
-  lucSelectReportBy.ItemIndex := RegKey.ReadInteger('Select Report By Index');
-  cbxGroupedReport.Checked := RegKey.ReadBool('Group Timsheet Detail Report');
-  cbxRefreshData.Checked := RegKey.ReadBool('Refresh Data When Changing Sort Order');
-  cbxRemoveZeroBillableValues.Checked := RegKey.ReadBool('Remove Zero Billable Values');
-  lucBillable.ItemIndex := RegKey.ReadInteger('Billable Status Index');
-  lucWorkType.ItemIndex := RegKey.ReadInteger('Work Type Index');
-  lucReportType.ItemIndex := RegKey.ReadInteger('Report Type Index');
-  cbxOpenDocument.Checked := RegKey.ReadBool('Open Document After Export');
-  cbxExportSelectedOnlyToExcel.Checked := RegKey.ReadBool('Export Selcted Timesheets Only');
-  cbxFormatExcelData.Checked := RegKey.ReadBool('Export Formatted Data To Excel');
-
+  lucReportType.ItemIndex := 0;
   PopulateSortOptions;
   GetPeriods;
 
   if not ReportDM.cdsPeriodListing.Locate('THE_PERIOD', VBBaseDM.CurrentPeriod, []) then
     ReportDM.cdsPeriodListing.Last;
+
+  lucPeriod.EditValue := ReportDM.cdsPeriodListing.FieldByName('THE_PERIOD').Asinteger;
 
 //  if not ReportDM.cdsToPeriod.Locate('THE_PERIOD', VBBaseDM.CurrentPeriod, []) then
 //    ReportDM.cdsToPeriod.Last;
@@ -641,58 +630,6 @@ begin
   Screen.Cursor := crDefault;
 end;
 
-procedure TTimesheetDetailReportFrm.lucFromDatePropertiesEditValueChanged(Sender: TObject);
-begin
-  inherited;
-  if not FShowingForm then
-//    HideTabs;
-//  Showtabs;
-    CloseTSDataSets;
-end;
-
-procedure TTimesheetDetailReportFrm.edtTLoginNameGetDisplayText(
-  Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord; var AText: string);
-begin
-  inherited;
-  if ARecord is TcxGridGroupRow then
-    AText := TcxGridGroupRow(ARecord).Value;
-end;
-
-procedure TTimesheetDetailReportFrm.FormClose(Sender: TObject; var Action: TCloseAction);
-var
-  RegKey: TRegistry;
-begin
-  inherited;
-  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
-  RegKey.RootKey := HKEY_CURRENT_USER;
-  RegKey.OpenKey(KEY_TIMESHEET_DETAIL_REPORT, True);
-
-  try
-    RegKey.WriteBool('Save settings on exit', cbxSaveSettingsOnExit.Checked);
-
-    if cbxSaveSettingsOnExit.Checked then
-    begin
-      RegKey.WriteInteger('Date Type', lucDateType.ItemIndex);
-      RegKey.WriteInteger('Period', lucPeriod.EditValue);
-      RegKey.WriteDate('From Date', lucFromDate.EditValue);
-      RegKey.WriteDate('To Date', lucToDate.EditValue);
-      RegKey.WriteInteger('Select Report By Index', lucSelectReportBy.ItemIndex);
-      RegKey.WriteBool('Group Timsheet Detail Report', cbxGroupedReport.Checked);
-      RegKey.WriteBool('Refresh Data When Changing Sort Order', cbxRefreshData.Checked);
-      RegKey.WriteBool('Group Timsheet Detail Report', cbxOpenDocument.Checked);
-      RegKey.WriteBool('Remove Zero Billable Values', cbxRemoveZeroBillableValues.Checked);
-      RegKey.WriteBool('Export Formatted Data To Excel', cbxOpenDocument.Checked);
-      RegKey.WriteInteger('Billable Status Index', lucBillable.ItemIndex);
-      RegKey.WriteInteger('Work Type Index', lucWorkType.ItemIndex);
-      RegKey.WriteInteger('Report Type Index', lucReportType.ItemIndex);
-      ReportDM.cdsTSSortOrder.SaveToFile(TSDM.ShellResource.ResourceFolder + 'TS Report Sort Order.xml');
-      RegKey.CloseKey;
-    end;
-  finally
-    RegKey.Free;
-  end;
-end;
-
 procedure TTimesheetDetailReportFrm.cbxExportSelectedOnlyToExcelPropertiesChange(Sender: TObject);
 var
   RegKey: TRegistry;
@@ -712,10 +649,102 @@ begin
   end;
 end;
 
+procedure TTimesheetDetailReportFrm.cbxFormatExcelDataPropertiesChange(Sender: TObject);
+var
+  RegKey: TRegistry;
+begin
+  inherited;
+  if not FShowingForm then
+  begin
+    RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+    RegKey.RootKey := HKEY_CURRENT_USER;
+    RegKey.OpenKey(KEY_TIMESHEET_DETAIL_REPORT, True);
+    try
+      RegKey.WriteBool('Export Formatted Data To Excel', cbxOpenDocument.Checked);
+      RegKey.CloseKey;
+    finally
+      Regkey.Free;
+    end;
+  end;
+end;
+
+procedure TTimesheetDetailReportFrm.cbxGroupedReportPropertiesChange(Sender: TObject);
+var
+  RegKey: TRegistry;
+begin
+  inherited;
+  if not FShowingForm then
+  begin
+    RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+    RegKey.RootKey := HKEY_CURRENT_USER;
+    RegKey.OpenKey(KEY_TIMESHEET_DETAIL_REPORT, True);
+    try
+      RegKey.WriteBool('Group Timsheet Detail Report', cbxGroupedReport.Checked);
+      RegKey.CloseKey;
+    finally
+      Regkey.Free;
+    end;
+  end;
+end;
+
 procedure TTimesheetDetailReportFrm.cbxIncludePropertiesEditValueChanged(Sender: TObject);
 begin
   inherited;
   ReportDM.cdsTSSortOrder.Post;
+end;
+
+procedure TTimesheetDetailReportFrm.cbxOepnDocumentPropertiesChange(Sender: TObject);
+var
+  RegKey: TRegistry;
+begin
+  inherited;
+  if not FShowingForm then
+  begin
+    RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+    RegKey.RootKey := HKEY_CURRENT_USER;
+    RegKey.OpenKey(KEY_TIMESHEET_DETAIL_REPORT, True);
+    try
+      RegKey.WriteBool('Group Timsheet Detail Report', cbxOpenDocument.Checked);
+      RegKey.CloseKey;
+    finally
+      Regkey.Free;
+    end;
+  end;
+end;
+
+procedure TTimesheetDetailReportFrm.cbxRefreshDataPropertiesChange(Sender: TObject);
+var
+  RegKey: TRegistry;
+begin
+  inherited;
+  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+  RegKey.RootKey := HKEY_CURRENT_USER;
+  RegKey.OpenKey(KEY_TIMESHEET_DETAIL_REPORT, True);
+  try
+    RegKey.WriteBool('Refresh Data When Changing Sort Order', cbxRefreshData.Checked);
+    RegKey.CloseKey;
+  finally
+    Regkey.Free;
+  end;
+end;
+
+procedure TTimesheetDetailReportFrm.cbxRemoveZeroBillableValuesPropertiesChange(Sender: TObject);
+var
+  RegKey: TRegistry;
+begin
+  inherited;
+  if not FShowingForm then
+  begin
+    RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+    RegKey.RootKey := HKEY_CURRENT_USER;
+    RegKey.OpenKey(KEY_TIMESHEET_DETAIL_REPORT, True);
+    try
+      RegKey.WriteBool('Remove Zero Billable Values', cbxRemoveZeroBillableValues.Checked);
+      RegKey.CloseKey;
+    finally
+      Regkey.Free;
+    end;
+  end;
 end;
 
 procedure TTimesheetDetailReportFrm.CheckSelection;
@@ -1127,7 +1156,7 @@ begin
   grpData.Items[4].Visible := not grpData.Items[3].Visible;
 end;
 
-procedure TTimesheetDetailReportFrm.lucReportTypePropertiesEditValueChanged(Sender: TObject);
+procedure TTimesheetDetailReportFrm.lucReportTypePropertiesChange(Sender: TObject);
 begin
   inherited;
 //  HideTabs;
@@ -1182,13 +1211,11 @@ begin
   end;
 end;
 
-procedure TTimesheetDetailReportFrm.lucPeriodPropertiesEditValueChanged(Sender: TObject);
+procedure TTimesheetDetailReportFrm.lucPeriodPropertiesChange(Sender: TObject);
 begin
   inherited;
   if not FShowingForm then
   begin
-    lucFromDate.EditValue := GetMonthStartDate(lucPeriod.EditValue);
-    lucToDate.EditValue := GetMonthEndDate(lucPeriod.EditValue);
     HideTabs;
     Showtabs;
   end;
@@ -1196,7 +1223,7 @@ begin
   CloseTSDataSets;
 end;
 
-procedure TTimesheetDetailReportFrm.lucSelectReportByPropertiesEditValueChanged(Sender: TObject);
+procedure TTimesheetDetailReportFrm.lucSelectReportByPropertiesChange(Sender: TObject);
 var
   RegKey: TRegistry;
 begin
@@ -1267,6 +1294,46 @@ begin
         grpData.ItemIndex := lucSelectReportBy.ItemIndex;
       end;
   end;
+end;
+
+procedure TTimesheetDetailReportFrm.lucSelectReportByPropertiesEditValueChanged(Sender: TObject);
+begin
+  inherited;
+//  HideTabs;
+//  grpData.Items[lucSelectReportBy.ItemIndex].Visible := True;
+//  viewTimesheet.DataController.Groups.ClearGrouping;
+//  edtTActivtyType.Visible := True;
+//  edtTLoginName.Visible := True;
+//  edtTCustomerName.Visible := True;
+//  viewSystemUser.Controller.ClearSelection;
+//  viewCustomerListing.Controller.ClearSelection;
+//  viewActivityType.Controller.ClearSelection;
+//
+//  case lucReportType.ItemIndex of
+//    0:
+//      begin
+//        case lucSelectReportBy.ItemIndex of
+//          0:
+//            begin
+//              edtTLoginName.GroupBy(0, True, True, True);
+//              edtTLoginName.Position.BandIndex := 0;
+//            end;
+//
+//          1:
+//            begin
+//              edtTCustomerName.GroupBy(0, True, True, True);
+//              edtTCustomerName.Position.BandIndex := 0;
+//            end;
+//
+//          2:
+//            begin
+//              edtTActivtyType.GroupBy(0, True, True, True);
+//              edtTActivtyType.Position.BandIndex := 0;
+//            end;
+//        end;
+//        grpData.ItemIndex := lucSelectReportBy.ItemIndex;
+//      end;
+//  end;
 end;
 
 procedure TTimesheetDetailReportFrm.PopulateSortOptions;
@@ -1372,7 +1439,7 @@ var
 begin
   HT := TcxGridSite(Sender).ViewInfo.GetHitTest(X, Y);
   ReorderRows(TcxGridDBTableView(TcxGridSite(Sender).GridView), TcxGridRecordCellHitTest(HT).GridRecord);
-//  ReportDM.cdsTSSortOrder.SaveToFile(TSDM.ShellResource.ResourceFolder + 'TS Report Sort Order.xml');
+  ReportDM.cdsTSSortOrder.SaveToFile(TSDM.ShellResource.ResourceFolder + 'TS Report Sort Order.xml');
   FGroupByField := ReportDM.cdsTSSortOrder.FieldByName('FIELD_NAME').AsString;
 
   if cbxRefreshData.Checked then
@@ -1988,7 +2055,7 @@ procedure TTimesheetDetailReportFrm.DoCloseForm(Sender: TObject);
 begin
   inherited;
   CloseDataSets;
-  Self.Close;
+  Self.ModalResult := mrOK;
 end;
 
 procedure TTimesheetDetailReportFrm.DoPDF(Sender: TObject);
