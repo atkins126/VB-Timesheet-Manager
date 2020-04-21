@@ -277,7 +277,7 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Default = True
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 19
+      TabOrder = 20
       OnClick = btnOKClick
     end
     object btnCancel: TcxButton [14]
@@ -288,7 +288,7 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Caption = 'Cancel'
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 20
+      TabOrder = 21
       OnClick = btnCancelClick
     end
     object lucRateUnit: TcxDBLookupComboBox [15]
@@ -387,8 +387,19 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       TabOrder = 17
       Width = 80
     end
+    object lblEditStatus: TcxLabel [21]
+      Left = 149
+      Top = 614
+      Caption = 'This timesheet item cannot be modified'
+      ParentFont = False
+      Style.HotTrack = False
+      Style.StyleController = styEditStatus
+      Style.TextColor = clRed
+      Style.TransparentBorder = False
+      Transparent = True
+    end
     inherited layMainGroup_Root: TdxLayoutGroup
-      ItemIndex = 7
+      ItemIndex = 9
     end
     object grpDate: TdxLayoutGroup
       Parent = layMainGroup_Root
@@ -793,7 +804,7 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       ControlOptions.OriginalHeight = 25
       ControlOptions.OriginalWidth = 75
       ControlOptions.ShowBorder = False
-      Index = 1
+      Index = 3
     end
     object litCancel: TdxLayoutItem
       Parent = grpControls
@@ -804,7 +815,7 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       ControlOptions.OriginalHeight = 25
       ControlOptions.OriginalWidth = 75
       ControlOptions.ShowBorder = False
-      Index = 2
+      Index = 4
     end
     object grpGeneralInfo: TdxLayoutGroup
       Parent = layMainGroup_Root
@@ -841,6 +852,7 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
     end
     object litLegend: TdxLayoutItem
       Parent = grpControls
+      AlignVert = avCenter
       CaptionOptions.Glyph.SourceDPI = 96
       CaptionOptions.Glyph.Data = {
         89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
@@ -924,6 +936,24 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       ItemIndex = 1
       Index = 6
     end
+    object litEditStatus: TdxLayoutItem
+      Parent = grpControls
+      AlignVert = avCenter
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = lblEditStatus
+      ControlOptions.OriginalHeight = 16
+      ControlOptions.OriginalWidth = 287
+      ControlOptions.ShowBorder = False
+      Index = 2
+    end
+    object spc4: TdxLayoutEmptySpaceItem
+      Parent = grpControls
+      SizeOptions.Height = 10
+      SizeOptions.Width = 10
+      CaptionOptions.Text = 'Empty Space Item'
+      Index = 1
+    end
   end
   inherited styRepository: TcxStyleRepository
     PixelsPerInch = 96
@@ -948,8 +978,18 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
   end
   object styReadOnly: TcxEditStyleController
     Style.Color = 15132415
-    OnStyleChanged = styReadOnlyStyleChanged
     Left = 375
+    Top = 145
+    PixelsPerInch = 96
+  end
+  object styEditStatus: TcxEditStyleController
+    Style.Font.Charset = ANSI_CHARSET
+    Style.Font.Color = clRed
+    Style.Font.Height = -13
+    Style.Font.Name = 'Verdana'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
+    Left = 470
     Top = 145
     PixelsPerInch = 96
   end

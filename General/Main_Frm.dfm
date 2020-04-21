@@ -12,17 +12,16 @@ inherited MainFrm: TMainFrm
   TextHeight = 13
   inherited layMain: TdxLayoutControl
     Top = 115
-    Width = 1455
+    Width = 1400
     Height = 617
-    Align = alClient
     ExplicitTop = 115
-    ExplicitWidth = 1455
+    ExplicitWidth = 1400
     ExplicitHeight = 617
     object grdTimesheet: TcxGrid [0]
       Left = 11
-      Top = 11
-      Width = 1433
-      Height = 595
+      Top = 17
+      Width = 1378
+      Height = 589
       TabOrder = 0
       object viewTimesheet: TcxGridDBBandedTableView
         PopupMenu = popTimesheet
@@ -66,6 +65,7 @@ inherited MainFrm: TMainFrm
         OptionsData.Inserting = False
         OptionsSelection.MultiSelect = True
         OptionsSelection.CheckBoxVisibility = [cbvDataRow, cbvColumnHeader]
+        OptionsSelection.MultiSelectMode = msmPersistent
         OptionsView.NoDataToDisplayInfoText = '<No Timesheet data to display>'
         OptionsView.Footer = True
         Bands = <
@@ -682,6 +682,14 @@ inherited MainFrm: TMainFrm
       ControlOptions.OriginalHeight = 426
       ControlOptions.OriginalWidth = 786
       ControlOptions.ShowBorder = False
+      Index = 1
+    end
+    object dxLayoutItem1: TdxLayoutItem
+      Parent = layMainGroup_Root
+      CaptionOptions.Visible = False
+      ControlOptions.OriginalHeight = 25
+      ControlOptions.OriginalWidth = 75
+      ControlOptions.ShowBorder = False
       Index = 0
     end
   end
@@ -766,8 +774,8 @@ inherited MainFrm: TMainFrm
     end
   end
   object grdTimesheetBillable: TcxGrid [3]
-    Left = 1426
-    Top = 255
+    Left = 1386
+    Top = 225
     Width = 1181
     Height = 421
     Font.Charset = ANSI_CHARSET
@@ -781,6 +789,7 @@ inherited MainFrm: TMainFrm
     object viewTimesheetBillable: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       ScrollbarAnnotations.CustomAnnotations = <>
+      DataController.DataSource = ReportDM.dtsTSBillable
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
@@ -1158,7 +1167,7 @@ inherited MainFrm: TMainFrm
         Properties.DisplayFormat = '######'
         Properties.EditFormat = '######'
         Properties.ReadOnly = True
-        MinWidth = 64
+        MinWidth = 74
         Options.Editing = False
         Options.Filtering = False
         Options.IncSearch = False
@@ -1194,7 +1203,7 @@ inherited MainFrm: TMainFrm
         Properties.DisplayFormat = '######'
         Properties.EditFormat = '######'
         Properties.ReadOnly = True
-        MinWidth = 64
+        MinWidth = 74
         Options.Editing = False
         Options.Filtering = False
         Options.IncSearch = False
@@ -7383,8 +7392,15 @@ inherited MainFrm: TMainFrm
           ItemName = 'lucViewMode'
         end
         item
+          UserDefine = [udWidth]
+          UserWidth = 20
+          ViewLayout = ivlGlyphControlCaption
           Visible = True
-          ItemName = 'lbl1'
+          ItemName = 'cbxPersistentSelection'
+        end
+        item
+          Visible = True
+          ItemName = 'spc1'
         end
         item
           Visible = True
@@ -7694,12 +7710,6 @@ inherited MainFrm: TMainFrm
       Action = actLayoutManager
       Category = 0
     end
-    object lbl1: TdxBarStatic
-      Caption = ' '
-      Category = 0
-      Hint = ' '
-      Visible = ivAlways
-    end
     object btnBillableSummary: TdxBarLargeButton
       Action = actBillableSummary
       Category = 0
@@ -7819,6 +7829,20 @@ inherited MainFrm: TMainFrm
       Action = actMonthlyBilling
       Category = 0
       ScreenTip = tipMonthlyBilling
+    end
+    object cbxPersistentSelection: TcxBarEditItem
+      Caption = 'Persistent record selection'
+      Category = 0
+      Hint = 'Persistent record selection'
+      Visible = ivAlways
+      PropertiesClassName = 'TcxCheckBoxProperties'
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
+      Properties.OnEditValueChanged = cbxPersistentSelectionPropertiesEditValueChanged
+    end
+    object spc1: TdxBarStatic
+      Category = 0
+      Visible = ivAlways
     end
   end
   object imgNav32: TcxImageList

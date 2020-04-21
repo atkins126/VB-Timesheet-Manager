@@ -31,6 +31,7 @@ type
     IncrementalLookupFitlering: Boolean;
     HighlightLookupSearchMatch: Boolean;
     SaveGridLayout: Boolean;
+    PersitentRecordSelection: Boolean;
   end;
 
 //    Regkey.WriteBool('Incremental Lookup Fitlering', cbxIncrementalFiltering.Checked);

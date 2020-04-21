@@ -28,7 +28,7 @@ uses
   dxCore, cxDateUtils, cxCustomData, cxFilter, cxData, cxDataStorage,
   cxNavigator, dxDateRanges, dxScrollbarAnnotations, cxDBData, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridBandedTableView,
-  cxGridDBBandedTableView, cxGridCustomView, cxGrid;
+  cxGridDBBandedTableView, cxGridCustomView, cxGrid, cxLabel;
 
 type
   TTimesheetEditFrm = class(TBaseLayoutFrm)
@@ -92,6 +92,10 @@ type
     spc2: TdxLayoutEmptySpaceItem;
     spc5: TdxLayoutEmptySpaceItem;
     grpValues: TdxLayoutGroup;
+    litEditStatus: TdxLayoutItem;
+    lblEditStatus: TcxLabel;
+    styEditStatus: TcxEditStyleController;
+    spc4: TdxLayoutEmptySpaceItem;
     procedure FormCreate(Sender: TObject);
     procedure lucActivityDatePropertiesEditValueChanged(Sender: TObject);
     procedure btnOKClick(Sender: TObject);
@@ -105,18 +109,20 @@ type
     procedure edtRatePropertiesEditValueChanged(Sender: TObject);
     procedure lucRateUnitPropertiesEditValueChanged(Sender: TObject);
     procedure edtTimeSpentPropertiesEditValueChanged(Sender: TObject);
-    procedure styReadOnlyStyleChanged(Sender: TObject);
     procedure doStdActivity(Sender: TObject);
     procedure btnStdActivityClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
   private
     FClosingForm: Boolean;
+    FCanEdit: Boolean;
 //    FMyDataSet: TFDMemTable;
 //    FMyDataSource: TDataSource;
     { Private declarations }
 //    procedure RecalcValues;
+    procedure SetReadOnlystatus(CanEdit: Boolean);
   public
     { Public declarations }
+    property CanEdit: Boolean read FCanEdit write FCanEdit;
 //    property MyDataSet: TFDMemTable read FMyDataSet write FMyDataSet;
 //    property MyDataSource: TDataSource read FMyDataSource write FMyDataSource;
   end;
@@ -201,6 +207,8 @@ begin
       lucPriceListItem.SetFocus
     else
       lucActivityType.SetFocus;
+
+    SetReadOnlyStatus(FCanEdit);
   finally
     Screen.Cursor := crDefault;
   end;
@@ -412,10 +420,41 @@ begin
   end;
 end;
 
-procedure TTimesheetEditFrm.styReadOnlyStyleChanged(Sender: TObject);
+procedure TTimesheetEditFrm.SetReadOnlystatus(CanEdit: Boolean);
 begin
-  inherited;
+  btnOK.Enabled := CanEdit;
+  litEditStatus.Visible := not CanEdit;
+  btnStdActivity.Enabled := CanEdit;
 
+  if not CanEdit then
+  begin
+    lucActivityDate.Properties.ReadOnly := not CanEdit;
+    cbxAproved.Properties.ReadOnly := not CanEdit;
+    cbxBillable.Properties.ReadOnly := not CanEdit;
+    cbxAddWork.Properties.ReadOnly := not CanEdit;
+    lucCustomer.Properties.ReadOnly := not CanEdit;
+    lucPriceListItem.Properties.ReadOnly := not CanEdit;
+    lucActivityType.Properties.ReadOnly := not CanEdit;
+    memActivity.Properties.ReadOnly := not CanEdit;
+    edtTimeSpent.Properties.ReadOnly := not CanEdit;
+    edtRate.Properties.ReadOnly := not CanEdit;
+    lucRateUnit.Properties.ReadOnly := not CanEdit;
+    cbxCarryForward.Properties.ReadOnly := not CanEdit;
+
+    lucActivityDate.Style.StyleController := styReadOnly;
+
+    cbxAproved.Style.StyleController := styReadOnly;
+    cbxBillable.Style.StyleController := styReadOnly;
+    cbxAddWork.Style.StyleController := styReadOnly;
+    lucCustomer.Style.StyleController := styReadOnly;
+    lucPriceListItem.Style.StyleController := styReadOnly;
+    lucActivityType.Style.StyleController := styReadOnly;
+    memActivity.Style.StyleController := styReadOnly;
+    edtTimeSpent.Style.StyleController := styReadOnly;
+    edtRate.Style.StyleController := styReadOnly;
+    lucRateUnit.Style.StyleController := styReadOnly;
+    cbxCarryForward.Style.StyleController := styReadOnly;
+  end;
 end;
 
 //procedure TTimesheetEditFrm.RecalcValues;
