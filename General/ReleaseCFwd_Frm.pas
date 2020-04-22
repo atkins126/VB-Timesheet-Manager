@@ -21,7 +21,7 @@ uses
   cxGridDBBandedTableView, cxGridCustomView, dxScreenTip, dxPrnDev, dxPrnDlg,
   dxCustomHint, cxHint, cxContainer, cxMaskEdit, cxDropDownEdit, cxLookupEdit,
   cxDBLookupEdit, cxDBLookupComboBox, dxBar, dxLayoutcxEditAdapters,
-  dxLayoutControlAdapters, cxButtons, cxLabel, dxBarExtItems;
+  dxLayoutControlAdapters, cxButtons, cxLabel, dxBarExtItems, cxBarEditItem;
 
 type
 //  TcxLookupComboBoxAccess = class (TcxLookupComboBox);
@@ -117,8 +117,7 @@ type
     litAlwaysExpand: TdxLayoutItem;
     cbxExpandGrid: TcxCheckBox;
     spc2: TdxLayoutEmptySpaceItem;
-    cbxSaveSettingsOnExit: TcxCheckBox;
-    cntSaveSettingsonExit: TdxBarControlContainerItem;
+    cbxSaveSettingsOnExit: TcxBarEditItem;
     procedure FormCreate(Sender: TObject);
     procedure DoCloseForm(Sender: TObject);
     procedure DoGetTimesheetData(Sender: TObject);
@@ -258,7 +257,7 @@ begin
     FFromPeriod := RegKey.ReadInteger('From Period');
     FToPeriod := RegKey.ReadInteger('To Period');
 
-    cbxSaveSettingsOnExit.Checked := RegKey.ReadBool('Save Settings On Exit');
+    cbxSaveSettingsOnExit.EditValue := RegKey.ReadBool('Save Settings On Exit');
     cbxAllPeriods.Checked := RegKey.ReadBool('Fetch All Periods');
 //    cbxReleaseToCurrentPeriod.Checked := RegKey.ReadBool('Always Release To Current Period');
     lucBillable.ItemIndex := RegKey.ReadInteger('Billable Status Index');
@@ -323,13 +322,15 @@ var
   RegKey: TRegistry;
 begin
   inherited;
-  if cbxSaveSettingsOnExit.Checked then
-    try
-      RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
-      RegKey.RootKey := HKEY_CURRENT_USER;
-      RegKey.OpenKey(KEY_TIMESHEET_RELEASE_CFWD_MANAGER, True);
+  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+  RegKey.RootKey := HKEY_CURRENT_USER;
+  RegKey.OpenKey(KEY_TIMESHEET_RELEASE_CFWD_MANAGER, True);
 
-      RegKey.WriteBool('Save Settings On Exit', cbxSaveSettingsOnExit.Checked);
+  try
+    RegKey.WriteBool('Save Settings On Exit', cbxSaveSettingsOnExit.EditValue);
+
+    if cbxSaveSettingsOnExit.EditValue then
+    begin
       RegKey.WriteInteger('From Period', lucFromPeriod.EditValue);
       RegKey.WriteInteger('To Period', lucToPeriod.EditValue);
       RegKey.WriteBool('Fetch All Periods', cbxAllPeriods.Checked);
@@ -338,11 +339,11 @@ begin
       RegKey.WriteBool('Always Release To Current Period', cbxReleaseToCurrentPeriod.Checked);
       RegKey.WriteBool('Always Expand Grid', cbxExpandGrid.Checked);
       RegKey.CloseKey;
-    finally
-      RegKey.Free;
     end;
-
-  Self.Close;
+  finally
+    RegKey.Free;
+    Self.ModalResult := mrOK;
+  end;
 end;
 
 procedure TReleaseCFwdFrm.btnExpandAllClick(Sender: TObject);

@@ -277,10 +277,10 @@ type
     edtBCAddWorkStrX: TcxGridDBBandedColumn;
     lvlBillCfwdExcel: TcxGridLevel;
     actOptions: TAction;
-    cntSaveSettingsOnExit: TdxBarControlContainerItem;
-    cbxSaveSettingsOnExit: TcxCheckBox;
     cbxExportSelectedRecordsOnly: TcxCheckBox;
     litExportSelectedRecordsOnly: TdxLayoutItem;
+    dxLayoutItem1: TdxLayoutItem;
+    cbxSaveSettingsOnExit: TcxBarEditItem;
     procedure FormCreate(Sender: TObject);
     procedure DoCloseForm(Sender: TObject);
     procedure DoPrint(Sender: TObject);
@@ -410,6 +410,7 @@ begin
   viewCustomerListing.DataController.DataSource := ReportDM.dtsTSCustomer;
   viewActivityType.DataController.DataSource := ReportDM.dtsActivityType;
   viewTimesheet.DataController.DataSource := ReportDM.dtsTSBillable;
+  viewTimesheetExcel.DataController.DataSource := ReportDM.dtsTSBillableExcel;
   viewBillCfwd.DataController.DataSource := ReportDM.dtsBillCfwd;
   viewBillCfwdExcel.DataController.DataSource := ReportDM.dtsBillCFwdExcel;
   viewSortOrder.DataController.DataSource := ReportDM.dtsTSSortOrder;
@@ -463,7 +464,7 @@ begin
   if not RegKey.ValueExists('Export Formatted Data To Excel') then
     RegKey.WriteBool('Export Formatted Data To Excel', True);
 
-  cbxSaveSettingsOnExit.Checked := RegKey.ReadBool('Save settings on exit');
+  cbxSaveSettingsOnExit.EditValue := RegKey.ReadBool('Save settings on exit');
   lucDateType.ItemIndex := RegKey.ReadInteger('Date Type');
   lucPeriod.EditValue := RegKey.ReadInteger('Period');
   lucFromDate.EditValue := GetMonthStartDate(lucPeriod.EditValue);
@@ -668,9 +669,9 @@ begin
   RegKey.OpenKey(KEY_TIMESHEET_DETAIL_REPORT, True);
 
   try
-    RegKey.WriteBool('Save settings on exit', cbxSaveSettingsOnExit.Checked);
+    RegKey.WriteBool('Save settings on exit', cbxSaveSettingsOnExit.EditValue);
 
-    if cbxSaveSettingsOnExit.Checked then
+    if cbxSaveSettingsOnExit.EditValue then
     begin
       RegKey.WriteInteger('Date Type', lucDateType.ItemIndex);
       RegKey.WriteInteger('Period', lucPeriod.EditValue);
@@ -690,6 +691,7 @@ begin
     end;
   finally
     RegKey.Free;
+    Self.ModalResult :=  mrOK;
   end;
 end;
 
@@ -1718,21 +1720,18 @@ begin
 //  end;
 end;
 
-procedure TTimesheetDetailReportFrm.viewSystemUserCustomDrawCell(
-  Sender: TcxCustomGridTableView; ACanvas: TcxCanvas;
-  AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
+procedure TTimesheetDetailReportFrm.viewSystemUserCustomDrawCell(Sender: TcxCustomGridTableView;
+  ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
 begin
   inherited;
   if AViewInfo.GridRecord = nil then
     Exit;
 
   if AViewInfo.GridRecord.Focused then
-  // This renders the background and font colours of the focused record
   begin
     if AViewInfo.Item <> nil then
       if AViewInfo.Item.Focused then
       begin
-        // This renders the background and border colour of the focused cell
         ACanvas.Brush.Color := $B6EDFA;
         ACanvas.Font.Color := RootLookAndFeel.SkinPainter.DefaultSelectionColor;
         PostMessage(Handle, CM_DRAWBORDER, Integer(ACanvas), Integer(AViewInfo));

@@ -92,7 +92,6 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
           FieldName = 'PERIOD_NAME'
         end>
       Properties.ListOptions.SyncMode = True
-      Properties.ListSource = ReportDM.dtsPeriodListing
       Properties.OnEditValueChanged = lucPeriodPropertiesEditValueChanged
       Style.HotTrack = False
       Style.TransparentBorder = False
@@ -229,7 +228,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Left = 10000
       Top = 10000
       Width = 670
-      Height = 361
+      Height = 376
       TabOrder = 17
       Visible = False
       object viewCustomerListing: TcxGridDBBandedTableView
@@ -428,7 +427,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Left = 10000
       Top = 10000
       Width = 819
-      Height = 361
+      Height = 376
       TabOrder = 18
       Visible = False
       object viewActivityType: TcxGridDBBandedTableView
@@ -519,7 +518,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Left = 10000
       Top = 10000
       Width = 913
-      Height = 361
+      Height = 376
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -1361,7 +1360,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Left = 10000
       Top = 10000
       Width = 913
-      Height = 310
+      Height = 325
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -2179,7 +2178,6 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       SizeOptions.SizableHorz = False
       SizeOptions.Width = 380
       ButtonOptions.Buttons = <>
-      ItemIndex = 1
       Index = 0
     end
     object grpData: TdxLayoutGroup
@@ -2230,7 +2228,6 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       Parent = grpSubOptions
       CaptionOptions.Text = 'New Group'
       ButtonOptions.Buttons = <>
-      ItemIndex = 3
       ShowBorder = False
       Index = 0
     end
@@ -2464,10 +2461,14 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       ControlOptions.ShowBorder = False
       Index = 2
     end
+    object dxLayoutItem1: TdxLayoutItem
+      CaptionOptions.Text = 'New Item'
+      Index = -1
+    end
   end
   object grdTimesheetExcel: TcxGrid [1]
-    Left = 1044
-    Top = 94
+    Left = 1179
+    Top = 109
     Width = 912
     Height = 298
     Font.Charset = ANSI_CHARSET
@@ -3162,8 +3163,8 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     end
   end
   object grdBillCfwdExcel: TcxGrid [2]
-    Left = 1044
-    Top = 446
+    Left = 1184
+    Top = 458
     Width = 913
     Height = 361
     Font.Charset = ANSI_CHARSET
@@ -3856,18 +3857,6 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     object lvlBillCfwdExcel: TcxGridLevel
       GridView = viewBillCfwdExcel
     end
-  end
-  object cbxSaveSettingsOnExit: TcxCheckBox [3]
-    Left = 425
-    Top = 160
-    Caption = 'Save settings on exit'
-    ParentShowHint = False
-    Properties.ImmediatePost = True
-    Properties.UseAlignmentWhenInplace = True
-    ShowHint = True
-    Style.TransparentBorder = False
-    TabOrder = 3
-    Transparent = True
   end
   inherited styRepository: TcxStyleRepository
     Left = 260
@@ -4757,8 +4746,11 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
           ItemName = 'btnPDF'
         end
         item
+          UserDefine = [udPaintStyle, udWidth]
+          UserWidth = 20
+          ViewLayout = ivlGlyphControlCaption
           Visible = True
-          ItemName = 'cntSaveSettingsOnExit'
+          ItemName = 'cbxSaveSettingsOnExit'
         end>
       MultiLine = True
       NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
@@ -4805,12 +4797,13 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
       ScreenTip = tipPrint
       AutoGrayScale = False
     end
-    object cntSaveSettingsOnExit: TdxBarControlContainerItem
-      Caption = 'New Item'
+    object cbxSaveSettingsOnExit: TcxBarEditItem
+      Caption = 'Save settings on exit'
       Category = 0
-      Hint = 'New Item'
+      Hint = 'Save settings on exit'
       Visible = ivAlways
-      Control = cbxSaveSettingsOnExit
+      ShowCaption = True
+      PropertiesClassName = 'TcxCheckBoxProperties'
     end
   end
   object dlgPrint: TdxPrintDialog

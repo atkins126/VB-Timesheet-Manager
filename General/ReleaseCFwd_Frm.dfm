@@ -1004,18 +1004,6 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
       Index = 4
     end
   end
-  object cbxSaveSettingsOnExit: TcxCheckBox [1]
-    Left = 425
-    Top = 225
-    Caption = 'Save settings on exit'
-    ParentShowHint = False
-    Properties.ImmediatePost = True
-    Properties.UseAlignmentWhenInplace = True
-    ShowHint = True
-    Style.TransparentBorder = False
-    TabOrder = 1
-    Transparent = True
-  end
   inherited styRepository: TcxStyleRepository
     Left = 455
     Top = 250
@@ -2239,8 +2227,11 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
           ItemName = 'btnOptions'
         end
         item
+          UserDefine = [udWidth]
+          UserWidth = 20
+          ViewLayout = ivlGlyphControlCaption
           Visible = True
-          ItemName = 'cntSaveSettingsonExit'
+          ItemName = 'cbxSaveSettingsOnExit'
         end>
       MultiLine = True
       OneOnRow = True
@@ -2273,12 +2264,13 @@ inherited ReleaseCFwdFrm: TReleaseCFwdFrm
       Visible = ivNever
       AutoGrayScale = False
     end
-    object cntSaveSettingsonExit: TdxBarControlContainerItem
-      Caption = 'New Item'
+    object cbxSaveSettingsOnExit: TcxBarEditItem
+      Caption = 'Save settings on exit'
       Category = 0
-      Hint = 'New Item'
+      Hint = 'Save settings on exit'
       Visible = ivAlways
-      Control = cbxSaveSettingsOnExit
+      ShowCaption = True
+      PropertiesClassName = 'TcxCheckBoxProperties'
     end
   end
   object styReadOnly: TcxEditStyleController
