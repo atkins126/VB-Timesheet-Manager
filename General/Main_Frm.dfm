@@ -513,7 +513,7 @@ inherited MainFrm: TMainFrm
           Position.ColIndex = 0
           Position.RowIndex = 0
         end
-        object dteInvoiceDate: TcxGridDBBandedColumn
+        object edtInvoiceDate: TcxGridDBBandedColumn
           DataBinding.FieldName = 'INVOICE_DATE'
           MinWidth = 90
           Options.Editing = False

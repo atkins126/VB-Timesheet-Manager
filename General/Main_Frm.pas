@@ -71,7 +71,7 @@ type
     cbxBillable: TcxGridDBBandedColumn;
     edtDayname: TcxGridDBBandedColumn;
     edtDayOrder: TcxGridDBBandedColumn;
-    dteInvoiceDate: TcxGridDBBandedColumn;
+    edtInvoiceDate: TcxGridDBBandedColumn;
     cbxCarryForward: TcxGridDBBandedColumn;
     cbxApproved: TcxGridDBBandedColumn;
     cbxAddWork: TcxGridDBBandedColumn;
@@ -737,6 +737,11 @@ begin
     end;
   end;
 
+  if ChangeCount > 0 then
+    VBBaseDM.PostData(TSDM.cdsTimesheet);
+
+  viewTimesheet.Controller.ClearSelection;
+
   case ATag of
     100:
       begin
@@ -794,10 +799,6 @@ begin
       end;
   end;
 
-  if ChangeCount > 0 then
-    VBBaseDM.PostData(TSDM.cdsTimesheet);
-
-  viewTimesheet.Controller.ClearSelection;
 end;
 
 procedure TMainFrm.DoReleaseCFwdManager(Sender: TObject);
@@ -1058,67 +1059,86 @@ procedure TMainFrm.InvoiceTimesheetItem;
 var
   DC: TcxDBDataController;
   C: TcxCustomGridTableController;
-  I, ChangeCount: Integer;
+  I, ChangeCount, AlreadyInvoiced, AlreadyApprovedCFwd: Integer;
   RecIndex: Integer;
   InvoiceDate: TDateTime;
 begin
   inherited;
+  C := viewTimesheet.Controller;
+
+  if C.SelectedRecordCount = 0 then
+    raise ESelectionException.Create('No timesheet items selected. Please select at least one item.');
+
+  AlreadyInvoiced := 0;
+  AlreadyApprovedCFwd := 0;
+
   if InvoiceItemFrm = nil then
     InvoiceItemFrm := TInvoiceItemFrm.Create(nil);
 
   try
     if InvoiceItemFrm.ShowModal = mrOK then
     begin
-//      InvoiceDate := VarAsType(InvoiceItemFrm.dteInvoiceDate.EditValue, varDate);
+//      InvoiceDate := VarAsType(InvoiceItemFrm.edtInvoiceDate.EditValue, varDate);
       InvoiceDate := TSDM.DefaultInvoiceDate;
       DC := viewTimesheet.DataController;
-      C := viewTimesheet.Controller;
       ChangeCount := 0;
 
       for I := 0 to C.SelectedRecordCount - 1 do
       begin
-        // If item is NOT locked...
-        if DC.Values[C.SelectedRecords[I].RecordIndex, cbxLocked.Index] = 0 then
+        // If item is NOT already invoiced...
+//        if DC.Values[C.SelectedRecords[I].RecordIndex, cbxLocked.Index] = 0 then
+        if DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] <= 0 then
         begin
-          DC.Edit;
+//          DC.Edit;
           RecIndex := C.SelectedRecords[I].RecordIndex;
           DC.FocusedRecordIndex := RecIndex;
 
           // If item is approved AND it is NOT carried forward...
           if (DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 1)
             and (DC.Values[C.SelectedRecords[I].RecordIndex, cbxCarryForward.Index] = 0) then
-            if DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] <= 0 then
-            begin
-              DC.SetEditValue(edtInvoiceID.Index, 1, evsValue);
-              DC.SetEditValue(cbxLocked.Index, 1, evsValue);
-              DC.SetEditValue(dteInvoiceDate.Index, InvoiceDate, evsValue);
-              Inc(ChangeCount);
-            end;
-        end;
-        DC.Post(True);
+//            if DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] <= 0 then
+          begin
+            DC.Edit;
+            DC.SetEditValue(edtInvoiceID.Index, 1, evsValue);
+            DC.SetEditValue(cbxLocked.Index, 1, evsValue);
+            DC.SetEditValue(edtInvoiceDate.Index, InvoiceDate, evsValue);
+            Inc(ChangeCount);
+            DC.Post(True);
+          end
+          else
+            Inc(AlreadyApprovedCFwd);
+        end
+        else
+          Inc(AlreadyInvoiced);
       end;
 
-//      if ChangeCount = 0 then
-//      begin
-//        Beep;
-//        DisplayMsg(
-//          Application.Title,
-//          'Data Validation Error',
-//          'One or more items could not be invoiced.' + CRLF + CRLF +
-//          'Possible reason(s):' + CRLF +
-//          'Item is locked.' + CRLF +
-//          'Item has not yet been approved.' + CRLF +
-//          'Item is carried forward.',
-//          mtError,
-//          [mbOK]
-//          );
-//      end
-//      else
-//      begin
       if ChangeCount > 0 then
         TSDM.PostData(TSDM.cdsTimesheet);
 //        actRefresh.Execute;
-//      end;
+
+      if AlreadyInvoiced > 0 then
+      begin
+        Beep;
+        DisplayMsg(
+          Application.Title,
+          'Data Update Informaiton',
+          AlreadyInvoiced.ToString + ' items are already been invoiced.',
+          mtInformation,
+          [mbOK]
+          );
+      end
+
+      else if AlreadyApprovedCFwd > 0 then
+      begin
+        Beep;
+        DisplayMsg(
+          Application.Title,
+          'Data Update Informaiton',
+          AlreadyApprovedCFwd.ToString + ' items have not yet been approved or are carried forward and were not updated.',
+          mtInformation,
+          [mbOK]
+          );
+      end;
     end;
   finally
     if Assigned(InvoiceItemFrm) then
@@ -1156,7 +1176,7 @@ begin
       begin
         DC.SetEditValue(edtInvoiceID.Index, 0, evsValue);
         DC.SetEditValue(cbxLocked.Index, 0, evsValue);
-        DC.SetEditValue(dteInvoiceDate.Index, Null, evsValue);
+        DC.SetEditValue(edtInvoiceDate.Index, Null, evsValue);
         Inc(ChangeCount);
       end;
       DC.Post(True);

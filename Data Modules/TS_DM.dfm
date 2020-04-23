@@ -668,7 +668,9 @@ inherited TSDM: TTSDM
     Tag = 27
     ActiveStoredUsage = [auDesignTime]
     BeforeEdit = cdsTimesheetBeforeEdit
+    BeforePost = cdsTimesheetBeforePost
     AfterPost = cdsTimesheetAfterPost
+    OnCalcFields = cdsTimesheetCalcFields
     OnNewRecord = cdsTimesheetNewRecord
     FilterOptions = [foCaseInsensitive]
     FieldDefs = <>
@@ -784,12 +786,14 @@ inherited TSDM: TTSDM
     end
     object cdsTimesheetEditITEM_VALUE: TFloatField
       DisplayLabel = 'Value'
+      FieldKind = fkInternalCalc
       FieldName = 'ITEM_VALUE'
       Origin = 'ITEM_VALUE'
     end
     object cdsTimesheetEditLOCKED: TIntegerField
       Alignment = taLeftJustify
       DisplayLabel = 'Lck'
+      FieldKind = fkInternalCalc
       FieldName = 'LOCKED'
       Origin = 'LOCKED'
       Required = True
@@ -809,6 +813,7 @@ inherited TSDM: TTSDM
     object cdsTimesheetEditTHE_PERIOD: TIntegerField
       Alignment = taLeftJustify
       DisplayLabel = 'Period'
+      FieldKind = fkInternalCalc
       FieldName = 'THE_PERIOD'
       Origin = 'THE_PERIOD'
       Required = True

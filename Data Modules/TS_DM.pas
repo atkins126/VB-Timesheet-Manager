@@ -234,6 +234,8 @@ type
     procedure PostData(DataSet: TFDMemTable);
     procedure cdsTimesheetBeforeEdit(DataSet: TDataSet);
     procedure cdsTimesheetAfterPost(DataSet: TDataSet);
+    procedure cdsTimesheetCalcFields(DataSet: TDataSet);
+    procedure cdsTimesheetBeforePost(DataSet: TDataSet);
   private
     FCurrentUserID: Integer;
     FDefaultInvoiceDate: TDateTime;
@@ -287,6 +289,58 @@ procedure TTSDM.cdsTimesheetBeforeEdit(DataSet: TDataSet);
 begin
   inherited;
   VBBaseDM.DBAction := acModify;
+end;
+
+procedure TTSDM.cdsTimesheetBeforePost(DataSet: TDataSet);
+begin
+  inherited;
+  cdsTimesheet.FieldByName('THE_PERIOD').AsInteger :=
+    cdsTimesheet.FieldByName('ACTIVITY_DATE').Asinteger div 100 +
+    cdsTimesheet.FieldByName('ACTIVITY_DATE').AsInteger mod 100;
+
+  // Set ITEM_VALUE
+  cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat := 0;
+  if cdsTimesheet.FieldByName('BILLABLE').AsInteger = 1 then
+    if cdsTimesheet.FieldByName('RATE_UNIT_ID').AsInteger = 1 then
+      cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat :=
+        cdsTimesheet.FieldByName('TIME_SPENT').AsFloat * cdsTimesheet.FieldByName('ACTUAL_RATE').AsFloat / 60
+    else
+      cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat :=
+        cdsTimesheet.FieldByName('ACTUAL_RATE').AsFloat;
+
+  // Set LOCK status
+  if (cdsTimesheet.FieldByName('APPROVED').Asinteger = 1)
+    or (cdsTimesheet.FieldByName('INVOICE_ID').Asinteger > 0) then
+    cdsTimesheet.FieldByName('LOCKED').AsInteger := 1
+  else
+    cdsTimesheet.FieldByName('LOCKED').AsInteger := 0;
+end;
+
+procedure TTSDM.cdsTimesheetCalcFields(DataSet: TDataSet);
+begin
+  inherited;
+  {TODO: use decode date here. Move to OnBeforePost}
+  // Set THE_PEIROD
+  cdsTimesheet.FieldByName('THE_PERIOD').AsInteger :=
+    cdsTimesheet.FieldByName('ACTIVITY_DATE').Asinteger div 100 +
+    cdsTimesheet.FieldByName('ACTIVITY_DATE').AsInteger mod 100;
+
+  // Set ITEM_VALUE
+  cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat := 0;
+  if cdsTimesheet.FieldByName('BILLABLE').AsInteger = 1 then
+    if cdsTimesheet.FieldByName('RATE_UNIT_ID').AsInteger = 1 then
+      cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat :=
+        cdsTimesheet.FieldByName('TIME_SPENT').AsFloat * cdsTimesheet.FieldByName('ACTUAL_RATE').AsFloat / 60
+    else
+      cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat :=
+        cdsTimesheet.FieldByName('ACTUAL_RATE').AsFloat;
+
+  // Set LOCK status
+  if (cdsTimesheet.FieldByName('APPROVED').Asinteger = 1)
+    or (cdsTimesheet.FieldByName('INVOICE_ID').Asinteger > 0) then
+    cdsTimesheet.FieldByName('LOCKED').AsInteger := 1
+  else
+    cdsTimesheet.FieldByName('LOCKED').AsInteger := 0;
 end;
 
 procedure TTSDM.cdsTimesheetNewRecord(DataSet: TDataSet);
