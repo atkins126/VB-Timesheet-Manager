@@ -214,9 +214,9 @@ begin
   layMain.Align := alClient;
   layMain.LayoutLookAndFeel := lafCustomSkin;
 
-  DoMouseWheel(lucFromPeriod, False);
-  DoMouseWheel(lucToPeriod, False);
-  DoMouseWheel(lucBillable, False);
+  DoMyMouseWheel(lucFromPeriod, False);
+  DoMyMouseWheel(lucToPeriod, False);
+  DoMyMouseWheel(lucBillable, False);
 
 //  lucFromPeriod.Properties.UseMouseWheel := False;
 //  lucToPeriod.Properties.UseMouseWheel := False;
@@ -421,7 +421,6 @@ const
     ' WHERE ID IN(%s)';
 
 var
-  DC: TcxCustomDataController;
   C: TcxGridBandedTableController;
   IDValues, CommandString: string;
   I, SelectCount: Integer;
@@ -429,7 +428,6 @@ var
   Response: TStringList;
 begin
   inherited;
-  DC := viewTimesheet.DataController;
   C := viewTimesheet.Controller;
   SelectCount := C.SelectedRecordCount;
 
@@ -443,7 +441,7 @@ begin
     'You have selected ' + SelectCount.ToString +
     ' carried forward items to be released to billing period ' +
     TSDM.cdsReleaseToPeriod.FieldByName('PERIOD_NAME').AsString + CRLF + CRLF +
-    'Are you sure you want to proceed.',
+    'Are you sure you want to proceed?',
     mtConfirmation,
     [mbYes, mbNo]
     ) = mrNo then
@@ -491,10 +489,9 @@ begin
     DisplayMsg(
       Application.Title,
       'Carry Forward released',
-      SelectCount.ToString + ' Carried forward item(s) successfully update.',
+      SelectCount.ToString + ' Carried forward item(s) successfully released for billing.',
       mtInformation,
-      [mbOK]
-      );
+      [mbOK]);
 
   finally
     Response.Free;
@@ -611,12 +608,12 @@ end;
 procedure TReleaseCFwdFrm.lucFromPeriodPropertiesCloseUp(Sender: TObject);
 begin
   inherited;
-  DoMouseWheel(TcxLookupComboBox(Sender), False)
+  DoMyMouseWheel(TcxLookupComboBox(Sender), False)
 end;
 
 procedure TReleaseCFwdFrm.lucFromPeriodPropertiesEditValueChanged(Sender: TObject);
-var
-  RegKey: TRegistry;
+//var
+//  RegKey: TRegistry;
 begin
   inherited;
   if not FShowingForm then
@@ -662,16 +659,16 @@ begin
     Abort;
 
   if TcxLookupComboBox(Sender).DroppedDown then
-    DoMouseWheel(TcxLookupComboBox(Sender), True);
+    DoMyMouseWheel(TcxLookupComboBox(Sender), True);
 end;
 
 procedure TReleaseCFwdFrm.lucFromPeriodPropertiesPopup(Sender: TObject);
 begin
   inherited;
   if TcxLookupComboBox(Sender).DroppedDown then
-    DoMouseWheel(TcxLookupComboBox(Sender), True)
+    DoMyMouseWheel(TcxLookupComboBox(Sender), True)
   else
-    DoMouseWheel(TcxLookupComboBox(Sender), False)
+    DoMyMouseWheel(TcxLookupComboBox(Sender), False)
 end;
 
 procedure TReleaseCFwdFrm.lucReleaseToPeriodPropertiesInitPopup(Sender: TObject);

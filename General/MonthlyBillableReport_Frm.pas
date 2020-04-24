@@ -215,7 +215,7 @@ var
   FolderPath, ExportFileName: string;
   FileSaved: Boolean;
 //  RepFileName: string;
-  CustomerID: Integer;
+//  CustomerID: Integer;
   ThePeriod: Integer;
 begin
   inherited;

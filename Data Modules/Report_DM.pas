@@ -675,8 +675,6 @@ begin
 end;
 
 procedure TReportDM.DataModuleCreate(Sender: TObject);
-var
-  IDX: TFDIndex;
 begin
   inherited;
   SetLength(FReportFileName, REPORT_COUNT);

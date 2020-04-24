@@ -175,7 +175,8 @@ type
     tipApprove: TdxScreenTip;
     btnToggleBillable: TdxBarLargeButton;
     actBilable: TAction;
-    actNonBillable: TAction;
+    actNotBillable: TAction;
+    actToggleBillable: TAction;
     popBillable: TdxBarPopupMenu;
     btnBillable: TdxBarButton;
     btnNotBillable: TdxBarButton;
@@ -196,7 +197,7 @@ type
     actCarryForward: TAction;
     actReleaseCFwdManagaer: TAction;
     btnCarryForward: TdxBarButton;
-    btnReleaseCFwdManager: TdxBarButton;
+    btnClearCarryForwrd: TdxBarButton;
     btnCarryFwd: TdxBarLargeButton;
     N4: TMenuItem;
     CarryForward1: TMenuItem;
@@ -246,13 +247,13 @@ type
     procedure btnApproveClick(Sender: TObject);
     procedure DoBillable(Sender: TObject);
     procedure DoInvoiceItem(Sender: TObject);
-    procedure DoCarryForward(Sender: TObject);
+    procedure DoReleaseCFwdManager(Sender: TObject);
 
     procedure cbxApprovedCustomDrawCell(Sender: TcxCustomGridTableView;
       ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
     procedure DoMonthlyBilling(Sender: TObject);
-    procedure cbxPersistentSelectionPropertiesEditValueChanged(Sender: TObject);
     procedure DoReleaseCarryForwardManager(Sender: TObject);
+    procedure cbxPersistentSelectionPropertiesEditValueChanged(Sender: TObject);
   private
     { Private declarations }
     FTSUserID: Integer;
@@ -271,7 +272,7 @@ type
     procedure BillTimesheetItem(ATag: Integer);
     procedure InvoiceTimesheetItem;
     procedure UnInvoiceTimesheetItem;
-    procedure CarryForwardItem;
+    procedure CarryForwardItem(ATag: Integer);
   protected
     procedure HandleStateChange(var MyMsg: TMessage); message WM_STATE_CHANGE;
     procedure DrawCellBorder(var Msg: TMessage); message CM_DRAWBORDER;
@@ -559,7 +560,7 @@ begin
     Exit;
   VBBaseDM.DBAction := acDelete;
   C.DeleteSelection;
-  VBBaseDM.PostData(TSDM.cdsTimesheet);
+  TSDM.PostData(TSDM.cdsTimesheet);
 end;
 
 procedure TMainFrm.DoRefresh(Sender: TObject);
@@ -664,73 +665,9 @@ begin
   end;
 end;
 
-procedure TMainFrm.CarryForwardItem;
-var
-  DC: TcxDBDataController;
-  C: TcxCustomGridTableController;
-  I, RecIndex, ChangeCount: Integer;
-  Msg: string;
-begin
-  inherited;
-  Msg := 'All selected items will be marked as carried forward. ' +
-    ' are you sure you want to proceed?';
-
-  Beep;
-  if DisplayMsg(
-    Application.Title,
-    'Data Update Confirmation',
-    Msg,
-    mtConfirmation,
-    [mbYes, mbNo]
-    ) = mrNo then
-    Exit;
-
-  DC := viewTimesheet.DataController;
-  C := viewTimesheet.Controller;
-  ChangeCount := 0;
-
-  for I := 0 to C.SelectedRecordCount - 1 do
-  begin
-    RecIndex := C.SelectedRecords[I].RecordIndex;
-    DC.FocusedRecordIndex := RecIndex;
-
-    if DC.Values[C.SelectedRecords[I].RecordIndex, cbxCarryForward.Index] = 0 then
-    begin
-      DC.Edit;
-      DC.SetEditValue(cbxCarryForward.Index, 1, evsValue);
-      DC.SetEditValue(edtInvoiceID.Index, -1, evsValue);
-      DC.Post(True);
-      Inc(ChangeCount);
-    end;
-  end;
-
-  if ChangeCount > 0 then
-    VBBaseDM.PostData(TSDM.cdsTimesheet);
-end;
-
 procedure TMainFrm.DoApprovalStatus(Sender: TObject);
-var
-  Msg: string;
 begin
   inherited;
-  case TAction(Sender).Tag of
-    100: Msg := 'All selected un-approved items will be marked as approved. ' +
-      ' are you sure you want to proceed?';
-
-    101: Msg := 'All selected approved items will be marked as un-approved. ' +
-      ' are you sure you want to proceed?';
-  end;
-
-  Beep;
-  if DisplayMsg(
-    Application.Title,
-    'Data Update Confirmation',
-    Msg,
-    mtConfirmation,
-    [mbYes, mbNo]
-    ) = mrNo then
-    Exit;
-
   ApproveTimesheetItem(TAction(Sender).Tag);
 
 // case TAction(Sender).Tag of
@@ -864,35 +801,76 @@ begin
 
 end;
 
-procedure TMainFrm.DoCarryForward(Sender: TObject);
+procedure TMainFrm.DoReleaseCFwdManager(Sender: TObject);
 begin
   inherited;
-  CarryForwardItem;
+//  CarryForwardItem(TAction(Sender).Tag);
+end;
+
+procedure TMainFrm.CarryForwardItem(ATag: Integer);
+//var
+//  DC: TcxDBDataController;
+//  C: TcxCustomGridTableController;
+//  I, RecIndex, ChangeCount: Integer;
+begin
+//  inherited;
+//  DC := viewTimesheet.DataController;
+//  C := viewTimesheet.Controller;
+////  DC.BeginUpdate;
+//  ChangeCount := 0;
+//
+////  try
+////  begin
+//  for I := 0 to C.SelectedRecordCount - 1 do
+//  begin
+//    RecIndex := C.SelectedRecords[I].RecordIndex;
+//    DC.FocusedRecordIndex := RecIndex;
+//    DC.Edit;
+//
+//    case ATag of
+//      130: // Carry forward
+//        begin
+////            DC.Values[C.SelectedRecords[I].RecordIndex, cbxCarryForward.Index] := 1;
+////            DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] := 0;
+//
+//          if DC.Values[C.SelectedRecords[I].RecordIndex, cbxCarryForward.Index] = 0 then
+//          begin
+//            DC.SetEditValue(cbxCarryForward.Index, 1, evsValue);
+//            DC.SetEditValue(edtInvoiceID.Index, 0, evsValue);
+//            DC.Post(True);
+////      DC.PostEditingData;
+//            Inc(ChangeCount);
+//          end;
+//        end;
+//
+//      131: // Release carry forward
+//        begin
+////            DC.Values[RecIndex, cbxCarryForward.Index] := 0;
+////            DC.Values[RecIndex, edtInvoiceID.Index] := -1;
+//
+//          if DC.Values[C.SelectedRecords[I].RecordIndex, cbxCarryForward.Index] = 1 then
+//          begin
+//            DC.SetEditValue(cbxCarryForward.Index, 0, evsValue);
+//            DC.SetEditValue(edtInvoiceID.Index, -1, evsValue);
+//            DC.Post(True);
+////      DC.PostEditingData;
+//            Inc(ChangeCount);
+//          end;
+//        end;
+//    end;
+//  end;
+////  end;
+//
+//  if ChangeCount > 0 then
+//    TSDM.PostData(TSDM.cdsTimesheet);
+////  finally
+////    DC.EndUpdate;
+////  end;
 end;
 
 procedure TMainFrm.DoBillable(Sender: TObject);
-var
-  Msg: string;
 begin
   inherited;
-  case TAction(Sender).Tag of
-    110: Msg := 'All selected billable items will be marked as not billable. ' +
-      ' are you sure you want to proceed?';
-
-    111: Msg := 'All selected non billable items will be marked as billable. ' +
-      ' are you sure you want to proceed?';
-  end;
-
-  Beep;
-  if DisplayMsg(
-    Application.Title,
-    'Data Update Confirmation',
-    Msg,
-    mtConfirmation,
-    [mbYes, mbNo]
-    ) = mrNo then
-    Exit;
-
   BillTimesheetItem(TAction(Sender).Tag);
 end;
 
@@ -911,7 +889,6 @@ begin
     raise ESelectionException.Create('No timesheet items selected. Please select at least one item.');
 
   ChangeCount := 0;
-  AlreadyApproved := 0;
   AlreadyBillable := 0;
   NotBillable := 0;
 //  DC.BeginUpdate;
@@ -961,25 +938,25 @@ begin
 // DON'T DO ANY OF THIS AS YOU WILL ATTEMPT TO UPDATE READONLY FIELDS.
 // In this case it would be the ITEM_VALUE field.
 
-// case VarAstype(lucRateUnit.EditValue, varInteger) of
-// 1: edtitemValue.Value := edtTimeSpent.Value * edtRate.Value / 60;
-// else
-// edtitemValue.Value := {edtTimeSpent.Value * }edtRate.Value;
-// end;
-
-      DC.SetEditValue(edtItemValue.Index, 0, evsValue);
-// DC.Values[RecIndex, edtItemValue.Index] := 0;
-
-      if DC.Values[RecIndex, cbxBillable.Index] = 1 then
-        if DC.Values[RecIndex, lucRateUnit.Index] = 1 then
-          DC.SetEditValue(edtItemValue.Index, DC.Values[RecIndex, edtTimeSpent.Index] *
-            DC.Values[RecIndex, edtRate.Index] / 60, evsValue)
-// DC.Values[RecIndex, edtItemValue.Index] := DC.Values[RecIndex, edtTimeSpent.Index] *
-// DC.Values[RecIndex, edtRate.Index] / 60
-        else
-          DC.SetEditValue(edtItemValue.Index,
-            DC.Values[RecIndex, edtRate.Index], evsValue);
-// DC.Values[RecIndex, edtItemValue.Index] := DC.Values[RecIndex, edtRate.Index];
+//// case VarAstype(lucRateUnit.EditValue, varInteger) of
+//// 1: edtitemValue.Value := edtTimeSpent.Value * edtRate.Value / 60;
+//// else
+//// edtitemValue.Value := {edtTimeSpent.Value * }edtRate.Value;
+//// end;
+//
+//      DC.SetEditValue(edtItemValue.Index, 0, evsValue);
+//// DC.Values[RecIndex, edtItemValue.Index] := 0;
+//
+//      if DC.Values[RecIndex, cbxBillable.Index] = 1 then
+//        if DC.Values[RecIndex, lucRateUnit.Index] = 1 then
+//          DC.SetEditValue(edtItemValue.Index, DC.Values[RecIndex, edtTimeSpent.Index] *
+//            DC.Values[RecIndex, edtRate.Index] / 60, evsValue)
+//// DC.Values[RecIndex, edtItemValue.Index] := DC.Values[RecIndex, edtTimeSpent.Index] *
+//// DC.Values[RecIndex, edtRate.Index] / 60
+//        else
+//          DC.SetEditValue(edtItemValue.Index,
+//            DC.Values[RecIndex, edtRate.Index], evsValue);
+//// DC.Values[RecIndex, edtItemValue.Index] := DC.Values[RecIndex, edtRate.Index];
 
     end
     else
@@ -1136,7 +1113,7 @@ begin
       end;
 
       if ChangeCount > 0 then
-        VBBaseDM.PostData(TSDM.cdsTimesheet);
+        TSDM.PostData(TSDM.cdsTimesheet);
 //        actRefresh.Execute;
 
       if AlreadyInvoiced > 0 then
@@ -1224,7 +1201,7 @@ begin
 //    else
 //    begin
     if ChangeCount > 0 then
-      VBBaseDM.PostData(TSDM.cdsTimesheet);
+      TSDM.PostData(TSDM.cdsTimesheet);
 //      actRefresh.Execute;
 //    end;
   finally

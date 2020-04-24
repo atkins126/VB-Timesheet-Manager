@@ -31,7 +31,6 @@ uses
   VBCommonValues in '..\..\Lib\VBCommonValues.pas',
   TimesheetEdit_Frm in 'General\TimesheetEdit_Frm.pas' {TimesheetEditFrm},
   TimesheetOptions_Frm in 'General\TimesheetOptions_Frm.pas' {TimesheetOptionsFrm},
-  VBProxyClass in '..\Lib\VBProxyClass.pas',
   TimesheetDetailReport_Frm in 'General\TimesheetDetailReport_Frm.pas' {TimesheetDetailReportFrm},
   BillableSummary_Frm in 'General\BillableSummary_Frm.pas' {BillableSummaryFrm},
   Report_DM in 'Data Modules\Report_DM.pas' {ReportDM: TDataModule},
@@ -39,7 +38,8 @@ uses
   InvoiceItem_Frm in 'General\InvoiceItem_Frm.pas' {InvoiceItemFrm},
   StdActivity_Frm in 'General\StdActivity_Frm.pas' {StdActivityFrm},
   MonthlyBillableReport_Frm in 'General\MonthlyBillableReport_Frm.pas' {MonthlyBillableReportFrm},
-  ReleaseCFwd_Frm in 'General\ReleaseCFwd_Frm.pas' {ReleaseCFwdFrm};
+  ReleaseCFwd_Frm in 'General\ReleaseCFwd_Frm.pas' {ReleaseCFwdFrm},
+  VBProxyClass in '..\Lib\VBProxyClass.pas';
 
 {$R *.res}
 

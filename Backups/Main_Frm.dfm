@@ -1478,11 +1478,18 @@ inherited MainFrm: TMainFrm
       ImageIndex = 31
       OnExecute = DoBillable
     end
-    object actNonBillable: TAction
+    object actNotBillable: TAction
       Tag = 111
       Category = 'Billable'
-      Caption = 'Non Billable'
+      Caption = 'Not Billable'
       ImageIndex = 32
+      OnExecute = DoBillable
+    end
+    object actToggleBillable: TAction
+      Tag = 112
+      Category = 'Billable'
+      Caption = 'Toggle Billable'
+      ImageIndex = 33
       OnExecute = DoBillable
     end
     object actInvoiceItem: TAction
@@ -1506,7 +1513,7 @@ inherited MainFrm: TMainFrm
       Category = 'Carry Forward'
       Caption = 'Carry Forward'
       ImageIndex = 34
-      OnExecute = DoCarryForward
+      OnExecute = DoReleaseCFwdManager
     end
     object actReleaseCFwdManagaer: TAction
       Tag = 131
@@ -1525,6 +1532,7 @@ inherited MainFrm: TMainFrm
       Category = 'System'
       Caption = 'Release C/Fwd'
       ImageIndex = 38
+      OnExecute = DoReleaseCarryForwardManager
     end
   end
   inherited lafLayoutList: TdxLayoutLookAndFeelList
@@ -7422,19 +7430,19 @@ inherited MainFrm: TMainFrm
         item
           BeginGroup = True
           Visible = True
-          ItemName = 'btnToggleBillable'
-        end
-        item
-          Visible = True
           ItemName = 'btnApprove'
         end
         item
           Visible = True
-          ItemName = 'btnCarryFwd'
+          ItemName = 'btnToggleBillable'
         end
         item
           Visible = True
           ItemName = 'btnInvoice'
+        end
+        item
+          Visible = True
+          ItemName = 'btnCarryFwd'
         end
         item
           BeginGroup = True
@@ -7756,7 +7764,7 @@ inherited MainFrm: TMainFrm
       LargeImageIndex = 9
     end
     object btnNotBillable: TdxBarButton
-      Action = actNonBillable
+      Action = actNotBillable
       Category = 0
       ImageIndex = 10
       LargeImageIndex = 10
@@ -7795,9 +7803,10 @@ inherited MainFrm: TMainFrm
       ImageIndex = 14
       LargeImageIndex = 14
     end
-    object btnReleaseCFwdManager: TdxBarButton
+    object btnClearCarryForwrd: TdxBarButton
       Action = actReleaseCFwdManagaer
       Category = 0
+      Hint = 'Cllear carry forward for selected item(s)'
       ImageIndex = 15
       LargeImageIndex = 15
     end
@@ -9496,17 +9505,6 @@ inherited MainFrm: TMainFrm
     object N1: TMenuItem
       Caption = '-'
     end
-    object Billable1: TMenuItem
-      Action = actBilable
-      ImageIndex = 9
-    end
-    object NotBillable1: TMenuItem
-      Action = actNonBillable
-      ImageIndex = 10
-    end
-    object N2: TMenuItem
-      Caption = '-'
-    end
     object Approve1: TMenuItem
       Action = actApprove
       Hint = 'Approve selected timesheet item(s)'
@@ -9517,18 +9515,18 @@ inherited MainFrm: TMainFrm
       Hint = 'Un-Approve selected timesheet item(s)'
       ImageIndex = 8
     end
-    object N3: TMenuItem
+    object N2: TMenuItem
       Caption = '-'
     end
-    object CarryForward1: TMenuItem
-      Action = actCarryForward
-      ImageIndex = 14
+    object Billable1: TMenuItem
+      Action = actBilable
+      ImageIndex = 9
     end
-    object ClearCarryForward1: TMenuItem
-      Action = actReleaseCFwdManagaer
-      ImageIndex = 15
+    object NotBillable1: TMenuItem
+      Action = actNotBillable
+      ImageIndex = 10
     end
-    object N4: TMenuItem
+    object N3: TMenuItem
       Caption = '-'
     end
     object Invoice1: TMenuItem
@@ -9538,6 +9536,17 @@ inherited MainFrm: TMainFrm
     object UnInvoice1: TMenuItem
       Action = actUnInvoice
       ImageIndex = 13
+    end
+    object N4: TMenuItem
+      Caption = '-'
+    end
+    object CarryForward1: TMenuItem
+      Action = actCarryForward
+      ImageIndex = 14
+    end
+    object ClearCarryForward1: TMenuItem
+      Action = actReleaseCFwdManagaer
+      ImageIndex = 15
     end
   end
   object dlgPrint: TdxPrintDialog
@@ -9613,7 +9622,7 @@ inherited MainFrm: TMainFrm
       end
       item
         Visible = True
-        ItemName = 'btnReleaseCFwdManager'
+        ItemName = 'btnClearCarryForwrd'
       end>
     UseOwnFont = False
     Left = 700

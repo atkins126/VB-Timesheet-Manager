@@ -982,7 +982,7 @@ end;
 
 procedure TBillableSummaryFrm.EditTimesheet(ItemIndex: integer);
 var
-  TSID, ID: Integer;
+  TSID: Integer;
 begin
   inherited;
   Screen.Cursor := crHourglass;
@@ -1018,7 +1018,6 @@ begin
 //        0: // Timesheet details
 //          begin
             // Get the ID of the current recored that was modified
-      ID := VBBaseDM.MyDataSet.FieldByName('ID').AsInteger;
 
       // We need to update the Timesheet record if it is in the current
       // Timesheet dataset.
@@ -1037,7 +1036,7 @@ begin
           // Copy the modified recored to the corresponding Timesheet datset record.
           VBBaseDM.MyDataSet.CopyRecord(VBBaseDM.MyDataSet);
           VBBaseDM.MyDataSet.Post;
-          TSDM.PostData(VBBaseDM.MyDataSet);
+          VBBaseDM.PostData(VBBaseDM.MyDataSet);
 //          actRefresh.Execute;
 
           // Relocated the original Timesheet selected/focused record.
