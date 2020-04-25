@@ -12,17 +12,16 @@ inherited MainFrm: TMainFrm
   TextHeight = 13
   inherited layMain: TdxLayoutControl
     Top = 115
-    Width = 1455
+    Width = 1366
     Height = 617
-    Align = alClient
     ExplicitTop = 115
-    ExplicitWidth = 1455
+    ExplicitWidth = 1366
     ExplicitHeight = 617
     object grdTimesheet: TcxGrid [0]
       Left = 11
       Top = 11
-      Width = 1433
-      Height = 595
+      Width = 1344
+      Height = 574
       TabOrder = 0
       object viewTimesheet: TcxGridDBBandedTableView
         PopupMenu = popTimesheet
@@ -83,7 +82,7 @@ inherited MainFrm: TMainFrm
             Caption = 'Other'
           end
           item
-            Caption = 'Carry Forward'
+            Caption = 'Carry Forward/Release'
           end>
         object edtID: TcxGridDBBandedColumn
           DataBinding.FieldName = 'ID'
@@ -621,7 +620,7 @@ inherited MainFrm: TMainFrm
           Properties.ReadOnly = True
           Properties.UseDisplayFormatWhenEditing = True
           Visible = False
-          MinWidth = 60
+          MinWidth = 90
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
@@ -629,14 +628,13 @@ inherited MainFrm: TMainFrm
           Options.HorzSizing = False
           Options.Moving = False
           VisibleForCustomization = False
-          Width = 60
+          Width = 90
           Position.BandIndex = 0
           Position.ColIndex = 15
           Position.RowIndex = 0
         end
-        object edtDateCfwdReleased: TcxGridDBBandedColumn
-          AlternateCaption = 'dd/MM/yyyy'
-          DataBinding.FieldName = 'DATE_CFWD_RELEASED'
+        object edtDateCarriedForward: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'DATE_CARRIED_FORWARD'
           PropertiesClassName = 'TcxDateEditProperties'
           Properties.DisplayFormat = 'dd/mm/yyyy'
           Properties.EditFormat = 'dd/mm/yyyy'
@@ -649,6 +647,22 @@ inherited MainFrm: TMainFrm
           Width = 90
           Position.BandIndex = 4
           Position.ColIndex = 0
+          Position.RowIndex = 0
+        end
+        object edtDateCfwdReleased: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'DATE_CFWD_RELEASED'
+          PropertiesClassName = 'TcxDateEditProperties'
+          Properties.DisplayFormat = 'dd/mm/yyyy'
+          Properties.EditFormat = 'dd/mm/yyyy'
+          Properties.ReadOnly = True
+          MinWidth = 90
+          Options.Editing = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 90
+          Position.BandIndex = 4
+          Position.ColIndex = 1
           Position.RowIndex = 0
         end
         object edtReleaseCfwdToPeriod: TcxGridDBBandedColumn
@@ -665,13 +679,33 @@ inherited MainFrm: TMainFrm
           Options.Moving = False
           Width = 65
           Position.BandIndex = 4
-          Position.ColIndex = 1
+          Position.ColIndex = 2
           Position.RowIndex = 0
         end
       end
       object lvlTimesheet: TcxGridLevel
         GridView = viewTimesheet
       end
+    end
+    object lblCFwdItemColour: TcxLabel [1]
+      Left = 32
+      Top = 591
+      Caption = 'Items carried foward from previous periods'
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      Transparent = True
+    end
+    object imgCFwdItemColour: TcxImage [2]
+      Left = 11
+      Top = 591
+      Enabled = False
+      Properties.ReadOnly = True
+      Style.Color = 14148607
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 1
+      Height = 15
+      Width = 15
     end
     object litTimesheet: TdxLayoutItem
       Parent = layMainGroup_Root
@@ -684,6 +718,35 @@ inherited MainFrm: TMainFrm
       ControlOptions.OriginalWidth = 786
       ControlOptions.ShowBorder = False
       Index = 0
+    end
+    object grpLegend: TdxLayoutGroup
+      Parent = layMainGroup_Root
+      CaptionOptions.Text = 'Legend'
+      ButtonOptions.Buttons = <>
+      ItemIndex = 1
+      LayoutDirection = ldHorizontal
+      ShowBorder = False
+      Index = 1
+    end
+    object litReleasedItemColour: TdxLayoutItem
+      Parent = grpLegend
+      CaptionOptions.Visible = False
+      Control = imgCFwdItemColour
+      ControlOptions.OriginalHeight = 15
+      ControlOptions.OriginalWidth = 15
+      ControlOptions.ShowBorder = False
+      Enabled = False
+      Index = 0
+    end
+    object litReleasedItemLegend: TdxLayoutItem
+      Parent = grpLegend
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = lblCFwdItemColour
+      ControlOptions.OriginalHeight = 13
+      ControlOptions.OriginalWidth = 250
+      ControlOptions.ShowBorder = False
+      Index = 1
     end
   end
   object sbrMain: TdxStatusBar [1]
@@ -767,8 +830,8 @@ inherited MainFrm: TMainFrm
     end
   end
   object grdTimesheetBillable: TcxGrid [3]
-    Left = 1361
-    Top = 255
+    Left = 1406
+    Top = 420
     Width = 1181
     Height = 421
     Font.Charset = ANSI_CHARSET
@@ -782,7 +845,6 @@ inherited MainFrm: TMainFrm
     object viewTimesheetBillable: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       ScrollbarAnnotations.CustomAnnotations = <>
-      DataController.DataSource = ReportDM.dtsTSBillable
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
@@ -1160,7 +1222,7 @@ inherited MainFrm: TMainFrm
         Properties.DisplayFormat = '######'
         Properties.EditFormat = '######'
         Properties.ReadOnly = True
-        MinWidth = 74
+        MinWidth = 64
         Options.Editing = False
         Options.Filtering = False
         Options.IncSearch = False
@@ -1196,7 +1258,7 @@ inherited MainFrm: TMainFrm
         Properties.DisplayFormat = '######'
         Properties.EditFormat = '######'
         Properties.ReadOnly = True
-        MinWidth = 74
+        MinWidth = 64
         Options.Editing = False
         Options.Filtering = False
         Options.IncSearch = False
@@ -7314,6 +7376,18 @@ inherited MainFrm: TMainFrm
       Description.Text = 'Release carried forward timesheet items for billing'
       Width = 335
     end
+    object tipIncludeCarryForwardItems: TdxScreenTip
+      Header.Text = 'Include Carry Forward Items'
+      Description.Text = 
+        'Include items carried forward from previous periods to the curre' +
+        'nt period'
+      Width = 300
+    end
+    object tipPersistentRecordSelection: TdxScreenTip
+      Header.Text = 'Persistent Record Selection'
+      Description.Text = 'Maitain record selection when selecting multiple records'
+      Width = 360
+    end
   end
   object styHintController: TcxHintStyleController
     Global = False
@@ -7367,14 +7441,43 @@ inherited MainFrm: TMainFrm
           ItemName = 'btnExit'
         end
         item
-          Visible = True
-          ItemName = 'lucUser'
-        end
-        item
           UserDefine = [udWidth]
           UserWidth = 130
           Visible = True
           ItemName = 'lucViewMode'
+        end
+        item
+          Visible = True
+          ItemName = 'lucUser'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'lucPeriod'
+        end
+        item
+          Visible = True
+          ItemName = 'lbl1'
+        end
+        item
+          Visible = True
+          ItemName = 'dteFromDate'
+        end
+        item
+          Visible = True
+          ItemName = 'dteToDate'
+        end
+        item
+          Visible = True
+          ItemName = 'lbl2'
+        end
+        item
+          BeginGroup = True
+          UserDefine = [udWidth]
+          UserWidth = 20
+          ViewLayout = ivlGlyphControlCaption
+          Visible = True
+          ItemName = 'cbxIncludeCarryForwardItems'
         end
         item
           UserDefine = [udWidth]
@@ -7385,19 +7488,7 @@ inherited MainFrm: TMainFrm
         end
         item
           Visible = True
-          ItemName = 'lbl1'
-        end
-        item
-          Visible = True
-          ItemName = 'lucPeriod'
-        end
-        item
-          Visible = True
-          ItemName = 'dteFromDate'
-        end
-        item
-          Visible = True
-          ItemName = 'dteToDate'
+          ItemName = 'lbl3'
         end
         item
           Visible = True
@@ -7824,11 +7915,30 @@ inherited MainFrm: TMainFrm
       Caption = 'Persistent record selection'
       Category = 0
       Hint = 'Persistent record selection'
+      ScreenTip = tipPersistentRecordSelection
       Visible = ivAlways
       ShowCaption = True
       PropertiesClassName = 'TcxCheckBoxProperties'
       Properties.ImmediatePost = True
       Properties.OnEditValueChanged = cbxPersistentSelectionPropertiesEditValueChanged
+    end
+    object cbxIncludeCarryForwardItems: TcxBarEditItem
+      Caption = 'Include Carry Forward Items'
+      Category = 0
+      Hint = 'Include Carry Forward Items'
+      ScreenTip = tipIncludeCarryForwardItems
+      Visible = ivAlways
+      PropertiesClassName = 'TcxCheckBoxProperties'
+      Properties.ImmediatePost = True
+      Properties.OnEditValueChanged = cbxIncludeCarryForwardItemsPropertiesEditValueChanged
+    end
+    object lbl2: TdxBarStatic
+      Category = 0
+      Visible = ivNever
+    end
+    object lbl3: TdxBarStatic
+      Category = 0
+      Visible = ivAlways
     end
   end
   object imgNav32: TcxImageList

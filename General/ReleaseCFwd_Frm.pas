@@ -143,20 +143,21 @@ type
     procedure lucFromPeriodPropertiesCloseUp(Sender: TObject);
     procedure DoOptions(Sender: TObject);
     procedure cbxAllPeriodsPropertiesEditValueChanged(Sender: TObject);
-    procedure cbxReleaseToCurrentPeriodPropertiesEditValueChanged(
-      Sender: TObject);
+    procedure cbxReleaseToCurrentPeriodPropertiesEditValueChanged(      Sender: TObject);
   private
     { Private declarations }
     FShowingForm: Boolean;
     FFromPeriod: Integer;
     FToPeriod: Integer;
     FReleaseToPeriod: Integer;
+    FItemsRelease: Boolean;
 
     procedure GetPeriods;
     procedure GetTimesheetData;
     procedure DrawCellBorder(var Msg: TMessage); message CM_DRAWBORDER;
   public
     { Public declarations }
+    property ItemsRelease: Boolean read FItemsRelease write FItemsRelease;
   end;
 
 var
@@ -207,6 +208,7 @@ begin
   inherited;
   Caption := 'Carry forward release manager';
   FShowingForm := True;
+  FItemsRelease := False;
   viewTimesheet.DataController.DataSource := TSDM.dtsReleaseCFwd;
   lucFromPeriod.Properties.ListSource := TSDM.dtsPeriod;
   lucToPeriod.Properties.ListSource := TSDM.dtsToPeriod;
@@ -276,10 +278,10 @@ begin
     end;
 
     cbxExpandGrid.Checked := RegKey.ReadBool('Always Expand Grid');
+    RegKey.CloseKey;
 
     actGetTimeSheetData.Execute;
   finally
-    RegKey.CloseKey;
     Regkey.Free;
   end;
 end;
@@ -412,13 +414,13 @@ begin
 end;
 
 procedure TReleaseCFwdFrm.DoRelease(Sender: TObject);
-const
-  RELEASE_CARRY_FORWARD =
-    ' UPDATE TIMESHEET SET ' +
-    ' RELEASE_CFWD_TO_PERIOD = %d, ' +
-    ' DATE_CFWD_RELEASED = %s, ' +
-    ' CARRY_FORWARD = 0 ' +
-    ' WHERE ID IN(%s)';
+//const
+//  RELEASE_CARRY_FORWARD =
+//    ' UPDATE TIMESHEET SET ' +
+//    ' RELEASE_CFWD_TO_PERIOD = %d, ' +
+//    ' DATE_CFWD_RELEASED = %s, ' +
+//    ' CARRY_FORWARD = 0 ' +
+//    ' WHERE ID IN(%s)';
 
 var
   C: TcxGridBandedTableController;
@@ -447,6 +449,7 @@ begin
     ) = mrNo then
     Exit;
 
+  ItemsRelease := True;
   CommandString := '';
   Response := RUtils.CreateStringList(PIPE, SINGLE_QUOTE);
 
@@ -482,17 +485,19 @@ begin
         mtError,
         [mbOK]
         );
+    end
+    else
+    begin
+      Beep;
+      DisplayMsg(
+        Application.Title,
+        'Carry Forward released',
+        SelectCount.ToString + ' Carried forward item(s) successfully released for billing.',
+        mtInformation,
+        [mbOK]);
     end;
 
     actGetTimesheetData.Execute;
-
-    DisplayMsg(
-      Application.Title,
-      'Carry Forward released',
-      SelectCount.ToString + ' Carried forward item(s) successfully released for billing.',
-      mtInformation,
-      [mbOK]);
-
   finally
     Response.Free;
   end;

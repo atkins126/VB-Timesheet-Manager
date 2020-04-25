@@ -854,6 +854,10 @@ inherited TSDM: TTSDM
       Origin = 'CARRY_FORWARD'
       Required = True
     end
+    object cdsTimesheetDATE_CARRIED_FORWARD: TDateField
+      DisplayLabel = 'Carried Fwd'
+      FieldName = 'DATE_CARRIED_FORWARD'
+    end
     object cdsTimesheetEditAPPROVED: TIntegerField
       Alignment = taLeftJustify
       DisplayLabel = 'Appr'

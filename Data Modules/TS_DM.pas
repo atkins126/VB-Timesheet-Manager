@@ -32,6 +32,7 @@ type
     HighlightLookupSearchMatch: Boolean;
     SaveGridLayout: Boolean;
     PersitentRecordSelection: Boolean;
+    IncludeCarryForwardItems: Boolean;
   end;
 
 //    Regkey.WriteBool('Incremental Lookup Fitlering', cbxIncrementalFiltering.Checked);
@@ -227,6 +228,7 @@ type
     cdsToPeriodPERIOD_NAME: TStringField;
     cdsReleaseToPeriodPERIOD_NAME: TStringField;
     cdsReleaseCFwdPERIOD_NAME: TStringField;
+    cdsTimesheetDATE_CARRIED_FORWARD: TDateField;
     procedure dtsTimesheetStateChange(Sender: TObject);
     procedure cdsCustomerLookupCalcFields(DataSet: TDataSet);
     procedure cdsTimesheetNewRecord(DataSet: TDataSet);

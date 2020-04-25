@@ -21,7 +21,7 @@ uses
   dxCore, cxDateUtils, cxDropDownEdit, cxMaskEdit, cxLookupEdit, cxDBLookupEdit,
   dxBarExtItems, cxBarEditItem, cxMemo, Vcl.Menus, dxScrollbarAnnotations,
   dxRibbonSkins, dxRibbonCustomizationForm, dxRibbon, dxPrnDev, dxPrnDlg,
-  cxGridExportLink, cxDataUtils;
+  cxGridExportLink, cxDataUtils, dxLayoutcxEditAdapters, cxImage, cxLabel;
 
 type
   TMainFrm = class(TBaseLayoutFrm)
@@ -212,6 +212,17 @@ type
     tipReleaseCFwdManager: TdxScreenTip;
     edtPeriodName: TcxGridDBBandedColumn;
     cbxPersistentSelection: TcxBarEditItem;
+    edtDateCarriedForward: TcxGridDBBandedColumn;
+    cbxIncludeCarryForwardItems: TcxBarEditItem;
+    lbl2: TdxBarStatic;
+    lbl3: TdxBarStatic;
+    tipIncludeCarryForwardItems: TdxScreenTip;
+    tipPersistentRecordSelection: TdxScreenTip;
+    grpLegend: TdxLayoutGroup;
+    litReleasedItemColour: TdxLayoutItem;
+    litReleasedItemLegend: TdxLayoutItem;
+    lblCFwdItemColour: TcxLabel;
+    imgCFwdItemColour: TcxImage;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoEditInsertEntry(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
@@ -253,6 +264,8 @@ type
     procedure DoMonthlyBilling(Sender: TObject);
     procedure cbxPersistentSelectionPropertiesEditValueChanged(Sender: TObject);
     procedure DoReleaseCarryForwardManager(Sender: TObject);
+    procedure cbxIncludeCarryForwardItemsPropertiesEditValueChanged(
+      Sender: TObject);
   private
     { Private declarations }
     FTSUserID: Integer;
@@ -315,6 +328,7 @@ end;
 procedure TMainFrm.FormCreate(Sender: TObject);
 begin
   inherited;
+  {TODO: Change individual action buttons to one button}
   Caption := Application.Title;
   layMain.Align := alClient;
   layMain.LayoutLookAndFeel := lafCustomSkin;
@@ -432,6 +446,7 @@ begin
       FTimesheetPeriod := RegKey.ReadInteger('Period');
       lucPeriod.EditValue := FTimesheetPeriod;
       cbxPersistentSelection.EditValue := TSDM.TimesheetOption.PersitentRecordSelection;
+      cbxIncludeCarryForwardItems.EditValue := TSDM.TimesheetOption.IncludeCarryForwardItems;
 
       if TSDM.TimesheetOption.PersitentRecordSelection then
         viewTimesheet.OptionsSelection.MultiSelectMode := msmPersistent
@@ -543,7 +558,10 @@ begin
 
   C := viewTimesheet.Controller;
   if C.SelectedRecordCount = 0 then
+  begin
+    raise ESelectionException.Create('No items selected to deleted. Please select at leaset one item to delete.');
     Exit;
+  end;
 
   Beep;
   if
@@ -557,7 +575,9 @@ begin
     [mbYes, mbNo]
     ) = mrNo then
     Exit;
+
   VBBaseDM.DBAction := acDelete;
+  {TODO: Change this. Cannot delete locked items!!}
   C.DeleteSelection;
   VBBaseDM.PostData(TSDM.cdsTimesheet);
 end;
@@ -617,13 +637,28 @@ begin
 end;
 
 procedure TMainFrm.DoReleaseCarryForwardManager(Sender: TObject);
+var
+  ID: Integer;
 begin
   inherited;
   Screen.Cursor := crHourglass;
+  ID := viewTimesheet.Controller.SelectedRecords[0].Values[edtID.Index];
+
   try
     if ReleaseCFwdFrm = nil then
       ReleaseCFwdFrm := TReleaseCFwdFrm.Create(nil);
+
     ReleaseCFwdFrm.ShowModal;
+
+    if ReleaseCFwdFrm.ItemsRelease then
+    begin
+      actGetTimesheetData.Execute;
+      viewTimesheet.Controller.ClearSelection;
+
+      if not TSDM.cdsTimesheet.Locate('ID', ID, []) then
+        TSDM.cdsTimesheet.First;
+    end;
+
     ReleaseCFwdFrm.Close;
     FreeAndNil(ReleaseCFwdFrm);
   finally
@@ -669,7 +704,8 @@ var
   DC: TcxDBDataController;
   C: TcxCustomGridTableController;
   I, RecIndex, ChangeCount: Integer;
-  Msg: string;
+  Msg, IDValues, CommandString: string;
+  Response: TStringList;
 begin
   inherited;
   Msg := 'All selected items will be marked as carried forward. ' +
@@ -699,13 +735,33 @@ begin
       DC.Edit;
       DC.SetEditValue(cbxCarryForward.Index, 1, evsValue);
       DC.SetEditValue(edtInvoiceID.Index, -1, evsValue);
+      DC.SetEditValue(edtDateCarriedForward.Index, Date, evsValue);
+      DC.SetEditValue(edtDateCfwdReleased.Index, Null, evsValue);
       DC.Post(True);
+      IDValues := IDValues + IntToStr(C.SelectedRecords[I].Values[edtTID.Index]);
+
+      if I < C.SelectedRecordCount - 1 then
+        IDValues := IDValues + ',';
       Inc(ChangeCount);
     end;
   end;
 
   if ChangeCount > 0 then
-    VBBaseDM.PostData(TSDM.cdsTimesheet);
+  begin
+    Response := RUtils.CreateStringList(PIPE, SINGLE_QUOTE);
+
+    try
+      CommandString := Format(CARRY_FORWARD_STATUS_CHANGE, [AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', Date), ''''), IDValues]);
+      Response.DelimitedText := VBBaseDM.Client.ExecuteSQLCommand(CommandString);
+      if SameText(Response.Values['RESPONSE'], 'ERROR') then
+        raise EServerError.Create('One or more errors occurred when posting data to the database with message;' + CRLF + CRLF +
+          Response.Values['ERROR_MESSAGE']);
+    finally
+      Response.Free;
+    end;
+  end;
+
+  viewTimesheet.Controller.ClearSelection;
 end;
 
 procedure TMainFrm.DoApprovalStatus(Sender: TObject);
@@ -744,8 +800,10 @@ procedure TMainFrm.ApproveTimesheetItem(ATag: Integer);
 var
   DC: TcxDBDataController;
   C: TcxCustomGridTableController;
-  I: Integer;
+  I, Approve: Integer;
   RecIndex, ChangeCount, AlreadyApproved, AlreadyUnApproved, AlreadyInvoiced: Integer;
+  IDValues, CommandString: string;
+  Response: TStringList;
 begin
   inherited;
   DC := viewTimesheet.DataController;
@@ -759,49 +817,73 @@ begin
   AlreadyUnApproved := 0;
   AlreadyInvoiced := 0;
 
+  case ATag of
+    100: Approve := 1; // Approve
+    101: Approve := 0; // Un-Approve
+  end;
+
+  for I := 0 to C.SelectedRecordCount - 1 do
   begin
-    for I := 0 to C.SelectedRecordCount - 1 do
+    RecIndex := C.SelectedRecords[I].RecordIndex;
+    DC.FocusedRecordIndex := RecIndex;
+
+    if DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] <= 0 then
     begin
-      RecIndex := C.SelectedRecords[I].RecordIndex;
-      DC.FocusedRecordIndex := RecIndex;
-
-      if DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] <= 0 then
-      begin
-        case ATag of
-          100: // Approve
+      case ATag of
+        100: // Approve
+          begin
+            if DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 0 then
             begin
-              if DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 0 then
-              begin
-                DC.Edit;
-                DC.SetEditValue(cbxApproved.Index, 1, evsValue);
-                DC.Post(True);
-                Inc(ChangeCount);
-              end
-              else
-                Inc(AlreadyApproved);
-            end;
+              DC.Edit;
+              DC.SetEditValue(cbxApproved.Index, 1, evsValue);
+              DC.SetEditValue(cbxLocked.Index, 1, evsValue);
+              DC.Post(True);
+              IDValues := IDValues + IntToStr(C.SelectedRecords[I].Values[edtTID.Index]);
+              if I < C.SelectedRecordCount - 1 then
+                IDValues := IDValues + ',';
+              Inc(ChangeCount);
+            end
+            else
+              Inc(AlreadyApproved);
+          end;
 
-          101: // Un-approve
+        101: // Un-approve
+          begin
+            if DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 1 then
             begin
-              if DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 1 then
-              begin
-                DC.Edit;
-                DC.SetEditValue(cbxApproved.Index, 0, evsValue);
-                DC.Post(True);
-                Inc(ChangeCount);
-              end
-              else
-                Inc(AlreadyUnApproved);
-            end;
-        end;
-      end
-      else
-        Inc(AlreadyInvoiced);
-    end;
+              DC.Edit;
+              DC.SetEditValue(cbxApproved.Index, 0, evsValue);
+              DC.SetEditValue(cbxLocked.Index, 0, evsValue);
+              DC.Post(True);
+              IDValues := IDValues + IntToStr(C.SelectedRecords[I].Values[edtTID.Index]);
+              if I < C.SelectedRecordCount - 1 then
+                IDValues := IDValues + ',';
+              Inc(ChangeCount);
+            end
+            else
+              Inc(AlreadyUnApproved);
+          end;
+      end;
+    end
+    else
+      Inc(AlreadyInvoiced);
   end;
 
   if ChangeCount > 0 then
-    VBBaseDM.PostData(TSDM.cdsTimesheet);
+  begin
+    Response := RUtils.CreateStringList(PIPE, SINGLE_QUOTE);
+
+    try
+      CommandString := Format(APPROVE_STATUS_CHANGE, [Approve, IDValues]);
+      Response.DelimitedText := VBBaseDM.Client.ExecuteSQLCommand(CommandString);
+      if SameText(Response.Values['RESPNSE'], 'ERROR') then
+        raise EServerError.Create('One or more errors occurred when posting data to the database with message;' + CRLF + CRLF +
+          Response.Values['ERROR_MESSAGE']);
+//      VBBaseDM.PostData(TSDM.cdsTimesheet);
+    finally
+      Response.Free;
+    end;
+  end;
 
   viewTimesheet.Controller.ClearSelection;
 
@@ -900,8 +982,10 @@ procedure TMainFrm.BillTimesheetItem(ATag: Integer);
 var
   DC: TcxDBDataController;
   C: TcxCustomGridTableController;
-  I, ID, RecIndex, AlreadyBillable, NotBillable, AlreadyInvoiced, AlreadyApproved: Integer;
-  ChangeCount: Integer;
+  I {, ID}, RecIndex, AlreadyBillable, NotBillable, AlreadyInvoiced, AlreadyApproved: Integer;
+  ChangeCount, Bill: Integer;
+  IDValues, CommandString: string;
+  Response: TStringList;
 begin
   inherited;
   DC := viewTimesheet.DataController;
@@ -914,13 +998,14 @@ begin
   AlreadyApproved := 0;
   AlreadyBillable := 0;
   NotBillable := 0;
-//  DC.BeginUpdate;
 
-//  try
-//  begin
+  case ATag of
+    110: Bill := 1;
+    111: Bill := 0;
+  end;
+
   for I := 0 to C.SelectedRecordCount - 1 do
   begin
-//    DC.Edit;
     RecIndex := C.SelectedRecords[I].RecordIndex;
     DC.FocusedRecordIndex := RecIndex;
 
@@ -937,6 +1022,9 @@ begin
               DC.Edit;
               DC.SetEditValue(cbxBillable.Index, 1, evsValue);
               DC.Post(True);
+              IDValues := IDValues + IntToStr(C.SelectedRecords[I].Values[edtTID.Index]);
+              if I < C.SelectedRecordCount - 1 then
+                IDValues := IDValues + ',';
               Inc(ChangeCount);
             end
             else
@@ -950,6 +1038,9 @@ begin
               DC.Edit;
               DC.SetEditValue(cbxBillable.Index, 0, evsValue);
               DC.Post(True);
+              IDValues := IDValues + IntToStr(C.SelectedRecords[I].Values[edtTID.Index]);
+              if I < C.SelectedRecordCount - 1 then
+                IDValues := IDValues + ',';
               Inc(ChangeCount);
             end
             else
@@ -957,30 +1048,15 @@ begin
           end;
       end;
 
-// WARNING!!
-// DON'T DO ANY OF THIS AS YOU WILL ATTEMPT TO UPDATE READONLY FIELDS.
-// In this case it would be the ITEM_VALUE field.
-
-// case VarAstype(lucRateUnit.EditValue, varInteger) of
-// 1: edtitemValue.Value := edtTimeSpent.Value * edtRate.Value / 60;
-// else
-// edtitemValue.Value := {edtTimeSpent.Value * }edtRate.Value;
-// end;
-
       DC.SetEditValue(edtItemValue.Index, 0, evsValue);
-// DC.Values[RecIndex, edtItemValue.Index] := 0;
 
       if DC.Values[RecIndex, cbxBillable.Index] = 1 then
         if DC.Values[RecIndex, lucRateUnit.Index] = 1 then
           DC.SetEditValue(edtItemValue.Index, DC.Values[RecIndex, edtTimeSpent.Index] *
             DC.Values[RecIndex, edtRate.Index] / 60, evsValue)
-// DC.Values[RecIndex, edtItemValue.Index] := DC.Values[RecIndex, edtTimeSpent.Index] *
-// DC.Values[RecIndex, edtRate.Index] / 60
         else
           DC.SetEditValue(edtItemValue.Index,
             DC.Values[RecIndex, edtRate.Index], evsValue);
-// DC.Values[RecIndex, edtItemValue.Index] := DC.Values[RecIndex, edtRate.Index];
-
     end
     else
     begin
@@ -990,15 +1066,24 @@ begin
         Inc(AlreadyApproved);
     end;
   end;
-//  end;
-  ID := TSDM.cdsTimesheet.FieldByName('ID').AsInteger;
+
   if ChangeCount > 0 then
-    VBBaseDM.PostData(TSDM.cdsTimesheet);
+  begin
+    Response := RUtils.CreateStringList(PIPE, SINGLE_QUOTE);
+
+    try
+      CommandString := Format(BILLABLE_STATUS_CHANGE, [Bill, IDValues]);
+      Response.DelimitedText := VBBaseDM.Client.ExecuteSQLCommand(CommandString);
+
+      if SameText(Response.Values['RESPNSE'], 'ERROR') then
+        raise EServerError.Create('One or more errors occurred when posting data to the database with message;' + CRLF + CRLF +
+          Response.Values['ERROR_MESSAGE']);
+    finally
+      Response.Free;
+    end;
+  end;
 
   viewTimesheet.Controller.ClearSelection;
-  actRefresh.Execute;
-  if not TSDM.cdsTimesheet.Locate('ID', ID, []) then
-    TSDM.cdsTimesheet.First;
 
   case ATag of
     110:
@@ -1033,7 +1118,7 @@ begin
           DisplayMsg(
             Application.Title,
             'Data Update Informaiton',
-            AlreadyBillable.ToString + ' items are either carried forward or not approved and were thus not updated.',
+            AlreadyBillable.ToString + ' items are already billable and were thus not updated.',
             mtInformation,
             [mbOK]
             );
@@ -1048,25 +1133,13 @@ begin
           DisplayMsg(
             Application.Title,
             'Data Update Informaiton',
-            NotBillable.ToString + ' items are already approved and were thus not updated.',
+            NotBillable.ToString + ' items are already non-billable and were thus not updated.',
             mtInformation,
             [mbOK]
             );
         end;
       end;
   end;
-
-// if DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 0 then
-// DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 1
-// else
-// DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] := 0;
-//
-// DC.Post(True);
-// end;
-// VBBaseDM.PostData(TSDM.cdsTimesheet);
-//  finally
-//    DC.EndUpdate;
-//  end;
 end;
 
 procedure TMainFrm.DoInvoiceItem(Sender: TObject);
@@ -1248,6 +1321,34 @@ begin
     ACanvas.Brush.Color := clMaroon;
 end;
 
+procedure TMainFrm.cbxIncludeCarryForwardItemsPropertiesEditValueChanged(Sender: TObject);
+var
+  RegKey: TRegistry;
+  ID: Integer;
+begin
+  inherited;
+  TSDM.TimesheetOption.IncludeCarryForwardItems := cbxIncludeCarryForwardItems.EditValue;
+
+  if not FShowingForm then
+  begin
+    ID := TSDM.cdsTimesheet.FieldByName('ID').Asinteger;
+    RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+
+    try
+      RegKey.RootKey := HKEY_CURRENT_USER;
+      RegKey.OpenKey(KEY_TIMESHEET, True);
+      RegKey.WriteBool('Include Carry Forward Items', TSDM.TimesheetOption.IncludeCarryForwardItems);
+      RegKey.CloseKey;
+    finally
+      RegKey.Free;
+    end;
+
+    actGetTimesheetData.Execute;
+    if not TSDM.cdsTimesheet.Locate('ID', id, []) then
+      TSDM.cdsTimesheet.First;
+  end;
+end;
+
 procedure TMainFrm.cbxPersistentSelectionPropertiesEditValueChanged(Sender: TObject);
 var
   RegKey: TRegistry;
@@ -1330,7 +1431,7 @@ end;
 
 procedure TMainFrm.DoGetTimesheetData(Sender: TObject);
 var
-  WhereClause, OrderByClause: string;
+  WhereClause, OrderByClause, CarryForwardClause: string;
   AToDateEdit: TcxDateEdit;
 begin
   inherited;
@@ -1340,9 +1441,17 @@ begin
     if FTimesheetPeriod < 201901 then
       raise EValidateException.Create('Invalid period. Please select a valid period and try again.');
 
-    WhereClause :=
-      ' WHERE T.USER_ID=' + FTSUserID.ToString +
-      ' AND T.THE_PERIOD=' + FTimesheetPeriod.ToString;
+    CarryForwardClause := '';
+
+    if cbxIncludeCarryForwardItems.EditValue then
+      WhereClause :=
+        ' WHERE T.USER_ID =' + FTSUserID.ToString +
+        ' AND (T.THE_PERIOD =' + FTimesheetPeriod.ToString +
+        ' OR T.RELEASE_CFWD_TO_PERIOD = ' + FTimesheetPeriod.ToString + ') '
+    else
+      WhereClause :=
+        ' WHERE T.USER_ID=' + FTSUserID.ToString +
+        ' AND T.THE_PERIOD=' + FTimesheetPeriod.ToString;
 
     OrderByClause := ' ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
     WhereClause := WhereClause + OrderByClause;
@@ -1363,7 +1472,15 @@ begin
       AToDateEdit.Date := FFromDate;
     end;
 
-    WhereClause := ' WHERE T.USER_ID =' + FTSUserID.ToString +
+    if cbxIncludeCarryForwardItems.EditValue then
+      WhereClause :=
+        ' WHERE T.USER_ID =' + FTSUserID.ToString +
+        ' ((AND T.ACTIVITY_DATE >=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FFromDate), '''') +
+        ' AND T.ACTIVITY_DATE <=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FToDate), '''') + ') ' +
+        ' OR T.RELEASE_CFWD_TO_PERIOD = ' + FTimesheetPeriod.ToString + ') ';
+
+    WhereClause :=
+      ' WHERE T.USER_ID =' + FTSUserID.ToString +
       ' AND T.ACTIVITY_DATE >=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FFromDate), '''') +
       ' AND T.ACTIVITY_DATE <=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FToDate), '''');
 
@@ -1440,6 +1557,9 @@ begin
     if not RegKey.ValueExists('Persistent Selection') then
       RegKey.WriteBool('Persistent Selection', True);
 
+    if not RegKey.ValueExists('Include Carry Forward Items') then
+      RegKey.WriteBool('Include Carry Forward Items', True);
+
     if not RegKey.ValueExists('View Mode Index') then
       RegKey.WriteInteger('View Mode Index', 0);
 
@@ -1513,6 +1633,7 @@ begin
     TSDM.TimesheetOption.IncrementalLookupFitlering := RegKey.ReadBool('Incremental Lookup Fitlering');
     TSDM.TimesheetOption.HighlightLookupSearchMatch := RegKey.ReadBool('Highlight Lookup Search Match');
     TSDM.TimesheetOption.PersitentRecordSelection := RegKey.ReadBool('Persistent Selection');
+    TSDM.TimesheetOption.IncludeCarryForwardItems := RegKey.ReadBool('Include Carry Forward Items');
   finally
     RegKey.Free
   end;
@@ -1531,10 +1652,15 @@ begin
   if AViewInfo.GridRecord = nil then
     Exit;
 
+  if AViewInfo.GridRecord.Values[edtReleaseCfwdToPeriod.Index] > 0 then
+  begin
+    ACanvas.Brush.Color := $D7E3FF; // $FFE1F0;
+    ACanvas.Font.Color := RootLookAndFeel.SkinPainter.DefaultSelectionColor;
+  end;
+
   if AViewInfo.GridRecord.Focused then
   begin
     if AViewInfo.Item <> nil then
-//      if (AViewInfo.Item <> cbxApproved) and (AViewInfo.Item.Focused) then
       if AViewInfo.Item.Focused then
       begin
         ACanvas.Brush.Color := $B6EDFA;
@@ -1899,6 +2025,18 @@ begin
   lucPeriod.Enabled := lucViewMode.ItemIndex = 0;
   dteFromDate.Enabled := not lucPeriod.Enabled;
   dteToDate.Enabled := not lucPeriod.Enabled;
+
+  if lucViewMode.ItemIndex = 0 then
+  begin
+    lbl1.Visible := ivAlways;
+//    lbl3.Visible := ivNever;
+  end
+  else
+  begin
+    lbl1.Visible := ivNever;
+//    lbl3.Visible := ivAlways;
+  end;
+
 // MonthEndDate := GetMonthEndDate(FTimesheetPeriod);
 
   try
