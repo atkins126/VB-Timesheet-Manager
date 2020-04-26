@@ -75,7 +75,6 @@ type
     cbxCarryForward: TcxGridDBBandedColumn;
     cbxApproved: TcxGridDBBandedColumn;
     cbxAddWork: TcxGridDBBandedColumn;
-    btnPreview: TdxBarLargeButton;
     actGetTimesheetData: TAction;
     lucPeriod: TcxBarEditItem;
     lucUser: TcxBarEditItem;
@@ -88,9 +87,6 @@ type
     actExcel: TAction;
     actTimsheetDetail: TAction;
     actOptions: TAction;
-    btnPrint: TdxBarLargeButton;
-    btnPDF: TdxBarLargeButton;
-    btnExcel: TdxBarLargeButton;
     popTimesheet: TPopupMenu;
     Insert1: TMenuItem;
     Edit1: TMenuItem;
@@ -162,42 +158,36 @@ type
     tipTimesheetDetail: TdxScreenTip;
     tipBillableSummary: TdxScreenTip;
     tipTimesheetActivitySummary: TdxScreenTip;
-    actToggleApprovalStatus: TAction;
-    btnApprove: TdxBarLargeButton;
     actApprove: TAction;
     actUnApprove: TAction;
     N1: TMenuItem;
     Approve1: TMenuItem;
     UnApprove1: TMenuItem;
-    popApproval: TdxBarPopupMenu;
+    popPrintExport: TdxBarPopupMenu;
     dxBarButton1: TdxBarButton;
     btnUnApprove: TdxBarButton;
     tipApprove: TdxScreenTip;
-    btnToggleBillable: TdxBarLargeButton;
+    btnTImeshetAction: TdxBarLargeButton;
     actBilable: TAction;
     actNonBillable: TAction;
-    popBillable: TdxBarPopupMenu;
+    popTImesheetAction: TdxBarPopupMenu;
     btnBillable: TdxBarButton;
     btnNotBillable: TdxBarButton;
     N2: TMenuItem;
     Billable1: TMenuItem;
     NotBillable1: TMenuItem;
-    tipBillable: TdxScreenTip;
-    popInvoice: TdxBarPopupMenu;
+    tipAdditionalActions: TdxScreenTip;
     actInvoiceItem: TAction;
     actUnInvoice: TAction;
-    btnInvoice: TdxBarLargeButton;
     btnInvoiceItem: TdxBarButton;
     btnUnInvoiceItem: TdxBarButton;
     N3: TMenuItem;
     Invoice1: TMenuItem;
     UnInvoice1: TMenuItem;
-    popCarryForward: TdxBarPopupMenu;
     actCarryForward: TAction;
     actReleaseCFwdManagaer: TAction;
     btnCarryForward: TdxBarButton;
     btnReleaseCFwdManager: TdxBarButton;
-    btnCarryFwd: TdxBarLargeButton;
     N4: TMenuItem;
     CarryForward1: TMenuItem;
     ClearCarryForward1: TMenuItem;
@@ -208,7 +198,6 @@ type
     tipMonthlyBilling: TdxScreenTip;
     edtDateCfwdReleased: TcxGridDBBandedColumn;
     edtReleaseCfwdToPeriod: TcxGridDBBandedColumn;
-    actReleaseCarryForward: TAction;
     tipReleaseCFwdManager: TdxScreenTip;
     edtPeriodName: TcxGridDBBandedColumn;
     cbxPersistentSelection: TcxBarEditItem;
@@ -223,6 +212,21 @@ type
     litReleasedItemLegend: TdxLayoutItem;
     lblCFwdItemColour: TcxLabel;
     imgCFwdItemColour: TcxImage;
+    Sep1: TdxBarSeparator;
+    Sep2: TdxBarSeparator;
+    Sep3: TdxBarSeparator;
+    Sep4: TdxBarSeparator;
+    btnCopyCell: TdxBarButton;
+    sep5: TdxBarSeparator;
+    sep6: TdxBarSeparator;
+    N5: TMenuItem;
+    Preview1: TMenuItem;
+    Print1: TMenuItem;
+    Excel1: TMenuItem;
+    PDF1: TMenuItem;
+    btnPrintExport: TdxBarLargeButton;
+    tipPrintExport: TdxScreenTip;
+    Sep7: TdxBarSeparator;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoEditInsertEntry(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
@@ -682,21 +686,23 @@ begin
 end;
 
 procedure TMainFrm.btnApproveClick(Sender: TObject);
-var
-  aControl: TdxBarItemControl;
-  APopupPoint: TPoint;
+//var
+//  aControl: TdxBarItemControl;
+//  APopupPoint: TPoint;
 begin
   inherited;
-  aControl := TdxBarButton(Sender).ClickItemLink.Control;
-  APopupPoint := Point(aControl.ItemBounds.Left, aControl.ItemBounds.Bottom);
-  APopupPoint := aControl.Parent.ClientToScreen(APopupPoint);
-
-  case TdxBarLargeButton(Sender).Tag of
-    0: popApproval.Popup(APopupPoint.X, APopupPoint.Y);
-    1: popBillable.Popup(APopupPoint.X, APopupPoint.Y);
-    2: popInvoice.Popup(APopupPoint.X, APopupPoint.Y);
-    3: popCarryForward.Popup(APopupPoint.X, APopupPoint.Y);
-  end;
+//  aControl := TdxBarButton(Sender).ClickItemLink.Control;
+//  APopupPoint := Point(aControl.ItemBounds.Left, aControl.ItemBounds.Bottom);
+//  APopupPoint := aControl.Parent.ClientToScreen(APopupPoint);
+//
+//  popTimesheet.Popup(APopupPoint.X, APopupPoint.Y);
+//
+////  case TdxBarLargeButton(Sender).Tag of
+////    0: popApproval.Popup(APopupPoint.X, APopupPoint.Y);
+////    1: popBillable.Popup(APopupPoint.X, APopupPoint.Y);
+////    2: popInvoice.Popup(APopupPoint.X, APopupPoint.Y);
+////    3: popCarryForward.Popup(APopupPoint.X, APopupPoint.Y);
+////  end;
 end;
 
 procedure TMainFrm.CarryForwardItem;
