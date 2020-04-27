@@ -79,8 +79,8 @@ type
     lucPeriod: TcxBarEditItem;
     lucUser: TcxBarEditItem;
     lucViewMode: TdxBarCombo;
-    dteFromDate: TcxBarEditItem;
-    dteToDate: TcxBarEditItem;
+    lucFromDate: TcxBarEditItem;
+    lucToDate: TcxBarEditItem;
     actPreview: TAction;
     actPrint: TAction;
     actPDF: TAction;
@@ -227,6 +227,11 @@ type
     btnPrintExport: TdxBarLargeButton;
     tipPrintExport: TdxScreenTip;
     Sep7: TdxBarSeparator;
+    tipCopyData: TdxScreenTip;
+    actCopyRecord: TAction;
+    CopyRecord1: TMenuItem;
+    btnCopyRecord: TdxBarButton;
+    styImageColour: TcxEditStyleController;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoEditInsertEntry(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
@@ -418,10 +423,10 @@ begin
     TcxLookupComboBoxProperties(lucCustomerGroup.Properties).listSource := TSDM.dtsCustomerGroup;
     TcxLookupComboBoxProperties(lucPeriod.Properties).listSource := TSDM.dtsTSPeriod;
     TcxLookupComboBoxProperties(lucUser.Properties).listSource := TSDM.dtsSytemUser;
-    TcxDateEditProperties(dteFromDate.Properties).MinDate := StrToDate('01/01/2019');
-    TcxDateEditProperties(dteFromDate.Properties).MaxDate := Date;
-    TcxDateEditProperties(dteToDate.Properties).MinDate := StrToDate('01/01/2019');
-    TcxDateEditProperties(dteToDate.Properties).MaxDate := Date;
+    TcxDateEditProperties(lucFromDate.Properties).MinDate := StrToDate('01/01/2019');
+    TcxDateEditProperties(lucFromDate.Properties).MaxDate := Date;
+    TcxDateEditProperties(lucToDate.Properties).MinDate := StrToDate('01/01/2019');
+    TcxDateEditProperties(lucToDate.Properties).MaxDate := Date;
 
     RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
     RegKey.RootKey := HKEY_CURRENT_USER;
@@ -443,10 +448,10 @@ begin
       ReadRegValues;
 
       RegKey.OpenKey(KEY_TIMESHEET, True);
-      FFromDate := RegKey.ReadDate('From Date');
-      dteFromDate.EditValue := FFromDate;
-      FToDate := RegKey.ReadDate('To Date');
-      dteToDate.EditValue := FToDate;
+//      FFromDate := RegKey.ReadDate('From Date');
+//      lucFromDate.EditValue := FFromDate;
+//      FToDate := RegKey.ReadDate('To Date');
+//      lucToDate.EditValue := FToDate;
       FTimesheetPeriod := RegKey.ReadInteger('Period');
       lucPeriod.EditValue := FTimesheetPeriod;
       cbxPersistentSelection.EditValue := TSDM.TimesheetOption.PersitentRecordSelection;
@@ -463,7 +468,10 @@ begin
         FTimesheetPeriod := TSDM.cdsTSPeriod.FieldByName('THE_PERIOD').AsInteger;
       end;
 
-      GetMonthEndDate(FTimesheetPeriod);
+      FFromDate := GetMonthStartDate(FTimesheetPeriod);
+      FToDate := GetMonthEndDate(FTimesheetPeriod);
+      lucFromDate.EditValue := FFromDate;
+      lucToDate.EditValue := FToDate;
       lucViewMode.ItemIndex := RegKey.ReadInteger('View Mode Index');
       RegKey.CloseKey;
     finally
@@ -547,9 +555,12 @@ begin
 end;
 
 procedure TMainFrm.DoCopyCell(Sender: TObject);
+var
+  CopyCellContentOnly: Boolean;
 begin
   inherited;
-  CopyCellValue(viewTimesheet);
+  CopyCellContentOnly := TAction(Sender).Tag = 0;
+  CopyRecordData(viewTimesheet, CopyCellContentOnly);
 end;
 
 procedure TMainFrm.DoDeleteEntry(Sender: TObject);
@@ -646,7 +657,10 @@ var
 begin
   inherited;
   Screen.Cursor := crHourglass;
-  ID := viewTimesheet.Controller.SelectedRecords[0].Values[edtID.Index];
+  ID := 0;
+
+  if viewTimesheet.Controller.SelectedRecordCount > 0 then
+    ID := viewTimesheet.Controller.SelectedRecords[0].Values[edtID.Index];
 
   try
     if ReleaseCFwdFrm = nil then
@@ -1469,26 +1483,26 @@ begin
   else if lucViewMode.ItemIndex = 1 then
   begin
     if (FFromDate = 0.00) or (FToDate = 0.00) then
-      raise EValidateException.Create('Ivalide From and/or to date. Please sselect valid dates and try again.');
+      raise EValidateException.Create('Ivalid From and/or to date. Please sselect valid dates and try again.');
 
     if FFromDate > FToDate then
     begin
-      dteToDate.SetFocus;
-      AToDateEdit := TcxBarEditItemControl(dteToDate.Links[0].Control).Edit as TcxDateEdit;
+      lucToDate.SetFocus;
+      AToDateEdit := TcxBarEditItemControl(lucToDate.Links[0].Control).Edit as TcxDateEdit;
       AToDateEdit.Date := FFromDate;
     end;
 
     if cbxIncludeCarryForwardItems.EditValue then
       WhereClause :=
         ' WHERE T.USER_ID =' + FTSUserID.ToString +
-        ' ((AND T.ACTIVITY_DATE >=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FFromDate), '''') +
+        ' AND ((T.ACTIVITY_DATE >=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FFromDate), '''') +
         ' AND T.ACTIVITY_DATE <=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FToDate), '''') + ') ' +
-        ' OR T.RELEASE_CFWD_TO_PERIOD = ' + FTimesheetPeriod.ToString + ') ';
-
-    WhereClause :=
-      ' WHERE T.USER_ID =' + FTSUserID.ToString +
-      ' AND T.ACTIVITY_DATE >=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FFromDate), '''') +
-      ' AND T.ACTIVITY_DATE <=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FToDate), '''');
+        ' OR T.RELEASE_CFWD_TO_PERIOD = ' + FTimesheetPeriod.ToString + ') '
+    else
+      WhereClause :=
+        ' WHERE T.USER_ID =' + FTSUserID.ToString +
+        ' AND T.ACTIVITY_DATE >=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FFromDate), '''') +
+        ' AND T.ACTIVITY_DATE <=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FToDate), '''');
 
     OrderByClause := ' ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
     WhereClause := WhereClause + OrderByClause;
@@ -1649,6 +1663,7 @@ procedure TMainFrm.ribMainTabChanged(Sender: TdxCustomRibbon);
 begin
   inherited;
   litTimesheet.Visible := ribMain.ActiveTab = tabTimesheet;
+  grpLegend.Visible := ribMain.ActiveTab = tabTimesheet;
 end;
 
 procedure TMainFrm.viewTimesheetCustomDrawCell(Sender: TcxCustomGridTableView;
@@ -1660,7 +1675,7 @@ begin
 
   if AViewInfo.GridRecord.Values[edtReleaseCfwdToPeriod.Index] > 0 then
   begin
-    ACanvas.Brush.Color := $D7E3FF; // $FFE1F0;
+    ACanvas.Brush.Color := $7EE4FE; // Color := $54DCFE; // $C1E0FF; //$D7E3FF; // $FFE1F0;
     ACanvas.Font.Color := RootLookAndFeel.SkinPainter.DefaultSelectionColor;
   end;
 
@@ -1939,6 +1954,8 @@ begin
   inherited;
   // This still works!
   FTimesheetPeriod := lucPeriod.EditValue;
+  lucFromDate.EditValue := GetMonthStartDate(FTimesheetPeriod);
+  lucToDate.EditValue := GetMonthEndDate(FTimesheetPeriod);
   // This also works.
 //  FTimesheetPeriod := TSDM.cdsTSPeriod.FieldByName('THE_PERIOD').AsInteger;
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
@@ -1970,8 +1987,8 @@ var
   // ATag: integer;
 begin
   inherited;
-  dteFromDate.SetFocus;
-  AFromDateEdit := TcxBarEditItemControl(dteFromDate.Links[0].Control).Edit as TcxDateEdit;
+  lucFromDate.SetFocus;
+  AFromDateEdit := TcxBarEditItemControl(lucFromDate.Links[0].Control).Edit as TcxDateEdit;
   FFromDate := AFromDateEdit.Date;
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   try
@@ -1997,8 +2014,8 @@ var
   // ATag: integer;
 begin
   inherited;
-  dteToDate.SetFocus;
-  AToDateEdit := TcxBarEditItemControl(dteToDate.Links[0].Control).Edit as TcxDateEdit;
+  lucToDate.SetFocus;
+  AToDateEdit := TcxBarEditItemControl(lucToDate.Links[0].Control).Edit as TcxDateEdit;
   FToDate := AToDateEdit.Date;
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   try
@@ -2029,8 +2046,8 @@ begin
   ribMain.BeginUpdate;
 // AComboBox := TcxBarEditItemControl(lucViewMode.Links[0].Control).Edit as TcxComboBox;
   lucPeriod.Enabled := lucViewMode.ItemIndex = 0;
-  dteFromDate.Enabled := not lucPeriod.Enabled;
-  dteToDate.Enabled := not lucPeriod.Enabled;
+  lucFromDate.Enabled := not lucPeriod.Enabled;
+  lucToDate.Enabled := not lucPeriod.Enabled;
 
   if lucViewMode.ItemIndex = 0 then
   begin
@@ -2050,15 +2067,15 @@ begin
       0:
         begin
           lucPeriod.Visible := ivAlways;
-          dteFromDate.Visible := ivNever;
-          dteToDate.Visible := ivNever;
+          lucFromDate.Visible := ivNever;
+          lucToDate.Visible := ivNever;
         end;
 
       1:
         begin
           lucPeriod.Visible := ivNever;
-          dteFromDate.Visible := ivAlways;
-          dteToDate.Visible := ivAlways;
+          lucFromDate.Visible := ivAlways;
+          lucToDate.Visible := ivAlways;
         end;
     end;
   finally
@@ -2090,8 +2107,8 @@ begin
 // barToolbar.Bars.BeginUpdate;
 // AComboBox := TcxBarEditItemControl(lucViewMode.Links[0].Control).Edit as TcxComboBox;
   lucPeriod.Enabled := lucViewMode.ItemIndex = 0;
-  dteFromDate.Enabled := not lucPeriod.Enabled;
-  dteToDate.Enabled := not lucPeriod.Enabled;
+  lucFromDate.Enabled := not lucPeriod.Enabled;
+  lucToDate.Enabled := not lucPeriod.Enabled;
 // MonthEndDate := GetMonthEndDate(FTimesheetPeriod);
 
 // try
@@ -2101,9 +2118,9 @@ begin
 // lucPeriod.Visible := ivAlways;
 // lblPeriod.Visible := ivAlways;
 // lblFromDate.Visible := ivNever;
-// dteFromDate.Visible := ivNever;
+// lucFromDate.Visible := ivNever;
 // lblToDate.Visible := ivNever;
-// dteToDate.Visible := ivNever;
+// lucToDate.Visible := ivNever;
 // end;
 //
 // 1:
@@ -2111,9 +2128,9 @@ begin
 // lucPeriod.Visible := ivNever;
 // lblPeriod.Visible := ivNever;
 // lblFromDate.Visible := ivAlways;
-// dteFromDate.Visible := ivAlways;
+// lucFromDate.Visible := ivAlways;
 // lblToDate.Visible := ivAlways;
-// dteToDate.Visible := ivAlways;
+// lucToDate.Visible := ivAlways;
 // end;
 // end;
 // finally
