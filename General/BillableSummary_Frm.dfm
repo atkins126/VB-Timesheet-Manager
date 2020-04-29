@@ -269,19 +269,18 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       end
     end
     object grdCarryForwardDetail: TcxGrid [2]
-      Left = 10000
-      Top = 10000
+      Left = 25
+      Top = 468
       Width = 1073
       Height = 210
       TabOrder = 3
-      Visible = False
       object viewCarryForwardDetail: TcxGridDBBandedTableView
         Tag = 1
         OnDblClick = viewTimesheetDblClick
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
         OnCustomDrawCell = viewBillableSummaryCustomDrawCell
-        DataController.DataSource = ReportDM.dtsCarryForwardDetail
+        DataController.DataSource = ReportDM.dtsTimesheetCF
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -293,14 +292,24 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           item
             Format = '#,###,##0.00'
             Kind = skSum
-            FieldName = 'ITEM_VALUE'
-            Column = edtCFItemValue
+            FieldName = 'CARRY_FORWARD_VALUE'
+            Column = edtCFCFwdValue
+          end
+          item
+            Format = 'Items: #,##0'
+            Kind = skCount
+            FieldName = 'USER_ID'
+            Column = lucCFSystemuser
           end>
         DataController.Summary.SummaryGroups = <>
         OptionsBehavior.CellHints = True
         OptionsBehavior.FocusCellOnTab = True
         OptionsBehavior.FocusCellOnCycle = True
         OptionsCustomize.ColumnsQuickCustomization = True
+        OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Editing = False
+        OptionsData.Inserting = False
         OptionsView.NoDataToDisplayInfoText = '<No Carry Forward data to display>'
         OptionsView.ExpandButtonsForEmptyDetails = False
         OptionsView.Footer = True
@@ -650,6 +659,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           Properties.ReadOnly = True
           Properties.UseDisplayFormatWhenEditing = True
           Properties.UseLeftAlignmentOnEditing = False
+          Visible = False
           HeaderAlignmentHorz = taRightJustify
           MinWidth = 80
           Options.Editing = False
@@ -662,6 +672,30 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           Width = 80
           Position.BandIndex = 1
           Position.ColIndex = 4
+          Position.RowIndex = 0
+        end
+        object edtCFCFwdValue: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'CARRY_FORWARD_VALUE'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DisplayFormat = '###,##0.00'
+          Properties.EditFormat = '###,##0.00'
+          Properties.ReadOnly = True
+          Properties.UseDisplayFormatWhenEditing = True
+          Properties.UseLeftAlignmentOnEditing = False
+          HeaderAlignmentHorz = taRightJustify
+          MinWidth = 80
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 80
+          Position.BandIndex = 1
+          Position.ColIndex = 5
           Position.RowIndex = 0
         end
         object edtCFInvID: TcxGridDBBandedColumn
@@ -873,17 +907,18 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       end
     end
     object grdTimesheet: TcxGrid [3]
-      Left = 25
-      Top = 468
+      Left = 10000
+      Top = 10000
       Width = 1073
       Height = 210
       TabOrder = 2
+      Visible = False
       object viewTimesheet: TcxGridDBBandedTableView
         OnDblClick = viewTimesheetDblClick
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
         OnCustomDrawCell = viewBillableSummaryCustomDrawCell
-        DataController.DataSource = ReportDM.dtsTimesheet
+        DataController.DataSource = ReportDM.dtsTimesheetDetail
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -897,12 +932,22 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
             Kind = skSum
             FieldName = 'ITEM_VALUE'
             Column = edtTSItemValue
+          end
+          item
+            Format = 'Items: #,##0'
+            Kind = skCount
+            FieldName = 'USER_ID'
+            Column = lucSystemUser
           end>
         DataController.Summary.SummaryGroups = <>
         OptionsBehavior.CellHints = True
         OptionsBehavior.FocusCellOnTab = True
         OptionsBehavior.FocusCellOnCycle = True
         OptionsCustomize.ColumnsQuickCustomization = True
+        OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Editing = False
+        OptionsData.Inserting = False
         OptionsView.NoDataToDisplayInfoText = '<No Timesheet data to display>'
         OptionsView.ExpandButtonsForEmptyDetails = False
         OptionsView.Footer = True
@@ -1266,6 +1311,29 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           Position.ColIndex = 4
           Position.RowIndex = 0
         end
+        object edtTSCarryForwardValue: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'CARRY_FORWARD_VALUE'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = '###,##0.00'
+          Properties.EditFormat = '###,##0.00'
+          Properties.ReadOnly = True
+          Properties.UseDisplayFormatWhenEditing = True
+          Properties.UseLeftAlignmentOnEditing = False
+          Visible = False
+          HeaderAlignmentHorz = taRightJustify
+          MinWidth = 80
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 80
+          Position.BandIndex = 1
+          Position.ColIndex = 5
+          Position.RowIndex = 0
+        end
         object edtTSInvID: TcxGridDBBandedColumn
           DataBinding.FieldName = 'INVOICE_ID'
           PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -1474,6 +1542,9 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
         GridView = viewTimesheet
       end
     end
+    inherited layMainGroup_Root: TdxLayoutGroup
+      ItemIndex = 2
+    end
     object grpToolbar: TdxLayoutGroup
       Parent = layMainGroup_Root
       CaptionOptions.Text = 'New Group'
@@ -1487,6 +1558,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       AlignVert = avClient
       CaptionOptions.Text = 'New Group'
       ButtonOptions.Buttons = <>
+      ItemIndex = 1
       LayoutDirection = ldTabbed
       ShowBorder = False
       Index = 2
@@ -1524,7 +1596,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
     end
     object litCarryForward: TdxLayoutItem
       Parent = grpData
-      AlignHorz = ahClient
       AlignVert = avClient
       CaptionOptions.Text = 'Carry Forward Details'
       CaptionOptions.Visible = False
@@ -1536,8 +1607,8 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
     end
   end
   object grdBillCfwdExcel: TcxGrid [1]
-    Left = 25
-    Top = 348
+    Left = 1195
+    Top = 128
     Width = 913
     Height = 361
     Font.Charset = ANSI_CHARSET
@@ -1546,7 +1617,8 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
     Font.Name = 'Calibri'
     Font.Style = []
     ParentFont = False
-    TabOrder = 5
+    TabOrder = 1
+    Visible = False
     object viewBillCfwdExcel: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       ScrollbarAnnotations.CustomAnnotations = <>

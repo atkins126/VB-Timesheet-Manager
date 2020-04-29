@@ -152,6 +152,8 @@ type
     edtBCAddWorkX: TcxGridDBBandedColumn;
     edtBCAddWorkStrX: TcxGridDBBandedColumn;
     lvlBillCfwdExcel: TcxGridLevel;
+    edtCFCFwdValue: TcxGridDBBandedColumn;
+    edtTSCarryForwardValue: TcxGridDBBandedColumn;
     procedure GetBillableSummary;
     procedure GetBillableTimesheet;
     procedure GetPeriods;
@@ -197,6 +199,9 @@ type
 
 var
   BillableSummaryFrm: TBillableSummaryFrm;
+
+const
+  TABLE_COUNT = 8;
 
 implementation
 
@@ -473,8 +478,6 @@ begin
   viewTimesheet.DataController.DataSource := ReportDM.dtsTimesheetDetail;
   viewCarryForwardDetail.DataController.DataSource := ReportDM.dtsTimesheetCF;
   grpData.ItemIndex := 0;
-  litTimesheet.CaptionOptions.Text := 'Timesheet Details (0 Items)';
-  litCarryForward.CaptionOptions.Text := 'Carry Forward Details (0 Items)';
   OpenTables;
 //  GetPeriods;
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
@@ -509,18 +512,18 @@ end;
 procedure TBillableSummaryFrm.FormShow(Sender: TObject);
 begin
   inherited;
-  GetBillableSummary;
+//  GetBillableSummary;
+//  GetBillableTimesheet;
   FShowingForm := False;
-  GetBillableTimesheet;
   WindowState := wsMaximized;
   Screen.Cursor := crDefault;
 end;
 
 procedure TBillableSummaryFrm.GetBillableSummary;
 var
-  SL: TStringList;
+  Response: TStringList;
   FromPeriod, ToPeriod, Period: Integer;
-  OrderByClause, FileName: string;
+  WhereClause, OrderByClause, FileName: string;
   AComboBox: TcxComboBox;
   SamePeriod: Boolean;
 const
@@ -552,19 +555,10 @@ begin
 //  end;
 
   if lucFromPeriod.EditValue > lucToPeriod.EditValue then
-  begin
-    Beep;
-    DisplayMsg(Application.Title,
-      'Invalid Periods',
-      'From period cannot be greater than To period.',
-      mtError,
-      [mbOK]
-      );
-    Exit;
-  end;
+    raise ESelectionException.Create('From period cannot be greater than To period.');
 
   ReportDM.locSQL.Active := True;
-  SL := RUtils.CreateStringList(PIPE, SINGLE_QUOTE);
+  Response := RUtils.CreateStringList(PIPE, SINGLE_QUOTE);
   try
     if not ReportDM.conSQLLite.Connected then
       ReportDM.conSQLLite.Connected := True;
@@ -575,19 +569,34 @@ begin
     ReportDM.qryPeriod.Open(Format(SQL_PERIOD, [FromPeriod, ToPeriod]));
     ReportDM.qryPeriod.First;
 
-    VBBaseDM.ExecuteSQLCommand('REQUEST=' + Format(SQL_DELETE_SUMMARY_DATA, [VBBaseDM.UserData.UserID]));
+    // Delete all billable summary table items for this user
+    Response.DelimitedText := VBBaseDM.ExecuteSQLCommand(Format(SQL_DELETE_SUMMARY_DATA, [VBBaseDM.UserData.UserID]));
+    if SameText(Response.Values['RESPONSE'], 'ERROR') then
+      raise EServerError.Create('One or more errors occurred when executing an SQL command with error message:' + CRLF + CRLF +
+        Response.Values['ERROR_MESSAGE']);
 
+    // Generate billable data for each selected period
     while not ReportDM.qryPeriod.EOF do
     begin
       Period := ReportDM.qryPeriod.FieldByName('THE_PERIOD').AsInteger;
-      VBBaseDM.ExecuteStoredProcedure('SP_GEN_BILLABLE_SUMMARY_TABLE', VBBaseDM.UserData.UserID.ToString + ',' + Period.ToString);
+      Response.DelimitedText := VBBaseDM.ExecuteStoredProcedure('SP_GEN_BILLABLE_SUMMARY_TABLE', VBBaseDM.UserData.UserID.ToString + ',' + Period.ToString);
+
+      if SameText(Response.Values['RESPONSE'], 'ERROR') then
+        raise EServerError.Create('One or more errors occurred when generating the billable summary data with error message:' + CRLF + CRLF +
+          Response.Values['ERROR_MESSAGE']);
+
       ReportDM.qryPeriod.Next;
     end;
 
-          // Suppress customers that have no transaactions for billable summary
-          // report
+    // Suppress customers that have no transaactions for billable summary report
     if cbxRemoveZeroValues.EditValue then
-      VBBaseDM.ExecuteStoredProcedure('SP_DELETE_ZERO_BILLABLE_VALUES', VBBaseDM.UserData.UserID.ToString);
+    begin
+      Response.DelimitedText := VBBaseDM.ExecuteStoredProcedure('SP_DELETE_ZERO_BILLABLE_VALUES', VBBaseDM.UserData.UserID.ToString);
+
+      if SameText(Response.Values['RESPONSE'], 'ERROR') then
+        raise EServerError.Create('One or more errors occurred when attempting to remove zero billable values with error message:' + CRLF + CRLF +
+          Response.Values['ERROR_MESSAGE']);
+    end;
 
     lucGroupBy.SetFocus;
     AComboBox := TcxBarEditItemControl(lucGroupBy.Links[0].Control).Edit as TcxComboBox;
@@ -596,12 +605,12 @@ begin
       0:
         begin
           FileName := 'Billable Summary by Period';
-          OrderByClause := 'ORDER BY B.THE_PERIOD, B."NAME"';
+          OrderByClause := ' ORDER BY B.THE_PERIOD, B."NAME"';
         end;
       1:
         begin
           FileName := 'Billable Summary by Customer';
-          OrderByClause := 'ORDER BY B."NAME", B.THE_PERIOD';
+          OrderByClause := ' ORDER BY B."NAME", B.THE_PERIOD';
         end;
     end;
 
@@ -621,12 +630,21 @@ begin
     else
       edtBName.GroupIndex := 0;
 //      viewBillable.ViewData.Expand(True);
+
+    WhereClause :=
+      ' WHERE ' + 'B.USER_ID = ' + VBBaseDM.UserData.UserID.ToString + OrderByClause;
+
     VBBaseDM.GetData(61, ReportDM.cdsBillableSummary, ReportDM.cdsBillableSummary.Name,
-      'B.USER_ID = ' + VBBaseDM.UserData.UserID.ToString + ';' + OrderByClause,
+      WhereClause,
       'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsBillableSummary.UpdateOptions.Generatorname,
       ReportDM.cdsBillableSummary.UpdateOptions.UpdateTableName);
+
+//    VBBaseDM.GetData(61, ReportDM.cdsBillableSummary, ReportDM.cdsBillableSummary.Name,
+//      'B.USER_ID = ' + VBBaseDM.UserData.UserID.ToString + ';' + OrderByClause,
+//      'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsBillableSummary.UpdateOptions.Generatorname,
+//      ReportDM.cdsBillableSummary.UpdateOptions.UpdateTableName);
   finally
-    SL.Free;
+    Response.Free;
   end;
 end;
 
@@ -640,16 +658,21 @@ begin
     GroupByClause := ONE_SPACE;
 
     WhereClause :=
-//      ' WHERE T.THE_PERIOD <= ' + VarAsType(lucToPeriod.EditValue, varString) +
-//      ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ' +
-    'WHERE T.THE_PERIOD <= ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) +
+      'WHERE T.THE_PERIOD <= ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) +
       ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ' +
       ' AND T.CARRY_FORWARD = 1 ';
 
-    OrderByClause := 'ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
+//    OrderByClause := ' ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
+    OrderByClause := ' ORDER BY T.ACTIVITY_DATE';
+    FileName := 'C:\Data\Xml\Carry Forward Summary.xml';
+    WhereClause := WhereClause + OrderByClause;
 
-    VBBaseDM.GetData(45, ReportDM.cdsTimesheetDetail, ReportDM.cdsTimesheetDetail.Name, WhereClause + ';' + OrderByClause + ';' + GroupByClause,
-      'C:\Data\Xml\Carry Forward Summary.xml', ReportDM.cdsTimesheetDetail.UpdateOptions.Generatorname,
+//    VBBaseDM.GetData(45, ReportDM.cdsTimesheetDetail, ReportDM.cdsTimesheetDetail.Name, WhereClause + ';' + OrderByClause + ';' + GroupByClause,
+//      FileName, ReportDM.cdsTimesheetDetail.UpdateOptions.Generatorname,
+//      ReportDM.cdsTimesheetDetail.UpdateOptions.UpdateTableName);
+
+    VBBaseDM.GetData(45, ReportDM.cdsTimesheetDetail, ReportDM.cdsTimesheetDetail.Name, WhereClause,
+      FileName, ReportDM.cdsTimesheetDetail.UpdateOptions.Generatorname,
       ReportDM.cdsTimesheetDetail.UpdateOptions.UpdateTableName);
 
     ReportDM.cdsTimesheetCF.Close;
@@ -668,19 +691,16 @@ begin
     ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ' +
       ' AND T.CARRY_FORWARD = 0 ';
 
-    VBBaseDM.GetData(45, ReportDM.cdsTimesheetDetail, ReportDM.cdsTimesheetDetail.Name, WhereClause + ';' + OrderByClause + ';' + GroupByClause,
-      'C:\Data\Xml\' + FileName + '.xml', ReportDM.cdsTimesheetDetail.UpdateOptions.Generatorname,
+    FileName := 'C:\Data\Xml\Timesheet Details.xml';
+    WhereClause := WhereClause + OrderByClause;
+
+    VBBaseDM.GetData(45, ReportDM.cdsTimesheetDetail, ReportDM.cdsTimesheetDetail.Name, WhereClause,
+      FileName, ReportDM.cdsTimesheetDetail.UpdateOptions.Generatorname,
       ReportDM.cdsTimesheetDetail.UpdateOptions.UpdateTableName);
 
-    if ReportDM.cdsTimesheetDetail.IsEmpty then
-      litTimesheet.CaptionOptions.Text := 'Timesheet Details (0 Items)'
-    else
-      litTimesheet.CaptionOptions.Text := 'Timesheet Details (' + ReportDM.cdsTimesheetDetail.RecordCount.ToString + ' Items)';
-
-    if ReportDM.cdsTimesheetCF.IsEmpty then
-      litCarryForward.CaptionOptions.Text := 'Carry Forward Details (0 Items)'
-    else
-      litCarryForward.CaptionOptions.Text := 'Carry Forward Details (' + ReportDM.cdsTimesheetCF.RecordCount.ToString + ' Items)';
+//    VBBaseDM.GetData(45, ReportDM.cdsTimesheetDetail, ReportDM.cdsTimesheetDetail.Name, WhereClause + ';' + OrderByClause + ';' + GroupByClause,
+//      FileName, ReportDM.cdsTimesheetDetail.UpdateOptions.Generatorname,
+//      ReportDM.cdsTimesheetDetail.UpdateOptions.UpdateTableName);
   finally
     Screen.Cursor := crDefault;
   end;
@@ -829,7 +849,7 @@ begin
   I := 1;
 
   try
-    DownloadCaption := 'Opening Period Table';
+    DownloadCaption := 'Opening period table';
     Progress := StrToFloat(I.ToString) / StrToFloat(TABLE_COUNT.ToString) * 100;
 //    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(DownloadCaption)), 0);
@@ -837,7 +857,7 @@ begin
     GetPeriods;
 
     Inc(I);
-    DownloadCaption := 'Opening System User Table';
+    DownloadCaption := 'Opening system user table';
     Progress := StrToFloat(I.ToString) / StrToFloat(TABLE_COUNT.ToString) * 100;
 //    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(DownloadCaption)), 0);
@@ -846,7 +866,7 @@ begin
 
     Inc(I);
     Progress := StrToFloat(I.ToString) / StrToFloat(TABLE_COUNT.ToString) * 100;
-    DownloadCaption := 'Opening Activity Type Table';
+    DownloadCaption := 'Opening activity type table';
 //    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(DownloadCaption)), 0);
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FloatToStr(Progress))), 0);
@@ -854,7 +874,7 @@ begin
 
     Inc(I);
     Progress := StrToFloat(I.ToString) / StrToFloat(TABLE_COUNT.ToString) * 100;
-    DownloadCaption := 'Opening Customer Table';
+    DownloadCaption := 'Opening customer table';
 //    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(DownloadCaption)), 0);
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FloatToStr(Progress))), 0);
@@ -862,15 +882,37 @@ begin
 
     Inc(I);
     Progress := StrToFloat(I.ToString) / StrToFloat(TABLE_COUNT.ToString) * 100;
-    DownloadCaption := 'Opening Rate Unit Table';
+    DownloadCaption := 'Opening rate unit table';
 //    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(DownloadCaption)), 0);
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FloatToStr(Progress))), 0);
     GetRateUnit;
 //    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=100' + '|CAPTION=All_tables_opened')), 0);
-    Progress := 0;
+//    Progress := 0;
+//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('All tables opened')), 0);
+//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FloatToStr(Progress))), 0);
+
+    Inc(I);
+    Progress := StrToFloat(I.ToString) / StrToFloat(TABLE_COUNT.ToString) * 100;
+    DownloadCaption := 'Generating billable summary data (can take several seconds).';
+//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(DownloadCaption)), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FloatToStr(Progress))), 0);
+    GetBillableSummary;
+    FShowingForm := False;
+
+    Inc(I);
+    Progress := StrToFloat(I.ToString) / StrToFloat(TABLE_COUNT.ToString) * 100;
+    DownloadCaption := 'Opening timesheeet details for selected customer';
+//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('PROGRESS=' + FloatToStr(Progress) + '|CAPTION=' + DownloadCaption)), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(DownloadCaption)), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FloatToStr(Progress))), 0);
+    GetBillableTimesheet;
+
+    Progress := 100;
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('All tables opened')), 0);
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FloatToStr(Progress))), 0);
+
   finally
     ProgressFrm.Close;
     FreeAndNil(ProgressFrm);

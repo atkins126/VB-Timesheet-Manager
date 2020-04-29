@@ -205,6 +205,7 @@ inherited MonthlyBillableReportFrm: TMonthlyBillableReportFrm
           Properties.DisplayFormat = '#,##0.00'
           Properties.EditFormat = '#,##0.00'
           Properties.ReadOnly = True
+          HeaderAlignmentHorz = taRightJustify
           MinWidth = 110
           Options.Editing = False
           Options.Filtering = False
@@ -222,6 +223,7 @@ inherited MonthlyBillableReportFrm: TMonthlyBillableReportFrm
           Properties.DisplayFormat = '#,##0.00'
           Properties.EditFormat = '#,##0.00'
           Properties.ReadOnly = True
+          HeaderAlignmentHorz = taRightJustify
           MinWidth = 110
           Options.Editing = False
           Options.Filtering = False
@@ -239,6 +241,7 @@ inherited MonthlyBillableReportFrm: TMonthlyBillableReportFrm
           Properties.DisplayFormat = '#,##0.00'
           Properties.EditFormat = '#,##0.00'
           Properties.ReadOnly = True
+          HeaderAlignmentHorz = taRightJustify
           MinWidth = 90
           Options.Editing = False
           Options.Filtering = False

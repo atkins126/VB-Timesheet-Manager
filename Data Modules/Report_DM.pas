@@ -189,33 +189,33 @@ type
     cdsTimesheetCUSTOMER_GROUP_ID: TIntegerField;
     cdsTimesheetBILLABLE_STR: TStringField;
     cdsCarryForwardDetail: TFDMemTable;
-    IntegerField1: TIntegerField;
-    IntegerField2: TIntegerField;
-    IntegerField3: TIntegerField;
-    IntegerField5: TIntegerField;
-    IntegerField6: TIntegerField;
-    IntegerField7: TIntegerField;
-    IntegerField8: TIntegerField;
-    StringField1: TStringField;
-    FloatField1: TFloatField;
-    FloatField2: TFloatField;
-    FloatField3: TFloatField;
-    FloatField4: TFloatField;
-    IntegerField9: TIntegerField;
-    FloatField5: TFloatField;
-    IntegerField10: TIntegerField;
-    DateField1: TDateField;
-    DateField2: TDateField;
-    IntegerField11: TIntegerField;
-    IntegerField12: TIntegerField;
-    StringField2: TStringField;
-    IntegerField13: TIntegerField;
-    DateField4: TDateField;
-    IntegerField14: TIntegerField;
-    IntegerField15: TIntegerField;
-    IntegerField16: TIntegerField;
-    IntegerField17: TIntegerField;
-    StringField3: TStringField;
+    cdsCarryForwardDetailID: TIntegerField;
+    cdsCarryForwardDetailUSER_ID: TIntegerField;
+    cdsCarryForwardDetailCUSTOMER_ID: TIntegerField;
+    cdsCarryForwardDetailPRICE_LIST_ITEM_ID: TIntegerField;
+    cdsCarryForwardDetailRATE_UNIT_ID: TIntegerField;
+    cdsCarryForwardDetailACTIVITY_TYPE_ID: TIntegerField;
+    cdsCarryForwardDetailINVOICE_ID: TIntegerField;
+    cdsCarryForwardDetailACTIVITY: TStringField;
+    cdsCarryForwardDetailTIME_SPENT: TFloatField;
+    cdsCarryForwardDetailTIME_HOURS: TFloatField;
+    cdsCarryForwardDetailACTUAL_RATE: TFloatField;
+    cdsCarryForwardDetailSTD_RATE: TFloatField;
+    cdsCarryForwardDetailCN_ID: TIntegerField;
+    cdsCarryForwardDetailITEM_VALUE: TFloatField;
+    cdsCarryForwardDetailLOCKED: TIntegerField;
+    cdsCarryForwardDetailACTIVITY_DATE: TDateField;
+    cdsCarryForwardDetailDATE_MODIFIED: TDateField;
+    cdsCarryForwardDetailTHE_PERIOS: TIntegerField;
+    cdsCarryForwardDetailBILLABLE: TIntegerField;
+    cdsCarryForwardDetailDAY_NAME: TStringField;
+    cdsCarryForwardDetailDAY_ORDER: TIntegerField;
+    cdsCarryForwardDetailINVOICE_DATE: TDateField;
+    cdsCarryForwardDetailCARRY_FORWARD: TIntegerField;
+    cdsCarryForwardDetailAPPROVED: TIntegerField;
+    cdsCarryForwardDetailIS_ADDITIONAL_WORK: TIntegerField;
+    cdsCarryForwardDetailCUSTOMER_GROUP_ID: TIntegerField;
+    cdsCarryForwardDetailBILLABLE_STR: TStringField;
     dtsCarryForwardDetail: TDataSource;
     cdsCustomerGroup: TFDMemTable;
     dtsCustomerGroup: TDataSource;
@@ -258,50 +258,9 @@ type
     cdsSystemUserACCOUNT_ENABLED: TIntegerField;
     dtsSystemUser: TDataSource;
     rptBillCFwd: TfrxReport;
-    cdsTimesheetDetail: TFDMemTable;
     dtsTimesheetDetail: TDataSource;
     cdsTimesheetCF: TFDMemTable;
     dtsTimesheetCF: TDataSource;
-    cdsTimesheetDetailID: TIntegerField;
-    cdsTimesheetDetailUSER_ID: TIntegerField;
-    cdsTimesheetDetailCUSTOMER_ID: TIntegerField;
-    cdsTimesheetDetailRATE_UNIT_ID: TIntegerField;
-    cdsTimesheetDetailINVOICE_ID: TIntegerField;
-    cdsTimesheetDetailCN_ID: TIntegerField;
-    cdsTimesheetDetailACTIVITY_TYPE_ID: TIntegerField;
-    cdsTimesheetDetailPRICE_LIST_ITEM_ID: TIntegerField;
-    cdsTimesheetDetailCUSTOMER_TYPE_ID: TIntegerField;
-    cdsTimesheetDetailFIRST_NAME: TStringField;
-    cdsTimesheetDetailLAST_NAME: TStringField;
-    cdsTimesheetDetailLOGIN_NAME: TStringField;
-    cdsTimesheetDetailACTIVITY_DATE: TDateField;
-    cdsTimesheetDetailCUSTOMER_TYPE: TStringField;
-    cdsTimesheetDetailCUSTOMER_NAME: TStringField;
-    cdsTimesheetDetailACTIVITY_TYPE: TStringField;
-    cdsTimesheetDetailACTIVITY: TStringField;
-    cdsTimesheetDetailPRICE_LIST_ITEM: TStringField;
-    cdsTimesheetDetailTIME_SPENT: TFloatField;
-    cdsTimesheetDetailTIME_HOURS: TFloatField;
-    cdsTimesheetDetailITEM_VALUE: TFloatField;
-    cdsTimesheetDetailACTUAL_RATE: TFloatField;
-    cdsTimesheetDetailSTD_RATE: TFloatField;
-    cdsTimesheetDetailDATE_MODIFIED: TDateField;
-    cdsTimesheetDetailTHE_PERIOD: TIntegerField;
-    cdsTimesheetDetailBILLABLE: TIntegerField;
-    cdsTimesheetDetailBILLABLE_STR: TStringField;
-    cdsTimesheetDetailDAY_NAME: TStringField;
-    cdsTimesheetDetailDAY_ORDER: TIntegerField;
-    cdsTimesheetDetailLOCKED: TIntegerField;
-    cdsTimesheetDetailLOCKED_STR: TStringField;
-    cdsTimesheetDetailINVOICE_DATE: TDateField;
-    cdsTimesheetDetailCARRY_FORWARD: TIntegerField;
-    cdsTimesheetDetailIS_ADDITIONAL_WORK: TIntegerField;
-    cdsTimesheetDetailIS_ADDITIONAL_WORK_STR: TStringField;
-    cdsTimesheetDetailCUSTOMER_GROUP_ID: TIntegerField;
-    cdsTimesheetDetailCUSTOMER_GROUP_LINK_NAME: TStringField;
-    cdsTimesheetDetailCARRY_FORWARD_STR: TStringField;
-    cdsTimesheetDetailAPPROVED: TIntegerField;
-    cdsTimesheetDetailFULL_NAME: TStringField;
     cdsTimesheetCFID: TIntegerField;
     cdsTimesheetCFUSER_ID: TIntegerField;
     cdsTimesheetCFCUSTOMER_ID: TIntegerField;
@@ -524,21 +483,66 @@ type
     cdsSumByActivityPeriodPERIOD_NAME: TStringField;
     cdsTimesheetPERIOD_NAME: TStringField;
     cdsCarryForwardDetailPERIOD_NAME: TStringField;
-    cdsTimesheetDetailPERIOD_NAME: TStringField;
     cdsTimesheetCFPERIOD_NAME: TStringField;
     cdsBillCFwdPERIOD_NAME: TStringField;
     cdsBillCFwdExcelPERIOD_NAME: TStringField;
     cdsTSBillablePERIOD_NAME: TStringField;
     cdsTSBillableExcelPERIOD_NAME: TStringField;
     cdsMonthlyBillingPERIOD_NAME: TStringField;
+    cdsTimesheetCARRY_FORWARD_VALUE: TFloatField;
+    cdsCarryForwardDetailCARRY_FORWARD_VALUE: TFloatField;
+    cdsTimesheetCFCARRY_FORWARD_VALUE: TFloatField;
+    cdsTimesheetDetail: TFDMemTable;
+    cdsTimesheetDetailID: TIntegerField;
+    cdsTimesheetDetailUSER_ID: TIntegerField;
+    cdsTimesheetDetailCUSTOMER_ID: TIntegerField;
+    cdsTimesheetDetailRATE_UNIT_ID: TIntegerField;
+    cdsTimesheetDetailINVOICE_ID: TIntegerField;
+    cdsTimesheetDetailCN_ID: TIntegerField;
+    cdsTimesheetDetailACTIVITY_TYPE_ID: TIntegerField;
+    cdsTimesheetDetailPRICE_LIST_ITEM_ID: TIntegerField;
+    cdsTimesheetDetailCUSTOMER_TYPE_ID: TIntegerField;
+    cdsTimesheetDetailFIRST_NAME: TStringField;
+    cdsTimesheetDetailLAST_NAME: TStringField;
+    cdsTimesheetDetailLOGIN_NAME: TStringField;
+    cdsTimesheetDetailACTIVITY_DATE: TDateField;
+    cdsTimesheetDetailCUSTOMER_TYPE: TStringField;
+    cdsTimesheetDetailCUSTOMER_NAME: TStringField;
+    cdsTimesheetDetailACTIVITY_TYPE: TStringField;
+    cdsTimesheetDetailACTIVITY: TStringField;
+    cdsTimesheetDetailPRICE_LIST_ITEM: TStringField;
+    cdsTimesheetDetailTIME_SPENT: TFloatField;
+    cdsTimesheetDetailTIME_HOURS: TFloatField;
+    cdsTimesheetDetailITEM_VALUE: TFloatField;
+    cdsTimesheetDetailCARRY_FORWARD_VALUE: TFloatField;
+    cdsTimesheetDetailACTUAL_RATE: TFloatField;
+    cdsTimesheetDetailSTD_RATE: TFloatField;
+    cdsTimesheetDetailDATE_MODIFIED: TDateField;
+    cdsTimesheetDetailTHE_PERIOD: TIntegerField;
+    cdsTimesheetDetailPERIOD_NAME: TStringField;
+    cdsTimesheetDetailBILLABLE: TIntegerField;
+    cdsTimesheetDetailBILLABLE_STR: TStringField;
+    cdsTimesheetDetailDAY_NAME: TStringField;
+    cdsTimesheetDetailDAY_ORDER: TIntegerField;
+    cdsTimesheetDetailLOCKED: TIntegerField;
+    cdsTimesheetDetailLOCKED_STR: TStringField;
+    cdsTimesheetDetailINVOICE_DATE: TDateField;
+    cdsTimesheetDetailCARRY_FORWARD: TIntegerField;
+    cdsTimesheetDetailIS_ADDITIONAL_WORK: TIntegerField;
+    cdsTimesheetDetailIS_ADDITIONAL_WORK_STR: TStringField;
+    cdsTimesheetDetailCUSTOMER_GROUP_ID: TIntegerField;
+    cdsTimesheetDetailCUSTOMER_GROUP_LINK_NAME: TStringField;
+    cdsTimesheetDetailCARRY_FORWARD_STR: TStringField;
+    cdsTimesheetDetailAPPROVED: TIntegerField;
+    cdsTimesheetDetailFULL_NAME: TStringField;
     procedure cdsTimesheetCalcFields(DataSet: TDataSet);
     procedure cdsTimesheetAfterPost(DataSet: TDataSet);
     procedure cdsTimesheetBeforePost(DataSet: TDataSet);
     procedure cdsTimesheetBeforeEdit(DataSet: TDataSet);
     procedure cdsCarryForwardDetailCalcFields(DataSet: TDataSet);
     procedure cdsCarryForwardDetailBeforePost(DataSet: TDataSet);
-    procedure cdsTimesheetDetailCalcFields(DataSet: TDataSet);
     procedure DataModuleCreate(Sender: TObject);
+    procedure cdsTimesheetDetailCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
     FID: Integer;
@@ -558,7 +562,7 @@ var
   ReportDM: TReportDM;
 
 const
-  TABLE_COUNT = 6;
+  TABLE_COUNT = 8;
   REPORT_COUNT = 6;
 
 implementation
@@ -636,8 +640,9 @@ begin
 //    end;
 //  end;
 
-  cdsTimesheet.FieldByName('BILLABLE_STR').AsString := 'Y';
-  if cdsTimesheet.FieldByName('BILLABLE').AsInteger = 0 then
+  if cdsTimesheet.FieldByName('BILLABLE').AsInteger = 1 then
+    cdsTimesheet.FieldByName('BILLABLE_STR').AsString := 'Y'
+  else
     cdsTimesheet.FieldByName('BILLABLE_STR').AsString := 'N';
 
 end;
@@ -713,8 +718,9 @@ begin
 //        cdsCarryForwardDetail.FieldByName('ACTUAL_RATE').AsFloat;
 //    end;
 
-  cdsCarryForwardDetail.FieldByName('BILLABLE_STR').AsString := 'Y';
-  if cdsCarryForwardDetail.FieldByName('BILLABLE').AsInteger = 0 then
+  if cdsCarryForwardDetail.FieldByName('BILLABLE').AsInteger = 1 then
+    cdsCarryForwardDetail.FieldByName('BILLABLE_STR').AsString := 'Y'
+  else
     cdsCarryForwardDetail.FieldByName('BILLABLE_STR').AsString := 'N';
 end;
 

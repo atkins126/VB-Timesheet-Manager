@@ -342,7 +342,7 @@ inherited MainFrm: TMainFrm
           Properties.UseThousandSeparator = True
           HeaderAlignmentHorz = taRightJustify
           HeaderHint = 'Time spent (Mins)'
-          MinWidth = 74
+          MinWidth = 80
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
@@ -350,6 +350,7 @@ inherited MainFrm: TMainFrm
           Options.HorzSizing = False
           Options.Moving = False
           Options.Sorting = False
+          Width = 80
           Position.BandIndex = 1
           Position.ColIndex = 1
           Position.RowIndex = 0
@@ -364,7 +365,7 @@ inherited MainFrm: TMainFrm
           Properties.UseThousandSeparator = True
           HeaderAlignmentHorz = taRightJustify
           HeaderHint = 'Time spent (Hrs)'
-          MinWidth = 74
+          MinWidth = 80
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
@@ -372,6 +373,7 @@ inherited MainFrm: TMainFrm
           Options.HorzSizing = False
           Options.Moving = False
           Options.Sorting = False
+          Width = 80
           Position.BandIndex = 1
           Position.ColIndex = 2
           Position.RowIndex = 0
@@ -479,7 +481,7 @@ inherited MainFrm: TMainFrm
           Properties.UseThousandSeparator = True
           HeaderAlignmentHorz = taRightJustify
           HeaderHint = 'Item value'
-          MinWidth = 74
+          MinWidth = 80
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
@@ -487,6 +489,7 @@ inherited MainFrm: TMainFrm
           Options.HorzSizing = False
           Options.Moving = False
           Options.Sorting = False
+          Width = 80
           Position.BandIndex = 2
           Position.ColIndex = 3
           Position.RowIndex = 0
@@ -699,8 +702,6 @@ inherited MainFrm: TMainFrm
       Left = 11
       Top = 591
       Properties.ReadOnly = True
-      Style.BorderColor = clNone
-      Style.BorderStyle = ebsOffice11
       Style.Color = 8316158
       Style.HotTrack = False
       Style.TransparentBorder = False
@@ -1398,6 +1399,26 @@ inherited MainFrm: TMainFrm
       GridView = viewTimesheetBillable
     end
   end
+  object btnSelectAll: TcxButton [4]
+    Left = 285
+    Top = 135
+    Width = 85
+    Height = 25
+    Caption = 'Select All'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 8
+  end
+  object btnSelectNone: TcxButton [5]
+    Left = 376
+    Top = 135
+    Width = 85
+    Height = 25
+    Caption = 'Select None'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 9
+  end
   inherited styRepository: TcxStyleRepository
     Left = 420
     Top = 235
@@ -1410,12 +1431,14 @@ inherited MainFrm: TMainFrm
     object actGetTimesheetData: TAction
       Category = 'General'
       Caption = 'Get Data'
+      Hint = 'Get timesheet data'
       ImageIndex = 14
       OnExecute = DoGetTimesheetData
     end
     object actLayoutManager: TAction
       Category = 'General'
       Caption = 'Layout Manager'
+      Hint = 'Layout manager'
       ImageIndex = 15
       OnExecute = DoLayoutManager
     end
@@ -1431,6 +1454,7 @@ inherited MainFrm: TMainFrm
       Tag = 1
       Category = 'System'
       Caption = 'Edit'
+      Hint = 'Edit selected timesheet item'
       ImageIndex = 7
       ShortCut = 13
       OnExecute = DoEditInsertEntry
@@ -1439,6 +1463,7 @@ inherited MainFrm: TMainFrm
       Tag = 100
       Category = 'Approval'
       Caption = 'Approve'
+      Hint = 'Approve selected timesheet items'
       ImageIndex = 20
       OnExecute = DoApprovalStatus
     end
@@ -1446,6 +1471,7 @@ inherited MainFrm: TMainFrm
       Tag = 101
       Category = 'Approval'
       Caption = 'Un-Approve'
+      Hint = 'Un-approve selected timesheet items'
       ImageIndex = 21
       OnExecute = DoApprovalStatus
     end
@@ -1453,6 +1479,7 @@ inherited MainFrm: TMainFrm
       Tag = 2
       Category = 'System'
       Caption = 'Delete'
+      Hint = 'Delete selected timesheet item'
       ImageIndex = 8
       ShortCut = 46
       OnExecute = DoDeleteEntry
@@ -1461,6 +1488,7 @@ inherited MainFrm: TMainFrm
       Tag = 3
       Category = 'System'
       Caption = 'Refresh'
+      Hint = 'Refresh timesheet data'
       ImageIndex = 11
       OnExecute = DoRefresh
     end
@@ -1468,6 +1496,7 @@ inherited MainFrm: TMainFrm
       Tag = 4
       Category = 'System'
       Caption = 'Exit'
+      Hint = 'Exit Timesheet Manager'
       ImageIndex = 0
       ShortCut = 32883
       OnExecute = DoExitTimesheetManager
@@ -1475,6 +1504,7 @@ inherited MainFrm: TMainFrm
     object actPreview: TAction
       Category = 'Reports'
       Caption = 'Preview'
+      Hint = 'Preview timesheet report on screen'
       ImageIndex = 2
       ShortCut = 16466
       OnExecute = DoPrint
@@ -1483,6 +1513,7 @@ inherited MainFrm: TMainFrm
       Tag = 1
       Category = 'Reports'
       Caption = 'Print'
+      Hint = 'Print timesheet report'
       ImageIndex = 3
       ShortCut = 16464
       OnExecute = DoPrint
@@ -1490,6 +1521,7 @@ inherited MainFrm: TMainFrm
     object actPDF: TAction
       Category = 'Reports'
       Caption = 'PDF'
+      Hint = 'Export timesheet data in PDF format'
       ImageIndex = 5
       ShortCut = 16452
       OnExecute = DoPDF
@@ -1497,6 +1529,7 @@ inherited MainFrm: TMainFrm
     object actExcel: TAction
       Category = 'Reports'
       Caption = 'Excel'
+      Hint = 'Export timesheet data in Excel format'
       ImageIndex = 4
       ShortCut = 16453
       OnExecute = DoExcel
@@ -1504,18 +1537,21 @@ inherited MainFrm: TMainFrm
     object actTimsheetDetail: TAction
       Category = 'Reports'
       Caption = 'Timsheet Detail'
+      Hint = 'Timesheet detail report'
       ImageIndex = 1
       OnExecute = DoTimeSheetDetail
     end
     object actOptions: TAction
       Category = 'System'
       Caption = 'Options'
+      Hint = 'User options'
       ImageIndex = 13
       OnExecute = DoOptions
     end
     object actCopyCell: TAction
       Category = 'System'
       Caption = 'Copy Cell Content'
+      Hint = 'Copy selected cell content'
       ImageIndex = 33
       ShortCut = 16451
       OnExecute = DoCopyCell
@@ -1524,25 +1560,29 @@ inherited MainFrm: TMainFrm
       Tag = 1
       Category = 'System'
       Caption = 'Copy Record'
+      Hint = 'Copy selected record'
       ImageIndex = 34
       ShortCut = 16466
       OnExecute = DoCopyCell
     end
     object actRefreshLookupTables: TAction
       Category = 'System'
-      Caption = 'Lookups'
+      Caption = 'Refresh Lookups'
+      Hint = 'Refresh lookup tables'
       ImageIndex = 18
       OnExecute = DoRefreshLookupTables
     end
     object actBillableSummary: TAction
       Category = 'Reports'
       Caption = 'Billable Summary'
+      Hint = 'Billable summary report'
       ImageIndex = 15
       OnExecute = DoBillableSummary
     end
     object actActivitySummary: TAction
       Category = 'Reports'
       Caption = 'Activity Summary'
+      Hint = 'Activity summary report'
       ImageIndex = 16
       OnExecute = DoActivitySummary
     end
@@ -1550,6 +1590,7 @@ inherited MainFrm: TMainFrm
       Tag = 110
       Category = 'Billable'
       Caption = 'Billable'
+      Hint = 'Set selected timesheet items as billable'
       ImageIndex = 22
       OnExecute = DoBillable
     end
@@ -1557,6 +1598,7 @@ inherited MainFrm: TMainFrm
       Tag = 111
       Category = 'Billable'
       Caption = 'Non Billable'
+      Hint = 'Set selected timesheet items as non-billable'
       ImageIndex = 23
       OnExecute = DoBillable
     end
@@ -1580,6 +1622,7 @@ inherited MainFrm: TMainFrm
       Tag = 130
       Category = 'Carry Forward'
       Caption = 'Carry Forward'
+      Hint = 'Set selected timesheet items as carried forward'
       ImageIndex = 27
       OnExecute = DoCarryForward
     end
@@ -1587,14 +1630,30 @@ inherited MainFrm: TMainFrm
       Tag = 131
       Category = 'Carry Forward'
       Caption = 'Release CFwd Manager'
+      Hint = 'Launch release carry forward managaer'
       ImageIndex = 28
       OnExecute = DoReleaseCarryForwardManager
     end
     object actMonthlyBilling: TAction
       Category = 'Reports'
       Caption = 'Monthly Billing'
+      Hint = 'Monthly billing summary report'
       ImageIndex = 26
       OnExecute = DoMonthlyBilling
+    end
+    object actSelectAll: TAction
+      Category = 'System'
+      Caption = 'Select All'
+      Hint = 'Select all timesheet items'
+      ImageIndex = 35
+      OnExecute = DoSelectAllTimesheetItems
+    end
+    object actClearAllSelectedItems: TAction
+      Category = 'System'
+      Caption = 'Clear All'
+      Hint = 'Clear all selected timesheet items'
+      ImageIndex = 36
+      OnExecute = DoClearTimesheetSelection
     end
   end
   inherited lafLayoutList: TdxLayoutLookAndFeelList
@@ -2919,6 +2978,47 @@ inherited MainFrm: TMainFrm
           0000000000000000000000000000000000000000000000000000B6B6B6FFB6B6
           B6FFB6B6B6FFB6B6B6FFB6B6B6FFB6B6B6FFB6B6B6FF7171719F000000000000
           0000000000000000000000000000000000000000000000000000}
+      end
+      item
+        ImageClass = 'TdxPNGImage'
+        Image.Data = {
+          89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+          6100000010744558745469746C6500477269643B436172643B911129FE000001
+          D249444154785EA593CF4A234110C6BB7B7AE260D87750587C83C092648D1A70
+          C1D758C8698F7B597C00C19B274F6210512288DEC4434427BA2C420EFB14CBC2
+          9255A3A333D37FFCAAA71344F494868FEAEE5FE59BAE2AC2ADB56C9225D8848B
+          43818FFC153390F54CBCC3355F6DF7CF85081A943BAA8682512A5EFB5AF9F263
+          EBFA940B394F60542E05A3F378BDF5A92939178D5A7586594F109D0E0F7FD38F
+          A4E5C17CB53A3B361E191D74FAC403698C650FA9617F6E33667D151F22812F18
+          DA0A8A0F19F80DB875EF04974C2B4D9C3B030D522E05FEEB386BCB5461C01DC7
+          7EBA24C625D2599BE2201F93A4DBD9FDD9B4C6B953929356E919B84A86F767FB
+          EDDE920520EEF3C073E286DE5C864AAFBA6CA11CCA887989579C58C2BF6DC43D
+          29C37A511FE49FA0B2EC72F3FBE24A6BBD7B12C852CD370F2A629EA557DBABCB
+          988290F54AED23338E7813C4E3CE751DDB08BC56F93C47B7C8E1850903DFFB45
+          A6525237874F9AFDC514405C51E550A049AE898152860D53CDFEDDE5CED930F0
+          A900668E0B49DDA6A42814E3396B4AC41D2DA5B59B4A24393844773037A3290C
+          07FFCF8F76E2050B475F3E16F5E0E9023CBD1BDC5C1CB5BB0D00CF20449D3DC6
+          E4C5A94E287C630ACA4BBEC373289DF8EFFC0C90E42D2306428AF80000000049
+          454E44AE426082}
+      end
+      item
+        ImageClass = 'TdxPNGImage'
+        Image.Data = {
+          89504E470D0A1A0A0000000D49484452000000100000001008060000001FF3FF
+          610000001974455874536F6674776172650041646F626520496D616765526561
+          647971C9653C00000015744558745469746C6500477269644C696E65733B4772
+          69643BC10351250000015649444154785EA5533D4B0341107DB33910042D14C1
+          8868672BDA8858497AFF82FFC0C6BF606BFE81E437D8098AA649A10741B11341
+          257A65B08CBAB323B3C766201F07E2C20E77F7DEBCB76F778F0094B36254E042
+          CD567E4DA0FD481140648895D54A89112929A22184369D9EE57274B83D2493A4
+          56D399369AAD3B64CC2192980542D50D06129C23686FE639A0D32DF0FCD6379A
+          485A69FA007B2CCB6A7D1EDE075D0163776B053B9B75F330275321050DA939C2
+          EDFD075C8C103151676B961139194FE75384ABCE2B5E7AFD92A44E1527918496
+          97E6C0CCC8D8331A7BEB605EC3A4219606643A7113F387775884D146F3B7FCA2
+          C5500E3182E0FCF209BDE233829657609EE30E8B0BB3F1E8B3C08C83C6063824
+          466A2C4568CA6D7044E83E16C85263CD2513D26942E37B3A140D1AE1FB6B7073
+          7C72B11FDDC4B263E2B55696C5F23F83B6BECD00C894FFD73F51354844F09FF1
+          0BE602D325DBCC0A030000000049454E44AE426082}
       end>
   end
   inherited img32: TcxImageList
@@ -7432,6 +7532,89 @@ inherited MainFrm: TMainFrm
           B6FFB6B6B6FFB3B3B3FFA9A9A9FFAAAAAAF02222223C00000006000000010000
           0000000000000000000000000000000000000000000000000000000000000000
           0000000000000000000000000000000000000000000000000000}
+      end
+      item
+        ImageClass = 'TdxPNGImage'
+        Image.Data = {
+          89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7A
+          F400000010744558745469746C6500477269643B436172643B911129FE000004
+          D749444154785EC5564F6B5D4514BF73EF7DEF256DB45F4144D16F202669538D
+          B142372EDCB87023B850445C08821BF72282962C8A8A48B12A56414169D0D8C6
+          94560CD248C1856E54C4BDE9EBFB7767CE71E69C73E7DC9904D2AE1C98CB9B79
+          E737E7CF9CF39B638AA2D0998D6C2F1FE027FA592AF6B6F02813D08F3A805F5C
+          FF71D394E5C9149BA3D2D134CDD6D99796D65E58BFF66D59562B87E374319DCD
+          B6DE7B7979D52F1C1910943F7DEAC102322806041ADE1734CAE7CD0F7F0A4AEB
+          A0FCA9B5070801D842917C47F98DE4B3BA7EE6FC4EC096D18080715E62E78F3D
+          91C2C4E8DC9363477A85410D3178F9EB7F3156A099C926BA74F75CEDBF8AAD55
+          1A0B1417607FEC9225BAB8223BC212A095546FC5F5040D905E661D0F013F1113
+          7713A5C853A295080182C7438ECDF1342C084E23A00080787D051ABD3B0963F4
+          C4392F4B78FE207423806A07EF25390450F2B91A01B5CC01EA7514264944DA63
+          43C86363E21510CE865381CD04C646830C6A82BA3C02DDBB39365F158869E9A2
+          284E2215F6D40D0AFF5D832A297F04C2E9F575F4A004AE350067D3D977EF7CB4
+          F358726946F3572F410738BB190237198F37CF7E7A7DB555668C219C8204897E
+          1A560D76F67D7B3346EAB1EF67EF30F6CBECB17E3682EBDD011BA2E02688483C
+          503D7FE6EA4659D527F8DF6C68189331194FB63F7865E589E7DEDEBE58D5FDE3
+          11AB728A33E9FE7874EBCAB9571F8D4C581AAFFCC9D5FB4958F1183319751DF7
+          D63FF93928ED07E5A757EED3FA67E65384C843E7D4F72FEC2E07C7230F781871
+          C0EE9F7B6A3526FE8B7186B27C61BE6E054A444EAC1B7F3336C743DC64C4C25C
+          559883AB80C84804312723CE7AE10670E29B9621E1D3F740AF040CC8C2906C4E
+          C506914B09FC14BC86332B2D96C5AE6554967AB086DC68E4A203CE21AD732222
+          41EB64217040CD3E88CF9929ACB89BD0B8C394093B11886EB99075911F4CF216
+          58277C4E44C45E313EE7F7E085D0A944AFF1580BAA11F25C404DE0C6634D1601
+          2C24911606B528AAD872A55F06F09A64F50C8EC07CBF22A4E690468176F80AC9
+          49349818E026A35B97DEFD6CF71113FF10A2E727E0E05EAC995EF68BE96878F3
+          F2F9AF7E39C910C38A4DCA58050A43CABBE0EC24602D21A41E8F0A1B9677C066
+          533F277ECEC934B7D94BA2E08688684304EA67DFDAFAA6EE0D96F2FBD672CA9E
+          640C6C36BCFAF16B6BA79F79E3D2D7757F6E11F32E8A335F3B3453C4F57838BC
+          76E1F5538109D980AA1E2C3DBE7C2F09822844BEE7AC9F83B83EF7E58DC5E079
+          D51B2CAE3C740F3FC1526AE0340E741E1449627FB1F1EBC3416FDA11B982D88C
+          EB352112B1DC445E3F3AA8DB522A09EB31BFFF33DC57824612B2DB681D09C9CA
+          EB520DF00887A0042389845A9592C9487B0E9927B40CB98C4DDE8A45E586BDF7
+          D38266281B10EB93C9441F10D10B49CB46A3B12223C623002B68D1280ADB4898
+          20C3FF5A7740535A08153BD7493851284BED11898838192389819F0ED34861FA
+          1C43C4E66F81A8B312464D3719488A89BD4092D0D9EC0A1AA0070AD82CED01BB
+          6788225B522852264464E5F38320534AD81984A85E1450EA5E7C2491DE865E8F
+          DB2E6C852356A229966943AB06D8D1CD7F7FF8FCE2DE09DD8F0A5818E923F7C9
+          BFDD74B41D4A7A3CDCDBDED8FAED78DBFB19440526BDA126B79D0CAFF8D5ACDB
+          130EB4AFA379C8E0BCCD7AC2F270D8FE9E90B2F8FF1CFF019BF8D1EACFEEC6CA
+          0000000049454E44AE426082}
+      end
+      item
+        ImageClass = 'TdxPNGImage'
+        Image.Data = {
+          89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7A
+          F40000001974455874536F6674776172650041646F626520496D616765526561
+          647971C9653C00000015744558745469746C6500477269644C696E65733B4772
+          69643BC10351250000039749444154785EC5974F8B1D5510C57FD5AF876C3244
+          FC33030A12572E0543762EC4A5AE0475E5C6AF20EA4617BA11578ACB6C448580
+          20121484D9B873170CC4A51222FE419D51422090CC9BEE3AC2A3E0706F330161
+          480A9ABED5B7EF3DA7AA4EF57D6F94C4FDB4F1D3AFAEF0DA4BE7A2FCE0DE98CA
+          D158E003B002E2AE243CF7FFE76D09CC753102AB0F2FEC3D777AFB81F787D5EA
+          1C044220908982024988A837444D230F9112545404F23E48629EA62B376F1CBC
+          FDEE9B2F7F074C23309C3EF3E0E7CF3FFBE4EEA33BDB27985F93B3C1EF7FDD7C
+          FAD2DE8F9F016781794320C406FCF6E18CD42CAC40444450538404D827047610
+          220A9C8886D263BB679062872AF986401AB4B26D60952C24994E17AEC08008C2
+          017800358D52D412C6AADBF2250A502A4281703011C2DB80EA0A83DB50939D59
+          D910884CA11289A332881FF6B56DA377E4766A546EE1A4EB551910DF5FFE8583
+          7F6F2103F88E377287385D262350BDD59075D7EC3CB24D762508A578E6FC590E
+          D773A11CAFEEE89211DD9C583C686C6B6BC50F577F2DAF3490124A389AAC4258
+          0AAA87ECC9A1420C37466FAB714052A70109E1D0843A75D58EE5866B6BAEA6D1
+          E9262C5601D2A204A40ABE22280785B5EBF27AFB04C22EF2C0DF008A7FA93405
+          99D99420341781B6B81633359481299FE8FB3F30E968F6540DD225882A81F8F2
+          DBABCC99FEE848DD37A1557AA1BAAD22AC76684165E10E0199EA4498C92B2F3C
+          C59DF5842DB069E1F7D6BF252D9B40C0A9AD81F73EDAEB4498490AD693FB35C0
+          27DF7148BA3B1D5520960E0C95A94E842084D47E3241A88F267C2029A24197D9
+          B973E43325428048A913612652B78916F138B5828C628E0F00B3AB0E7257B993
+          04CAFE2C9037B76939F2568D0843AA804DB25F99CEEB2203E42C2E5EBACC3CBB
+          DE4D17D82F534BD6C048D511EAA84B48300C41CE8B364C5E7DF13C8747F322EA
+          58F80641D8A215A71DB027C671E09D0FBEE94498624E6D0EA30608A36B89B134
+          84C51728E435A587530A67AF3D0BDA945BC186950BE02F6378BE144FD41D5987
+          593BA544AA1521CAAAA9307BA341580751F5DDDCA3165988CB0692EF6AF5A322
+          C0344FD3DFD7AE1FEC3EF1F843D62A71EC91EB9F9DA00ED16B8D2A7BFC747D9F
+          799EF78109D008ACFFF8EDE7D73FF9E2E8E318560FF7AA970A00FB4DC91B1075
+          BFA2A21C674039FFB3FFE7B53780432037042E5E78EB6B608FD2C409FF23EA9B
+          E908B863023003B781B5C14ED4029BEACABA182529220026EEADC95D2089FB64
+          FF01AA16EC477DFFFF650000000049454E44AE426082}
       end>
   end
   object sknController: TdxSkinController
@@ -7581,11 +7764,28 @@ inherited MainFrm: TMainFrm
         'entire record with headers is copied.'
       Width = 360
     end
+    object tipSelectAll: TdxScreenTip
+      Header.Text = 'Selec tAll'
+      Description.Text = 'Select all timesheet items'
+    end
+    object tipSelectNone: TdxScreenTip
+      Header.Text = 'Select None'
+      Description.Text = 'Clear all tiesheet item selection'
+      Width = 220
+    end
   end
   object styHintController: TcxHintStyleController
     Global = False
     HintStyleClassName = 'TdxScreenTipStyle'
-    HintStyle.ScreenTipLinks = <>
+    HintStyle.ScreenTipLinks = <
+      item
+        ScreenTip = tipSelectAll
+        Control = btnSelectAll
+      end
+      item
+        ScreenTip = tipSelectNone
+        Control = btnSelectNone
+      end>
     HintStyle.ScreenTipActionLinks = <>
     HintShortPause = 0
     HintPause = 0
@@ -7644,6 +7844,10 @@ inherited MainFrm: TMainFrm
           ItemName = 'lucUser'
         end
         item
+          Visible = True
+          ItemName = 'cntSelectAll'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'lucPeriod'
@@ -7659,6 +7863,10 @@ inherited MainFrm: TMainFrm
         item
           Visible = True
           ItemName = 'lucToDate'
+        end
+        item
+          Visible = True
+          ItemName = 'cntSelectNone'
         end
         item
           Visible = True
@@ -8098,6 +8306,36 @@ inherited MainFrm: TMainFrm
     object btnCopyRecord: TdxBarButton
       Action = actCopyRecord
       Category = 0
+    end
+    object cntSelectAll: TdxBarControlContainerItem
+      Caption = 'Select All'
+      Category = 0
+      Hint = 'Select all timesheet items'
+      Visible = ivAlways
+      Control = btnSelectAll
+    end
+    object cntSelectNone: TdxBarControlContainerItem
+      Caption = 'Select None'
+      Category = 0
+      Hint = 'Clear all selected timesheet items'
+      Visible = ivAlways
+      Control = btnSelectNone
+    end
+    object Sep8: TdxBarSeparator
+      Caption = 'Copy && Select Options'
+      Category = 0
+      Hint = 'Copy & Select Options'
+      Visible = ivAlways
+    end
+    object btnSelectAllItems: TdxBarButton
+      Action = actSelectAll
+      Category = 0
+      ShortCut = 16449
+    end
+    object btnSlectNone: TdxBarButton
+      Action = actClearAllSelectedItems
+      Category = 0
+      ShortCut = 16462
     end
   end
   object imgNav32: TcxImageList
@@ -9747,18 +9985,26 @@ inherited MainFrm: TMainFrm
     end
     object Edit1: TMenuItem
       Action = actEdit
-      Hint = 'Edit selected timesheet item'
     end
     object Delete1: TMenuItem
       Action = actDelete
-      Hint = 'Delete selected timesheet item'
+    end
+    object N6: TMenuItem
+      Caption = '-'
     end
     object Copy1: TMenuItem
       Action = actCopyCell
-      Hint = 'Copy selected cell content'
     end
     object CopyRecord1: TMenuItem
       Action = actCopyRecord
+    end
+    object SelectAll1: TMenuItem
+      Action = actSelectAll
+      ShortCut = 16449
+    end
+    object ClearAll1: TMenuItem
+      Action = actClearAllSelectedItems
+      ShortCut = 16462
     end
     object N1: TMenuItem
       Caption = '-'
@@ -9861,6 +10107,14 @@ inherited MainFrm: TMainFrm
       end
       item
         Visible = True
+        ItemName = 'btnRefreshLookupTables'
+      end
+      item
+        Visible = True
+        ItemName = 'Sep8'
+      end
+      item
+        Visible = True
         ItemName = 'btnCopyCell'
       end
       item
@@ -9869,7 +10123,11 @@ inherited MainFrm: TMainFrm
       end
       item
         Visible = True
-        ItemName = 'btnRefreshLookupTables'
+        ItemName = 'btnSelectAllItems'
+      end
+      item
+        Visible = True
+        ItemName = 'btnSlectNone'
       end
       item
         Visible = True

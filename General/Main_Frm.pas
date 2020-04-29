@@ -21,7 +21,8 @@ uses
   dxCore, cxDateUtils, cxDropDownEdit, cxMaskEdit, cxLookupEdit, cxDBLookupEdit,
   dxBarExtItems, cxBarEditItem, cxMemo, Vcl.Menus, dxScrollbarAnnotations,
   dxRibbonSkins, dxRibbonCustomizationForm, dxRibbon, dxPrnDev, dxPrnDlg,
-  cxGridExportLink, cxDataUtils, dxLayoutcxEditAdapters, cxImage, cxLabel;
+  cxGridExportLink, cxDataUtils, dxLayoutcxEditAdapters, cxImage, cxLabel,
+  Vcl.StdCtrls, cxButtons;
 
 type
   TMainFrm = class(TBaseLayoutFrm)
@@ -232,6 +233,20 @@ type
     CopyRecord1: TMenuItem;
     btnCopyRecord: TdxBarButton;
     styImageColour: TcxEditStyleController;
+    cntSelectAll: TdxBarControlContainerItem;
+    btnSelectAll: TcxButton;
+    btnSelectNone: TcxButton;
+    cntSelectNone: TdxBarControlContainerItem;
+    tipSelectAll: TdxScreenTip;
+    tipSelectNone: TdxScreenTip;
+    actSelectAll: TAction;
+    actClearAllSelectedItems: TAction;
+    Sep8: TdxBarSeparator;
+    btnSelectAllItems: TdxBarButton;
+    btnSlectNone: TdxBarButton;
+    N6: TMenuItem;
+    SelectAll1: TMenuItem;
+    ClearAll1: TMenuItem;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoEditInsertEntry(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
@@ -275,6 +290,8 @@ type
     procedure DoReleaseCarryForwardManager(Sender: TObject);
     procedure cbxIncludeCarryForwardItemsPropertiesEditValueChanged(
       Sender: TObject);
+    procedure DoSelectAllTimesheetItems(Sender: TObject);
+    procedure DoClearTimesheetSelection(Sender: TObject);
   private
     { Private declarations }
     FTSUserID: Integer;
@@ -684,6 +701,12 @@ begin
   end;
 end;
 
+procedure TMainFrm.DoSelectAllTimesheetItems(Sender: TObject);
+begin
+  inherited;
+  viewTimesheet.Controller.SelectAll;
+end;
+
 procedure TMainFrm.DoTimeSheetDetail(Sender: TObject);
 begin
   inherited;
@@ -970,6 +993,12 @@ procedure TMainFrm.DoCarryForward(Sender: TObject);
 begin
   inherited;
   CarryForwardItem;
+end;
+
+procedure TMainFrm.DoClearTimesheetSelection(Sender: TObject);
+begin
+  inherited;
+  viewTimesheet.Controller.ClearSelection;
 end;
 
 procedure TMainFrm.DoBillable(Sender: TObject);
