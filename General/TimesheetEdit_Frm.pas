@@ -80,7 +80,6 @@ type
     spc3: TdxLayoutEmptySpaceItem;
     edtDayName: TcxTextEdit;
     edtHours: TcxCurrencyEdit;
-    edtitemValue: TcxCurrencyEdit;
     litLegend: TdxLayoutItem;
     actStdActivity: TAction;
     litAdWork: TdxLayoutItem;
@@ -96,6 +95,7 @@ type
     lblEditStatus: TcxLabel;
     styEditStatus: TcxEditStyleController;
     spc4: TdxLayoutEmptySpaceItem;
+    edtItemValue: TcxDBCurrencyEdit;
     procedure FormCreate(Sender: TObject);
     procedure lucActivityDatePropertiesEditValueChanged(Sender: TObject);
     procedure btnOKClick(Sender: TObject);
@@ -153,6 +153,10 @@ end;
 procedure TTimesheetEditFrm.FormShow(Sender: TObject);
 begin
   inherited;
+  edtTimeSpent.Properties.OnEditValueChanged := nil;
+  edtRate.Properties.OnEditValueChanged := nil;
+  lucRateUnit.Properties.OnEditValueChanged := nil;
+
   try
     cbxAproved.DataBinding.DataSource := VBBaseDM.MyDataSource;
     cbxCarryForward.DataBinding.DataSource := VBBaseDM.MyDataSource;
@@ -164,6 +168,7 @@ begin
     edtTimeSpent.DataBinding.DataSource := VBBaseDM.MyDataSource;
 //  edtHours.DataBinding.DataSource := VBBaseDM.MyDataSource;
     edtRate.DataBinding.DataSource := VBBaseDM.MyDataSource;
+    edtItemValue.DataBinding.DataSource := VBBaseDM.MyDataSource;
     edtStdrate.DataBinding.DataSource := VBBaseDM.MyDataSource;
     lucCustomer.Properties.ListSource := TSDM.dtsCustomerLookup;
     lucCustomer.DataBinding.DataSource := VBBaseDM.MyDataSource;
@@ -177,7 +182,7 @@ begin
     edtReleaseToPeriod.DataBinding.DataSource := VBBaseDM.MyDataSource;
     TcxLookupComboBoxProperties(lucDateReleasedCfwd.Properties).Buttons.Items[0].Visible := False;
     cbxCarryForward.Properties.ReadOnly := True; // TSDM.cdsTimesheet.FieldByName('CARRY_FORWARD').AsInteger = 1;
-    edtitemValue.Value := TSDM.cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat;
+//    edtitemValue.Value := TSDM.cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat;
 
     lucCustomer.Properties.IncrementalFiltering := TSDM.TimesheetOption.IncrementalLookupFitlering;
     lucCustomer.Properties.IncrementalFilteringOptions := [];
@@ -210,6 +215,9 @@ begin
 
     SetReadOnlyStatus(FCanEdit);
   finally
+    edtTimeSpent.Properties.OnEditValueChanged := edtTimeSpentPropertiesEditValueChanged;
+    edtRate.Properties.OnEditValueChanged := edtRatePropertiesEditValueChanged;
+    lucRateUnit.Properties.OnEditValueChanged := lucRateUnitPropertiesEditValueChanged;
     Screen.Cursor := crDefault;
   end;
 end;
@@ -227,6 +235,8 @@ end;
 procedure TTimesheetEditFrm.btnOKClick(Sender: TObject);
 var
   NextID: Integer;
+  SQLStatement: string;
+  Response: TStringList;
 begin
   inherited;
   if VarIsNull(lucActivityDate.EditValue) or SameText(Trim(lucActivityDate.Text), '') then
@@ -284,8 +294,33 @@ begin
     VBBaseDM.MyDataSet.FieldByName('ID').AsInteger := NextID;
   end;
 
-  VBBaseDM.MyDataSet.Post;
-  VBBaseDM.PostData(VBBaseDM.MyDataSet);
+  SQLStatement := 'UPDATE TIMESHEET SET ' +
+    ' USER_ID = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('USER_ID').AsInteger, varString) + ',' +
+    ' CUSTOMER_ID = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('CUSTOMER_ID').AsInteger, varString) + ',' +
+    ' PRICE_LIST_ITEM_ID = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('PRICE_LIST_ITEM_ID').AsInteger, varString) + ',' +
+    ' RATE_UNIT_ID = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('RATE_UNIT_ID').AsInteger, varString) + ',' +
+    ' ACTIVITY_TYPE_ID = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('ACTIVITY_TYPE_ID').AsInteger, varString) + ',' +
+    ' CUSTOMER_GROUP_ID = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('CUSTOMER_GROUP_ID').AsInteger, varString) + ',' +
+    ' ACTIVITY_DATE = ' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', VBBaseDM.MyDataSet.FieldByName('ACTIVITY_DATE').AsDateTime), '''') + ',' +
+    ' ACTIVITY = ' + AnsiQuotedStr(VBBaseDM.MyDataSet.FieldByName('ACTIVITY').AsString, '''') + ',' +
+    ' TIME_SPENT = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('TIME_SPENT').AsFloat, varString) + ',' +
+    ' ACTUAL_RATE = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('ACTUAL_RATE').AsFloat, varString) + ',' +
+    ' STD_RATE = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('STD_RATE').AsFloat, varString) + ',' +
+    ' BILLABLE = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('BILLABLE').AsInteger, varString) + ',' +
+    ' APPROVED = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('APPROVED').AsInteger, varString) + ',' +
+    ' IS_ADDITIONAL_WORK = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('IS_ADDITIONAL_WORK').AsInteger, varString) +
+    ' WHERE ID = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('ID').AsInteger, varString);
+
+  Response := RUtils.CreateStringList(PIPE, SINGLE_QUOTE);
+
+  try
+    Response.DelimitedText := VBBaseDM.ExecuteSQLCommand(SQLStatement);
+    if SameText(Response.Values['RESPONSE'], 'ERROR') then
+      raise EServerError.Create('One or more errors occurred when executing an SQL command with error message:' + CRLF + CRLF +
+        Response.Values['ERROR_MESSAGE']);
+  finally
+    Response.Free;
+  end;
 
   if not (VBBaseDM.MyDataSet.State in [dsEdit, dsInsert]) then
     VBBaseDM.MyDataSet.Edit;
@@ -404,20 +439,20 @@ begin
   inherited;
   if not FClosingForm then
   begin
-    if VBBaseDM.MyDataSet.State in [dsEdit, dsInsert] then
+//    if VBBaseDM.MyDataSet.State in [dsEdit, dsInsert] then
+//    begin
+    if cbxBillable.Checked then
     begin
-      if cbxBillable.Checked then
-      begin
-        case VarAstype(lucRateUnit.EditValue, varInteger) of
-          1: VBBaseDM.MyDataSet.FieldByName('ITEM_VALUE').AsFloat := edtTimeSpent.Value * edtRate.Value / 60;
+      if not VarIsNull(lucRateUnit.EditValue) then
+        if lucRateUnit.EditValue = 1 then
+          VBBaseDM.MyDataSet.FieldByName('ITEM_VALUE').AsFloat := edtTimeSpent.Value * edtRate.Value / 60
         else
           VBBaseDM.MyDataSet.FieldByName('ITEM_VALUE').AsFloat := {edtTimeSpent.Value * }edtRate.Value;
-        end;
-      end
-      else
-        VBBaseDM.MyDataSet.FieldByName('ITEM_VALUE').AsFloat := 0;
-    end;
-  end;
+    end
+    else
+      VBBaseDM.MyDataSet.FieldByName('ITEM_VALUE').AsFloat := 0;
+  end
+//  end;
 end;
 
 procedure TTimesheetEditFrm.SetReadOnlystatus(CanEdit: Boolean);
@@ -566,12 +601,10 @@ begin
     if cbxBillable.Checked then
     begin
       if VBBaseDM.MyDataSet.FieldByName('RATE_UNIT_ID').AsInteger = 1 then
-
         edtitemValue.Value :=
           VBBaseDM.MyDataSet.FieldByName('TIME_SPENT').AsFloat * edtRate.Value / 60
       else
-        edtitemValue.Value :=
-          VBBaseDM.MyDataSet.FieldByName('ACTUAL_RATE').AsFloat;
+        edtitemValue.Value := VBBaseDM.MyDataSet.FieldByName('ACTUAL_RATE').AsFloat;
     end
     else
       edtitemValue.Value := 0;
@@ -611,12 +644,41 @@ begin
   inherited;
   if not FClosingForm then
   begin
-    edtHours.Value := edtTimeSpent.Value / 60;
-
     if cbxBillable.Checked then
-      edtitemValue.Value := edtTimeSpent.Value * edtRate.Value
+    begin
+      if VBBaseDM.MyDataSet.FieldByName('RATE_UNIT_ID').AsInteger = 1 then
+        edtitemValue.Value :=
+          VBBaseDM.MyDataSet.FieldByName('TIME_SPENT').AsFloat * edtRate.Value / 60
+      else
+        edtitemValue.Value := VBBaseDM.MyDataSet.FieldByName('ACTUAL_RATE').AsFloat;
+    end
     else
       edtitemValue.Value := 0;
+  end;
+
+//  if not FClosingForm then
+//  begin
+//    edtHours.Value := edtTimeSpent.Value / 60;
+//
+//    if cbxBillable.Checked then
+//    begin
+//      case lucRateUnit.EditValue of
+//        1: edtitemValue.Value := edtTimeSpent.Value * edtRate.Value / 60;
+//      else
+//        edtitemValue.Value := edtRate.Value;
+//      end;
+////    case cdsTimesheet.FieldByName('RATE_UNIT_ID').AsInteger of
+////      1: cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat :=
+////        cdsTimesheet.FieldByName('ACTUAL_RATE').AsFloat *
+////          cdsTimesheet.FieldByName('TIME_HOURS').AsFloat;
+////
+////      2: cdsTimesheet.FieldByName('ITEM_VALUE').AsFloat :=
+////        cdsTimesheet.FieldByName('ACTUAL_RATE').AsFloat;
+////      edtitemValue.Value := edtTimeSpent.Value * edtRate.Value
+//    end
+//    else
+//
+//      edtitemValue.Value := 0;
 
 //  if VBBaseDM.MyDataSet.State in [dsEdit, dsInsert] then
 //  begin
@@ -630,7 +692,6 @@ begin
 //    else
 //      edtitemValue.Value := 0;
 //  end;
-  end;
 end;
 
 procedure TTimesheetEditFrm.edtTimeSpentPropertiesValidate(Sender: TObject;

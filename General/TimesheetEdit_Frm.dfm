@@ -257,14 +257,15 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       DataBinding.DataSource = TSDM.dtsTimesheet
       Properties.Alignment.Horz = taLeftJustify
       Properties.DecimalPlaces = 2
-      Properties.DisplayFormat = '#,###,##0.00'
-      Properties.EditFormat = '#,###,##0.00'
+      Properties.DisplayFormat = '###,##0.00'
+      Properties.EditFormat = '###,##0.00'
       Properties.ReadOnly = True
       Properties.UseDisplayFormatWhenEditing = True
       Properties.UseLeftAlignmentOnEditing = False
       Properties.UseThousandSeparator = True
       Style.HotTrack = False
       Style.StyleController = styReadOnly
+      Style.TransparentBorder = False
       TabOrder = 14
       Width = 80
     end
@@ -338,26 +339,11 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       TabOrder = 13
       Width = 45
     end
-    object edtitemValue: TcxCurrencyEdit [18]
-      Left = 358
-      Top = 473
-      TabStop = False
-      Properties.Alignment.Horz = taLeftJustify
-      Properties.DisplayFormat = '#,##0.00'
-      Properties.EditFormat = '#,##0.00'
-      Properties.ReadOnly = True
-      Properties.UseDisplayFormatWhenEditing = True
-      Properties.UseThousandSeparator = True
-      Style.HotTrack = False
-      Style.StyleController = styReadOnly
-      Style.TransparentBorder = False
-      TabOrder = 15
-      Width = 150
-    end
-    object lucDateReleasedCfwd: TcxDBDateEdit [19]
+    object lucDateReleasedCfwd: TcxDBDateEdit [18]
       Left = 367
       Top = 543
       TabStop = False
+      DataBinding.DataField = 'DATE_CFWD_RELEASED'
       DataBinding.DataSource = TSDM.dtsTimesheet
       Properties.ImmediatePost = True
       Properties.ReadOnly = True
@@ -369,10 +355,11 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       TabOrder = 18
       Width = 100
     end
-    object edtReleaseToPeriod: TcxDBCurrencyEdit [20]
+    object edtReleaseToPeriod: TcxDBCurrencyEdit [19]
       Left = 199
       Top = 543
       TabStop = False
+      DataBinding.DataField = 'RELEASE_CFWD_TO_PERIOD'
       DataBinding.DataSource = TSDM.dtsTimesheet
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = '#,###,##0.00'
@@ -387,7 +374,7 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       TabOrder = 17
       Width = 80
     end
-    object lblEditStatus: TcxLabel [21]
+    object lblEditStatus: TcxLabel [20]
       Left = 149
       Top = 614
       Caption = 'This timesheet item cannot be modified'
@@ -397,6 +384,26 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Style.TextColor = clRed
       Style.TransparentBorder = False
       Transparent = True
+    end
+    object edtItemValue: TcxDBCurrencyEdit [21]
+      Left = 358
+      Top = 473
+      TabStop = False
+      DataBinding.DataField = 'ITEM_VALUE'
+      DataBinding.DataSource = TSDM.dtsTimesheet
+      Properties.Alignment.Horz = taLeftJustify
+      Properties.DecimalPlaces = 2
+      Properties.DisplayFormat = '###,##0.00'
+      Properties.EditFormat = '###,##0.00'
+      Properties.ReadOnly = True
+      Properties.UseDisplayFormatWhenEditing = True
+      Properties.UseLeftAlignmentOnEditing = False
+      Properties.UseThousandSeparator = True
+      Style.HotTrack = False
+      Style.StyleController = styReadOnly
+      Style.TransparentBorder = True
+      TabOrder = 15
+      Width = 150
     end
     inherited layMainGroup_Root: TdxLayoutGroup
       ItemIndex = 9
@@ -691,7 +698,7 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Parent = grpRate
       CaptionOptions.Text = 'Std Rate'
       Control = edtStdrate
-      ControlOptions.OriginalHeight = 21
+      ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 80
       ControlOptions.ShowBorder = False
       Index = 2
@@ -763,8 +770,8 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
     object litItemValue: TdxLayoutItem
       Parent = grpRate
       CaptionOptions.Text = 'Item Value'
-      Control = edtitemValue
-      ControlOptions.OriginalHeight = 19
+      Control = edtItemValue
+      ControlOptions.OriginalHeight = 21
       ControlOptions.OriginalWidth = 150
       ControlOptions.ShowBorder = False
       Index = 3

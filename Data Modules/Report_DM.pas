@@ -535,6 +535,12 @@ type
     cdsTimesheetDetailCARRY_FORWARD_STR: TStringField;
     cdsTimesheetDetailAPPROVED: TIntegerField;
     cdsTimesheetDetailFULL_NAME: TStringField;
+    cdsTimesheetDetailDATE_CARRIED_FORWARD: TDateField;
+    cdsTimesheetDetailDATE_CFWD_RELEASED: TDateField;
+    cdsTimesheetDetailRELEASE_CFWD_TO_PERIOD: TIntegerField;
+    cdsTimesheetDATE_CARRIED_FORWARD: TDateField;
+    cdsTimesheetDATE_CFWD_RELEASED: TDateField;
+    cdsTimesheetRELEASE_CFWD_TO_PERIOD: TIntegerField;
     procedure cdsTimesheetCalcFields(DataSet: TDataSet);
     procedure cdsTimesheetAfterPost(DataSet: TDataSet);
     procedure cdsTimesheetBeforePost(DataSet: TDataSet);
@@ -576,15 +582,15 @@ uses VBBase_DM, VBCommonValues, RUtils;
 procedure TReportDM.cdsTimesheetAfterPost(DataSet: TDataSet);
 begin
   inherited;
-  DataSet := cdsTimesheet;
-  SetLength(VBBaseDM.DataSetArray, 1);
-  VBBaseDM.DataSetArray[0] := TFDMemTable(DataSet);
-
-  VBBaseDM.ApplyUpdates(VBBaseDM.DataSetArray, TFDMemTable(DataSet).UpdateOptions.GeneratorName,
-    TFDMemTable(DataSet).UpdateOptions.UpdateTableName,
-    TFDMemTable(DataSet).Tag);
-
-  SendMessage(Application.MainForm.Handle, WM_RECORD_ID, DWORD(PChar('REQUEST=REFRESH_DATA' + '|ID=' + FID.ToString)), 0);
+//  DataSet := cdsTimesheet;
+//  SetLength(VBBaseDM.DataSetArray, 1);
+//  VBBaseDM.DataSetArray[0] := TFDMemTable(DataSet);
+//
+//  VBBaseDM.ApplyUpdates(VBBaseDM.DataSetArray, TFDMemTable(DataSet).UpdateOptions.GeneratorName,
+//    TFDMemTable(DataSet).UpdateOptions.UpdateTableName,
+//    TFDMemTable(DataSet).Tag);
+//
+//  SendMessage(Application.MainForm.Handle, WM_RECORD_ID, DWORD(PChar('REQUEST=REFRESH_DATA' + '|ID=' + FID.ToString)), 0);
 end;
 
 procedure TReportDM.cdsTimesheetBeforeEdit(DataSet: TDataSet);

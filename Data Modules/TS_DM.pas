@@ -237,6 +237,7 @@ type
     procedure cdsTimesheetBeforeEdit(DataSet: TDataSet);
     procedure cdsTimesheetAfterPost(DataSet: TDataSet);
     procedure cdsTimesheetBeforePost(DataSet: TDataSet);
+    procedure cdsTimesheetCalcFields(DataSet: TDataSet);
   private
     FCurrentUserID: Integer;
     FDefaultInvoiceDate: TDateTime;
@@ -315,6 +316,12 @@ begin
 //    cdsTimesheet.FieldByName('LOCKED').AsInteger := 1
 //  else
 //    cdsTimesheet.FieldByName('LOCKED').AsInteger := 0;
+end;
+
+procedure TTSDM.cdsTimesheetCalcFields(DataSet: TDataSet);
+begin
+  inherited;
+Write code here!!
 end;
 
 procedure TTSDM.cdsTimesheetNewRecord(DataSet: TDataSet);

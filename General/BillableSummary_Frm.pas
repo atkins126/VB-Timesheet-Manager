@@ -154,6 +154,16 @@ type
     lvlBillCfwdExcel: TcxGridLevel;
     edtCFCFwdValue: TcxGridDBBandedColumn;
     edtTSCarryForwardValue: TcxGridDBBandedColumn;
+    popTimesheet: TPopupMenu;
+    actTimesheet: TActionList;
+    actEditItem: TAction;
+    EditItem1: TMenuItem;
+    N1: TMenuItem;
+    Preview1: TMenuItem;
+    GetData1: TMenuItem;
+    Print1: TMenuItem;
+    Excel1: TMenuItem;
+    PDF1: TMenuItem;
     procedure GetBillableSummary;
     procedure GetBillableTimesheet;
     procedure GetPeriods;
@@ -179,9 +189,11 @@ type
     procedure lucToPeriodPropertiesEditValueChanged(Sender: TObject);
     procedure cbxSamePeriodPropertiesEditValueChanged(Sender: TObject);
     procedure lucToPeriodPropertiesInitPopup(Sender: TObject);
+    procedure DoEditItem(Sender: TObject);
   private
     { Private declarations }
     FShowingForm: Boolean;
+    GroupItemIndex: Integer;
 
     procedure OpenTables;
     procedure GetSystemUser;
@@ -214,13 +226,95 @@ uses
   Progress_Frm,
   CommonFunctions,
   TS_DM,
-  TimesheetEdit_Frm;
+  TimesheetEdit_Frm,
+  Main_Frm;
 
 procedure TBillableSummaryFrm.DoCloseForm(Sender: TObject);
 begin
   inherited;
   CloseDataSets;
   Self.ModalResult := mrOK;
+end;
+
+procedure TBillableSummaryFrm.DoEditItem(Sender: TObject);
+var
+  TSID: Integer;
+begin
+  inherited;
+  Screen.Cursor := crHourglass;
+
+  try
+    case GroupItemIndex of
+      0: // Timesheet details
+        begin
+          VBBaseDM.MyDataSet := ReportDM.cdsTimesheetDetail;
+          VBBaseDM.MyDataSource := ReportDM.dtsTimesheetDetail;
+        end;
+
+      1: // Carry Forward details
+        begin
+          VBBaseDM.MyDataSet := ReportDM.cdsTimesheetCF;
+          VBBaseDM.MyDataSource := ReportDM.dtsTimesheetCF;
+        end;
+    end;
+
+    VBBaseDM.MyDataSet.Edit;
+
+    if TimesheetEditFrm = nil then
+      TimesheetEditFrm := TTimesheetEditFrm.Create(nil);
+
+    TimesheetEditFrm.CanEdit := VBBaseDM.MyDataSet.FieldByName('LOCKED').AsInteger = 0;
+
+    if TimesheetEditFrm.ShowModal = mrCancel then
+    begin
+      if VBBaseDM.MyDataSet.State in [dsEdit, dsInsert] then
+        VBBaseDM.MyDataSet.Cancel;
+    end
+    else
+    begin
+//      case TcxGridDBBandedTableView(Sender).Tag of
+//        0: // Timesheet details
+//          begin
+            // Get the ID of the current recored that was modified
+
+      // We need to update the Timesheet record if it is in the current
+      // Timesheet dataset.
+      if (VBBaseDM.MyDataSet.Active) and not (VBBaseDM.MyDataSet.IsEmpty) then
+      begin
+        // Get the ID of the currently selected/focused Timesheet
+        // record.
+        TSID := VBBaseDM.MyDataSet.FieldByName('ID').AsInteger;
+
+        // If we find the modified billable summary record in the
+        // current Timesheet dataset then update its values.
+        begin
+          if not (VBBaseDM.MyDataSet.State in [dsEdit, dsInsert]) then
+            VBBaseDM.MyDataSet.Edit;
+
+          // Copy the modified recored to the corresponding Timesheet datset record.
+          VBBaseDM.MyDataSet.CopyRecord(VBBaseDM.MyDataSet);
+          VBBaseDM.MyDataSet.Post;
+          VBBaseDM.PostData(VBBaseDM.MyDataSet);
+//          actRefresh.Execute;
+
+          // Relocated the original Timesheet selected/focused record.
+          VBBaseDM.MyDataSet.Locate('ID', TSID, []);
+        end;
+      end;
+//          end;
+
+//        1: // Carry forward details
+//          begin
+//
+//          end;
+//      end;
+    end;
+
+    TimesheetEditFrm.Close;
+    FreeAndNil(TimesheetEditFrm);
+  finally
+    Screen.Cursor := crDefault;
+  end;
 end;
 
 procedure TBillableSummaryFrm.DoExcel(Sender: TObject);
@@ -1104,7 +1198,9 @@ end;
 procedure TBillableSummaryFrm.viewTimesheetDblClick(Sender: TObject);
 begin
   inherited;
-  EditTimesheet(grpData.ItemIndex);
+  GroupItemIndex := grpData.ItemIndex;
+  actEditItem.Execute;
+//  EditTimesheet(grpData.ItemIndex);
 end;
 
 end.

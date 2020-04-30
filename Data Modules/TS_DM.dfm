@@ -670,6 +670,7 @@ inherited TSDM: TTSDM
     BeforeEdit = cdsTimesheetBeforeEdit
     BeforePost = cdsTimesheetBeforePost
     AfterPost = cdsTimesheetAfterPost
+    OnCalcFields = cdsTimesheetCalcFields
     OnNewRecord = cdsTimesheetNewRecord
     FilterOptions = [foCaseInsensitive]
     FieldDefs = <>
@@ -756,6 +757,12 @@ inherited TSDM: TTSDM
       Origin = 'CUSTOMER_GROUP_ID'
       Required = True
     end
+    object cdsTimesheetEditACTIVITY_DATE: TDateField
+      DisplayLabel = 'Date'
+      FieldName = 'ACTIVITY_DATE'
+      Origin = 'ACTIVITY_DATE'
+      Required = True
+    end
     object cdsTimesheetEditACTIVITY: TStringField
       DisplayLabel = 'Activity'
       FieldName = 'ACTIVITY'
@@ -795,12 +802,6 @@ inherited TSDM: TTSDM
       FieldKind = fkInternalCalc
       FieldName = 'LOCKED'
       Origin = 'LOCKED'
-      Required = True
-    end
-    object cdsTimesheetEditACTIVITY_DATE: TDateField
-      DisplayLabel = 'Date'
-      FieldName = 'ACTIVITY_DATE'
-      Origin = 'ACTIVITY_DATE'
       Required = True
     end
     object cdsTimesheetEditDATE_MODIFIED: TDateField
