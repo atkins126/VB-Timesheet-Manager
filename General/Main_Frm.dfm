@@ -702,7 +702,7 @@ inherited MainFrm: TMainFrm
       Left = 11
       Top = 591
       Properties.ReadOnly = True
-      Style.Color = 8316158
+      Style.Color = 10419889
       Style.HotTrack = False
       Style.TransparentBorder = False
       TabOrder = 1
@@ -1407,9 +1407,11 @@ inherited MainFrm: TMainFrm
     Caption = 'Select All'
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 8
+    TabOrder = 4
+    OnClick = btnSelectAllClick
   end
   object btnSelectNone: TcxButton [5]
+    Tag = 1
     Left = 376
     Top = 135
     Width = 85
@@ -1417,7 +1419,8 @@ inherited MainFrm: TMainFrm
     Caption = 'Select None'
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 9
+    TabOrder = 5
+    OnClick = btnSelectAllClick
   end
   inherited styRepository: TcxStyleRepository
     Left = 420
@@ -7741,11 +7744,11 @@ inherited MainFrm: TMainFrm
       Description.Text = 'Release carried forward timesheet items for billing'
       Width = 335
     end
-    object tipIncludeCarryForwardItems: TdxScreenTip
-      Header.Text = 'Include Carry Forward Items'
+    object tipIncludeReleaasedItems: TdxScreenTip
+      Header.Text = 'Include released Items'
       Description.Text = 
-        'Include items carried forward from previous periods to the curre' +
-        'nt period'
+        'Include carry forward items released from previous periods to th' +
+        'e current period'
       Width = 300
     end
     object tipPersistentRecordSelection: TdxScreenTip
@@ -7777,15 +7780,7 @@ inherited MainFrm: TMainFrm
   object styHintController: TcxHintStyleController
     Global = False
     HintStyleClassName = 'TdxScreenTipStyle'
-    HintStyle.ScreenTipLinks = <
-      item
-        ScreenTip = tipSelectAll
-        Control = btnSelectAll
-      end
-      item
-        ScreenTip = tipSelectNone
-        Control = btnSelectNone
-      end>
+    HintStyle.ScreenTipLinks = <>
     HintStyle.ScreenTipActionLinks = <>
     HintShortPause = 0
     HintPause = 0
@@ -7878,7 +7873,7 @@ inherited MainFrm: TMainFrm
           UserWidth = 20
           ViewLayout = ivlGlyphControlCaption
           Visible = True
-          ItemName = 'cbxIncludeCarryForwardItems'
+          ItemName = 'cbxIncludeReleasedItems'
         end
         item
           UserDefine = [udWidth]
@@ -8225,15 +8220,15 @@ inherited MainFrm: TMainFrm
       Properties.ImmediatePost = True
       Properties.OnEditValueChanged = cbxPersistentSelectionPropertiesEditValueChanged
     end
-    object cbxIncludeCarryForwardItems: TcxBarEditItem
-      Caption = 'Include Carry Forward Items'
+    object cbxIncludeReleasedItems: TcxBarEditItem
+      Caption = 'Include Released Items'
       Category = 0
-      Hint = 'Include Carry Forward Items'
-      ScreenTip = tipIncludeCarryForwardItems
+      Hint = 'Include Released Items'
+      ScreenTip = tipIncludeReleaasedItems
       Visible = ivAlways
       PropertiesClassName = 'TcxCheckBoxProperties'
       Properties.ImmediatePost = True
-      Properties.OnEditValueChanged = cbxIncludeCarryForwardItemsPropertiesEditValueChanged
+      Properties.OnEditValueChanged = cbxIncludeReleasedItemsPropertiesEditValueChanged
     end
     object lbl2: TdxBarStatic
       Category = 0
@@ -8311,6 +8306,7 @@ inherited MainFrm: TMainFrm
       Caption = 'Select All'
       Category = 0
       Hint = 'Select all timesheet items'
+      ScreenTip = tipSelectAll
       Visible = ivAlways
       Control = btnSelectAll
     end
@@ -8318,6 +8314,7 @@ inherited MainFrm: TMainFrm
       Caption = 'Select None'
       Category = 0
       Hint = 'Clear all selected timesheet items'
+      ScreenTip = tipSelectNone
       Visible = ivAlways
       Control = btnSelectNone
     end

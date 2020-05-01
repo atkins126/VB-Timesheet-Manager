@@ -21,10 +21,10 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
     end
     object grdBillableSummary: TcxGrid [1]
       Left = 11
-      Top = 75
+      Top = 100
       Width = 1104
       Height = 350
-      TabOrder = 1
+      TabOrder = 3
       object viewBillableSummary: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
@@ -273,7 +273,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       Top = 10000
       Width = 1073
       Height = 210
-      TabOrder = 3
+      TabOrder = 5
       Visible = False
       object viewCarryForwardDetail: TcxGridDBBandedTableView
         Tag = 1
@@ -915,10 +915,10 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
     end
     object grdTimesheet: TcxGrid [3]
       Left = 25
-      Top = 468
+      Top = 493
       Width = 1073
-      Height = 210
-      TabOrder = 2
+      Height = 185
+      TabOrder = 4
       object viewTimesheet: TcxGridDBBandedTableView
         PopupMenu = popTimesheet
         OnDblClick = viewTimesheetDblClick
@@ -1554,8 +1554,36 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
         GridView = viewTimesheet
       end
     end
+    object cbxRemoveZeroBillableItems: TcxCheckBox [4]
+      Left = 11
+      Top = 75
+      Caption = 'Remove zero billable items'
+      ParentShowHint = False
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
+      Properties.OnEditValueChanged = cbxRemoveZeroBillableItemsPropertiesEditValueChanged
+      ShowHint = True
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 1
+      Transparent = True
+    end
+    object cbxIncludeReleasedItems: TcxCheckBox [5]
+      Left = 193
+      Top = 75
+      Caption = 'Include released items'
+      ParentShowHint = False
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
+      Properties.OnEditValueChanged = cbxIncludeReleasedItemsPropertiesEditValueChanged
+      ShowHint = True
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 2
+      Transparent = True
+    end
     inherited layMainGroup_Root: TdxLayoutGroup
-      ItemIndex = 2
+      ItemIndex = 1
     end
     object grpToolbar: TdxLayoutGroup
       Parent = layMainGroup_Root
@@ -1572,7 +1600,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       ButtonOptions.Buttons = <>
       LayoutDirection = ldTabbed
       ShowBorder = False
-      Index = 2
+      Index = 3
     end
     object litToolbar: TdxLayoutItem
       Parent = grpToolbar
@@ -1591,7 +1619,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       ControlOptions.OriginalHeight = 350
       ControlOptions.OriginalWidth = 830
       ControlOptions.ShowBorder = False
-      Index = 1
+      Index = 2
     end
     object litTimesheet: TdxLayoutItem
       Parent = grpData
@@ -1613,6 +1641,34 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       Control = grdCarryForwardDetail
       ControlOptions.OriginalHeight = 421
       ControlOptions.OriginalWidth = 1181
+      ControlOptions.ShowBorder = False
+      Index = 1
+    end
+    object grpOptions: TdxLayoutGroup
+      Parent = layMainGroup_Root
+      CaptionOptions.Text = 'New Group'
+      ButtonOptions.Buttons = <>
+      LayoutDirection = ldHorizontal
+      ShowBorder = False
+      Index = 1
+    end
+    object litRemoveZeroValueItems: TdxLayoutItem
+      Parent = grpOptions
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = cbxRemoveZeroBillableItems
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 176
+      ControlOptions.ShowBorder = False
+      Index = 0
+    end
+    object litIncludeReleaseditems: TdxLayoutItem
+      Parent = grpOptions
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = cbxIncludeReleasedItems
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 151
       ControlOptions.ShowBorder = False
       Index = 1
     end
@@ -3818,13 +3874,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
         item
           Visible = True
           ItemName = 'btnPDF'
-        end
-        item
-          UserDefine = [udWidth]
-          UserWidth = 20
-          ViewLayout = ivlGlyphControlCaption
-          Visible = True
-          ItemName = 'cbxRemoveZeroValues'
         end>
       MultiLine = True
       NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
@@ -3914,17 +3963,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       Properties.PostPopupValueOnTab = True
       Properties.OnChange = lucGroupByPropertiesChange
     end
-    object cbxRemoveZeroValues: TcxBarEditItem
-      Caption = 'Remove items with zero billable values'
-      Category = 0
-      Hint = 'Remove items with zero billable values'
-      Visible = ivAlways
-      ShowCaption = True
-      PropertiesClassName = 'TcxCheckBoxProperties'
-      Properties.ImmediatePost = True
-      Properties.UseAlignmentWhenInplace = True
-      InternalEditValue = True
-    end
     object cbxSamePeriod: TcxBarEditItem
       Caption = 'Same Period'
       Category = 0
@@ -3984,5 +4022,78 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       ImageIndex = 8
       OnExecute = DoEditItem
     end
+  end
+  object repScreenTip: TdxScreenTipRepository
+    AssignedFonts = [stbHeader, stbDescription, stbFooter]
+    DescriptionFont.Charset = ANSI_CHARSET
+    DescriptionFont.Color = 5000268
+    DescriptionFont.Height = -11
+    DescriptionFont.Name = 'Verdana'
+    DescriptionFont.Style = []
+    FooterFont.Charset = ANSI_CHARSET
+    FooterFont.Color = 5000268
+    FooterFont.Height = -12
+    FooterFont.Name = 'Verdana'
+    FooterFont.Style = [fsBold]
+    HeaderFont.Charset = ANSI_CHARSET
+    HeaderFont.Color = 5000268
+    HeaderFont.Height = -12
+    HeaderFont.Name = 'Verdana'
+    HeaderFont.Style = [fsBold]
+    Left = 475
+    Top = 280
+    PixelsPerInch = 96
+    object tipExit: TdxScreenTip
+      Header.Text = 'Exit'
+      Description.Text = 'Exit master table manager'
+    end
+    object tipGetData: TdxScreenTip
+      Header.Text = 'Get Data'
+      Description.Text = 'Get billable data and display in grid on-screen'
+      Width = 305
+    end
+    object tipPreview: TdxScreenTip
+      Header.Text = 'Preview'
+      Description.Text = 'Preview timesheet'
+    end
+    object tipPrint: TdxScreenTip
+      Header.Text = 'Print'
+      Description.Text = 'Print timesheet'
+    end
+    object tipPDF: TdxScreenTip
+      Header.Text = 'PDF'
+      Description.Text = 'Export timesheet to PDF'
+    end
+    object tipExcel: TdxScreenTip
+      Header.Text = 'Excel'
+      Description.Text = 'Export timesheet to Excel'
+    end
+    object tipRemoveZeroValueItems: TdxScreenTip
+      Header.Text = 'Remove zero value items'
+      Description.Text = 'Remove items that have a zero value balance when fetching data'
+      Width = 300
+    end
+    object tipInclude: TdxScreenTip
+      Header.Text = 'Select None'
+      Description.Text = 'Clear all tiesheet item selection'
+      Width = 220
+    end
+  end
+  object styHintController: TcxHintStyleController
+    Global = False
+    HintStyleClassName = 'TdxScreenTipStyle'
+    HintStyle.ScreenTipLinks = <
+      item
+        ScreenTip = tipRemoveZeroValueItems
+      end
+      item
+        ScreenTip = tipInclude
+      end>
+    HintStyle.ScreenTipActionLinks = <>
+    HintShortPause = 0
+    HintPause = 0
+    HintHidePause = 15000
+    Left = 565
+    Top = 279
   end
 end

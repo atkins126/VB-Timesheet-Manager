@@ -203,10 +203,10 @@ type
     edtPeriodName: TcxGridDBBandedColumn;
     cbxPersistentSelection: TcxBarEditItem;
     edtDateCarriedForward: TcxGridDBBandedColumn;
-    cbxIncludeCarryForwardItems: TcxBarEditItem;
+    cbxIncludeReleasedItems: TcxBarEditItem;
     lbl2: TdxBarStatic;
     lbl3: TdxBarStatic;
-    tipIncludeCarryForwardItems: TdxScreenTip;
+    tipIncludeReleaasedItems: TdxScreenTip;
     tipPersistentRecordSelection: TdxScreenTip;
     grpLegend: TdxLayoutGroup;
     litReleasedItemColour: TdxLayoutItem;
@@ -288,10 +288,11 @@ type
     procedure DoMonthlyBilling(Sender: TObject);
     procedure cbxPersistentSelectionPropertiesEditValueChanged(Sender: TObject);
     procedure DoReleaseCarryForwardManager(Sender: TObject);
-    procedure cbxIncludeCarryForwardItemsPropertiesEditValueChanged(
-      Sender: TObject);
     procedure DoSelectAllTimesheetItems(Sender: TObject);
     procedure DoClearTimesheetSelection(Sender: TObject);
+    procedure cbxIncludeReleasedItemsPropertiesEditValueChanged(
+      Sender: TObject);
+    procedure btnSelectAllClick(Sender: TObject);
   private
     { Private declarations }
     FTSUserID: Integer;
@@ -427,7 +428,7 @@ begin
     if BaseFrm = nil then
       BaseFrm := TBaseFrm.Create(nil);
 
-    VBBaseDM.CurrentPeriod := RUtils.CurrentPeriod(Date);
+    VBBaseDM.CurrentPeriod := GetCurrentPeriod(Date);
     VBBaseDM.CurrentYear := Trunc(VBBaseDM.CurrentPeriod div 100);
     VBBaseDM.CurrentMonth := RUtils.MonthInt(Date);
 
@@ -472,7 +473,7 @@ begin
       FTimesheetPeriod := RegKey.ReadInteger('Period');
       lucPeriod.EditValue := FTimesheetPeriod;
       cbxPersistentSelection.EditValue := TSDM.TimesheetOption.PersitentRecordSelection;
-      cbxIncludeCarryForwardItems.EditValue := TSDM.TimesheetOption.IncludeCarryForwardItems;
+      cbxIncludeReleasedItems.EditValue := TSDM.TimesheetOption.IncludeCarryForwardItems;
 
       if TSDM.TimesheetOption.PersitentRecordSelection then
         viewTimesheet.OptionsSelection.MultiSelectMode := msmPersistent
@@ -740,6 +741,18 @@ begin
 ////    2: popInvoice.Popup(APopupPoint.X, APopupPoint.Y);
 ////    3: popCarryForward.Popup(APopupPoint.X, APopupPoint.Y);
 ////  end;
+end;
+
+procedure TMainFrm.btnSelectAllClick(Sender: TObject);
+var
+  C: TcxCustomGridTableController;
+begin
+  inherited;
+  C := viewTimesheet.Controller;
+  case Tcxbutton(Sender).Tag of
+    0: C.SelectAll;
+    1: C.ClearSelection;
+  end;
 end;
 
 procedure TMainFrm.CarryForwardItem;
@@ -1359,24 +1372,23 @@ procedure TMainFrm.cbxApprovedCustomDrawCell(Sender: TcxCustomGridTableView;
   ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
 var
   DC: TcxDBDataController;
-// C: TcxCustomGridTableController;
 begin
   inherited;
   DC := viewTimesheet.DataController;
-// C := viewTimesheet.Controller;
+
   if DC.Values[AViewInfo.GridRecord.Index, cbxApproved.Index] then
     ACanvas.Brush.Color := clGreen
   else
     ACanvas.Brush.Color := clMaroon;
 end;
 
-procedure TMainFrm.cbxIncludeCarryForwardItemsPropertiesEditValueChanged(Sender: TObject);
+procedure TMainFrm.cbxIncludeReleasedItemsPropertiesEditValueChanged(Sender: TObject);
 var
   RegKey: TRegistry;
   ID: Integer;
 begin
   inherited;
-  TSDM.TimesheetOption.IncludeCarryForwardItems := cbxIncludeCarryForwardItems.EditValue;
+  TSDM.TimesheetOption.IncludeCarryForwardItems := cbxIncludeReleasedItems.EditValue;
 
   if not FShowingForm then
   begin
@@ -1386,7 +1398,7 @@ begin
     try
       RegKey.RootKey := HKEY_CURRENT_USER;
       RegKey.OpenKey(KEY_TIMESHEET, True);
-      RegKey.WriteBool('Include Carry Forward Items', TSDM.TimesheetOption.IncludeCarryForwardItems);
+      RegKey.WriteBool('Include Released Items', TSDM.TimesheetOption.IncludeCarryForwardItems);
       RegKey.CloseKey;
     finally
       RegKey.Free;
@@ -1492,7 +1504,7 @@ begin
 
     CarryForwardClause := '';
 
-    if cbxIncludeCarryForwardItems.EditValue then
+    if cbxIncludeReleasedItems.EditValue then
       WhereClause :=
         ' WHERE T.USER_ID =' + FTSUserID.ToString +
         ' AND (T.THE_PERIOD =' + FTimesheetPeriod.ToString +
@@ -1521,7 +1533,7 @@ begin
       AToDateEdit.Date := FFromDate;
     end;
 
-    if cbxIncludeCarryForwardItems.EditValue then
+    if cbxIncludeReleasedItems.EditValue then
       WhereClause :=
         ' WHERE T.USER_ID =' + FTSUserID.ToString +
         ' AND ((T.ACTIVITY_DATE >=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FFromDate), '''') +
@@ -1606,8 +1618,8 @@ begin
     if not RegKey.ValueExists('Persistent Selection') then
       RegKey.WriteBool('Persistent Selection', True);
 
-    if not RegKey.ValueExists('Include Carry Forward Items') then
-      RegKey.WriteBool('Include Carry Forward Items', True);
+    if not RegKey.ValueExists('Include Released Items') then
+      RegKey.WriteBool('Include Released Items', True);
 
     if not RegKey.ValueExists('View Mode Index') then
       RegKey.WriteInteger('View Mode Index', 0);
@@ -1682,7 +1694,7 @@ begin
     TSDM.TimesheetOption.IncrementalLookupFitlering := RegKey.ReadBool('Incremental Lookup Fitlering');
     TSDM.TimesheetOption.HighlightLookupSearchMatch := RegKey.ReadBool('Highlight Lookup Search Match');
     TSDM.TimesheetOption.PersitentRecordSelection := RegKey.ReadBool('Persistent Selection');
-    TSDM.TimesheetOption.IncludeCarryForwardItems := RegKey.ReadBool('Include Carry Forward Items');
+    TSDM.TimesheetOption.IncludeCarryForwardItems := RegKey.ReadBool('Include Released Items');
   finally
     RegKey.Free
   end;
@@ -1704,8 +1716,12 @@ begin
 
   if AViewInfo.GridRecord.Values[edtReleaseCfwdToPeriod.Index] > 0 then
   begin
-    ACanvas.Brush.Color := $7EE4FE; // Color := $54DCFE; // $C1E0FF; //$D7E3FF; // $FFE1F0;
-    ACanvas.Font.Color := RootLookAndFeel.SkinPainter.DefaultSelectionColor;
+    if AViewInfo.Item <> nil then
+      if AViewInfo.Item <> cbxApproved then
+      begin
+        ACanvas.Brush.Color := $9EFEB1; //$7EE4FE; // Color := $54DCFE; // $C1E0FF; //$D7E3FF; // $FFE1F0;
+        ACanvas.Font.Color := RootLookAndFeel.SkinPainter.DefaultSelectionColor;
+      end;
   end;
 
   if AViewInfo.GridRecord.Focused then

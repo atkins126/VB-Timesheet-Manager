@@ -19,8 +19,10 @@ unit Report_DM;
 interface
 
 uses
-  System.SysUtils, System.Classes, Base_DM, Data.DBXDataSnap, Data.DBXCommon,
-  IPPeerClient, Data.DB, Data.SqlExpr, Winapi.Windows, Vcl.Forms,
+  System.SysUtils, System.Classes, Data.DBXDataSnap, Data.DBXCommon,
+  IPPeerClient, Data.DB, Data.SqlExpr, Winapi.Windows, {Vcl.Forms,}
+
+  Base_DM, VBBase_DM, VBCommonValues,
 
   frxClass, frxExportBaseDialog, frxExportPDF, frxDBSet,
 
@@ -575,7 +577,8 @@ implementation
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
-uses VBBase_DM, VBCommonValues, RUtils;
+uses
+  RUtils;
 
 {$R *.dfm}
 
@@ -656,9 +659,11 @@ end;
 procedure TReportDM.cdsTimesheetDetailCalcFields(DataSet: TDataSet);
 begin
   inherited;
-  DataSet.FieldByName('FULL_NAME').AsString :=
-    DataSet.FieldByName('FIRST_NAME').AsString + '' +
-    DataSet.FieldByName('LAST_NAME').AsString;
+  VBBaseDM.CalculateFieldValues(TFDMemTable(DataSet));
+
+//  DataSet.FieldByName('FULL_NAME').AsString :=
+//    DataSet.FieldByName('FIRST_NAME').AsString + '' +
+//    DataSet.FieldByName('LAST_NAME').AsString;
 end;
 
 procedure TReportDM.CreateIndex(ReportTypeIndex: Integer; FieldNames: string);

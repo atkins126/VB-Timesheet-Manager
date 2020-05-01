@@ -20,7 +20,8 @@ uses
   cxFilter, cxDataStorage, cxNavigator, dxDateRanges, dxScrollbarAnnotations,
   cxDBData, cxCurrencyEdit, cxCalendar, cxMemo, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridBandedTableView, cxGridDBBandedTableView, cxGridCustomView,
-  cxGrid, dxPrnDev, dxPrnDlg, cxGridExportLink;
+  cxGrid, dxPrnDev, dxPrnDlg, cxGridExportLink, dxLayoutcxEditAdapters,
+  dxScreenTip, dxCustomHint, cxHint;
 
 type
   TBillableSummaryFrm = class(TBaseLayoutFrm)
@@ -44,7 +45,6 @@ type
     lucFromPeriod: TcxBarEditItem;
     lucToPeriod: TcxBarEditItem;
     lucGroupBy: TcxBarEditItem;
-    cbxRemoveZeroValues: TcxBarEditItem;
     litBillableSummary: TdxLayoutItem;
     litTimesheet: TdxLayoutItem;
     litCarryForward: TdxLayoutItem;
@@ -164,6 +164,21 @@ type
     Print1: TMenuItem;
     Excel1: TMenuItem;
     PDF1: TMenuItem;
+    grpOptions: TdxLayoutGroup;
+    litRemoveZeroValueItems: TdxLayoutItem;
+    litIncludeReleaseditems: TdxLayoutItem;
+    cbxRemoveZeroBillableItems: TcxCheckBox;
+    cbxIncludeReleasedItems: TcxCheckBox;
+    repScreenTip: TdxScreenTipRepository;
+    tipExit: TdxScreenTip;
+    tipGetData: TdxScreenTip;
+    tipPreview: TdxScreenTip;
+    tipPrint: TdxScreenTip;
+    tipPDF: TdxScreenTip;
+    tipExcel: TdxScreenTip;
+    tipRemoveZeroValueItems: TdxScreenTip;
+    tipInclude: TdxScreenTip;
+    styHintController: TcxHintStyleController;
     procedure GetBillableSummary;
     procedure GetBillableTimesheet;
     procedure GetPeriods;
@@ -175,14 +190,6 @@ type
     procedure DoPDF(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure viewBillableSummaryFocusedRecordChanged(Sender: TcxCustomGridTableView;
-      APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord;
-      ANewItemRecordFocusingChanged: Boolean);
-    procedure viewBillableSummaryCustomDrawGroupCell(Sender: TcxCustomGridTableView;
-      ACanvas: TcxCanvas; AViewInfo: TcxGridTableCellViewInfo; var ADone: Boolean);
-    procedure viewTimesheetDblClick(Sender: TObject);
-    procedure viewBillableSummaryCustomDrawCell(Sender: TcxCustomGridTableView;
-      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
     procedure lucGroupByKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure lucGroupByPropertiesChange(Sender: TObject);
     procedure lucFromPeriodPropertiesEditValueChanged(Sender: TObject);
@@ -190,6 +197,19 @@ type
     procedure cbxSamePeriodPropertiesEditValueChanged(Sender: TObject);
     procedure lucToPeriodPropertiesInitPopup(Sender: TObject);
     procedure DoEditItem(Sender: TObject);
+    procedure cbxRemoveZeroBillableItemsPropertiesEditValueChanged(Sender: TObject);
+    procedure cbxIncludeReleasedItemsPropertiesEditValueChanged(Sender: TObject);
+    procedure viewTimesheetDblClick(Sender: TObject);
+
+    procedure viewBillableSummaryFocusedRecordChanged(Sender: TcxCustomGridTableView;
+      APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord;
+      ANewItemRecordFocusingChanged: Boolean);
+
+    procedure viewBillableSummaryCustomDrawGroupCell(Sender: TcxCustomGridTableView;
+      ACanvas: TcxCanvas; AViewInfo: TcxGridTableCellViewInfo; var ADone: Boolean);
+
+    procedure viewBillableSummaryCustomDrawCell(Sender: TcxCustomGridTableView;
+      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
   private
     { Private declarations }
     FShowingForm: Boolean;
@@ -577,13 +597,22 @@ begin
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   RegKey.RootKey := HKEY_CURRENT_USER;
   try
-    RegKey.OpenKey(KEY_TIMESHEET, True);
+    RegKey.OpenKey(KEY_TIMESHEET_BILLABLE_SUMMARY_REPORT, True);
 
     if not RegKey.ValueExists('To Period same as From Period') then
       RegKey.WriteBool('To Period same as From Period', True);
 
+    if not RegKey.ValueExists('Include Released Items') then
+      RegKey.WriteBool('Include Released Items', True);
+
+    if not RegKey.ValueExists('Remove Zero Billable Values') then
+      RegKey.WriteBool('Remove Zero Billable Values', True);
+
     cbxSamePeriod.EditValue := RegKey.ReadBool('To Period same as From Period');
     cbxSamePeriodPropertiesEditValueChanged(cbxSamePeriod.Properties);
+    cbxRemoveZeroBillableItems.Checked := RegKey.ReadBool('Remove Zero Billable Values');
+    cbxIncludeReleasedItems.Checked := RegKey.ReadBool('Include Released Items');
+
     RegKey.CloseKey;
 
     if not ReportDM.cdsPeriod.Locate('THE_PERIOD', VBBaseDM.CurrentPeriod, []) then
@@ -683,7 +712,7 @@ begin
     end;
 
     // Suppress customers that have no transaactions for billable summary report
-    if cbxRemoveZeroValues.EditValue then
+    if cbxRemoveZeroBillableItems.EditValue then
     begin
       Response.DelimitedText := VBBaseDM.ExecuteStoredProcedure('SP_DELETE_ZERO_BILLABLE_VALUES', VBBaseDM.UserData.UserID.ToString);
 
@@ -780,9 +809,9 @@ begin
 //      ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ';
 
     WhereClause :=
-      'WHERE T.THE_PERIOD = ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) +
-//      ' AND  T.THE_PERIOD <= ' + VarAsType(lucToPeriod.EditValue, varString) +
-    ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ' +
+      'WHERE (T.THE_PERIOD = ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) +
+      ' OR T.RELEASE_CFWD_TO_PERIOD = ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) + ') ' +
+      ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ' +
       ' AND T.CARRY_FORWARD = 0 ';
 
     FileName := 'C:\Data\Xml\Timesheet Details.xml';
@@ -1015,25 +1044,80 @@ begin
 
 end;
 
+procedure TBillableSummaryFrm.cbxRemoveZeroBillableItemsPropertiesEditValueChanged(Sender: TObject);
+var
+  RegKey: TRegistry;
+begin
+  inherited;
+  if not FShowingForm then
+  begin
+    RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+    RegKey.RootKey := HKEY_CURRENT_USER;
+    try
+      RegKey.OpenKey(KEY_TIMESHEET_BILLABLE_SUMMARY_REPORT, True);
+      RegKey.WriteBool('Remove Zero Billable Values', True);
+
+      RegKey.CloseKey;
+      lucToPeriod.Properties.ReadOnly := cbxSamePeriod.EditValue;
+      TcxLookupComboBoxProperties(lucToPeriod.Properties).Buttons[0].Visible :=
+        not cbxSamePeriod.EditValue;
+
+      TcxLookupComboBoxProperties(lucToPeriod.Properties).ImmediateDropDownWhenKeyPressed :=
+        not cbxSamePeriod.EditValue;
+    finally
+      RegKey.Free;
+    end;
+  end;
+end;
+
+procedure TBillableSummaryFrm.cbxIncludeReleasedItemsPropertiesEditValueChanged(Sender: TObject);
+var
+  RegKey: TRegistry;
+begin
+  inherited;
+  if not FShowingForm then
+  begin
+    RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+    RegKey.RootKey := HKEY_CURRENT_USER;
+    try
+      RegKey.OpenKey(KEY_TIMESHEET_BILLABLE_SUMMARY_REPORT, True);
+      RegKey.WriteBool('Include Released Items', True);
+
+      RegKey.CloseKey;
+      lucToPeriod.Properties.ReadOnly := cbxSamePeriod.EditValue;
+      TcxLookupComboBoxProperties(lucToPeriod.Properties).Buttons[0].Visible :=
+        not cbxSamePeriod.EditValue;
+
+      TcxLookupComboBoxProperties(lucToPeriod.Properties).ImmediateDropDownWhenKeyPressed :=
+        not cbxSamePeriod.EditValue;
+    finally
+      RegKey.Free;
+    end;
+  end;
+end;
+
 procedure TBillableSummaryFrm.cbxSamePeriodPropertiesEditValueChanged(Sender: TObject);
 var
   RegKey: TRegistry;
 begin
   inherited;
-  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
-  RegKey.RootKey := HKEY_CURRENT_USER;
-  try
-    RegKey.OpenKey(KEY_TIMESHEET, True);
-    RegKey.WriteBool('To Period same as From Period', cbxSamePeriod.EditValue);
-    RegKey.CloseKey;
-    lucToPeriod.Properties.ReadOnly := cbxSamePeriod.EditValue;
-    TcxLookupComboBoxProperties(lucToPeriod.Properties).Buttons[0].Visible :=
-      not cbxSamePeriod.EditValue;
+  if not FShowingForm then
+  begin
+    RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+    RegKey.RootKey := HKEY_CURRENT_USER;
+    try
+      RegKey.OpenKey(KEY_TIMESHEET_BILLABLE_SUMMARY_REPORT, True);
+      RegKey.WriteBool('To Period same as From Period', cbxSamePeriod.EditValue);
+      RegKey.CloseKey;
+      lucToPeriod.Properties.ReadOnly := cbxSamePeriod.EditValue;
+      TcxLookupComboBoxProperties(lucToPeriod.Properties).Buttons[0].Visible :=
+        not cbxSamePeriod.EditValue;
 
-    TcxLookupComboBoxProperties(lucToPeriod.Properties).ImmediateDropDownWhenKeyPressed :=
-      not cbxSamePeriod.EditValue;
-  finally
-    RegKey.Free;
+      TcxLookupComboBoxProperties(lucToPeriod.Properties).ImmediateDropDownWhenKeyPressed :=
+        not cbxSamePeriod.EditValue;
+    finally
+      RegKey.Free;
+    end;
   end;
 end;
 

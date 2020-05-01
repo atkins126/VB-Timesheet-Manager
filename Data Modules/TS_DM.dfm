@@ -775,6 +775,7 @@ inherited TSDM: TTSDM
     end
     object cdsTimesheetEditTIME_HOURS: TFloatField
       DisplayLabel = 'Hrs'
+      FieldKind = fkInternalCalc
       FieldName = 'TIME_HOURS'
       Origin = 'TIME_HOURS'
     end
@@ -820,6 +821,7 @@ inherited TSDM: TTSDM
     end
     object cdsTimesheetPERIOD_NAME: TStringField
       DisplayLabel = 'Period'
+      FieldKind = fkInternalCalc
       FieldName = 'PERIOD_NAME'
       Size = 10
     end

@@ -6202,6 +6202,7 @@ inherited ReportDM: TReportDM
   end
   object cdsTimesheetCF: TFDMemTable
     ActiveStoredUsage = [auDesignTime]
+    OnCalcFields = cdsTimesheetDetailCalcFields
     FilterOptions = [foCaseInsensitive]
     FieldDefs = <>
     CachedUpdates = True
@@ -6345,11 +6346,13 @@ inherited ReportDM: TReportDM
     end
     object cdsTimesheetCFTIME_HOURS: TFloatField
       DisplayLabel = 'Hrs'
+      FieldKind = fkInternalCalc
       FieldName = 'TIME_HOURS'
       Origin = 'TIME_HOURS'
     end
     object cdsTimesheetCFITEM_VALUE: TFloatField
       DisplayLabel = 'Value'
+      FieldKind = fkInternalCalc
       FieldName = 'ITEM_VALUE'
       Origin = 'ITEM_VALUE'
     end
@@ -6376,11 +6379,13 @@ inherited ReportDM: TReportDM
     object cdsTimesheetCFTHE_PERIOD: TIntegerField
       Alignment = taLeftJustify
       DisplayLabel = 'Period'
+      FieldKind = fkInternalCalc
       FieldName = 'THE_PERIOD'
       Origin = 'THE_PERIOD'
     end
     object cdsTimesheetCFPERIOD_NAME: TStringField
       DisplayLabel = 'Period'
+      FieldKind = fkInternalCalc
       FieldName = 'PERIOD_NAME'
       Size = 10
     end
@@ -6413,6 +6418,7 @@ inherited ReportDM: TReportDM
     object cdsTimesheetCFLOCKED: TIntegerField
       Alignment = taCenter
       DisplayLabel = 'Lck'
+      FieldKind = fkInternalCalc
       FieldName = 'LOCKED'
       Origin = 'LOCKED'
     end
@@ -10094,6 +10100,7 @@ inherited ReportDM: TReportDM
     end
     object cdsTimesheetDetailTIME_HOURS: TFloatField
       DisplayLabel = 'Hrs'
+      FieldKind = fkInternalCalc
       FieldName = 'TIME_HOURS'
       Origin = 'TIME_HOURS'
     end
@@ -10109,12 +10116,14 @@ inherited ReportDM: TReportDM
     end
     object cdsTimesheetDetailITEM_VALUE: TFloatField
       DisplayLabel = 'Value'
+      FieldKind = fkInternalCalc
       FieldName = 'ITEM_VALUE'
       Origin = 'ITEM_VALUE'
     end
     object cdsTimesheetDetailLOCKED: TIntegerField
       Alignment = taCenter
       DisplayLabel = 'Lck'
+      FieldKind = fkInternalCalc
       FieldName = 'LOCKED'
       Origin = 'LOCKED'
     end
@@ -10126,11 +10135,13 @@ inherited ReportDM: TReportDM
     object cdsTimesheetDetailTHE_PERIOD: TIntegerField
       Alignment = taLeftJustify
       DisplayLabel = 'Period'
+      FieldKind = fkInternalCalc
       FieldName = 'THE_PERIOD'
       Origin = 'THE_PERIOD'
     end
     object cdsTimesheetDetailPERIOD_NAME: TStringField
       DisplayLabel = 'Period'
+      FieldKind = fkInternalCalc
       FieldName = 'PERIOD_NAME'
       Size = 10
     end

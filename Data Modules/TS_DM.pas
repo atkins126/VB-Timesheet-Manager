@@ -321,7 +321,7 @@ end;
 procedure TTSDM.cdsTimesheetCalcFields(DataSet: TDataSet);
 begin
   inherited;
-Write code here!!
+  CalculateFieldValues(TFDMemTable(DataSet));
 end;
 
 procedure TTSDM.cdsTimesheetNewRecord(DataSet: TDataSet);
