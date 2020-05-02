@@ -53,7 +53,7 @@ type
     edtBCustomerID: TcxGridDBBandedColumn;
     edtBPeriod: TcxGridDBBandedColumn;
     edtBName: TcxGridDBBandedColumn;
-    edtBhours: TcxGridDBBandedColumn;
+    edtBHours: TcxGridDBBandedColumn;
     edtBValue: TcxGridDBBandedColumn;
     edtBNonHours: TcxGridDBBandedColumn;
     edtBNonValue: TcxGridDBBandedColumn;
@@ -210,6 +210,8 @@ type
 
     procedure viewBillableSummaryCustomDrawCell(Sender: TcxCustomGridTableView;
       ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
+    procedure edtBHoursGetDisplayText(Sender: TcxCustomGridTableItem;
+      ARecord: TcxCustomGridRecord; var AText: string);
   private
     { Private declarations }
     FShowingForm: Boolean;
@@ -592,8 +594,7 @@ begin
   viewTimesheet.DataController.DataSource := ReportDM.dtsTimesheetDetail;
   viewCarryForwardDetail.DataController.DataSource := ReportDM.dtsTimesheetCF;
   grpData.ItemIndex := 0;
-  OpenTables;
-//  GetPeriods;
+
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   RegKey.RootKey := HKEY_CURRENT_USER;
   try
@@ -614,6 +615,7 @@ begin
     cbxIncludeReleasedItems.Checked := RegKey.ReadBool('Include Released Items');
 
     RegKey.CloseKey;
+    OpenTables;
 
     if not ReportDM.cdsPeriod.Locate('THE_PERIOD', VBBaseDM.CurrentPeriod, []) then
     begin
@@ -785,7 +787,6 @@ begin
       ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ' +
       ' AND T.CARRY_FORWARD = 1 ';
 
-//    OrderByClause := ' ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
     OrderByClause := ' ORDER BY T.ACTIVITY_DATE';
     FileName := 'C:\Data\Xml\Carry Forward Summary.xml';
     WhereClause := WhereClause + OrderByClause;
@@ -808,11 +809,17 @@ begin
 //      ' AND  T.THE_PERIOD <= ' + VarAsType(lucToPeriod.EditValue, varString) +
 //      ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ';
 
-    WhereClause :=
-      'WHERE (T.THE_PERIOD = ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) +
-      ' OR T.RELEASE_CFWD_TO_PERIOD = ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) + ') ' +
-      ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ' +
-      ' AND T.CARRY_FORWARD = 0 ';
+    if cbxIncludeReleasedItems.Checked then
+      WhereClause :=
+        'WHERE (T.THE_PERIOD = ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) +
+        ' OR T.RELEASE_CFWD_TO_PERIOD = ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) + ') ' +
+        ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ' +
+        ' AND T.CARRY_FORWARD = 0 '
+    else
+      WhereClause :=
+        'WHERE T.THE_PERIOD = ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) +
+        ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ' +
+        ' AND T.CARRY_FORWARD = 0 ';
 
     FileName := 'C:\Data\Xml\Timesheet Details.xml';
     WhereClause := WhereClause + OrderByClause;
@@ -1190,14 +1197,16 @@ begin
   if AFocusedRecord = nil then
     Exit;
 
-  if not AFocusedRecord.IsData then
+  if AFocusedRecord.IsData then
+  begin
+    if not FShowingForm then
+      GetBillableTimesheet;
+  end
+  else
   begin
     ReportDM.cdsTimesheetDetail.Close;
     ReportDM.cdsCarryForwardDetail.Close;
-//    Exit;
-  end
-  else if not FShowingForm then
-    GetBillableTimesheet;
+  end;
 end;
 
 procedure TBillableSummaryFrm.EditTimesheet(ItemIndex: integer);
@@ -1276,6 +1285,53 @@ begin
     FreeAndNil(TimesheetEditFrm);
   finally
     Screen.Cursor := crDefault;
+  end;
+end;
+
+procedure TBillableSummaryFrm.edtBHoursGetDisplayText(
+  Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord; var AText: string);
+var
+  FieldName: string;
+begin
+  inherited;
+  if ARecord <> nil then
+  begin
+//    if (TcxCustomGridTableItem(Sender).Name = 'edtBHours')
+//      or (TcxCustomGridTableItem(Sender).Name = 'edtBVlaue')
+//      or (TcxCustomGridTableItem(Sender).Name = 'edtBNonHours')
+//      or (TcxCustomGridTableItem(Sender).Name = 'edtedtBCarryForwardB') then
+//    begin
+//      FieldName := TcxGridDBBandedColumn(TcxCustomGridTableItem(Sender)).DataBinding.FieldName;
+//
+//      if TcxGridDBBandedColumn(TcxCustomGridTableItem(Sender)).DataBinding.Field.DataSet.FieldByName(FieldName).AsFloat = 0 then
+//        AText := '';
+//    end;
+
+    if TcxCustomGridTableItem(Sender).Name = 'edtBHours' then
+    begin
+      if ARecord.Values[edtBHours.Index] = 0 then
+        AText := '';
+    end
+
+    else if TcxCustomGridTableItem(Sender).Name = 'edtBValue' then
+    begin
+      if ARecord.Values[edtBValue.Index] = 0 then
+        AText := '';
+    end
+
+    else
+    if TcxCustomGridTableItem(Sender).Name = 'edtBNonHours' then
+    begin
+      if ARecord.Values[edtBNonHours.Index] = 0 then
+        AText := '';
+    end
+
+    else
+    if TcxCustomGridTableItem(Sender).Name = 'edtBCarryForward' then
+    begin
+      if ARecord.Values[edtBCarryForward.Index] = 0 then
+        AText := '';
+    end;
   end;
 end;
 

@@ -37,7 +37,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
             Format = '#,###,##0.00'
             Kind = skSum
             FieldName = 'TOTAL_BILLABLE_HOURS'
-            Column = edtBhours
+            Column = edtBHours
           end
           item
             Format = '#,###,##0.00'
@@ -62,7 +62,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
             Kind = skSum
             Position = spFooter
             FieldName = 'TOTAL_BILLABLE_HOURS'
-            Column = edtBhours
+            Column = edtBHours
           end
           item
             Format = '#,###,##0.00'
@@ -90,7 +90,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
             Format = '#,###,##0.00'
             Kind = skSum
             FieldName = 'TOTAL_BILLABLE_HOURS'
-            Column = edtBhours
+            Column = edtBHours
           end
           item
             Format = '#,###,##0.00'
@@ -109,11 +109,24 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
             Kind = skSum
             FieldName = 'TOTAL_CARRY_FORWARD'
             Column = edtBCarryForward
+          end
+          item
+            Format = 'Items: #,###,##0'
+            Kind = skCount
+            FieldName = 'THE_PERIOD'
+            Column = edtBPeriod
+          end
+          item
+            Format = 'Items: #,###,##0'
+            Kind = skCount
+            FieldName = 'NAME'
+            Column = edtBName
           end>
         DataController.Summary.SummaryGroups = <>
         OptionsBehavior.FocusCellOnTab = True
         OptionsBehavior.IncSearch = True
         OptionsBehavior.FocusCellOnCycle = True
+        OptionsCustomize.ColumnsQuickCustomization = True
         OptionsData.CancelOnExit = False
         OptionsData.Deleting = False
         OptionsData.DeletingConfirmation = False
@@ -172,11 +185,12 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           Position.ColIndex = 2
           Position.RowIndex = 0
         end
-        object edtBhours: TcxGridDBBandedColumn
+        object edtBHours: TcxGridDBBandedColumn
           DataBinding.FieldName = 'TOTAL_BILLABLE_HOURS'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DisplayFormat = '#,###,##0.00'
           Properties.ReadOnly = True
+          OnGetDisplayText = edtBHoursGetDisplayText
           HeaderAlignmentHorz = taRightJustify
           MinWidth = 90
           Options.Editing = False
@@ -196,6 +210,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DisplayFormat = '#,###,##0.00'
           Properties.ReadOnly = True
+          OnGetDisplayText = edtBHoursGetDisplayText
           HeaderAlignmentHorz = taRightJustify
           MinWidth = 90
           Options.Editing = False
@@ -216,6 +231,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           Properties.DisplayFormat = '#,###,##0.00'
           Properties.EditFormat = '#,###,##0.00'
           Properties.ReadOnly = True
+          OnGetDisplayText = edtBHoursGetDisplayText
           HeaderAlignmentHorz = taRightJustify
           MinWidth = 90
           Options.Editing = False
@@ -249,6 +265,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           Properties.DisplayFormat = '#,###,##0.00'
           Properties.EditFormat = '#,###,##0.00'
           Properties.ReadOnly = True
+          OnGetDisplayText = edtBHoursGetDisplayText
           HeaderAlignmentHorz = taRightJustify
           MinWidth = 90
           Options.Editing = False

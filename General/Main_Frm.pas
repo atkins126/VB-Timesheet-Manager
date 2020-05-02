@@ -1703,8 +1703,11 @@ end;
 procedure TMainFrm.ribMainTabChanged(Sender: TdxCustomRibbon);
 begin
   inherited;
-  litTimesheet.Visible := ribMain.ActiveTab = tabTimesheet;
-  grpLegend.Visible := ribMain.ActiveTab = tabTimesheet;
+  litTimesheet.Visible :=
+    (ribMain.ActiveTab = tabTimesheet)
+    or (ribMain.ActiveTab = tabReports);
+
+  grpLegend.Visible := litTimesheet.Visible;
 end;
 
 procedure TMainFrm.viewTimesheetCustomDrawCell(Sender: TcxCustomGridTableView;
