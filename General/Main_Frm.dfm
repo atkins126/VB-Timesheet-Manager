@@ -805,7 +805,6 @@ inherited MainFrm: TMainFrm
     TabStop = False
     OnTabChanged = ribMainTabChanged
     object tabTimesheet: TdxRibbonTab
-      Active = True
       Caption = 'Timesheet'
       Groups = <
         item
@@ -814,6 +813,7 @@ inherited MainFrm: TMainFrm
       Index = 0
     end
     object tabReports: TdxRibbonTab
+      Active = True
       Caption = 'Reports'
       Groups = <
         item
