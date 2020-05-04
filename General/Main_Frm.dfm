@@ -751,33 +751,13 @@ inherited MainFrm: TMainFrm
       Index = 1
     end
   end
-  object sbrMain: TdxStatusBar [1]
-    Left = 0
-    Top = 732
-    Width = 1455
-    Height = 20
-    Panels = <
-      item
-        PanelStyleClassName = 'TdxStatusBarTextPanelStyle'
-        Width = 150
-      end
-      item
-        PanelStyleClassName = 'TdxStatusBarTextPanelStyle'
-        Width = 100
-      end>
-    PaintStyle = stpsUseLookAndFeel
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Style = []
-  end
-  object ribMain: TdxRibbon [2]
+  object ribMain: TdxRibbon [1]
     Left = 0
     Top = 0
     Width = 1455
-    Height = 115
+    Height = 118
     BarManager = barManager
+    Style = rs2019
     ColorSchemeName = 'UserSkin'
     Fonts.ApplicationButton.Charset = ANSI_CHARSET
     Fonts.ApplicationButton.Color = clWindowText
@@ -801,7 +781,7 @@ inherited MainFrm: TMainFrm
     Fonts.TabHeader.Name = 'Verdana'
     Fonts.TabHeader.Style = []
     Contexts = <>
-    TabOrder = 2
+    TabOrder = 1
     TabStop = False
     OnTabChanged = ribMainTabChanged
     object tabTimesheet: TdxRibbonTab
@@ -831,7 +811,7 @@ inherited MainFrm: TMainFrm
       Index = 2
     end
   end
-  object grdTimesheetBillable: TcxGrid [3]
+  object grdTimesheetBillable: TcxGrid [2]
     Left = 1391
     Top = 230
     Width = 1181
@@ -842,7 +822,7 @@ inherited MainFrm: TMainFrm
     Font.Name = 'Calibri'
     Font.Style = []
     ParentFont = False
-    TabOrder = 3
+    TabOrder = 2
     Visible = False
     object viewTimesheetBillable: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
@@ -1399,7 +1379,7 @@ inherited MainFrm: TMainFrm
       GridView = viewTimesheetBillable
     end
   end
-  object btnSelectAll: TcxButton [4]
+  object btnSelectAll: TcxButton [3]
     Left = 285
     Top = 135
     Width = 85
@@ -1407,10 +1387,10 @@ inherited MainFrm: TMainFrm
     Caption = 'Select All'
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 4
+    TabOrder = 3
     OnClick = btnSelectAllClick
   end
-  object btnSelectNone: TcxButton [5]
+  object btnSelectNone: TcxButton [4]
     Tag = 1
     Left = 376
     Top = 135
@@ -1419,8 +1399,29 @@ inherited MainFrm: TMainFrm
     Caption = 'Select None'
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 5
+    TabOrder = 4
     OnClick = btnSelectAllClick
+  end
+  object sbrMain: TdxRibbonStatusBar [5]
+    Left = 0
+    Top = 729
+    Width = 1455
+    Height = 23
+    Panels = <
+      item
+        PanelStyleClassName = 'TdxStatusBarTextPanelStyle'
+        Width = 150
+      end
+      item
+        PanelStyleClassName = 'TdxStatusBarTextPanelStyle'
+      end>
+    Ribbon = ribMain
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clDefault
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ExplicitTop = 32000
   end
   inherited styRepository: TcxStyleRepository
     Left = 420

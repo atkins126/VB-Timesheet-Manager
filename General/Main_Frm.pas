@@ -22,7 +22,7 @@ uses
   dxBarExtItems, cxBarEditItem, cxMemo, Vcl.Menus, dxScrollbarAnnotations,
   dxRibbonSkins, dxRibbonCustomizationForm, dxRibbon, dxPrnDev, dxPrnDlg,
   cxGridExportLink, cxDataUtils, dxLayoutcxEditAdapters, cxImage, cxLabel,
-  Vcl.StdCtrls, cxButtons;
+  Vcl.StdCtrls, cxButtons, dxRibbonStatusBar;
 
 type
   TMainFrm = class(TBaseLayoutFrm)
@@ -45,7 +45,6 @@ type
     actEdit: TAction;
     actDelete: TAction;
     actRefresh: TAction;
-    sbrMain: TdxStatusBar;
     litTimesheet: TdxLayoutItem;
     grdTimesheet: TcxGrid;
     viewTimesheet: TcxGridDBBandedTableView;
@@ -247,6 +246,7 @@ type
     N6: TMenuItem;
     SelectAll1: TMenuItem;
     ClearAll1: TMenuItem;
+    sbrMain: TdxRibbonStatusBar;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoEditInsertEntry(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
