@@ -21,7 +21,7 @@ uses
   cxDBData, cxCurrencyEdit, cxCalendar, cxMemo, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridBandedTableView, cxGridDBBandedTableView, cxGridCustomView,
   cxGrid, dxPrnDev, dxPrnDlg, cxGridExportLink, dxLayoutcxEditAdapters,
-  dxScreenTip, dxCustomHint, cxHint;
+  dxScreenTip, dxCustomHint, cxHint, cxLabel, cxImage;
 
 type
   TBillableSummaryFrm = class(TBaseLayoutFrm)
@@ -42,9 +42,7 @@ type
     actPrint: TAction;
     actExcel: TAction;
     actPDF: TAction;
-    lucFromPeriod: TcxBarEditItem;
-    lucToPeriod: TcxBarEditItem;
-    lucGroupBy: TcxBarEditItem;
+    lucPeriod: TcxBarEditItem;
     litBillableSummary: TdxLayoutItem;
     litTimesheet: TdxLayoutItem;
     litCarryForward: TdxLayoutItem;
@@ -118,7 +116,6 @@ type
     lvlTimesheet: TcxGridLevel;
     dlgPrint: TdxPrintDialog;
     dlgFileSave: TSaveDialog;
-    cbxSamePeriod: TcxBarEditItem;
     grdBillCfwdExcel: TcxGrid;
     viewBillCfwdExcel: TcxGridDBBandedTableView;
     edtBillCfwdX: TcxGridDBBandedColumn;
@@ -179,6 +176,18 @@ type
     tipRemoveZeroValueItems: TdxScreenTip;
     tipInclude: TdxScreenTip;
     styHintController: TcxHintStyleController;
+    edtDateCarriedForward: TcxGridDBBandedColumn;
+    edtDateCFwdReleased: TcxGridDBBandedColumn;
+    edtReleaseCFwdToPeriod: TcxGridDBBandedColumn;
+    tipFetchPreviousPeriodData: TdxScreenTip;
+    litFetchPreviousPeriodData: TdxLayoutItem;
+    cbxFetchPreviousPeriodData: TcxCheckBox;
+    litReleasedItemColour: TdxLayoutItem;
+    grpTimesheet: TdxLayoutGroup;
+    grpLegend: TdxLayoutGroup;
+    litReleasedItemDescription: TdxLayoutItem;
+    imgCFwdItemColour: TcxImage;
+    lblCFwdItemColour: TcxLabel;
     procedure GetBillableSummary;
     procedure GetBillableTimesheet;
     procedure GetPeriods;
@@ -190,12 +199,7 @@ type
     procedure DoPDF(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure lucGroupByKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure lucGroupByPropertiesChange(Sender: TObject);
-    procedure lucFromPeriodPropertiesEditValueChanged(Sender: TObject);
-    procedure lucToPeriodPropertiesEditValueChanged(Sender: TObject);
-    procedure cbxSamePeriodPropertiesEditValueChanged(Sender: TObject);
-    procedure lucToPeriodPropertiesInitPopup(Sender: TObject);
+    procedure lucPeriodPropertiesEditValueChanged(Sender: TObject);
     procedure DoEditItem(Sender: TObject);
     procedure cbxRemoveZeroBillableItemsPropertiesEditValueChanged(Sender: TObject);
     procedure cbxIncludeReleasedItemsPropertiesEditValueChanged(Sender: TObject);
@@ -212,10 +216,16 @@ type
       ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
     procedure edtBHoursGetDisplayText(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AText: string);
+    procedure viewTimesheetCustomDrawCell(Sender: TcxCustomGridTableView;
+      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
+      var ADone: Boolean);
+    procedure cbxFetchPreviousPeriodDataPropertiesEditValueChanged(
+      Sender: TObject);
   private
     { Private declarations }
     FShowingForm: Boolean;
     GroupItemIndex: Integer;
+    FPeriod: Integer;
 
     procedure OpenTables;
     procedure GetSystemUser;
@@ -250,6 +260,76 @@ uses
   TS_DM,
   TimesheetEdit_Frm,
   Main_Frm;
+
+procedure TBillableSummaryFrm.FormCreate(Sender: TObject);
+var
+  RegKey: TRegistry;
+begin
+  inherited;
+  Caption := 'Billable Summary Report';
+  FShowingForm := True;
+  TcxLookupComboBoxProperties(lucPeriod.Properties).ListSource := ReportDM.dtsPeriod;
+
+  TcxLookupComboBoxProperties(lucSystemUser.Properties).ListSource := ReportDM.dtsSystemUser1;
+  TcxLookupComboBoxProperties(lucCFSystemuser.Properties).ListSource := ReportDM.dtsSystemUser2;
+  TcxLookupComboBoxProperties(lucPriceList.Properties).ListSource := ReportDM.dtsPriceList1;
+  TcxLookupComboBoxProperties(lucCFPriceList.Properties).ListSource := ReportDM.dtsPriceList2;
+  TcxLookupComboBoxProperties(lucRateUnit.Properties).ListSource := ReportDM.dtsRateUnit1;
+  TcxLookupComboBoxProperties(lucCFRateUnit.Properties).ListSource := ReportDM.dtsRateUnit2;
+  TcxLookupComboBoxProperties(lucActivityType.Properties).ListSource := ReportDM.dtsActivityType1;
+  TcxLookupComboBoxProperties(lucCFActivityType.Properties).ListSource := ReportDM.dtsActivityType2;
+
+  TcxLookupComboBoxProperties(lucSystemUser.Properties).Buttons.Items[0].Visible := False;
+  TcxLookupComboBoxProperties(lucCFSystemuser.Properties).Buttons.Items[0].Visible := False;
+  TcxLookupComboBoxProperties(lucPriceList.Properties).Buttons.Items[0].Visible := False;
+  TcxLookupComboBoxProperties(lucCFPriceList.Properties).Buttons.Items[0].Visible := False;
+  TcxLookupComboBoxProperties(lucRateUnit.Properties).Buttons.Items[0].Visible := False;
+  TcxLookupComboBoxProperties(lucCFRateUnit.Properties).Buttons.Items[0].Visible := False;
+  TcxLookupComboBoxProperties(lucActivityType.Properties).Buttons.Items[0].Visible := False;
+  TcxLookupComboBoxProperties(lucCFActivityType.Properties).Buttons.Items[0].Visible := False;
+
+  viewBillableSummary.DataController.DataSource := ReportDM.dtsBillableSummary;
+  viewBillCfwdExcel.DataController.DataSource := ReportDM.dtsBillCFwdExcel;
+  viewTimesheet.DataController.DataSource := ReportDM.dtsTimesheetDetail;
+  viewCarryForwardDetail.DataController.DataSource := ReportDM.dtsTimesheetCF;
+  grpData.ItemIndex := 0;
+
+  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+  RegKey.RootKey := HKEY_CURRENT_USER;
+  try
+    RegKey.OpenKey(KEY_TIMESHEET_BILLABLE_SUMMARY_REPORT, True);
+
+    if not RegKey.ValueExists('Include Released Items') then
+      RegKey.WriteBool('Include Released Items', True);
+
+    if not RegKey.ValueExists('Remove Zero Billable Values') then
+      RegKey.WriteBool('Remove Zero Billable Values', True);
+
+    if not RegKey.ValueExists('Fetch Previous Period When Launching') then
+      RegKey.WriteBool('Fetch Previous Period When Launching', True);
+
+    cbxRemoveZeroBillableItems.Checked := RegKey.ReadBool('Remove Zero Billable Values');
+    cbxIncludeReleasedItems.Checked := RegKey.ReadBool('Include Released Items');
+    cbxFetchPreviousPeriodData.Checked := RegKey.ReadBool('Fetch Previous Period When Launching');
+
+    RegKey.CloseKey;
+    OpenTables;
+
+  finally
+    lucPeriodPropertiesEditValueChanged(lucPeriod.Properties);
+    RegKey.Free;
+  end;
+end;
+
+procedure TBillableSummaryFrm.FormShow(Sender: TObject);
+begin
+  inherited;
+//  GetBillableSummary;
+//  GetBillableTimesheet;
+  FShowingForm := False;
+  WindowState := wsMaximized;
+  Screen.Cursor := crDefault;
+end;
 
 procedure TBillableSummaryFrm.DoCloseForm(Sender: TObject);
 begin
@@ -411,13 +491,12 @@ begin
     grdBillableSummary.Font.Size := 8;
     grdBillableSummary.Align := alClient;
     grdBillableSummary.Visible := True;
+
     if not ReportDM.cdsBillableSummary.Locate('CUSTOMER_ID', CustomerID, []) then
       ReportDM.cdsBillableSummary.First;
-    if lucFromPeriod.EditValue <> lucToPeriod.EditValue then
-      viewBillableSummary.ViewData.Collapse(True);
+
+    viewBillableSummary.ViewData.Expand(True);
     viewBillableSummary.DataController.EndUpdate;
-//    edtBPeriod.Caption := '    Period';
-//    edtBName.Caption := '    Customer';
   end;
 end;
 
@@ -461,14 +540,7 @@ begin
 //  GetTimesheetDetail;
 
   CustomerID := ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger;
-
-  lucGroupBy.SetFocus;
-  AComboBox := TcxBarEditItemControl(lucGroupBy.Links[0].Control).Edit as TcxComboBox;
-
-  case AComboBox.ItemIndex of
-    0: RepFileName := TSDM.ShellResource.ReportFolder + 'BillableSummaryByPeriod.fr3';
-    1: RepFileName := TSDM.ShellResource.ReportFolder + 'BillableSummaryByCustomer.fr3';
-  end;
+  RepFileName := TSDM.ShellResource.ReportFolder + 'BillableSummaryByCustomer.fr3';
 
   if not TFile.Exists(RepFileName) then
     raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
@@ -502,27 +574,9 @@ var
 begin
   inherited;
   CustomerID := ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger;
-  lucGroupBy.SetFocus;
-  AComboBox := TcxBarEditItemControl(lucGroupBy.Links[0].Control).Edit as TcxComboBox;
-
-  case AComboBox.ItemIndex of
-    0:
-      begin
-        if lucFromPeriod.EditValue <> lucToPeriod.EditValue then
-          edtBPeriod.GroupIndex := 0;
-        ReportDM.cdsBillableSummary.IndexName := 'idxBillablePeriod';
-        ReportDM.Report := ReportDM.rptBillableSummaryByPeriod;
-        RepFileName := TSDM.ShellResource.ReportFolder + 'BillableSummaryByPeriod.fr3';
-      end;
-    1:
-      begin
-        if lucFromPeriod.EditValue <> lucToPeriod.EditValue then
-          edtBName.GroupIndex := 0;
-        ReportDM.cdsBillableSummary.IndexName := 'idxBillableCustomer';
-        ReportDM.Report := ReportDM.rptBillableSummaryByCustomer;
-        RepFileName := TSDM.ShellResource.ReportFolder + 'BillableSummaryByCustomer.fr3';
-      end;
-  end;
+  ReportDM.cdsBillableSummary.IndexName := 'idxBillableCustomer';
+  ReportDM.Report := ReportDM.rptBillableSummaryByCustomer;
+  RepFileName := TSDM.ShellResource.ReportFolder + 'BillableSummaryByCustomer.fr3';
 
   try
     if not TFile.Exists(RepFileName) then
@@ -562,137 +616,31 @@ begin
     TcxCanvas(Msg.WParam).DrawComplexFrame(TcxGridTableDataCellViewInfo(Msg.LParam).ClientBounds, clRed, clRed, cxBordersAll, 1);
 end;
 
-procedure TBillableSummaryFrm.FormCreate(Sender: TObject);
-var
-  RegKey: TRegistry;
-begin
-  inherited;
-  Caption := 'Billable Summary Report';
-  FShowingForm := True;
-  TcxLookupComboBoxProperties(lucFromPeriod.Properties).ListSource := ReportDM.dtsPeriod;
-  TcxLookupComboBoxProperties(lucToPeriod.Properties).ListSource := ReportDM.dtsToPeriod;
-
-  TcxLookupComboBoxProperties(lucSystemUser.Properties).ListSource := ReportDM.dtsSystemUser1;
-  TcxLookupComboBoxProperties(lucCFSystemuser.Properties).ListSource := ReportDM.dtsSystemUser2;
-  TcxLookupComboBoxProperties(lucPriceList.Properties).ListSource := ReportDM.dtsPriceList1;
-  TcxLookupComboBoxProperties(lucCFPriceList.Properties).ListSource := ReportDM.dtsPriceList2;
-  TcxLookupComboBoxProperties(lucRateUnit.Properties).ListSource := ReportDM.dtsRateUnit1;
-  TcxLookupComboBoxProperties(lucCFRateUnit.Properties).ListSource := ReportDM.dtsRateUnit2;
-  TcxLookupComboBoxProperties(lucActivityType.Properties).ListSource := ReportDM.dtsActivityType1;
-  TcxLookupComboBoxProperties(lucCFActivityType.Properties).ListSource := ReportDM.dtsActivityType2;
-
-  TcxLookupComboBoxProperties(lucSystemUser.Properties).Buttons.Items[0].Visible := False;
-  TcxLookupComboBoxProperties(lucCFSystemuser.Properties).Buttons.Items[0].Visible := False;
-  TcxLookupComboBoxProperties(lucPriceList.Properties).Buttons.Items[0].Visible := False;
-  TcxLookupComboBoxProperties(lucCFPriceList.Properties).Buttons.Items[0].Visible := False;
-  TcxLookupComboBoxProperties(lucRateUnit.Properties).Buttons.Items[0].Visible := False;
-  TcxLookupComboBoxProperties(lucCFRateUnit.Properties).Buttons.Items[0].Visible := False;
-  TcxLookupComboBoxProperties(lucActivityType.Properties).Buttons.Items[0].Visible := False;
-  TcxLookupComboBoxProperties(lucCFActivityType.Properties).Buttons.Items[0].Visible := False;
-
-  viewBillableSummary.DataController.DataSource := ReportDM.dtsBillableSummary;
-  viewTimesheet.DataController.DataSource := ReportDM.dtsTimesheetDetail;
-  viewCarryForwardDetail.DataController.DataSource := ReportDM.dtsTimesheetCF;
-  grpData.ItemIndex := 0;
-
-  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
-  RegKey.RootKey := HKEY_CURRENT_USER;
-  try
-    RegKey.OpenKey(KEY_TIMESHEET_BILLABLE_SUMMARY_REPORT, True);
-
-    if not RegKey.ValueExists('To Period same as From Period') then
-      RegKey.WriteBool('To Period same as From Period', True);
-
-    if not RegKey.ValueExists('Include Released Items') then
-      RegKey.WriteBool('Include Released Items', True);
-
-    if not RegKey.ValueExists('Remove Zero Billable Values') then
-      RegKey.WriteBool('Remove Zero Billable Values', True);
-
-    cbxSamePeriod.EditValue := RegKey.ReadBool('To Period same as From Period');
-    cbxSamePeriodPropertiesEditValueChanged(cbxSamePeriod.Properties);
-    cbxRemoveZeroBillableItems.Checked := RegKey.ReadBool('Remove Zero Billable Values');
-    cbxIncludeReleasedItems.Checked := RegKey.ReadBool('Include Released Items');
-
-    RegKey.CloseKey;
-    OpenTables;
-
-    if not ReportDM.cdsPeriod.Locate('THE_PERIOD', VBBaseDM.CurrentPeriod, []) then
-    begin
-      ReportDM.cdsPeriod.Last;
-      ReportDM.cdsToPeriod.Last;
-      VBBaseDM.CurrentPeriod := ReportDM.cdsPeriod.FieldByName('THE_PERIOD').AsInteger;
-    end;
-
-    lucFromPeriod.EditValue := VBBaseDM.CurrentPeriod;
-    lucToPeriod.EditValue := VBBaseDM.CurrentPeriod;
-    lucToPeriod.Properties.ReadOnly := cbxSamePeriod.EditValue;
-    lucFromPeriodPropertiesEditValueChanged(lucFromPeriod.Properties);
-    lucGroupBy.EditValue := 'Period';
-  finally
-    RegKey.Free;
-  end;
-end;
-
-procedure TBillableSummaryFrm.FormShow(Sender: TObject);
-begin
-  inherited;
-//  GetBillableSummary;
-//  GetBillableTimesheet;
-  FShowingForm := False;
-  WindowState := wsMaximized;
-  Screen.Cursor := crDefault;
-end;
-
 procedure TBillableSummaryFrm.GetBillableSummary;
 var
   Response: TStringList;
-  FromPeriod, ToPeriod, Period: Integer;
+//  FromPeriod, Period: Integer;
   WhereClause, OrderByClause, FileName: string;
   AComboBox: TcxComboBox;
-  SamePeriod: Boolean;
+//  SamePeriod: Boolean;
 const
-  SQL_PERIOD = 'SELECT THE_PERIOD FROM SourcePeriod WHERE THE_PERIOD >= %d AND THE_PERIOD <= %d';
+//  SQL_PERIOD = 'SELECT THE_PERIOD FROM SourcePeriod WHERE THE_PERIOD >= %d AND THE_PERIOD <= %d';
+  SQL_PERIOD = 'SELECT THE_PERIOD FROM SourcePeriod WHERE THE_PERIOD = %d';
   SQL_DELETE_SUMMARY_DATA = 'DELETE FROM BILLABLE_SUMMARY WHERE USER_ID = %d';
 begin
   inherited;
-//  case lucGroupBy.EditValue of
-//    0: ReportDM.Report := ReportDM.rptBillableSummaryByPeriod;
-//    1: ReportDM.Report := ReportDM.rptBillableSummaryByCustomer;
-//  end;
-
-  if lucGroupBy.EditValue = 'Period' then
-    ReportDM.Report := ReportDM.rptBillableSummaryByPeriod
-  else if lucGroupBy.EditValue = 'Customer' then
-    ReportDM.Report := ReportDM.rptBillableSummaryByCustomer;
-
-//  if (Length(Trim(lucFromPeriod.Text)) = 0)
-//    or (Length(Trim(lucBillableToPeriod.Text)) = 0) then
-//  begin
-//    Beep;
-//    DisplayMsg(Application.Title,
-//      'Invalid Selection',
-//      'Invalid periods selected. Please correct and try again.',
-//      mtError,
-//      [mbOK]
-//      );
-//    Exit;
-//  end;
-
-  if lucFromPeriod.EditValue > lucToPeriod.EditValue then
-    raise ESelectionException.Create('From period cannot be greater than To period.');
-
+  ReportDM.Report := ReportDM.rptBillableSummaryByCustomer;
   ReportDM.locSQL.Active := True;
-  Response := RUtils.CreateStringList(PIPE, SINGLE_QUOTE);
+  Response := RUtils.CreateStringList(PIPE, DOUBLE_QUOTE);
   try
     if not ReportDM.conSQLLite.Connected then
       ReportDM.conSQLLite.Connected := True;
 
     ReportDM.qryPeriod.Close;
-    FromPeriod := ReportDM.cdsPeriod.FieldByName('THE_PERIOD').AsInteger;
-    ToPeriod := ReportDM.cdsToPeriod.FieldByName('THE_PERIOD').AsInteger;
-    ReportDM.qryPeriod.Open(Format(SQL_PERIOD, [FromPeriod, ToPeriod]));
-    ReportDM.qryPeriod.First;
+    ReportDM.cdsPeriod.Prior;
+//    FromPeriod := ReportDM.cdsPeriod.FieldByName('THE_PERIOD').AsInteger;
+    ReportDM.qryPeriod.Open(Format(SQL_PERIOD, [FPeriod]));
+//    ReportDM.qryPeriod.First;
 
     // Delete all billable summary table items for this user
     Response.DelimitedText := VBBaseDM.ExecuteSQLCommand(Format(SQL_DELETE_SUMMARY_DATA, [VBBaseDM.UserData.UserID]));
@@ -701,17 +649,17 @@ begin
         Response.Values['ERROR_MESSAGE']);
 
     // Generate billable data for each selected period
-    while not ReportDM.qryPeriod.EOF do
-    begin
-      Period := ReportDM.qryPeriod.FieldByName('THE_PERIOD').AsInteger;
-      Response.DelimitedText := VBBaseDM.ExecuteStoredProcedure('SP_GEN_BILLABLE_SUMMARY_TABLE', VBBaseDM.UserData.UserID.ToString + ',' + Period.ToString);
+//    while not ReportDM.qryPeriod.EOF do
+//    begin
+//    Period := ReportDM.qryPeriod.FieldByName('THE_PERIOD').AsInteger;
+    Response.DelimitedText := VBBaseDM.ExecuteStoredProcedure('SP_GEN_BILLABLE_SUMMARY_TABLE', VBBaseDM.UserData.UserID.ToString + ',' + FPeriod.ToString);
 
-      if SameText(Response.Values['RESPONSE'], 'ERROR') then
-        raise EServerError.Create('One or more errors occurred when generating the billable summary data with error message:' + CRLF + CRLF +
-          Response.Values['ERROR_MESSAGE']);
+    if SameText(Response.Values['RESPONSE'], 'ERROR') then
+      raise EServerError.Create('One or more errors occurred when generating the billable summary data with error message:' + CRLF + CRLF +
+        Response.Values['ERROR_MESSAGE']);
 
-      ReportDM.qryPeriod.Next;
-    end;
+//      ReportDM.qryPeriod.Next;
+//    end;
 
     // Suppress customers that have no transaactions for billable summary report
     if cbxRemoveZeroBillableItems.EditValue then
@@ -723,21 +671,8 @@ begin
           Response.Values['ERROR_MESSAGE']);
     end;
 
-    lucGroupBy.SetFocus;
-    AComboBox := TcxBarEditItemControl(lucGroupBy.Links[0].Control).Edit as TcxComboBox;
-
-    case AComboBox.ItemIndex of
-      0:
-        begin
-          FileName := 'Billable Summary by Period';
-          OrderByClause := ' ORDER BY B.THE_PERIOD, B."NAME"';
-        end;
-      1:
-        begin
-          FileName := 'Billable Summary by Customer';
-          OrderByClause := ' ORDER BY B."NAME", B.THE_PERIOD';
-        end;
-    end;
+    FileName := 'Billable Summary by Customer';
+    OrderByClause := ' ORDER BY B."NAME"';
 
 //    VBBaseDM.GetData(61, ReportDM.cdsBillableSummary, ReportDM.cdsBillableSummary.Name,
 //      'B.USER_ID = ' + VBBaseDM.UserData.UserID.ToString + ';' + OrderByClause,
@@ -745,16 +680,15 @@ begin
 //      ReportDM.cdsBillableSummary.UpdateOptions.UpdateTableName);
 
     viewBillableSummary.ViewData.Collapse(True);
-    SamePeriod := lucFromPeriod.EditValue = lucToPeriod.EditValue;
-    edtBName.Visible := SamePeriod;
-    edtBPeriod.Visible := not SamePeriod;
-    viewBillableSummary.OptionsView.GroupByBox := not SamePeriod;
+//    SamePeriod := lucPeriod.EditValue = lucToPeriod.EditValue;
+//    edtBName.Visible := SamePeriod;
+//    edtBPeriod.Visible := not SamePeriod;
+//    viewBillableSummary.OptionsView.GroupByBox := not SamePeriod;
 
-    if SamePeriod then
-      edtBName.GroupIndex := -1
-    else
-      edtBName.GroupIndex := 0;
-//      viewBillable.ViewData.Expand(True);
+//    if SamePeriod then
+//      edtBName.GroupIndex := -1
+//    else
+//      edtBName.GroupIndex := 0;
 
     WhereClause :=
       ' WHERE ' + 'B.USER_ID = ' + VBBaseDM.UserData.UserID.ToString + OrderByClause;
@@ -783,9 +717,19 @@ begin
     GroupByClause := ONE_SPACE;
 
     WhereClause :=
-      'WHERE T.THE_PERIOD <= ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) +
-      ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ' +
+      'WHERE T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ' +
+      ' AND (T.THE_PERIOD <= ' + FPeriod.ToString +
+      ' OR T.RELEASE_CFWD_TO_PERIOD = ' + FPeriod.ToString + ') ' +
       ' AND T.CARRY_FORWARD = 1 ';
+
+//    WhereClause :=
+//      'WHERE T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ' +
+//      ' AND (T.THE_PERIOD <= ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) +
+//      ' OR T.RELEASE_CFWD_TO_PERIOD = ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) + ') ' +
+//      ' AND T.CARRY_FORWARD = 1 ';
+
+//        ' AND (T.THE_PERIOD =' + FTimesheetPeriod.ToString +
+//        ' OR T.RELEASE_CFWD_TO_PERIOD = ' + FTimesheetPeriod.ToString + ') '
 
     OrderByClause := ' ORDER BY T.ACTIVITY_DATE';
     FileName := 'C:\Data\Xml\Carry Forward Summary.xml';
@@ -805,21 +749,33 @@ begin
       ReportDM.cdsTimesheetCF.Data := ReportDM.cdsTimesheetDetail.Data;
 
 //    WhereClause :=
-//      'WHERE T.THE_PERIOD >= ' + VarAsType(lucFromPeriod.EditValue, varString) +
+//      'WHERE T.THE_PERIOD >= ' + VarAsType(lucPeriod.EditValue, varString) +
 //      ' AND  T.THE_PERIOD <= ' + VarAsType(lucToPeriod.EditValue, varString) +
 //      ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ';
 
     if cbxIncludeReleasedItems.Checked then
       WhereClause :=
-        'WHERE (T.THE_PERIOD = ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) +
-        ' OR T.RELEASE_CFWD_TO_PERIOD = ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) + ') ' +
-        ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ' +
+        'WHERE T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) +
+        ' AND (T.THE_PERIOD = ' + FPeriod.ToString +
+        ' OR T.RELEASE_CFWD_TO_PERIOD = ' + FPeriod.ToString + ') ' +
         ' AND T.CARRY_FORWARD = 0 '
     else
       WhereClause :=
-        'WHERE T.THE_PERIOD = ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) +
-        ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ' +
+        'WHERE T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ' +
+        ' AND T.THE_PERIOD = ' + FPeriod.ToString +
         ' AND T.CARRY_FORWARD = 0 ';
+
+//    if cbxIncludeReleasedItems.Checked then
+//      WhereClause :=
+//        'WHERE (T.THE_PERIOD = ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) +
+//        ' OR T.RELEASE_CFWD_TO_PERIOD = ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) + ') ' +
+//        ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ' +
+//        ' AND T.CARRY_FORWARD = 0 '
+//    else
+//      WhereClause :=
+//        'WHERE T.THE_PERIOD = ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) +
+//        ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ' +
+//        ' AND T.CARRY_FORWARD = 0 ';
 
     FileName := 'C:\Data\Xml\Timesheet Details.xml';
     WhereClause := WhereClause + OrderByClause;
@@ -844,13 +800,19 @@ begin
     'C:\Data\Xml\Period.xml', ReportDM.cdsPeriod.UpdateOptions.Generatorname,
     ReportDM.cdsPeriod.UpdateOptions.UpdateTableName);
 
-  ReportDM.cdsToPeriod.Data := ReportDM.cdsPeriod.Data;
+  FPeriod := GetCurrentPeriod(Date);
 
-  if not ReportDM.cdsPeriod.Locate('THE_PERIOD', VBBaseDM.CurrentPeriod, []) then
+  if not ReportDM.cdsPeriod.Locate('THE_PERIOD', FPeriod, []) then
     ReportDM.cdsPeriod.Last;
 
-  if not ReportDM.cdsToPeriod.Locate('THE_PERIOD', VBBaseDM.CurrentPeriod, []) then
-    ReportDM.cdsToPeriod.Last;
+  if cbxFetchPreviousPeriodData.Checked then
+  begin
+    ReportDM.cdsPeriod.Prior;
+    FPeriod := ReportDM.cdsPeriod.FieldByName('THE_PERIOD').AsInteger;
+  end;
+
+  lucPeriod.EditValue := FPeriod;
+//  lucPeriodPropertiesEditValueChanged(TcxLookupComboBox(lucPeriod));
 end;
 
 procedure TBillableSummaryFrm.GetPriceList;
@@ -886,70 +848,10 @@ begin
   ReportDM.cdsSystemUser2.Data := ReportDM.cdsSystemUser1.Data;
 end;
 
-procedure TBillableSummaryFrm.lucFromPeriodPropertiesEditValueChanged(Sender: TObject);
+procedure TBillableSummaryFrm.lucPeriodPropertiesEditValueChanged(Sender: TObject);
 begin
   inherited;
-  lucGroupBy.Properties.ReadOnly := lucFromPeriod.EditValue = lucToPeriod.EditValue;
-  if cbxSamePeriod.EditValue then
-    lucToPeriod.EditValue := lucFromPeriod.EditValue;
-
-  if lucFromPeriod.EditValue > lucToPeriod.EditValue then
-    raise EValidateException.Create('To Period must be later than From Period.');
-end;
-
-procedure TBillableSummaryFrm.lucToPeriodPropertiesEditValueChanged(Sender: TObject);
-begin
-  inherited;
-  lucGroupBy.Properties.ReadOnly := lucFromPeriod.EditValue = lucToPeriod.EditValue;
-
-  if lucFromPeriod.EditValue > lucToPeriod.EditValue then
-    raise EValidateException.Create('To Period must be later than From Period.');
-end;
-
-procedure TBillableSummaryFrm.lucToPeriodPropertiesInitPopup(Sender: TObject);
-begin
-  inherited;
-  TcxLookupComboBox(Sender).DroppedDown := not TcxLookupComboBox(Sender).Properties.ReadOnly
-end;
-
-procedure TBillableSummaryFrm.lucGroupByKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-begin
-  inherited;
-  if not TcxComboBox(Sender).DroppedDown then
-    Exit;
-end;
-
-procedure TBillableSummaryFrm.lucGroupByPropertiesChange(Sender: TObject);
-var
-  AComboBox: TcxComboBox;
-begin
-  inherited;
-  viewBillableSummary.OnCustomDrawCell := nil;
-  edtBPeriod.GroupIndex := -1;
-  edtBName.GroupIndex := -1;
-
-  lucGroupBy.SetFocus;
-  AComboBox := TcxBarEditItemControl(lucGroupBy.Links[0].Control).Edit as TcxComboBox;
-  case AComboBox.ItemIndex of
-    0:
-      begin
-        edtBPeriod.GroupIndex := 0;
-        ReportDM.cdsBillableSummary.IndexName := 'idxBillablePeriod';
-        ReportDM.Report := ReportDM.rptBillableSummaryByPeriod;
-      end;
-    1:
-      begin
-        edtBName.GroupIndex := 0;
-        ReportDM.cdsBillableSummary.IndexName := 'idxBillableCustomer';
-        ReportDM.Report := ReportDM.rptBillableSummaryByCustomer;
-      end;
-  end;
-  try
-    edtBPeriod.Visible := edtBPeriod.GroupIndex = -1;
-    edtBName.Visible := not edtBPeriod.Visible;
-  finally
-    viewBillableSummary.OnCustomDrawCell := viewBillableSummaryCustomDrawCell;
-  end;
+  FPeriod := ReportDM.qryPeriod.FieldByName('THE_PERIOD').AsInteger;
 end;
 
 procedure TBillableSummaryFrm.GetActivityType;
@@ -1065,12 +967,32 @@ begin
       RegKey.WriteBool('Remove Zero Billable Values', True);
 
       RegKey.CloseKey;
-      lucToPeriod.Properties.ReadOnly := cbxSamePeriod.EditValue;
-      TcxLookupComboBoxProperties(lucToPeriod.Properties).Buttons[0].Visible :=
-        not cbxSamePeriod.EditValue;
+//      lucToPeriod.Properties.ReadOnly := cbxSamePeriod.EditValue;
+//      TcxLookupComboBoxProperties(lucToPeriod.Properties).Buttons[0].Visible :=
+//        not cbxSamePeriod.EditValue;
+//
+//      TcxLookupComboBoxProperties(lucToPeriod.Properties).ImmediateDropDownWhenKeyPressed :=
+//        not cbxSamePeriod.EditValue;
+    finally
+      RegKey.Free;
+    end;
+  end;
+end;
 
-      TcxLookupComboBoxProperties(lucToPeriod.Properties).ImmediateDropDownWhenKeyPressed :=
-        not cbxSamePeriod.EditValue;
+procedure TBillableSummaryFrm.cbxFetchPreviousPeriodDataPropertiesEditValueChanged(Sender: TObject);
+var
+  RegKey: TRegistry;
+begin
+  inherited;
+  if not FShowingForm then
+  begin
+    RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+    RegKey.RootKey := HKEY_CURRENT_USER;
+    try
+      RegKey.OpenKey(KEY_TIMESHEET_BILLABLE_SUMMARY_REPORT, True);
+      RegKey.WriteBool('Fetch Previous Period When Launching', cbxFetchPreviousPeriodData.Checked);
+
+      RegKey.CloseKey;
     finally
       RegKey.Free;
     end;
@@ -1091,37 +1013,12 @@ begin
       RegKey.WriteBool('Include Released Items', True);
 
       RegKey.CloseKey;
-      lucToPeriod.Properties.ReadOnly := cbxSamePeriod.EditValue;
-      TcxLookupComboBoxProperties(lucToPeriod.Properties).Buttons[0].Visible :=
-        not cbxSamePeriod.EditValue;
-
-      TcxLookupComboBoxProperties(lucToPeriod.Properties).ImmediateDropDownWhenKeyPressed :=
-        not cbxSamePeriod.EditValue;
-    finally
-      RegKey.Free;
-    end;
-  end;
-end;
-
-procedure TBillableSummaryFrm.cbxSamePeriodPropertiesEditValueChanged(Sender: TObject);
-var
-  RegKey: TRegistry;
-begin
-  inherited;
-  if not FShowingForm then
-  begin
-    RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
-    RegKey.RootKey := HKEY_CURRENT_USER;
-    try
-      RegKey.OpenKey(KEY_TIMESHEET_BILLABLE_SUMMARY_REPORT, True);
-      RegKey.WriteBool('To Period same as From Period', cbxSamePeriod.EditValue);
-      RegKey.CloseKey;
-      lucToPeriod.Properties.ReadOnly := cbxSamePeriod.EditValue;
-      TcxLookupComboBoxProperties(lucToPeriod.Properties).Buttons[0].Visible :=
-        not cbxSamePeriod.EditValue;
-
-      TcxLookupComboBoxProperties(lucToPeriod.Properties).ImmediateDropDownWhenKeyPressed :=
-        not cbxSamePeriod.EditValue;
+//      lucToPeriod.Properties.ReadOnly := cbxSamePeriod.EditValue;
+//      TcxLookupComboBoxProperties(lucToPeriod.Properties).Buttons[0].Visible :=
+//        not cbxSamePeriod.EditValue;
+//
+//      TcxLookupComboBoxProperties(lucToPeriod.Properties).ImmediateDropDownWhenKeyPressed :=
+//        not cbxSamePeriod.EditValue;
     finally
       RegKey.Free;
     end;
@@ -1319,19 +1216,47 @@ begin
         AText := '';
     end
 
-    else
-    if TcxCustomGridTableItem(Sender).Name = 'edtBNonHours' then
+    else if TcxCustomGridTableItem(Sender).Name = 'edtBNonHours' then
     begin
       if ARecord.Values[edtBNonHours.Index] = 0 then
         AText := '';
     end
 
-    else
-    if TcxCustomGridTableItem(Sender).Name = 'edtBCarryForward' then
+    else if TcxCustomGridTableItem(Sender).Name = 'edtBCarryForward' then
     begin
       if ARecord.Values[edtBCarryForward.Index] = 0 then
         AText := '';
     end;
+  end;
+end;
+
+procedure TBillableSummaryFrm.viewTimesheetCustomDrawCell(
+  Sender: TcxCustomGridTableView; ACanvas: TcxCanvas;
+  AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
+begin
+  inherited;
+  if AViewInfo.GridRecord = nil then
+    Exit;
+
+  if AViewInfo.GridRecord.Values[edtReleaseCfwdToPeriod.Index] > 0 then
+  begin
+    if AViewInfo.Item <> nil then
+//      if AViewInfo.Item <> cbxApproved then
+//      begin
+      ACanvas.Brush.Color := $00E4FFCA; //$9EFEB1; //$7EE4FE; // Color := $54DCFE; // $C1E0FF; //$D7E3FF; // $FFE1F0;
+    ACanvas.Font.Color := RootLookAndFeel.SkinPainter.DefaultSelectionColor;
+//      end;
+  end;
+
+  if AViewInfo.GridRecord.Focused then
+  begin
+    if AViewInfo.Item <> nil then
+      if AViewInfo.Item.Focused then
+      begin
+        ACanvas.Brush.Color := $B6EDFA;
+        ACanvas.Font.Color := RootLookAndFeel.SkinPainter.DefaultSelectionColor;
+        PostMessage(Handle, CM_DRAWBORDER, Integer(ACanvas), Integer(AViewInfo));
+      end;
   end;
 end;
 

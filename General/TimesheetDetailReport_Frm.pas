@@ -397,9 +397,9 @@ begin
   layMain.LayoutLookAndFeel := lafCustomSkin;
 //  TcxDateEditProperties(lucTSActivityDate.Properties).MinDate := StrToDate('01/01/2019');
 //  TcxDateEditProperties(lucTSActivityDate.Properties).MaxDate := Date;
-  FSortOptioinsList := RUtils.CreateStringList(COMMA, SINGLE_QUOTE);
+  FSortOptioinsList := RUtils.CreateStringList(COMMA, DOUBLE_QUOTE);
   edtOrdValue.SortOrder := soAscending;
-  FSortListID := RUtils.CreateStringList(COMMA, SINGLE_QUOTE);
+  FSortListID := RUtils.CreateStringList(COMMA, DOUBLE_QUOTE);
   FShowingForm := True;
 
   if ReportDM = nil then

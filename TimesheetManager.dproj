@@ -194,8 +194,8 @@
             <Form>MonthlyBillableReportFrm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="General\ReleaseCFwd_Frm.pas">
-            <Form>ReleaseCFwdFrm</Form>
+        <DCCReference Include="General\CarryForward_Frm.pas">
+            <Form>CarryForwardFrm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\Lib\VBProxyClass.pas"/>

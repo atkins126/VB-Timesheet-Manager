@@ -1,4 +1,4 @@
-unit ReleaseCFwd_Frm;
+unit CarryForward_Frm;
 
 interface
 
@@ -26,7 +26,7 @@ uses
 type
 //  TcxLookupComboBoxAccess = class (TcxLookupComboBox);
 
-  TReleaseCFwdFrm = class(TBaseLayoutFrm)
+  TCarryForwardFrm = class(TBaseLayoutFrm)
     grdTimesheet: TcxGrid;
     viewTimesheet: TcxGridDBBandedTableView;
     edtTID: TcxGridDBBandedColumn;
@@ -161,7 +161,7 @@ type
   end;
 
 var
-  ReleaseCFwdFrm: TReleaseCFwdFrm;
+  CarryForwardFrm: TCarryForwardFrm;
 
 implementation
 
@@ -174,14 +174,14 @@ uses
   Report_DM, TimesheetOptions_Frm;
 //  Progress_Frm;
 
-procedure TReleaseCFwdFrm.DrawCellBorder(var Msg: TMessage);
+procedure TCarryForwardFrm.DrawCellBorder(var Msg: TMessage);
 begin
   if (TObject(Msg.WParam) is TcxCanvas)
     and (TObject(Msg.LParam) is TcxGridTableDataCellViewInfo) then
     TcxCanvas(Msg.WParam).DrawComplexFrame(TcxGridTableDataCellViewInfo(Msg.LParam).ClientBounds, clRed, clRed, cxBordersAll, 1);
 end;
 
-procedure TReleaseCFwdFrm.edtTThePeriodGetDisplayText(
+procedure TCarryForwardFrm.edtTThePeriodGetDisplayText(
   Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord; var AText: string);
 var
   TheYear, TheMonth: Integer;
@@ -201,12 +201,12 @@ begin
 //    AText := TcxGridGroupRow(ARecord).Values[edtTPeriodName.Index];
 end;
 
-procedure TReleaseCFwdFrm.FormCreate(Sender: TObject);
+procedure TCarryForwardFrm.FormCreate(Sender: TObject);
 var
   RegKey: TRegistry;
 begin
   inherited;
-  Caption := 'Carry forward release manager';
+  Caption := 'Carry forward manager';
   FShowingForm := True;
   FItemsRelease := False;
   viewTimesheet.DataController.DataSource := TSDM.dtsReleaseCFwd;
@@ -286,7 +286,7 @@ begin
   end;
 end;
 
-procedure TReleaseCFwdFrm.FormShow(Sender: TObject);
+procedure TCarryForwardFrm.FormShow(Sender: TObject);
 begin
   inherited;
   WindowState := wsMaximized;
@@ -294,7 +294,7 @@ begin
   Screen.Cursor := crDefault;
 end;
 
-procedure TReleaseCFwdFrm.cbxReleaseToCurrentPeriodPropertiesEditValueChanged(Sender: TObject);
+procedure TCarryForwardFrm.cbxReleaseToCurrentPeriodPropertiesEditValueChanged(Sender: TObject);
 begin
   inherited;
   lucReleaseToPeriod.Properties.ReadOnly := cbxReleaseToCurrentPeriod.Checked;
@@ -319,7 +319,7 @@ begin
   end;
 end;
 
-procedure TReleaseCFwdFrm.DoCloseForm(Sender: TObject);
+procedure TCarryForwardFrm.DoCloseForm(Sender: TObject);
 var
   RegKey: TRegistry;
 begin
@@ -348,19 +348,19 @@ begin
   end;
 end;
 
-procedure TReleaseCFwdFrm.btnExpandAllClick(Sender: TObject);
+procedure TCarryForwardFrm.btnExpandAllClick(Sender: TObject);
 begin
   inherited;
   viewTimesheet.ViewData.Expand(True);
 end;
 
-procedure TReleaseCFwdFrm.btnCollapseAllClick(Sender: TObject);
+procedure TCarryForwardFrm.btnCollapseAllClick(Sender: TObject);
 begin
   inherited;
   viewTimesheet.ViewData.Collapse(True);
 end;
 
-procedure TReleaseCFwdFrm.cbxAllPeriodsPropertiesEditValueChanged(Sender: TObject);
+procedure TCarryForwardFrm.cbxAllPeriodsPropertiesEditValueChanged(Sender: TObject);
 begin
   inherited;
   lucFromPeriod.Properties.ReadOnly := cbxAllPeriods.Checked;
@@ -384,7 +384,7 @@ begin
   end;
 end;
 
-procedure TReleaseCFwdFrm.DoGetTimesheetData(Sender: TObject);
+procedure TCarryForwardFrm.DoGetTimesheetData(Sender: TObject);
 begin
   inherited;
   Screen.Cursor := crHourglass;
@@ -396,7 +396,7 @@ begin
   end;
 end;
 
-procedure TReleaseCFwdFrm.DoOptions(Sender: TObject);
+procedure TCarryForwardFrm.DoOptions(Sender: TObject);
 begin
   inherited;
 //  Screen.Cursor := crHourglass;
@@ -413,7 +413,7 @@ begin
 //  end;
 end;
 
-procedure TReleaseCFwdFrm.DoRelease(Sender: TObject);
+procedure TCarryForwardFrm.DoRelease(Sender: TObject);
 //const
 //  RELEASE_CARRY_FORWARD =
 //    ' UPDATE TIMESHEET SET ' +
@@ -503,7 +503,7 @@ begin
   end;
 end;
 
-procedure TReleaseCFwdFrm.GetPeriods;
+procedure TCarryForwardFrm.GetPeriods;
 begin
   TSDM.cdsToPeriod.Close;
   TSDM.cdsReleaseToPeriod.Close;
@@ -536,7 +536,7 @@ begin
   lucToPeriod.EditValue := FToPeriod;
 end;
 
-procedure TReleaseCFwdFrm.GetTimesheetData;
+procedure TCarryForwardFrm.GetTimesheetData;
 var
   WhereClause, OrderByClause, FileName, DateClause, BillableClause: string;
 //  ActivityClause, BillableClause, WorkTypeClause, FileName: string;
@@ -577,7 +577,7 @@ begin
 
 end;
 
-procedure TReleaseCFwdFrm.lucBillablePropertiesChange(Sender: TObject);
+procedure TCarryForwardFrm.lucBillablePropertiesChange(Sender: TObject);
 var
   RegKey: TRegistry;
 begin
@@ -596,27 +596,27 @@ begin
   end;
 end;
 
-procedure TReleaseCFwdFrm.lucBillablePropertiesInitPopup(Sender: TObject);
+procedure TCarryForwardFrm.lucBillablePropertiesInitPopup(Sender: TObject);
 begin
   inherited;
   if not TcxLookupComboBox(Sender).DroppedDown then
     TcxLookupComboBox(Sender).Properties.UseMouseWheel := False;
 end;
 
-procedure TReleaseCFwdFrm.lucFromPeriodKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+procedure TCarryForwardFrm.lucFromPeriodKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
   inherited;
   if not TcxComboBox(Sender).DroppedDown then
     Abort;
 end;
 
-procedure TReleaseCFwdFrm.lucFromPeriodPropertiesCloseUp(Sender: TObject);
+procedure TCarryForwardFrm.lucFromPeriodPropertiesCloseUp(Sender: TObject);
 begin
   inherited;
   DoMyMouseWheel(TcxLookupComboBox(Sender), False)
 end;
 
-procedure TReleaseCFwdFrm.lucFromPeriodPropertiesEditValueChanged(Sender: TObject);
+procedure TCarryForwardFrm.lucFromPeriodPropertiesEditValueChanged(Sender: TObject);
 //var
 //  RegKey: TRegistry;
 begin
@@ -657,7 +657,7 @@ begin
   end;
 end;
 
-procedure TReleaseCFwdFrm.lucFromPeriodPropertiesInitPopup(Sender: TObject);
+procedure TCarryForwardFrm.lucFromPeriodPropertiesInitPopup(Sender: TObject);
 begin
   inherited;
   if cbxAllPeriods.Checked then
@@ -667,7 +667,7 @@ begin
     DoMyMouseWheel(TcxLookupComboBox(Sender), True);
 end;
 
-procedure TReleaseCFwdFrm.lucFromPeriodPropertiesPopup(Sender: TObject);
+procedure TCarryForwardFrm.lucFromPeriodPropertiesPopup(Sender: TObject);
 begin
   inherited;
   if TcxLookupComboBox(Sender).DroppedDown then
@@ -676,14 +676,14 @@ begin
     DoMyMouseWheel(TcxLookupComboBox(Sender), False)
 end;
 
-procedure TReleaseCFwdFrm.lucReleaseToPeriodPropertiesInitPopup(Sender: TObject);
+procedure TCarryForwardFrm.lucReleaseToPeriodPropertiesInitPopup(Sender: TObject);
 begin
   inherited;
   if cbxReleaseToCurrentPeriod.Checked then
     Abort;
 end;
 
-procedure TReleaseCFwdFrm.viewTimesheetCustomDrawCell(
+procedure TCarryForwardFrm.viewTimesheetCustomDrawCell(
   Sender: TcxCustomGridTableView; ACanvas: TcxCanvas;
   AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
 begin
@@ -709,7 +709,7 @@ begin
   end;
 end;
 
-procedure TReleaseCFwdFrm.viewTimesheetStylesGetGroupStyle(
+procedure TCarryForwardFrm.viewTimesheetStylesGetGroupStyle(
   Sender: TcxGridTableView; ARecord: TcxCustomGridRecord; ALevel: Integer; var AStyle: TcxStyle);
 begin
   inherited;

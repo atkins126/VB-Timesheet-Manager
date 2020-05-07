@@ -32,6 +32,7 @@ inherited MainFrm: TMainFrm
         OnCustomDrawCell = viewTimesheetCustomDrawCell
         OnSelectionChanged = viewTimesheetSelectionChanged
         DataController.DataSource = TSDM.dtsTimesheet
+        DataController.Filter.Options = [fcoCaseInsensitive]
         DataController.Options = [dcoCaseInsensitive, dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoMultiSelectionSyncGroupWithChildren]
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <
@@ -68,6 +69,7 @@ inherited MainFrm: TMainFrm
         OptionsSelection.CheckBoxVisibility = [cbvDataRow, cbvGroupRow, cbvColumnHeader]
         OptionsView.NoDataToDisplayInfoText = '<No Timesheet data to display>'
         OptionsView.Footer = True
+        OptionsView.ShowColumnFilterButtons = sfbAlways
         Bands = <
           item
             Caption = 'General'
@@ -322,12 +324,12 @@ inherited MainFrm: TMainFrm
           Properties.ValueUnchecked = 0
           HeaderAlignmentHorz = taCenter
           HeaderHint = 'Billable status'
-          MinWidth = 30
+          MinWidth = 40
           Options.Editing = False
           Options.IncSearch = False
           Options.HorzSizing = False
           Options.Moving = False
-          Width = 30
+          Width = 40
           Position.BandIndex = 1
           Position.ColIndex = 0
           Position.RowIndex = 0
@@ -583,11 +585,11 @@ inherited MainFrm: TMainFrm
           Properties.ValueUnchecked = 0
           HeaderAlignmentHorz = taCenter
           HeaderHint = 'Item lock status'
-          MinWidth = 30
+          MinWidth = 40
           Options.Editing = False
           Options.IncSearch = False
           Options.HorzSizing = False
-          Width = 30
+          Width = 40
           Position.BandIndex = 0
           Position.ColIndex = 12
           Position.RowIndex = 0
@@ -644,15 +646,17 @@ inherited MainFrm: TMainFrm
           Properties.ReadOnly = True
           MinWidth = 90
           Options.Editing = False
-          Options.Grouping = False
+          Options.Filtering = False
+          Options.IncSearch = False
           Options.HorzSizing = False
           Options.Moving = False
+          Options.Sorting = False
           Width = 90
           Position.BandIndex = 4
           Position.ColIndex = 0
           Position.RowIndex = 0
         end
-        object edtDateCfwdReleased: TcxGridDBBandedColumn
+        object edtDateCFwdReleased: TcxGridDBBandedColumn
           DataBinding.FieldName = 'DATE_CFWD_RELEASED'
           PropertiesClassName = 'TcxDateEditProperties'
           Properties.DisplayFormat = 'dd/mm/yyyy'
@@ -660,15 +664,17 @@ inherited MainFrm: TMainFrm
           Properties.ReadOnly = True
           MinWidth = 90
           Options.Editing = False
-          Options.Grouping = False
+          Options.Filtering = False
+          Options.IncSearch = False
           Options.HorzSizing = False
           Options.Moving = False
+          Options.Sorting = False
           Width = 90
           Position.BandIndex = 4
           Position.ColIndex = 1
           Position.RowIndex = 0
         end
-        object edtReleaseCfwdToPeriod: TcxGridDBBandedColumn
+        object edtReleaseCFwdToPeriod: TcxGridDBBandedColumn
           DataBinding.FieldName = 'RELEASE_CFWD_TO_PERIOD'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 0
@@ -677,9 +683,11 @@ inherited MainFrm: TMainFrm
           Properties.ReadOnly = True
           MinWidth = 65
           Options.Editing = False
+          Options.Filtering = False
           Options.IncSearch = False
           Options.HorzSizing = False
           Options.Moving = False
+          Options.Sorting = False
           Width = 65
           Position.BandIndex = 4
           Position.ColIndex = 2
@@ -702,7 +710,7 @@ inherited MainFrm: TMainFrm
       Left = 11
       Top = 591
       Properties.ReadOnly = True
-      Style.Color = 10419889
+      Style.Color = 15007690
       Style.HotTrack = False
       Style.TransparentBorder = False
       TabOrder = 1
@@ -739,7 +747,7 @@ inherited MainFrm: TMainFrm
       ControlOptions.ShowBorder = False
       Index = 0
     end
-    object litReleasedItemLegend: TdxLayoutItem
+    object litReleasedItemDescription: TdxLayoutItem
       Parent = grpLegend
       AlignVert = avCenter
       CaptionOptions.Text = 'New Item'
@@ -785,6 +793,7 @@ inherited MainFrm: TMainFrm
     TabStop = False
     OnTabChanged = ribMainTabChanged
     object tabTimesheet: TdxRibbonTab
+      Active = True
       Caption = 'Timesheet'
       Groups = <
         item
@@ -793,7 +802,6 @@ inherited MainFrm: TMainFrm
       Index = 0
     end
     object tabReports: TdxRibbonTab
-      Active = True
       Caption = 'Reports'
       Groups = <
         item
@@ -812,8 +820,8 @@ inherited MainFrm: TMainFrm
     end
   end
   object grdTimesheetBillable: TcxGrid [2]
-    Left = 1391
-    Top = 230
+    Left = 1386
+    Top = 200
     Width = 1181
     Height = 421
     Font.Charset = ANSI_CHARSET
@@ -827,7 +835,6 @@ inherited MainFrm: TMainFrm
     object viewTimesheetBillable: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       ScrollbarAnnotations.CustomAnnotations = <>
-      DataController.DataSource = ReportDM.dtsTSBillable
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
@@ -1205,7 +1212,7 @@ inherited MainFrm: TMainFrm
         Properties.DisplayFormat = '######'
         Properties.EditFormat = '######'
         Properties.ReadOnly = True
-        MinWidth = 74
+        MinWidth = 64
         Options.Editing = False
         Options.Filtering = False
         Options.IncSearch = False
@@ -1241,7 +1248,7 @@ inherited MainFrm: TMainFrm
         Properties.DisplayFormat = '######'
         Properties.EditFormat = '######'
         Properties.ReadOnly = True
-        MinWidth = 74
+        MinWidth = 64
         Options.Editing = False
         Options.Filtering = False
         Options.IncSearch = False
@@ -1421,7 +1428,6 @@ inherited MainFrm: TMainFrm
     Font.Height = -11
     Font.Name = 'Tahoma'
     Font.Style = []
-    ExplicitTop = 32000
   end
   inherited styRepository: TcxStyleRepository
     Left = 420
@@ -1625,16 +1631,16 @@ inherited MainFrm: TMainFrm
     object actCarryForward: TAction
       Tag = 130
       Category = 'Carry Forward'
-      Caption = 'Carry Forward'
+      Caption = 'Carry Items Forward'
       Hint = 'Set selected timesheet items as carried forward'
       ImageIndex = 27
       OnExecute = DoCarryForward
     end
-    object actReleaseCFwdManagaer: TAction
+    object actCarryForwardManagaer: TAction
       Tag = 131
       Category = 'Carry Forward'
-      Caption = 'Release CFwd Manager'
-      Hint = 'Launch release carry forward managaer'
+      Caption = 'Release Carry Forward Items'
+      Hint = 'Launch carry forward managaer'
       ImageIndex = 28
       OnExecute = DoReleaseCarryForwardManager
     end
@@ -7777,6 +7783,11 @@ inherited MainFrm: TMainFrm
       Description.Text = 'Clear all tiesheet item selection'
       Width = 220
     end
+    object tipCarryForwardManager: TdxScreenTip
+      Header.Text = 'Carry Forward Manager'
+      Description.Text = 'Manage carry forward items for release to billing'
+      Width = 320
+    end
   end
   object styHintController: TcxHintStyleController
     Global = False
@@ -8201,7 +8212,7 @@ inherited MainFrm: TMainFrm
       LargeImageIndex = 27
     end
     object btnReleaseCFwdManager: TdxBarButton
-      Action = actReleaseCFwdManagaer
+      Action = actCarryForwardManagaer
       Category = 0
       LargeImageIndex = 28
     end
@@ -8294,9 +8305,9 @@ inherited MainFrm: TMainFrm
       ImageIndex = 3
     end
     object Sep7: TdxBarSeparator
-      Caption = 'Print && Export Options'
+      Caption = 'Print && Export Actions'
       Category = 0
-      Hint = 'Print & Export Options'
+      Hint = 'Print & Export Actions'
       Visible = ivAlways
     end
     object btnCopyRecord: TdxBarButton
@@ -8334,6 +8345,22 @@ inherited MainFrm: TMainFrm
       Action = actClearAllSelectedItems
       Category = 0
       ShortCut = 16462
+    end
+    object btnPreview: TdxBarButton
+      Action = actPreview
+      Category = 0
+    end
+    object btnPrint: TdxBarButton
+      Action = actPrint
+      Category = 0
+    end
+    object btnExportToPDF: TdxBarButton
+      Action = actPDF
+      Category = 0
+    end
+    object btnExportToExcel: TdxBarButton
+      Action = actExcel
+      Category = 0
     end
   end
   object imgNav32: TcxImageList
@@ -10046,7 +10073,7 @@ inherited MainFrm: TMainFrm
       Action = actCarryForward
     end
     object ClearCarryForward1: TMenuItem
-      Action = actReleaseCFwdManagaer
+      Action = actCarryForwardManagaer
     end
     object N4: TMenuItem
       Caption = '-'
@@ -10077,6 +10104,22 @@ inherited MainFrm: TMainFrm
       item
         Visible = True
         ItemName = 'Sep7'
+      end
+      item
+        Visible = True
+        ItemName = 'btnPreview'
+      end
+      item
+        Visible = True
+        ItemName = 'btnPrint'
+      end
+      item
+        Visible = True
+        ItemName = 'btnExportToExcel'
+      end
+      item
+        Visible = True
+        ItemName = 'btnExportToPDF'
       end>
     UseOwnFont = False
     Left = 450

@@ -22,7 +22,7 @@ uses
   dxBarExtItems, cxBarEditItem, cxMemo, Vcl.Menus, dxScrollbarAnnotations,
   dxRibbonSkins, dxRibbonCustomizationForm, dxRibbon, dxPrnDev, dxPrnDlg,
   cxGridExportLink, cxDataUtils, dxLayoutcxEditAdapters, cxImage, cxLabel,
-  Vcl.StdCtrls, cxButtons, dxRibbonStatusBar;
+  Vcl.StdCtrls, cxButtons, dxRibbonStatusBar, dxSkinMoneyTwins;
 
 type
   TMainFrm = class(TBaseLayoutFrm)
@@ -185,7 +185,7 @@ type
     Invoice1: TMenuItem;
     UnInvoice1: TMenuItem;
     actCarryForward: TAction;
-    actReleaseCFwdManagaer: TAction;
+    actCarryForwardManagaer: TAction;
     btnCarryForward: TdxBarButton;
     btnReleaseCFwdManager: TdxBarButton;
     N4: TMenuItem;
@@ -196,8 +196,8 @@ type
     actMonthlyBilling: TAction;
     btnMonthlyBilling: TdxBarLargeButton;
     tipMonthlyBilling: TdxScreenTip;
-    edtDateCfwdReleased: TcxGridDBBandedColumn;
-    edtReleaseCfwdToPeriod: TcxGridDBBandedColumn;
+    edtDateCFwdReleased: TcxGridDBBandedColumn;
+    edtReleaseCFwdToPeriod: TcxGridDBBandedColumn;
     tipReleaseCFwdManager: TdxScreenTip;
     edtPeriodName: TcxGridDBBandedColumn;
     cbxPersistentSelection: TcxBarEditItem;
@@ -209,7 +209,7 @@ type
     tipPersistentRecordSelection: TdxScreenTip;
     grpLegend: TdxLayoutGroup;
     litReleasedItemColour: TdxLayoutItem;
-    litReleasedItemLegend: TdxLayoutItem;
+    litReleasedItemDescription: TdxLayoutItem;
     lblCFwdItemColour: TcxLabel;
     imgCFwdItemColour: TcxImage;
     Sep1: TdxBarSeparator;
@@ -247,6 +247,11 @@ type
     SelectAll1: TMenuItem;
     ClearAll1: TMenuItem;
     sbrMain: TdxRibbonStatusBar;
+    tipCarryForwardManager: TdxScreenTip;
+    btnPreview: TdxBarButton;
+    btnPrint: TdxBarButton;
+    btnExportToPDF: TdxBarButton;
+    btnExportToExcel: TdxBarButton;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoEditInsertEntry(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
@@ -343,7 +348,8 @@ uses
   TimesheetActivitySummary_Frm,
   InvoiceItem_Frm,
   MonthlyBillableReport_Frm,
-  ReleaseCFwd_Frm;
+  CarryForward_Frm;
+//  ReleaseCFwd_Frm;
 
 procedure TMainFrm.DrawCellBorder(var Msg: TMessage);
 begin
@@ -681,12 +687,12 @@ begin
     ID := viewTimesheet.Controller.SelectedRecords[0].Values[edtID.Index];
 
   try
-    if ReleaseCFwdFrm = nil then
-      ReleaseCFwdFrm := TReleaseCFwdFrm.Create(nil);
+    if CarryForwardFrm = nil then
+      CarryForwardFrm := TCarryForwardFrm.Create(nil);
 
-    ReleaseCFwdFrm.ShowModal;
+    CarryForwardFrm.ShowModal;
 
-    if ReleaseCFwdFrm.ItemsRelease then
+    if CarryForwardFrm.ItemsRelease then
     begin
       actGetTimesheetData.Execute;
       viewTimesheet.Controller.ClearSelection;
@@ -695,8 +701,8 @@ begin
         TSDM.cdsTimesheet.First;
     end;
 
-    ReleaseCFwdFrm.Close;
-    FreeAndNil(ReleaseCFwdFrm);
+    CarryForwardFrm.Close;
+    FreeAndNil(CarryForwardFrm);
   finally
     Screen.Cursor := crDefault;
   end;
@@ -804,7 +810,7 @@ begin
 
   if ChangeCount > 0 then
   begin
-    Response := RUtils.CreateStringList(PIPE, SINGLE_QUOTE);
+    Response := RUtils.CreateStringList(PIPE, DOUBLE_QUOTE);
 
     try
       CommandString := Format(CARRY_FORWARD_STATUS_CHANGE, [AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', Date), ''''), IDValues]);
@@ -927,7 +933,7 @@ begin
 
   if ChangeCount > 0 then
   begin
-    Response := RUtils.CreateStringList(PIPE, SINGLE_QUOTE);
+    Response := RUtils.CreateStringList(PIPE, DOUBLE_QUOTE);
 
     try
       CommandString := Format(APPROVE_STATUS_CHANGE, [Approve, IDValues]);
@@ -1131,13 +1137,13 @@ begin
 
   if ChangeCount > 0 then
   begin
-    Response := RUtils.CreateStringList(PIPE, SINGLE_QUOTE);
+    Response := RUtils.CreateStringList(PIPE, DOUBLE_QUOTE);
 
     try
       CommandString := Format(BILLABLE_STATUS_CHANGE, [Bill, IDValues]);
       Response.DelimitedText := VBBaseDM.Client.ExecuteSQLCommand(CommandString);
 
-      if SameText(Response.Values['RESPNSE'], 'ERROR') then
+      if SameText(Response.Values['RESPONSE'], 'ERROR') then
         raise EServerError.Create('One or more errors occurred when posting data to the database with message;' + CRLF + CRLF +
           Response.Values['ERROR_MESSAGE']);
     finally
@@ -1722,7 +1728,7 @@ begin
     if AViewInfo.Item <> nil then
       if AViewInfo.Item <> cbxApproved then
       begin
-        ACanvas.Brush.Color := $9EFEB1; //$7EE4FE; // Color := $54DCFE; // $C1E0FF; //$D7E3FF; // $FFE1F0;
+        ACanvas.Brush.Color := $00E4FFCA; //$009EFEB1; //$9EFEB1; //$7EE4FE; // Color := $54DCFE; // $C1E0FF; //$D7E3FF; // $FFE1F0;
         ACanvas.Font.Color := RootLookAndFeel.SkinPainter.DefaultSelectionColor;
       end;
   end;

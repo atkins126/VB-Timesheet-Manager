@@ -236,7 +236,6 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
         OnCustomDrawCell = viewSystemUserCustomDrawCell
-        DataController.DataSource = ReportDM.dtsTSCustomer
         DataController.Options = [dcoCaseInsensitive, dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding]
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
@@ -531,7 +530,6 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
         OnCustomDrawCell = viewSystemUserCustomDrawCell
-        DataController.DataSource = ReportDM.dtsBillCFwd
         DataController.Options = [dcoCaseInsensitive, dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding]
         DataController.Summary.DefaultGroupSummaryItems = <
           item
@@ -669,7 +667,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
           Properties.ReadOnly = True
           Visible = False
           GroupIndex = 0
-          MinWidth = 95
+          MinWidth = 64
           Options.Editing = False
           Options.IncSearch = False
           Options.HorzSizing = False
@@ -1038,7 +1036,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
           Properties.DisplayFormat = '######'
           Properties.EditFormat = '######'
           Properties.ReadOnly = True
-          MinWidth = 74
+          MinWidth = 64
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
@@ -1074,7 +1072,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
           Properties.DisplayFormat = '######'
           Properties.EditFormat = '######'
           Properties.ReadOnly = True
-          MinWidth = 74
+          MinWidth = 64
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
@@ -1253,7 +1251,6 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
         OnCustomDrawCell = viewSystemUserCustomDrawCell
-        DataController.DataSource = ReportDM.dtsTSSortOrder
         DataController.KeyFieldNames = 'ID'
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
@@ -1373,7 +1370,6 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
         OnCustomDrawCell = viewSystemUserCustomDrawCell
-        DataController.DataSource = ReportDM.dtsTSBillable
         DataController.Options = [dcoCaseInsensitive, dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding]
         DataController.Summary.DefaultGroupSummaryItems = <
           item
@@ -1843,7 +1839,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
           Properties.DisplayFormat = '######'
           Properties.EditFormat = '######'
           Properties.ReadOnly = True
-          MinWidth = 74
+          MinWidth = 64
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
@@ -1879,7 +1875,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
           Properties.DisplayFormat = '######'
           Properties.EditFormat = '######'
           Properties.ReadOnly = True
-          MinWidth = 74
+          MinWidth = 64
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
@@ -2482,7 +2478,6 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     object viewTimesheetExcel: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       ScrollbarAnnotations.CustomAnnotations = <>
-      DataController.DataSource = ReportDM.dtsTSBillableExcel
       DataController.Options = [dcoCaseInsensitive, dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding]
       DataController.Summary.DefaultGroupSummaryItems = <
         item
@@ -2977,7 +2972,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         Properties.DisplayFormat = '######'
         Properties.EditFormat = '######'
         Properties.ReadOnly = True
-        MinWidth = 74
+        MinWidth = 64
         Options.Editing = False
         Options.Filtering = False
         Options.IncSearch = False
@@ -3016,7 +3011,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         Properties.DisplayFormat = '######'
         Properties.EditFormat = '######'
         Properties.ReadOnly = True
-        MinWidth = 74
+        MinWidth = 64
         Options.Editing = False
         Options.Filtering = False
         Options.IncSearch = False
@@ -3178,7 +3173,6 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
     object viewBillCfwdExcel: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       ScrollbarAnnotations.CustomAnnotations = <>
-      DataController.DataSource = ReportDM.dtsBillCFwdExcel
       DataController.Options = [dcoCaseInsensitive, dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding]
       DataController.Summary.DefaultGroupSummaryItems = <
         item
@@ -3315,7 +3309,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         Properties.ReadOnly = True
         Visible = False
         GroupIndex = 0
-        MinWidth = 95
+        MinWidth = 64
         Options.Editing = False
         Options.IncSearch = False
         Options.HorzSizing = False
@@ -3684,7 +3678,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         Properties.DisplayFormat = '######'
         Properties.EditFormat = '######'
         Properties.ReadOnly = True
-        MinWidth = 74
+        MinWidth = 64
         Options.Editing = False
         Options.Filtering = False
         Options.IncSearch = False
@@ -3720,7 +3714,7 @@ inherited TimesheetDetailReportFrm: TTimesheetDetailReportFrm
         Properties.DisplayFormat = '######'
         Properties.EditFormat = '######'
         Properties.ReadOnly = True
-        MinWidth = 74
+        MinWidth = 64
         Options.Editing = False
         Options.Filtering = False
         Options.IncSearch = False

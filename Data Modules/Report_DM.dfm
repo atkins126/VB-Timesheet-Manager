@@ -6,11 +6,22 @@ inherited ReportDM: TReportDM
     ActiveStoredUsage = [auDesignTime]
     FieldDefs = <>
     CachedUpdates = True
-    IndexDefs = <>
+    IndexDefs = <
+      item
+        Name = 'idxBillablePeriod'
+        CaseInsFields = 'NAME'
+        Fields = 'THE_PERIOD;NAME'
+        Options = [ixCaseInsensitive]
+      end
+      item
+        Name = 'idxBillableCustomer'
+        CaseInsFields = 'NAME'
+        Fields = 'NAME;THE_PERIOD'
+        Options = [ixCaseInsensitive]
+      end>
     Indexes = <
       item
         Active = True
-        Selected = True
         Name = 'idxBillablePeriod'
         Fields = 'THE_PERIOD;NAME'
         CaseInsFields = 'NAME'
@@ -19,13 +30,14 @@ inherited ReportDM: TReportDM
       end
       item
         Active = True
+        Selected = True
         Name = 'idxBillableCustomer'
-        Fields = 'NAME;THE_PERIOD'
+        Fields = 'NAME'
         CaseInsFields = 'NAME'
         Options = [soNoCase]
         FilterOptions = [ekNoCase]
       end>
-    IndexName = 'idxBillablePeriod'
+    IndexName = 'idxBillableCustomer'
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
     FetchOptions.RecordCountMode = cmTotal
@@ -186,6 +198,10 @@ inherited ReportDM: TReportDM
       ' SourcePeriod')
     Left = 100
     Top = 135
+    object qryPeriodTHE_PERIOD: TIntegerField
+      Alignment = taLeftJustify
+      FieldName = 'THE_PERIOD'
+    end
   end
   object locSQL: TFDLocalSQL
     Connection = conSQLLite

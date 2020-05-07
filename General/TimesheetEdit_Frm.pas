@@ -311,7 +311,7 @@ begin
     ' IS_ADDITIONAL_WORK = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('IS_ADDITIONAL_WORK').AsInteger, varString) +
     ' WHERE ID = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('ID').AsInteger, varString);
 
-  Response := RUtils.CreateStringList(PIPE, SINGLE_QUOTE);
+  Response := RUtils.CreateStringList(PIPE, DOUBLE_QUOTE);
 
   try
     Response.DelimitedText := VBBaseDM.ExecuteSQLCommand(SQLStatement);

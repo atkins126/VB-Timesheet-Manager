@@ -24,7 +24,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       Top = 100
       Width = 1104
       Height = 350
-      TabOrder = 3
+      TabOrder = 4
       object viewBillableSummary: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
@@ -134,6 +134,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
         OptionsData.Inserting = False
         OptionsView.NoDataToDisplayInfoText = '<No Billable data to display>'
         OptionsView.Footer = True
+        OptionsView.GroupByBox = False
         OptionsView.GroupFooters = gfVisibleWhenExpanded
         OptionsView.GroupSummaryLayout = gslAlignWithColumnsAndDistribute
         OnCustomDrawGroupCell = viewBillableSummaryCustomDrawGroupCell
@@ -167,6 +168,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           Properties.DisplayFormat = '###0'
           Properties.EditFormat = '###0'
           Properties.ReadOnly = True
+          Visible = False
           Options.Editing = False
           Width = 400
           Position.BandIndex = 0
@@ -177,8 +179,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           DataBinding.FieldName = 'NAME'
           PropertiesClassName = 'TcxTextEditProperties'
           Properties.ReadOnly = True
-          Visible = False
-          GroupIndex = 0
           Options.Editing = False
           Width = 400
           Position.BandIndex = 0
@@ -289,8 +289,8 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       Left = 10000
       Top = 10000
       Width = 1073
-      Height = 210
-      TabOrder = 5
+      Height = 185
+      TabOrder = 8
       Visible = False
       object viewCarryForwardDetail: TcxGridDBBandedTableView
         Tag = 1
@@ -418,7 +418,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
             end>
           Properties.ListOptions.CaseInsensitive = True
           Properties.ListOptions.SyncMode = True
-          Properties.ListSource = ReportDM.dtsSystemUser2
           Properties.PostPopupValueOnTab = True
           Properties.ReadOnly = True
           MinWidth = 120
@@ -496,7 +495,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
               Width = 120
               FieldName = 'RATE_UNIT'
             end>
-          Properties.ListSource = ReportDM.dtsPriceList2
           Properties.PostPopupValueOnTab = True
           Properties.ReadOnly = True
           MinWidth = 300
@@ -523,7 +521,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
             item
               FieldName = 'NAME'
             end>
-          Properties.ListSource = ReportDM.dtsRateUnit2
           Properties.ReadOnly = True
           MinWidth = 80
           Options.Editing = False
@@ -550,7 +547,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
             item
               FieldName = 'NAME'
             end>
-          Properties.ListSource = ReportDM.dtsActivityType2
           Properties.PostPopupValueOnTab = True
           Properties.ReadOnly = True
           MinWidth = 300
@@ -934,14 +930,14 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       Left = 25
       Top = 493
       Width = 1073
-      Height = 185
-      TabOrder = 4
+      Height = 164
+      TabOrder = 5
       object viewTimesheet: TcxGridDBBandedTableView
         PopupMenu = popTimesheet
         OnDblClick = viewTimesheetDblClick
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
-        OnCustomDrawCell = viewBillableSummaryCustomDrawCell
+        OnCustomDrawCell = viewTimesheetCustomDrawCell
         DataController.DataSource = ReportDM.dtsTimesheetDetail
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <
@@ -986,6 +982,9 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           end
           item
             Caption = 'Other'
+          end
+          item
+            Caption = 'Carry Forward/Release'
           end>
         object edtTSID: TcxGridDBBandedColumn
           DataBinding.FieldName = 'ID'
@@ -1061,7 +1060,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
             end>
           Properties.ListOptions.CaseInsensitive = True
           Properties.ListOptions.SyncMode = True
-          Properties.ListSource = ReportDM.dtsSystemUser1
           Properties.PostPopupValueOnTab = True
           Properties.ReadOnly = True
           MinWidth = 120
@@ -1139,7 +1137,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
               Width = 120
               FieldName = 'RATE_UNIT'
             end>
-          Properties.ListSource = ReportDM.dtsPriceList1
           Properties.PostPopupValueOnTab = True
           Properties.ReadOnly = True
           MinWidth = 300
@@ -1166,7 +1163,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
             item
               FieldName = 'NAME'
             end>
-          Properties.ListSource = ReportDM.dtsRateUnit1
           Properties.ReadOnly = True
           MinWidth = 80
           Options.Editing = False
@@ -1193,7 +1189,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
             item
               FieldName = 'NAME'
             end>
-          Properties.ListSource = ReportDM.dtsActivityType1
           Properties.PostPopupValueOnTab = True
           Properties.ReadOnly = True
           MinWidth = 300
@@ -1415,13 +1410,13 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           Properties.ValueChecked = 1
           Properties.ValueUnchecked = 0
           HeaderAlignmentHorz = taCenter
-          MinWidth = 40
+          MinWidth = 50
           Options.Editing = False
           Options.IncSearch = False
           Options.Grouping = False
           Options.HorzSizing = False
           Options.Moving = False
-          Width = 40
+          Width = 50
           Position.BandIndex = 2
           Position.ColIndex = 7
           Position.RowIndex = 0
@@ -1495,13 +1490,13 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           Properties.ValueChecked = 1
           Properties.ValueUnchecked = 0
           HeaderAlignmentHorz = taCenter
-          MinWidth = 50
+          MinWidth = 55
           Options.Editing = False
           Options.IncSearch = False
           Options.Grouping = False
           Options.HorzSizing = False
           Options.Moving = False
-          Width = 50
+          Width = 55
           Position.BandIndex = 2
           Position.ColIndex = 3
           Position.RowIndex = 0
@@ -1566,13 +1561,70 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           Position.ColIndex = 11
           Position.RowIndex = 0
         end
+        object edtDateCarriedForward: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'DATE_CARRIED_FORWARD'
+          PropertiesClassName = 'TcxDateEditProperties'
+          Properties.DisplayFormat = 'ddMMyyyy'
+          Properties.EditFormat = 'ddMMyyyy'
+          Properties.ReadOnly = True
+          MinWidth = 90
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 90
+          Position.BandIndex = 3
+          Position.ColIndex = 0
+          Position.RowIndex = 0
+        end
+        object edtDateCFwdReleased: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'DATE_CFWD_RELEASED'
+          PropertiesClassName = 'TcxDateEditProperties'
+          Properties.DisplayFormat = 'ddMMyyyy'
+          Properties.EditFormat = 'ddMMyyyy'
+          Properties.ReadOnly = True
+          MinWidth = 90
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 90
+          Position.BandIndex = 3
+          Position.ColIndex = 1
+          Position.RowIndex = 0
+        end
+        object edtReleaseCFwdToPeriod: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'RELEASE_CFWD_TO_PERIOD'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = '######'
+          Properties.EditFormat = '######'
+          Properties.ReadOnly = True
+          MinWidth = 65
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 65
+          Position.BandIndex = 3
+          Position.ColIndex = 2
+          Position.RowIndex = 0
+        end
       end
       object lvlTimesheet: TcxGridLevel
         GridView = viewTimesheet
       end
     end
     object cbxRemoveZeroBillableItems: TcxCheckBox [4]
-      Left = 11
+      Left = 193
       Top = 75
       Caption = 'Remove zero billable items'
       ParentShowHint = False
@@ -1582,11 +1634,11 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       ShowHint = True
       Style.HotTrack = False
       Style.TransparentBorder = False
-      TabOrder = 1
+      TabOrder = 2
       Transparent = True
     end
     object cbxIncludeReleasedItems: TcxCheckBox [5]
-      Left = 193
+      Left = 375
       Top = 75
       Caption = 'Include released items'
       ParentShowHint = False
@@ -1596,11 +1648,44 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       ShowHint = True
       Style.HotTrack = False
       Style.TransparentBorder = False
-      TabOrder = 2
+      TabOrder = 3
+      Transparent = True
+    end
+    object cbxFetchPreviousPeriodData: TcxCheckBox [6]
+      Left = 11
+      Top = 75
+      Caption = 'Fetch previoius period data'
+      ParentShowHint = False
+      Properties.ImmediatePost = True
+      Properties.UseAlignmentWhenInplace = True
+      Properties.OnEditValueChanged = cbxFetchPreviousPeriodDataPropertiesEditValueChanged
+      ShowHint = True
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 1
+      Transparent = True
+    end
+    object imgCFwdItemColour: TcxImage [7]
+      Left = 25
+      Top = 663
+      Properties.ReadOnly = True
+      Style.Color = 15007690
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 6
+      Height = 15
+      Width = 15
+    end
+    object lblCFwdItemColour: TcxLabel [8]
+      Left = 46
+      Top = 663
+      Caption = 'Items carried foward from previous periods'
+      Style.HotTrack = False
+      Style.TransparentBorder = False
       Transparent = True
     end
     inherited layMainGroup_Root: TdxLayoutGroup
-      ItemIndex = 1
+      ItemIndex = 3
     end
     object grpToolbar: TdxLayoutGroup
       Parent = layMainGroup_Root
@@ -1639,8 +1724,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       Index = 2
     end
     object litTimesheet: TdxLayoutItem
-      Parent = grpData
-      AlignHorz = ahClient
+      Parent = grpTimesheet
       AlignVert = avClient
       CaptionOptions.Text = 'Timesheet Details'
       CaptionOptions.Visible = False
@@ -1677,7 +1761,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 176
       ControlOptions.ShowBorder = False
-      Index = 0
+      Index = 1
     end
     object litIncludeReleaseditems: TdxLayoutItem
       Parent = grpOptions
@@ -1687,12 +1771,57 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 151
       ControlOptions.ShowBorder = False
+      Index = 2
+    end
+    object litFetchPreviousPeriodData: TdxLayoutItem
+      Parent = grpOptions
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = cbxFetchPreviousPeriodData
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 176
+      ControlOptions.ShowBorder = False
+      Index = 0
+    end
+    object litReleasedItemColour: TdxLayoutItem
+      Parent = grpLegend
+      CaptionOptions.Visible = False
+      Control = imgCFwdItemColour
+      ControlOptions.OriginalHeight = 15
+      ControlOptions.OriginalWidth = 15
+      ControlOptions.ShowBorder = False
+      Index = 0
+    end
+    object grpTimesheet: TdxLayoutGroup
+      Parent = grpData
+      AlignVert = avClient
+      CaptionOptions.Text = 'Timesheet Details'
+      ButtonOptions.Buttons = <>
+      Index = 0
+    end
+    object grpLegend: TdxLayoutGroup
+      Parent = grpTimesheet
+      CaptionOptions.Text = 'New Group'
+      ButtonOptions.Buttons = <>
+      ItemIndex = 1
+      LayoutDirection = ldHorizontal
+      ShowBorder = False
+      Index = 1
+    end
+    object litReleasedItemDescription: TdxLayoutItem
+      Parent = grpLegend
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = lblCFwdItemColour
+      ControlOptions.OriginalHeight = 13
+      ControlOptions.OriginalWidth = 250
+      ControlOptions.ShowBorder = False
       Index = 1
     end
   end
   object grdBillCfwdExcel: TcxGrid [1]
-    Left = 1195
-    Top = 128
+    Left = 1245
+    Top = 198
     Width = 913
     Height = 361
     Font.Charset = ANSI_CHARSET
@@ -1706,7 +1835,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
     object viewBillCfwdExcel: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       ScrollbarAnnotations.CustomAnnotations = <>
-      DataController.DataSource = ReportDM.dtsBillCFwd
+      DataController.DataSource = ReportDM.dtsBillCFwdExcel
       DataController.Summary.DefaultGroupSummaryItems = <
         item
           Format = '###,##0.00'
@@ -3851,26 +3980,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           UserDefine = [udWidth]
           UserWidth = 70
           Visible = True
-          ItemName = 'lucFromPeriod'
-        end
-        item
-          UserDefine = [udWidth]
-          UserWidth = 70
-          Visible = True
-          ItemName = 'lucToPeriod'
-        end
-        item
-          UserDefine = [udWidth]
-          UserWidth = 18
-          ViewLayout = ivlGlyphControlCaption
-          Visible = True
-          ItemName = 'cbxSamePeriod'
-        end
-        item
-          UserDefine = [udWidth]
-          UserWidth = 90
-          Visible = True
-          ItemName = 'lucGroupBy'
+          ItemName = 'lucPeriod'
         end
         item
           Visible = True
@@ -3931,10 +4041,10 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       Category = 0
       AutoGrayScale = False
     end
-    object lucFromPeriod: TcxBarEditItem
-      Caption = 'From Period'
+    object lucPeriod: TcxBarEditItem
+      Caption = 'Billable Period'
       Category = 0
-      Hint = 'From Period'
+      Hint = 'Billable Period'
       Visible = ivAlways
       ShowCaption = True
       PropertiesClassName = 'TcxLookupComboBoxProperties'
@@ -3945,51 +4055,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           FieldName = 'THE_PERIOD'
         end>
       Properties.ListOptions.SyncMode = True
-      Properties.OnEditValueChanged = lucFromPeriodPropertiesEditValueChanged
-    end
-    object lucToPeriod: TcxBarEditItem
-      Caption = 'To Period'
-      Category = 0
-      Hint = 'To Period'
-      Visible = ivAlways
-      ShowCaption = True
-      PropertiesClassName = 'TcxLookupComboBoxProperties'
-      Properties.ImmediatePost = True
-      Properties.KeyFieldNames = 'THE_PERIOD'
-      Properties.ListColumns = <
-        item
-          FieldName = 'THE_PERIOD'
-        end>
-      Properties.ListOptions.SyncMode = True
-      Properties.OnEditValueChanged = lucToPeriodPropertiesEditValueChanged
-      Properties.OnInitPopup = lucToPeriodPropertiesInitPopup
-    end
-    object lucGroupBy: TcxBarEditItem
-      Caption = 'Group By'
-      Category = 0
-      Hint = 'Group By'
-      Visible = ivAlways
-      OnKeyDown = lucGroupByKeyDown
-      ShowCaption = True
-      PropertiesClassName = 'TcxComboBoxProperties'
-      Properties.DropDownListStyle = lsFixedList
-      Properties.ImmediatePost = True
-      Properties.Items.Strings = (
-        'Period'
-        'Customer')
-      Properties.PostPopupValueOnTab = True
-      Properties.OnChange = lucGroupByPropertiesChange
-    end
-    object cbxSamePeriod: TcxBarEditItem
-      Caption = 'Same Period'
-      Category = 0
-      Hint = 'Same Period'
-      Visible = ivAlways
-      ShowCaption = True
-      PropertiesClassName = 'TcxCheckBoxProperties'
-      Properties.ImmediatePost = True
-      Properties.OnEditValueChanged = cbxSamePeriodPropertiesEditValueChanged
-      InternalEditValue = 'Null'
+      Properties.OnEditValueChanged = lucPeriodPropertiesEditValueChanged
     end
   end
   object dlgPrint: TdxPrintDialog
@@ -4095,6 +4161,13 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       Description.Text = 'Clear all tiesheet item selection'
       Width = 220
     end
+    object tipFetchPreviousPeriodData: TdxScreenTip
+      Header.Text = 'Fetch Previous Period Data'
+      Description.Text = 
+        'When opening the BillableSummary screen, fetch data for the prev' +
+        'ious period'
+      Width = 280
+    end
   end
   object styHintController: TcxHintStyleController
     Global = False
@@ -4102,9 +4175,15 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
     HintStyle.ScreenTipLinks = <
       item
         ScreenTip = tipRemoveZeroValueItems
+        Control = cbxRemoveZeroBillableItems
       end
       item
         ScreenTip = tipInclude
+        Control = cbxIncludeReleasedItems
+      end
+      item
+        ScreenTip = tipFetchPreviousPeriodData
+        Control = cbxFetchPreviousPeriodData
       end>
     HintStyle.ScreenTipActionLinks = <>
     HintShortPause = 0

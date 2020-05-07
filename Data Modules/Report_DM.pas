@@ -543,6 +543,7 @@ type
     cdsTimesheetDATE_CARRIED_FORWARD: TDateField;
     cdsTimesheetDATE_CFWD_RELEASED: TDateField;
     cdsTimesheetRELEASE_CFWD_TO_PERIOD: TIntegerField;
+    qryPeriodTHE_PERIOD: TIntegerField;
     procedure cdsTimesheetCalcFields(DataSet: TDataSet);
     procedure cdsTimesheetAfterPost(DataSet: TDataSet);
     procedure cdsTimesheetBeforePost(DataSet: TDataSet);
