@@ -38,8 +38,10 @@ uses
   InvoiceItem_Frm in 'General\InvoiceItem_Frm.pas' {InvoiceItemFrm},
   StdActivity_Frm in 'General\StdActivity_Frm.pas' {StdActivityFrm},
   MonthlyBillableReport_Frm in 'General\MonthlyBillableReport_Frm.pas' {MonthlyBillableReportFrm},
-  CarryForward_Frm in 'General\CarryForward_Frm.pas' {CarryForwardFrm},
-  VBProxyClass in '..\Lib\VBProxyClass.pas';
+  CarryForwardManager_Frm in 'General\CarryForwardManager_Frm.pas' {CarryForwardManagerFrm},
+  VBProxyClass in '..\Lib\VBProxyClass.pas',
+  CustomerSearch_Frm in 'General\CustomerSearch_Frm.pas' {CustomerSearchFrm},
+  Lookup_DM in 'Data Modules\Lookup_DM.pas' {LookupDM: TDataModule};
 
 {$R *.res}
 

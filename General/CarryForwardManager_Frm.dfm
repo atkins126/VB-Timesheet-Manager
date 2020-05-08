@@ -1,5 +1,5 @@
-inherited CarryForwardFrm: TCarryForwardFrm
-  Caption = 'CarryForwardFrm'
+inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
+  Caption = 'CarryForwardManagerFrm'
   ClientHeight = 791
   ClientWidth = 1349
   ExplicitWidth = 1365
@@ -13,16 +13,16 @@ inherited CarryForwardFrm: TCarryForwardFrm
     ExplicitHeight = 706
     object grdTimesheet: TcxGrid [0]
       Left = 11
-      Top = 127
+      Top = 71
       Width = 1074
-      Height = 568
+      Height = 624
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
       Font.Name = 'Verdana'
       Font.Style = []
       ParentFont = False
-      TabOrder = 11
+      TabOrder = 1
       object viewTimesheet: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
@@ -99,6 +99,7 @@ inherited CarryForwardFrm: TCarryForwardFrm
         OptionsSelection.MultiSelectMode = msmPersistent
         OptionsView.NoDataToDisplayInfoText = '<No Timesheet data to display>'
         OptionsView.Footer = True
+        OptionsView.GroupByBox = False
         OptionsView.GroupFooters = gfVisibleWhenExpanded
         OptionsView.GroupSummaryLayout = gslAlignWithColumns
         Styles.OnGetGroupStyle = viewTimesheetStylesGetGroupStyle
@@ -180,14 +181,13 @@ inherited CarryForwardFrm: TCarryForwardFrm
           Properties.ReadOnly = True
           Visible = False
           OnGetDisplayText = edtTThePeriodGetDisplayText
-          GroupIndex = 0
           MinWidth = 60
           Options.Editing = False
           Options.IncSearch = False
           Options.HorzSizing = False
           Width = 60
           Position.BandIndex = 1
-          Position.ColIndex = 2
+          Position.ColIndex = 3
           Position.RowIndex = 0
         end
         object edtTPeriodName: TcxGridDBBandedColumn
@@ -201,7 +201,7 @@ inherited CarryForwardFrm: TCarryForwardFrm
           Options.HorzSizing = False
           Width = 70
           Position.BandIndex = 1
-          Position.ColIndex = 3
+          Position.ColIndex = 2
           Position.RowIndex = 0
         end
         object edtTLoginName: TcxGridDBBandedColumn
@@ -212,7 +212,9 @@ inherited CarryForwardFrm: TCarryForwardFrm
           OnGetDisplayText = edtTThePeriodGetDisplayText
           MinWidth = 120
           Options.Editing = False
+          Options.Grouping = False
           Options.HorzSizing = False
+          Options.Moving = False
           Width = 120
           Position.BandIndex = 1
           Position.ColIndex = 5
@@ -226,7 +228,9 @@ inherited CarryForwardFrm: TCarryForwardFrm
           OnGetDisplayText = edtTThePeriodGetDisplayText
           MinWidth = 90
           Options.Editing = False
+          Options.Grouping = False
           Options.HorzSizing = False
+          Options.Moving = False
           Width = 90
           Position.BandIndex = 1
           Position.ColIndex = 4
@@ -240,7 +244,9 @@ inherited CarryForwardFrm: TCarryForwardFrm
           OnGetDisplayText = edtTThePeriodGetDisplayText
           MinWidth = 200
           Options.Editing = False
+          Options.Grouping = False
           Options.HorzSizing = False
+          Options.Moving = False
           Width = 200
           Position.BandIndex = 1
           Position.ColIndex = 6
@@ -254,7 +260,9 @@ inherited CarryForwardFrm: TCarryForwardFrm
           OnGetDisplayText = edtTThePeriodGetDisplayText
           MinWidth = 400
           Options.Editing = False
+          Options.Grouping = False
           Options.HorzSizing = False
+          Options.Moving = False
           Width = 400
           Position.BandIndex = 1
           Position.ColIndex = 7
@@ -268,7 +276,9 @@ inherited CarryForwardFrm: TCarryForwardFrm
           OnGetDisplayText = edtTThePeriodGetDisplayText
           MinWidth = 250
           Options.Editing = False
+          Options.Grouping = False
           Options.HorzSizing = False
+          Options.Moving = False
           Width = 250
           Position.BandIndex = 1
           Position.ColIndex = 8
@@ -673,31 +683,7 @@ inherited CarryForwardFrm: TCarryForwardFrm
         GridView = viewTimesheet
       end
     end
-    object lucFromPeriod: TcxLookupComboBox [1]
-      Left = 95
-      Top = 71
-      BeepOnEnter = False
-      Properties.DropDownAutoSize = True
-      Properties.DropDownListStyle = lsFixedList
-      Properties.ImmediatePost = True
-      Properties.KeyFieldNames = 'THE_PERIOD'
-      Properties.ListColumns = <
-        item
-          FieldName = 'PERIOD_NAME'
-        end>
-      Properties.ListOptions.SyncMode = True
-      Properties.ListSource = TSDM.dtsPeriod
-      Properties.OnCloseUp = lucFromPeriodPropertiesCloseUp
-      Properties.OnEditValueChanged = lucFromPeriodPropertiesEditValueChanged
-      Properties.OnInitPopup = lucFromPeriodPropertiesInitPopup
-      Properties.OnPopup = lucFromPeriodPropertiesPopup
-      Style.HotTrack = False
-      Style.TransparentBorder = False
-      TabOrder = 1
-      OnKeyDown = lucFromPeriodKeyDown
-      Width = 100
-    end
-    object docToolbar: TdxBarDockControl [2]
+    object docToolbar: TdxBarDockControl [1]
       Left = 11
       Top = 11
       Width = 1074
@@ -705,145 +691,8 @@ inherited CarryForwardFrm: TCarryForwardFrm
       Align = dalNone
       BarManager = barManager
     end
-    object lucToPeriod: TcxLookupComboBox [3]
-      Left = 221
-      Top = 71
-      BeepOnEnter = False
-      Properties.DropDownAutoSize = True
-      Properties.DropDownListStyle = lsFixedList
-      Properties.ImmediatePost = True
-      Properties.KeyFieldNames = 'THE_PERIOD'
-      Properties.ListColumns = <
-        item
-          FieldName = 'PERIOD_NAME'
-        end>
-      Properties.ListOptions.SyncMode = True
-      Properties.ListSource = TSDM.dtsToPeriod
-      Properties.OnCloseUp = lucFromPeriodPropertiesCloseUp
-      Properties.OnEditValueChanged = lucFromPeriodPropertiesEditValueChanged
-      Properties.OnInitPopup = lucFromPeriodPropertiesInitPopup
-      Properties.OnPopup = lucFromPeriodPropertiesPopup
-      Style.HotTrack = False
-      Style.TransparentBorder = False
-      TabOrder = 2
-      OnKeyDown = lucFromPeriodKeyDown
-      Width = 100
-    end
-    object cbxAllPeriods: TcxCheckBox [4]
-      Left = 327
-      Top = 71
-      Caption = 'All Periods'
-      ParentShowHint = False
-      Properties.ImmediatePost = True
-      Properties.UseAlignmentWhenInplace = True
-      Properties.OnEditValueChanged = cbxAllPeriodsPropertiesEditValueChanged
-      ShowHint = True
-      Style.HotTrack = False
-      Style.TransparentBorder = False
-      TabOrder = 3
-      Transparent = True
-    end
-    object lucReleaseToPeriod: TcxLookupComboBox [5]
-      Left = 835
-      Top = 71
-      BeepOnEnter = False
-      Properties.DropDownAutoSize = True
-      Properties.DropDownListStyle = lsFixedList
-      Properties.ImmediatePost = True
-      Properties.KeyFieldNames = 'THE_PERIOD'
-      Properties.ListColumns = <
-        item
-          FieldName = 'PERIOD_NAME'
-        end>
-      Properties.ListOptions.SyncMode = True
-      Properties.ListSource = TSDM.dtsReleaseToPeriod
-      Properties.OnInitPopup = lucReleaseToPeriodPropertiesInitPopup
-      Style.HotTrack = False
-      Style.TransparentBorder = False
-      TabOrder = 6
-      Width = 100
-    end
-    object cbxReleaseToCurrentPeriod: TcxCheckBox [6]
-      Left = 435
-      Top = 71
-      Caption = 'Release selected items to current period'
-      ParentShowHint = False
-      Properties.ImmediatePost = True
-      Properties.UseAlignmentWhenInplace = True
-      Properties.OnEditValueChanged = cbxReleaseToCurrentPeriodPropertiesEditValueChanged
-      ShowHint = True
-      Style.HotTrack = False
-      Style.TransparentBorder = False
-      TabOrder = 4
-      Transparent = True
-    end
-    object btnExpandAll: TcxButton [7]
-      Left = 221
-      Top = 96
-      Width = 90
-      Height = 25
-      Caption = 'Expand All'
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 8
-      OnClick = btnExpandAllClick
-    end
-    object btnCollapseAll: TcxButton [8]
-      Left = 317
-      Top = 96
-      Width = 90
-      Height = 25
-      Caption = 'Collapse All'
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 9
-      OnClick = btnCollapseAllClick
-    end
-    object lblOR: TcxLabel [9]
-      Left = 693
-      Top = 73
-      Caption = 'OR'
-      ParentFont = False
-      Style.HotTrack = False
-      Style.StyleController = styOR
-      Style.TransparentBorder = False
-      Transparent = True
-    end
-    object lucBillable: TcxComboBox [10]
-      Left = 95
-      Top = 99
-      Properties.DropDownListStyle = lsFixedList
-      Properties.ImmediatePost = True
-      Properties.Items.Strings = (
-        'Billable'
-        'Non-Billable'
-        'All')
-      Properties.OnChange = lucBillablePropertiesChange
-      Properties.OnCloseUp = lucFromPeriodPropertiesCloseUp
-      Properties.OnEditValueChanged = lucFromPeriodPropertiesEditValueChanged
-      Properties.OnInitPopup = lucBillablePropertiesInitPopup
-      Properties.OnPopup = lucFromPeriodPropertiesPopup
-      Style.HotTrack = False
-      Style.TransparentBorder = False
-      TabOrder = 7
-      OnKeyDown = lucFromPeriodKeyDown
-      Width = 100
-    end
-    object cbxExpandGrid: TcxCheckBox [11]
-      Left = 435
-      Top = 99
-      Caption = 'Always expand grid when fetching data'
-      ParentShowHint = False
-      Properties.ImmediatePost = True
-      Properties.UseAlignmentWhenInplace = True
-      ShowHint = True
-      Style.HotTrack = False
-      Style.TransparentBorder = False
-      TabOrder = 10
-      Transparent = True
-    end
     inherited layMainGroup_Root: TdxLayoutGroup
-      ItemIndex = 2
+      ItemIndex = 1
     end
     object litToolbar: TdxLayoutItem
       Parent = layMainGroup_Root
@@ -856,41 +705,19 @@ inherited CarryForwardFrm: TCarryForwardFrm
       Index = 0
     end
     object grpPeriodSelection: TdxLayoutGroup
-      Parent = layMainGroup_Root
       CaptionOptions.Text = 'New Group'
       ButtonOptions.Buttons = <>
-      ItemIndex = 6
       LayoutDirection = ldHorizontal
       ShowBorder = False
-      Index = 1
+      Index = -1
     end
     object litFromPeriod: TdxLayoutItem
       Parent = grpPeriodSelection
       CaptionOptions.Text = 'From Period'
-      Control = lucFromPeriod
       ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 100
       ControlOptions.ShowBorder = False
       Index = 0
-    end
-    object litToPeriod: TdxLayoutItem
-      Parent = grpPeriodSelection
-      CaptionOptions.Text = 'To'
-      Control = lucToPeriod
-      ControlOptions.OriginalHeight = 19
-      ControlOptions.OriginalWidth = 100
-      ControlOptions.ShowBorder = False
-      Index = 1
-    end
-    object litAllData: TdxLayoutItem
-      Parent = grpPeriodSelection
-      CaptionOptions.Text = 'New Item'
-      CaptionOptions.Visible = False
-      Control = cbxAllPeriods
-      ControlOptions.OriginalHeight = 19
-      ControlOptions.OriginalWidth = 81
-      ControlOptions.ShowBorder = False
-      Index = 2
     end
     object litGrid: TdxLayoutItem
       Parent = layMainGroup_Root
@@ -901,108 +728,66 @@ inherited CarryForwardFrm: TCarryForwardFrm
       ControlOptions.OriginalHeight = 310
       ControlOptions.OriginalWidth = 913
       ControlOptions.ShowBorder = False
-      Index = 3
+      Index = 1
     end
     object litReleaseToPeriod: TdxLayoutItem
       Parent = grpPeriodSelection
-      CaptionOptions.Text = 'select billing period'
-      Control = lucReleaseToPeriod
+      CaptionOptions.Text = 'Release items to period'
       ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 100
       ControlOptions.ShowBorder = False
-      Index = 6
+      Index = 2
     end
     object sep1: TdxLayoutSeparatorItem
       Parent = grpPeriodSelection
       SizeOptions.Width = 15
       CaptionOptions.Text = 'Separator'
-      Index = 3
-    end
-    object litReleaseToCurrentPeriod: TdxLayoutItem
-      Parent = grpPeriodSelection
-      CaptionOptions.Text = 'New Item'
-      CaptionOptions.Visible = False
-      Control = cbxReleaseToCurrentPeriod
-      ControlOptions.OriginalHeight = 19
-      ControlOptions.OriginalWidth = 252
-      ControlOptions.ShowBorder = False
-      Index = 4
-    end
-    object grpControls: TdxLayoutGroup
-      Parent = layMainGroup_Root
-      CaptionOptions.Text = 'New Group'
-      ButtonOptions.Buttons = <>
-      ItemIndex = 4
-      LayoutDirection = ldHorizontal
-      ShowBorder = False
-      Index = 2
-    end
-    object litExpandAll: TdxLayoutItem
-      Parent = grpControls
-      CaptionOptions.Text = 'New Item'
-      CaptionOptions.Visible = False
-      Control = btnExpandAll
-      ControlOptions.OriginalHeight = 25
-      ControlOptions.OriginalWidth = 90
-      ControlOptions.ShowBorder = False
-      Index = 2
-    end
-    object litCollapseAll: TdxLayoutItem
-      Parent = grpControls
-      CaptionOptions.Text = 'New Item'
-      CaptionOptions.Visible = False
-      Control = btnCollapseAll
-      ControlOptions.OriginalHeight = 25
-      ControlOptions.OriginalWidth = 90
-      ControlOptions.ShowBorder = False
-      Index = 3
-    end
-    object spc1: TdxLayoutEmptySpaceItem
-      Parent = grpControls
-      SizeOptions.Height = 10
-      SizeOptions.Width = 14
-      CaptionOptions.Text = 'Empty Space Item'
       Index = 1
     end
-    object litOrLabel: TdxLayoutItem
-      Parent = grpPeriodSelection
-      AlignVert = avCenter
-      CaptionOptions.Text = 'New Item'
-      CaptionOptions.Visible = False
-      Control = lblOR
-      ControlOptions.OriginalHeight = 14
-      ControlOptions.OriginalWidth = 20
-      ControlOptions.ShowBorder = False
-      Index = 5
-    end
-    object litBillable: TdxLayoutItem
-      Parent = grpControls
-      AlignVert = avCenter
-      CaptionOptions.Text = 'Bilable Status'
-      Control = lucBillable
-      ControlOptions.OriginalHeight = 19
-      ControlOptions.OriginalWidth = 100
-      ControlOptions.ShowBorder = False
-      Index = 0
-    end
-    object litAlwaysExpand: TdxLayoutItem
-      Parent = grpControls
-      AlignVert = avCenter
-      CaptionOptions.Text = 'New Item'
-      CaptionOptions.Visible = False
-      Control = cbxExpandGrid
-      ControlOptions.OriginalHeight = 19
-      ControlOptions.OriginalWidth = 245
-      ControlOptions.ShowBorder = False
-      Index = 5
-    end
-    object spc2: TdxLayoutEmptySpaceItem
-      Parent = grpControls
-      SizeOptions.Height = 10
-      SizeOptions.Width = 16
-      CaptionOptions.Text = 'Empty Space Item'
-      Index = 4
-    end
+  end
+  object lucPeriod: TcxLookupComboBox [1]
+    Left = 245
+    Top = 127
+    BeepOnEnter = False
+    Properties.DropDownAutoSize = True
+    Properties.DropDownListStyle = lsFixedList
+    Properties.ImmediatePost = True
+    Properties.KeyFieldNames = 'THE_PERIOD'
+    Properties.ListColumns = <
+      item
+        FieldName = 'PERIOD_NAME'
+      end>
+    Properties.ListOptions.SyncMode = True
+    Properties.ListSource = TSDM.dtsPeriod
+    Properties.OnCloseUp = lucPeriodPropertiesCloseUp
+    Properties.OnEditValueChanged = lucPeriodPropertiesEditValueChanged
+    Properties.OnInitPopup = lucPeriodPropertiesInitPopup
+    Properties.OnPopup = lucPeriodPropertiesPopup
+    Style.HotTrack = False
+    Style.TransparentBorder = False
+    TabOrder = 5
+    OnKeyDown = lucPeriodKeyDown
+    Width = 100
+  end
+  object lucReleasePeriod: TcxLookupComboBox [2]
+    Left = 245
+    Top = 149
+    BeepOnEnter = False
+    Properties.DropDownAutoSize = True
+    Properties.DropDownListStyle = lsFixedList
+    Properties.ImmediatePost = True
+    Properties.KeyFieldNames = 'THE_PERIOD'
+    Properties.ListColumns = <
+      item
+        FieldName = 'PERIOD_NAME'
+      end>
+    Properties.ListOptions.SyncMode = True
+    Properties.ListSource = TSDM.dtsReleaseToPeriod
+    Properties.OnEditValueChanged = lucReleaseToPeriodPropertiesEditValueChanged
+    Style.HotTrack = False
+    Style.TransparentBorder = False
+    TabOrder = 6
+    Width = 100
   end
   inherited styRepository: TcxStyleRepository
     Left = 455
@@ -1027,7 +812,7 @@ inherited CarryForwardFrm: TCarryForwardFrm
       OnExecute = DoCloseForm
     end
     object actGetTimeSheetData: TAction
-      Caption = 'To Screen'
+      Caption = 'Get Data'
       ImageIndex = 5
       OnExecute = DoGetTimesheetData
     end
@@ -2150,11 +1935,9 @@ inherited CarryForwardFrm: TCarryForwardFrm
     HintStyle.ScreenTipLinks = <
       item
         ScreenTip = tipExpandAll
-        Control = btnExpandAll
       end
       item
         ScreenTip = tipCollapseAll
-        Control = btnCollapseAll
       end>
     HintStyle.ScreenTipActionLinks = <>
     HintShortPause = 0
@@ -2227,11 +2010,24 @@ inherited CarryForwardFrm: TCarryForwardFrm
           ItemName = 'btnOptions'
         end
         item
-          UserDefine = [udWidth]
-          UserWidth = 20
-          ViewLayout = ivlGlyphControlCaption
           Visible = True
-          ItemName = 'cbxSaveSettingsOnExit'
+          ItemName = 'lblPeriod'
+        end
+        item
+          Visible = True
+          ItemName = 'cntPeriod'
+        end
+        item
+          Visible = True
+          ItemName = 'lblSpace01'
+        end
+        item
+          Visible = True
+          ItemName = 'lblReleasePeriod'
+        end
+        item
+          Visible = True
+          ItemName = 'cntReleasePeriod'
         end>
       MultiLine = True
       OneOnRow = True
@@ -2264,32 +2060,43 @@ inherited CarryForwardFrm: TCarryForwardFrm
       Visible = ivNever
       AutoGrayScale = False
     end
-    object cbxSaveSettingsOnExit: TcxBarEditItem
-      Caption = 'Save settings on exit'
+    object cntPeriod: TdxBarControlContainerItem
+      Caption = 'Fetch data for period'
       Category = 0
-      Hint = 'Save settings on exit'
+      Hint = 'Fetch data for period'
       Visible = ivAlways
-      ShowCaption = True
-      PropertiesClassName = 'TcxCheckBoxProperties'
+      Control = lucPeriod
+    end
+    object cntReleasePeriod: TdxBarControlContainerItem
+      Caption = 'Release to period'
+      Category = 0
+      Hint = 'Release to period'
+      Visible = ivAlways
+      Control = lucReleasePeriod
+    end
+    object lblPeriod: TdxBarStatic
+      Caption = 'Fetch data for period'
+      Category = 0
+      Hint = 'Fetch data for period'
+      Visible = ivAlways
+    end
+    object lblReleasePeriod: TdxBarStatic
+      Caption = 'Release to period'
+      Category = 0
+      Hint = 'Release to period'
+      Visible = ivAlways
+    end
+    object lblSpace01: TdxBarStatic
+      Caption = '   '
+      Category = 0
+      Hint = '   '
+      Visible = ivAlways
     end
   end
   object styReadOnly: TcxEditStyleController
     Style.Color = 15132415
     Left = 365
     Top = 250
-    PixelsPerInch = 96
-  end
-  object styOR: TcxEditStyleController
-    Style.Color = clBtnFace
-    Style.Font.Charset = ANSI_CHARSET
-    Style.Font.Color = clRed
-    Style.Font.Height = -12
-    Style.Font.Name = 'Verdana'
-    Style.Font.Style = [fsBold]
-    Style.TextColor = clRed
-    Style.IsFontAssigned = True
-    Left = 705
-    Top = 285
     PixelsPerInch = 96
   end
 end

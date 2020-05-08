@@ -194,11 +194,20 @@
             <Form>MonthlyBillableReportFrm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="General\CarryForward_Frm.pas">
-            <Form>CarryForwardFrm</Form>
+        <DCCReference Include="General\CarryForwardManager_Frm.pas">
+            <Form>CarryForwardManagerFrm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\Lib\VBProxyClass.pas"/>
+        <DCCReference Include="General\CustomerSearch_Frm.pas">
+            <Form>CustomerSearchFrm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Data Modules\Lookup_DM.pas">
+            <Form>LookupDM</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

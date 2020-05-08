@@ -160,7 +160,6 @@ type
     tipTimesheetActivitySummary: TdxScreenTip;
     actApprove: TAction;
     actUnApprove: TAction;
-    N1: TMenuItem;
     Approve1: TMenuItem;
     UnApprove1: TMenuItem;
     popPrintExport: TdxBarPopupMenu;
@@ -170,7 +169,7 @@ type
     btnTImeshetAction: TdxBarLargeButton;
     actBilable: TAction;
     actNonBillable: TAction;
-    popTImesheetAction: TdxBarPopupMenu;
+    popTimesheetActions: TdxBarPopupMenu;
     btnBillable: TdxBarButton;
     btnNotBillable: TdxBarButton;
     N2: TMenuItem;
@@ -243,7 +242,6 @@ type
     Sep8: TdxBarSeparator;
     btnSelectAllItems: TdxBarButton;
     btnSlectNone: TdxBarButton;
-    N6: TMenuItem;
     SelectAll1: TMenuItem;
     ClearAll1: TMenuItem;
     sbrMain: TdxRibbonStatusBar;
@@ -252,6 +250,15 @@ type
     btnPrint: TdxBarButton;
     btnExportToPDF: TdxBarButton;
     btnExportToExcel: TdxBarButton;
+    popOtherActions: TdxBarPopupMenu;
+    btnOtherActions: TdxBarLargeButton;
+    sepBillingStatus: TdxBarSeparator;
+    sepApprovalStatus: TdxBarSeparator;
+    sepCarryForward: TdxBarSeparator;
+    sepInvoicing: TdxBarSeparator;
+    imesheetData1: TMenuItem;
+    Edit2: TMenuItem;
+    PrintingExporting1: TMenuItem;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoEditInsertEntry(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
@@ -348,7 +355,7 @@ uses
   TimesheetActivitySummary_Frm,
   InvoiceItem_Frm,
   MonthlyBillableReport_Frm,
-  CarryForward_Frm;
+  CarryForwardManager_Frm;
 //  ReleaseCFwd_Frm;
 
 procedure TMainFrm.DrawCellBorder(var Msg: TMessage);
@@ -687,12 +694,12 @@ begin
     ID := viewTimesheet.Controller.SelectedRecords[0].Values[edtID.Index];
 
   try
-    if CarryForwardFrm = nil then
-      CarryForwardFrm := TCarryForwardFrm.Create(nil);
+    if CarryForwardManagerFrm = nil then
+      CarryForwardManagerFrm := TCarryForwardManagerFrm.Create(nil);
 
-    CarryForwardFrm.ShowModal;
+    CarryForwardManagerFrm.ShowModal;
 
-    if CarryForwardFrm.ItemsRelease then
+    if CarryForwardManagerFrm.ItemsRelease then
     begin
       actGetTimesheetData.Execute;
       viewTimesheet.Controller.ClearSelection;
@@ -701,8 +708,8 @@ begin
         TSDM.cdsTimesheet.First;
     end;
 
-    CarryForwardFrm.Close;
-    FreeAndNil(CarryForwardFrm);
+    CarryForwardManagerFrm.Close;
+    FreeAndNil(CarryForwardManagerFrm);
   finally
     Screen.Cursor := crDefault;
   end;

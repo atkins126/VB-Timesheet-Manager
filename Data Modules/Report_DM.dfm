@@ -6529,47 +6529,47 @@ inherited ReportDM: TReportDM
     UpdateOptions.UpdateTableName = 'SYSTEM_USER'
     Left = 770
     Top = 490
-    object IntegerField4: TIntegerField
+    object cdsSystemUser1ID: TIntegerField
       Alignment = taLeftJustify
       FieldName = 'ID'
       Origin = 'ID'
       ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
       Required = True
     end
-    object StringField4: TStringField
+    object cdsSystemUser1FIRST_NAME: TStringField
       DisplayLabel = 'First Name'
       FieldName = 'FIRST_NAME'
       Origin = 'FIRST_NAME'
       Required = True
       Size = 30
     end
-    object StringField5: TStringField
+    object cdsSystemUser1LAST_NAME: TStringField
       DisplayLabel = 'Last Name'
       FieldName = 'LAST_NAME'
       Origin = 'LAST_NAME'
       Required = True
       Size = 30
     end
-    object StringField6: TStringField
+    object cdsSystemUser1LOGIN_NAME: TStringField
       DisplayLabel = 'Login Name'
       FieldName = 'LOGIN_NAME'
       Origin = 'LOGIN_NAME'
       Required = True
     end
-    object StringField7: TStringField
+    object cdsSystemUser1EMAIL_ADDRESS: TStringField
       DisplayLabel = 'Email'
       FieldName = 'EMAIL_ADDRESS'
       Origin = 'EMAIL_ADDRESS'
       Size = 100
     end
-    object StringField8: TStringField
+    object cdsSystemUser1PASSWORD: TStringField
       DisplayLabel = 'PW'
       FieldName = 'PASSWORD'
       Origin = '"PASSWORD"'
       Required = True
       Size = 100
     end
-    object IntegerField18: TIntegerField
+    object cdsSystemUser1ACCOUNT_ENABLED: TIntegerField
       DisplayLabel = 'Enabled'
       FieldName = 'ACCOUNT_ENABLED'
       Origin = 'ACCOUNT_ENABLED'
@@ -6599,47 +6599,47 @@ inherited ReportDM: TReportDM
     UpdateOptions.UpdateTableName = 'SYSTEM_USER'
     Left = 765
     Top = 610
-    object IntegerField19: TIntegerField
+    object cdsSystemUser2ID: TIntegerField
       Alignment = taLeftJustify
       FieldName = 'ID'
       Origin = 'ID'
       ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
       Required = True
     end
-    object StringField9: TStringField
+    object cdsSystemUser2FIRST_NAME: TStringField
       DisplayLabel = 'First Name'
       FieldName = 'FIRST_NAME'
       Origin = 'FIRST_NAME'
       Required = True
       Size = 30
     end
-    object StringField10: TStringField
+    object cdsSystemUser2LAST_NAME: TStringField
       DisplayLabel = 'Last Name'
       FieldName = 'LAST_NAME'
       Origin = 'LAST_NAME'
       Required = True
       Size = 30
     end
-    object StringField11: TStringField
+    object cdsSystemUser2LOGIN_NAME: TStringField
       DisplayLabel = 'Login Name'
       FieldName = 'LOGIN_NAME'
       Origin = 'LOGIN_NAME'
       Required = True
     end
-    object StringField12: TStringField
+    object cdsSystemUser2EMAIL_ADDRESS: TStringField
       DisplayLabel = 'Email'
       FieldName = 'EMAIL_ADDRESS'
       Origin = 'EMAIL_ADDRESS'
       Size = 100
     end
-    object StringField13: TStringField
+    object cdsSystemUser2PASSWORD: TStringField
       DisplayLabel = 'PW'
       FieldName = 'PASSWORD'
       Origin = '"PASSWORD"'
       Required = True
       Size = 100
     end
-    object IntegerField20: TIntegerField
+    object cdsSystemUser2ACCOUNT_ENABLED: TIntegerField
       DisplayLabel = 'Enabled'
       FieldName = 'ACCOUNT_ENABLED'
       Origin = 'ACCOUNT_ENABLED'
@@ -6821,14 +6821,14 @@ inherited ReportDM: TReportDM
     StoreDefs = True
     Left = 931
     Top = 490
-    object IntegerField23: TIntegerField
+    object cdsRateUnit1ID: TIntegerField
       Alignment = taLeftJustify
       FieldName = 'ID'
       Origin = 'ID'
       ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
       Required = True
     end
-    object StringField18: TStringField
+    object cdsRateUnit1NAME: TStringField
       DisplayLabel = 'Name'
       FieldName = 'NAME'
       Origin = 'NAME'
@@ -6865,14 +6865,14 @@ inherited ReportDM: TReportDM
     StoreDefs = True
     Left = 931
     Top = 605
-    object IntegerField24: TIntegerField
+    object cdsRateUnit2ID: TIntegerField
       Alignment = taLeftJustify
       FieldName = 'ID'
       Origin = 'ID'
       ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
       Required = True
     end
-    object StringField19: TStringField
+    object cdsRateUnit2NAME: TStringField
       DisplayLabel = 'Name'
       FieldName = 'NAME'
       Origin = 'NAME'
@@ -6909,14 +6909,14 @@ inherited ReportDM: TReportDM
     StoreDefs = True
     Left = 1043
     Top = 490
-    object IntegerField25: TIntegerField
+    object cdsActivityType1ID: TIntegerField
       Alignment = taLeftJustify
       FieldName = 'ID'
       Origin = 'ID'
       ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
       Required = True
     end
-    object StringField20: TStringField
+    object cdsActivityType1NAME: TStringField
       DisplayLabel = 'Name'
       FieldName = 'NAME'
       Origin = 'NAME'
@@ -6953,14 +6953,14 @@ inherited ReportDM: TReportDM
     StoreDefs = True
     Left = 1038
     Top = 605
-    object IntegerField26: TIntegerField
+    object cdsActivityType2ID: TIntegerField
       Alignment = taLeftJustify
       FieldName = 'ID'
       Origin = 'ID'
       ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
       Required = True
     end
-    object StringField21: TStringField
+    object cdsActivityType2NAME: TStringField
       DisplayLabel = 'Name'
       FieldName = 'NAME'
       Origin = 'NAME'
