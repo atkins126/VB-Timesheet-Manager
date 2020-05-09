@@ -311,7 +311,6 @@ inherited CustomerSearchFrm: TCustomerSearchFrm
       Version = 1
     end
     object edtVBillTo: TcxDBEditorRow
-      Properties.Caption = 'Bill To'
       Properties.EditPropertiesClassName = 'TcxTextEditProperties'
       Properties.DataBinding.FieldName = 'BILL_TO'
       ID = 6
@@ -638,7 +637,7 @@ inherited CustomerSearchFrm: TCustomerSearchFrm
     Top = 394
     Width = 390
     Height = 170
-    TabOrder = 7
+    TabOrder = 3
     object viewContactDetailCo: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       Navigator.Buttons.First.Visible = False
@@ -814,7 +813,7 @@ inherited CustomerSearchFrm: TCustomerSearchFrm
     Top = 394
     Width = 451
     Height = 170
-    TabOrder = 8
+    TabOrder = 4
     object viewContactPerson: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       Navigator.Buttons.First.Visible = False
@@ -1035,7 +1034,7 @@ inherited CustomerSearchFrm: TCustomerSearchFrm
     Top = 394
     Width = 390
     Height = 120
-    TabOrder = 9
+    TabOrder = 5
     object viewCPContactDetail: TcxGridDBBandedTableView
       Tag = 3
       Navigator.Buttons.CustomButtons = <>

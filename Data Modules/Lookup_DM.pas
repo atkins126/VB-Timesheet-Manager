@@ -21,7 +21,6 @@ type
     cdsContactPerson: TFDMemTable;
     dtsContactPerson: TDataSource;
     cdsCustomer: TFDMemTable;
-    cdsContactDetailCo: TFDMemTable;
     View_customerView: TFDQuery;
     View_customerViewID: TIntegerField;
     View_customerViewCUSTOMER_TYPE_ID: TIntegerField;
@@ -167,11 +166,14 @@ type
     View_contact_detail_coViewCUSTOMER_ID: TIntegerField;
     View_contact_detail_coViewCONTACT_TYPE: TStringField;
     View_contact_detail_coViewVALUE: TStringField;
-    cdsContactDetailCoCONTACT_DETAIL_CO_ID: TIntegerField;
+    cdsContactDetailCo: TFDMemTable;
+    cdsContactDetailCoID: TIntegerField;
     cdsContactDetailCoCONTACT_TYPE_ID: TIntegerField;
     cdsContactDetailCoCUSTOMER_ID: TIntegerField;
-    cdsContactDetailCoCONTACT_TYPE: TStringField;
+    cdsContactDetailCoCONTACT_PERSON_ID: TIntegerField;
     cdsContactDetailCoVALUE: TStringField;
+    cdsContactDetailCoCOMMENT: TStringField;
+    cdsContactDetailCoCONTACT_TYPE: TStringField;
   private
     { Private declarations }
   public

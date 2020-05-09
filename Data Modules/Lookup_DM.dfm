@@ -30,6 +30,7 @@ inherited LookupDM: TLookupDM
     Top = 60
   end
   object dtsContactDetailCo: TDataSource
+    DataSet = cdsContactDetailCo
     Left = 135
     Top = 170
   end
@@ -96,28 +97,34 @@ inherited LookupDM: TLookupDM
       Origin = 'ID'
     end
     object cdsContactDetailPersonCONTACT_TYPE_ID: TIntegerField
+      DisplayLabel = 'CT ID'
       FieldName = 'CONTACT_TYPE_ID'
       Origin = 'CONTACT_TYPE_ID'
     end
     object cdsContactDetailPersonCUSTOMER_ID: TIntegerField
+      DisplayLabel = 'C ID'
       FieldName = 'CUSTOMER_ID'
       Origin = 'CUSTOMER_ID'
     end
     object cdsContactDetailPersonCONTACT_PERSON_ID: TIntegerField
+      DisplayLabel = 'CP ID'
       FieldName = 'CONTACT_PERSON_ID'
       Origin = 'CONTACT_PERSON_ID'
     end
     object cdsContactDetailPersonVALUE: TStringField
+      DisplayLabel = 'Value'
       FieldName = 'VALUE'
       Origin = '"VALUE"'
       Size = 75
     end
     object cdsContactDetailPersonCOMMENT: TStringField
+      DisplayLabel = 'Comment'
       FieldName = 'COMMENT'
       Origin = '"COMMENT"'
       Size = 30
     end
     object cdsContactDetailPersonCONTACT_TYPE: TStringField
+      DisplayLabel = 'Contact Type'
       FieldName = 'CONTACT_TYPE'
       Origin = 'CONTACT_TYPE'
       Size = 255
@@ -191,33 +198,40 @@ inherited LookupDM: TLookupDM
       Origin = 'ID'
     end
     object cdsContactPersonCUSTOMER_ID: TIntegerField
+      DisplayLabel = 'C ID'
       FieldName = 'CUSTOMER_ID'
       Origin = 'CUSTOMER_ID'
     end
     object cdsContactPersonSALUTATION_ID: TIntegerField
+      DisplayLabel = 'Sal ID'
       FieldName = 'SALUTATION_ID'
       Origin = 'SALUTATION_ID'
     end
     object cdsContactPersonJOB_FUNCTION_ID: TIntegerField
+      DisplayLabel = 'JF ID'
       FieldName = 'JOB_FUNCTION_ID'
       Origin = 'JOB_FUNCTION_ID'
     end
     object cdsContactPersonFIRST_NAME: TStringField
+      DisplayLabel = 'First Name'
       FieldName = 'FIRST_NAME'
       Origin = 'FIRST_NAME'
       Size = 30
     end
     object cdsContactPersonLAST_NAME: TStringField
+      DisplayLabel = 'Last Name'
       FieldName = 'LAST_NAME'
       Origin = 'LAST_NAME'
       Size = 30
     end
     object cdsContactPersonINITIALS: TStringField
+      DisplayLabel = 'Init'
       FieldName = 'INITIALS'
       Origin = 'INITIALS'
       Size = 5
     end
     object cdsContactPersonOTHER_NAME: TStringField
+      DisplayLabel = 'Other Name'
       FieldName = 'OTHER_NAME'
       Origin = 'OTHER_NAME'
       Size = 50
@@ -227,22 +241,27 @@ inherited LookupDM: TLookupDM
       Origin = 'DOB'
     end
     object cdsContactPersonID_NUMBER: TStringField
+      DisplayLabel = 'ID Number'
       FieldName = 'ID_NUMBER'
       Origin = 'ID_NUMBER'
     end
     object cdsContactPersonPASSPORT_NUMBER: TStringField
+      DisplayLabel = 'Passprt No'
       FieldName = 'PASSPORT_NUMBER'
       Origin = 'PASSPORT_NUMBER'
     end
     object cdsContactPersonIS_PRIMARY_CONTACT: TIntegerField
+      DisplayLabel = 'P Cont'
       FieldName = 'IS_PRIMARY_CONTACT'
       Origin = 'IS_PRIMARY_CONTACT'
     end
     object cdsContactPersonSALUTATION: TStringField
+      DisplayLabel = 'Sal'
       FieldName = 'SALUTATION'
       Origin = 'SALUTATION'
     end
     object cdsContactPersonJOB_FUNCTION: TStringField
+      DisplayLabel = 'Job Function'
       FieldName = 'JOB_FUNCTION'
       Origin = 'JOB_FUNCTION'
       Size = 50
@@ -308,272 +327,259 @@ inherited LookupDM: TLookupDM
       Origin = 'ID'
     end
     object cdsCustomerCUSTOMER_TYPE_ID: TIntegerField
+      DisplayLabel = 'C ID'
       FieldName = 'CUSTOMER_TYPE_ID'
       Origin = 'CUSTOMER_TYPE_ID'
     end
     object cdsCustomerYEAR_END_MONTH_ID: TIntegerField
+      DisplayLabel = 'YEM ID'
       FieldName = 'YEAR_END_MONTH_ID'
       Origin = 'YEAR_END_MONTH_ID'
     end
     object cdsCustomerTAX_OFFICE_ID: TIntegerField
+      DisplayLabel = 'TO ID'
       FieldName = 'TAX_OFFICE_ID'
       Origin = 'TAX_OFFICE_ID'
     end
     object cdsCustomerAR_MONTH_ID: TIntegerField
+      DisplayLabel = 'ARM ID'
       FieldName = 'AR_MONTH_ID'
       Origin = 'AR_MONTH_ID'
     end
     object cdsCustomerVAT_MONTH_ID: TIntegerField
+      DisplayLabel = 'VM ID'
       FieldName = 'VAT_MONTH_ID'
       Origin = 'VAT_MONTH_ID'
     end
     object cdsCustomerVAT_COUNTRY_ID: TIntegerField
+      DisplayLabel = 'VC ID'
       FieldName = 'VAT_COUNTRY_ID'
       Origin = 'VAT_COUNTRY_ID'
     end
     object cdsCustomerVAT_OFFICE_ID: TIntegerField
+      DisplayLabel = 'VO ID'
       FieldName = 'VAT_OFFICE_ID'
       Origin = 'VAT_OFFICE_ID'
     end
     object cdsCustomerSTATUS_ID: TIntegerField
+      DisplayLabel = 'STA ID'
       FieldName = 'STATUS_ID'
       Origin = 'STATUS_ID'
     end
     object cdsCustomerCUSTOMER_TYPE: TStringField
+      DisplayLabel = 'Customer Type'
       FieldName = 'CUSTOMER_TYPE'
       Origin = 'CUSTOMER_TYPE'
       Size = 30
     end
     object cdsCustomerNAME: TStringField
+      DisplayLabel = 'Name'
       FieldName = 'NAME'
       Origin = 'NAME'
       Size = 100
     end
     object cdsCustomerFIRST_NAME: TStringField
+      DisplayLabel = 'First Name'
       FieldName = 'FIRST_NAME'
       Origin = 'FIRST_NAME'
       Size = 30
     end
     object cdsCustomerLAST_NAME: TStringField
+      DisplayLabel = 'Last Name'
       FieldName = 'LAST_NAME'
       Origin = 'LAST_NAME'
       Size = 30
     end
     object cdsCustomerINITIALS: TStringField
+      DisplayLabel = 'Init'
       FieldName = 'INITIALS'
       Origin = 'INITIALS'
       Size = 5
     end
     object cdsCustomerTRADING_AS: TStringField
+      DisplayLabel = 'Trading As'
       FieldName = 'TRADING_AS'
       Origin = 'TRADING_AS'
       Size = 100
     end
     object cdsCustomerBILL_TO: TStringField
+      DisplayLabel = 'Bill To'
       FieldName = 'BILL_TO'
       Origin = 'BILL_TO'
       Size = 100
     end
     object cdsCustomerCO_NO: TStringField
+      DisplayLabel = 'CO No'
       FieldName = 'CO_NO'
       Origin = 'CO_NO'
     end
     object cdsCustomerTAX_NO: TStringField
+      DisplayLabel = 'Tax No'
       FieldName = 'TAX_NO'
       Origin = 'TAX_NO'
     end
     object cdsCustomerVAT_NO: TStringField
+      DisplayLabel = 'VAT No'
       FieldName = 'VAT_NO'
       Origin = 'VAT_NO'
     end
     object cdsCustomerVAT_CUSTOMS_CODE: TStringField
+      DisplayLabel = 'VAT Cust Code'
       FieldName = 'VAT_CUSTOMS_CODE'
       Origin = 'VAT_CUSTOMS_CODE'
     end
     object cdsCustomerPAYE_NO: TStringField
+      DisplayLabel = 'PAYE No'
       FieldName = 'PAYE_NO'
       Origin = 'PAYE_NO'
     end
     object cdsCustomerUIF_NO: TStringField
+      DisplayLabel = 'UIF No'
       FieldName = 'UIF_NO'
       Origin = 'UIF_NO'
     end
     object cdsCustomerSDL_NO: TStringField
+      DisplayLabel = 'SDL No'
       FieldName = 'SDL_NO'
       Origin = 'SDL_NO'
     end
     object cdsCustomerWC_NO: TStringField
+      DisplayLabel = 'WC No'
       FieldName = 'WC_NO'
       Origin = 'WC_NO'
     end
     object cdsCustomerAR_COMPLETION_DATE: TSQLTimeStampField
+      DisplayLabel = 'AR Comp Date'
       FieldName = 'AR_COMPLETION_DATE'
       Origin = 'AR_COMPLETION_DATE'
     end
     object cdsCustomerPASTEL_ACC_CODE: TStringField
+      DisplayLabel = 'Pastel Acc Code'
       FieldName = 'PASTEL_ACC_CODE'
       Origin = 'PASTEL_ACC_CODE'
       Size = 25
     end
     object cdsCustomerVB_TAX_ACC_CODE: TStringField
+      DisplayLabel = 'VB Tax Acc Code'
       FieldName = 'VB_TAX_ACC_CODE'
       Origin = 'VB_TAX_ACC_CODE'
       Size = 25
     end
     object cdsCustomerIS_PROV_TAX_PAYER: TIntegerField
+      DisplayLabel = 'Prov'
       FieldName = 'IS_PROV_TAX_PAYER'
       Origin = 'IS_PROV_TAX_PAYER'
     end
     object cdsCustomerHAS_LIVING_WILL: TIntegerField
+      DisplayLabel = 'Liv Will'
       FieldName = 'HAS_LIVING_WILL'
       Origin = 'HAS_LIVING_WILL'
     end
     object cdsCustomerIS_ORGAN_DONOR: TIntegerField
+      DisplayLabel = 'Org Don'
       FieldName = 'IS_ORGAN_DONOR'
       Origin = 'IS_ORGAN_DONOR'
     end
     object cdsCustomerDATE_CREATED: TSQLTimeStampField
+      DisplayLabel = 'Created'
       FieldName = 'DATE_CREATED'
       Origin = 'DATE_CREATED'
     end
     object cdsCustomerDATE_MODIFIED: TSQLTimeStampField
+      DisplayLabel = 'Modified'
       FieldName = 'DATE_MODIFIED'
       Origin = 'DATE_MODIFIED'
     end
     object cdsCustomerIS_ACTIVE: TIntegerField
+      DisplayLabel = 'Act'
       FieldName = 'IS_ACTIVE'
       Origin = 'IS_ACTIVE'
     end
     object cdsCustomerEFILING: TStringField
+      DisplayLabel = 'eFiling'
       FieldName = 'EFILING'
       Origin = 'EFILING'
       Size = 30
     end
     object cdsCustomerEF_USER_NAME: TStringField
+      DisplayLabel = 'eFil User Name'
       FieldName = 'EF_USER_NAME'
       Origin = 'EF_USER_NAME'
       Size = 30
     end
     object cdsCustomerEF_PASSWORD: TStringField
+      DisplayLabel = 'eFiling Password'
       FieldName = 'EF_PASSWORD'
       Origin = 'EF_PASSWORD'
     end
     object cdsCustomerYEAR_END_MONTH: TStringField
+      DisplayLabel = 'Year End Month'
       FieldName = 'YEAR_END_MONTH'
       Origin = 'YEAR_END_MONTH'
       Size = 10
     end
     object cdsCustomerTAX_OFFICE: TStringField
+      DisplayLabel = 'Tax Office'
       FieldName = 'TAX_OFFICE'
       Origin = 'TAX_OFFICE'
       Size = 40
     end
     object cdsCustomerVAT_MONTH: TStringField
+      DisplayLabel = 'VAT Month'
       FieldName = 'VAT_MONTH'
       Origin = 'VAT_MONTH'
       Size = 10
     end
     object cdsCustomerVAT_COUNTRY: TStringField
+      DisplayLabel = 'VAT Country'
       FieldName = 'VAT_COUNTRY'
       Origin = 'VAT_COUNTRY'
       Size = 50
     end
     object cdsCustomerVAT_OFFICE: TStringField
+      DisplayLabel = 'VAT Office'
       FieldName = 'VAT_OFFICE'
       Origin = 'VAT_OFFICE'
       Size = 40
     end
     object cdsCustomerAR_MONTH: TStringField
+      DisplayLabel = 'AR Month'
       FieldName = 'AR_MONTH'
       Origin = 'AR_MONTH'
       Size = 10
     end
     object cdsCustomerCUSTOMER_STATUS: TStringField
+      DisplayLabel = 'Cust Status'
       FieldName = 'CUSTOMER_STATUS'
       Origin = 'CUSTOMER_STATUS'
     end
     object cdsCustomerIS_ACTIVE_STR: TStringField
+      DisplayLabel = 'Act'
       FieldName = 'IS_ACTIVE_STR'
       Origin = 'IS_ACTIVE_STR'
       FixedChar = True
       Size = 1
     end
     object cdsCustomerIS_PROV_TAX_PAYER_STR: TStringField
+      DisplayLabel = 'Prov'
       FieldName = 'IS_PROV_TAX_PAYER_STR'
       Origin = 'IS_PROV_TAX_PAYER_STR'
       FixedChar = True
       Size = 1
     end
     object cdsCustomerHAS_LIVING_WILL_STR: TStringField
+      DisplayLabel = 'Liv Will'
       FieldName = 'HAS_LIVING_WILL_STR'
       Origin = 'HAS_LIVING_WILL_STR'
       FixedChar = True
       Size = 1
     end
     object cdsCustomerIS_ORGAN_DONOR_STR: TStringField
+      DisplayLabel = 'Org Don'
       FieldName = 'IS_ORGAN_DONOR_STR'
       Origin = 'IS_ORGAN_DONOR_STR'
       FixedChar = True
       Size = 1
-    end
-  end
-  object cdsContactDetailCo: TFDMemTable
-    ActiveStoredUsage = [auDesignTime]
-    FilterOptions = [foCaseInsensitive]
-    FieldDefs = <>
-    CachedUpdates = True
-    IndexDefs = <
-      item
-        Name = 'idxCID'
-        Fields = 'CUSTOMER_ID'
-      end>
-    IndexName = 'idxCID'
-    ConstraintsEnabled = True
-    MasterSource = dtsCustomer
-    MasterFields = 'ID'
-    DetailFields = 'CUSTOMER_ID'
-    FetchOptions.AssignedValues = [evMode, evRecordCountMode, evDetailDelay]
-    FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
-    FormatOptions.AssignedValues = [fvMaxBcdPrecision, fvMaxBcdScale, fvDataSnapCompatibility]
-    FormatOptions.MaxBcdPrecision = 2147483647
-    FormatOptions.MaxBcdScale = 1073741823
-    FormatOptions.DataSnapCompatibility = True
-    ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
-    ResourceOptions.Persistent = True
-    ResourceOptions.StorePrettyPrint = True
-    ResourceOptions.SilentMode = True
-    UpdateOptions.AssignedValues = [uvUpdateChngFields, uvUpdateMode, uvLockMode, uvLockPoint, uvLockWait, uvRefreshMode, uvFetchGeneratorsPoint, uvGeneratorName, uvCheckRequired, uvCheckReadOnly, uvCheckUpdatable, uvAutoCommitUpdates]
-    UpdateOptions.LockWait = True
-    UpdateOptions.FetchGeneratorsPoint = gpNone
-    UpdateOptions.GeneratorName = 'CONTACT_DETAIL_CO_ID_GEN'
-    UpdateOptions.CheckRequired = False
-    UpdateOptions.AutoCommitUpdates = True
-    UpdateOptions.UpdateTableName = 'CONTACT_DETAIL_CO'
-    StoreDefs = True
-    Left = 135
-    Top = 120
-    object cdsContactDetailCoCONTACT_DETAIL_CO_ID: TIntegerField
-      FieldName = 'CONTACT_DETAIL_CO_ID'
-      Origin = 'CONTACT_DETAIL_CO_ID'
-    end
-    object cdsContactDetailCoCONTACT_TYPE_ID: TIntegerField
-      FieldName = 'CONTACT_TYPE_ID'
-      Origin = 'CONTACT_TYPE_ID'
-    end
-    object cdsContactDetailCoCUSTOMER_ID: TIntegerField
-      FieldName = 'CUSTOMER_ID'
-      Origin = 'CUSTOMER_ID'
-    end
-    object cdsContactDetailCoCONTACT_TYPE: TStringField
-      FieldName = 'CONTACT_TYPE'
-      Origin = 'CONTACT_TYPE'
-      Size = 30
-    end
-    object cdsContactDetailCoVALUE: TStringField
-      FieldName = 'VALUE'
-      Origin = '"VALUE"'
-      Size = 75
     end
   end
   object View_customerView: TFDQuery
@@ -928,6 +934,120 @@ inherited LookupDM: TLookupDM
     object View_contact_detail_personViewCONTACT_TYPE: TStringField
       FieldName = 'CONTACT_TYPE'
       Origin = 'CONTACT_TYPE'
+      Size = 255
+    end
+  end
+  object cdsContactDetailCo: TFDMemTable
+    Tag = 9
+    ActiveStoredUsage = [auDesignTime]
+    FilterOptions = [foCaseInsensitive]
+    Constraints = <
+      item
+        CustomConstraint = 'CONTACT_TYPE_ID > 0'
+        ErrorMessage = 'Contact type must have a value'
+        FromDictionary = False
+      end
+      item
+        CustomConstraint = 'CHAR_LENGTH(TRIM(VALUE)) > 0'
+        ErrorMessage = 'Contact detail must have a value'
+        FromDictionary = False
+      end>
+    FieldDefs = <>
+    CachedUpdates = True
+    IndexDefs = <>
+    Indexes = <
+      item
+        Active = True
+        Name = 'idxID'
+        Fields = 'ID'
+        Options = [soPrimary]
+      end
+      item
+        Active = True
+        Name = 'idxCID'
+        Fields = 'CUSTOMER_ID'
+      end
+      item
+        Active = True
+        Selected = True
+        Name = 'idxContactdetailValue'
+        Fields = 'CUSTOMER_ID;CONTACT_TYPE_ID;VALUE'
+        Options = [soNoCase, soUnique]
+        FilterOptions = [ekNoCase]
+      end>
+    IndexName = 'idxContactdetailValue'
+    ConstraintsEnabled = True
+    MasterSource = dtsCustomer
+    MasterFields = 'ID'
+    DetailFields = 'CUSTOMER_ID'
+    FetchOptions.AssignedValues = [evMode, evRecordCountMode, evDetailDelay]
+    FetchOptions.Mode = fmAll
+    FetchOptions.RecordCountMode = cmTotal
+    FetchOptions.DetailDelay = 450
+    FormatOptions.AssignedValues = [fvMaxBcdPrecision, fvMaxBcdScale, fvDataSnapCompatibility]
+    FormatOptions.MaxBcdPrecision = 2147483647
+    FormatOptions.MaxBcdScale = 1073741823
+    FormatOptions.DataSnapCompatibility = True
+    ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
+    ResourceOptions.Persistent = True
+    ResourceOptions.StorePrettyPrint = True
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvUpdateChngFields, uvUpdateMode, uvLockMode, uvLockPoint, uvLockWait, uvRefreshMode, uvFetchGeneratorsPoint, uvGeneratorName, uvCheckRequired, uvCheckReadOnly, uvCheckUpdatable, uvAutoCommitUpdates]
+    UpdateOptions.LockWait = True
+    UpdateOptions.FetchGeneratorsPoint = gpNone
+    UpdateOptions.GeneratorName = 'CONTACT_DETAIL_CO_ID_GEN'
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    UpdateOptions.UpdateTableName = 'CONTACT_DETAIL_CO'
+    StoreDefs = True
+    Left = 135
+    Top = 120
+    object cdsContactDetailCoID: TIntegerField
+      Alignment = taLeftJustify
+      FieldName = 'ID'
+      Origin = 'ID'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+    object cdsContactDetailCoCONTACT_TYPE_ID: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'Contact Type'
+      FieldName = 'CONTACT_TYPE_ID'
+      Origin = 'CONTACT_TYPE_ID'
+      Required = True
+    end
+    object cdsContactDetailCoCUSTOMER_ID: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'C ID'
+      FieldName = 'CUSTOMER_ID'
+      Origin = 'CUSTOMER_ID'
+      Required = True
+    end
+    object cdsContactDetailCoCONTACT_PERSON_ID: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'CP ID'
+      FieldName = 'CONTACT_PERSON_ID'
+      Origin = 'CONTACT_PERSON_ID'
+      Required = True
+    end
+    object cdsContactDetailCoCONTACT_TYPE: TStringField
+      DisplayLabel = 'Contact Type'
+      FieldKind = fkCalculated
+      FieldName = 'CONTACT_TYPE'
+      Size = 30
+      Calculated = True
+    end
+    object cdsContactDetailCoVALUE: TStringField
+      DisplayLabel = 'Value'
+      FieldName = 'VALUE'
+      Origin = '"VALUE"'
+      Required = True
+      Size = 75
+    end
+    object cdsContactDetailCoCOMMENT: TStringField
+      DisplayLabel = 'Comment'
+      FieldName = 'COMMENT'
+      Origin = '"COMMENT"'
       Size = 255
     end
   end

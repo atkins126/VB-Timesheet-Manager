@@ -7,7 +7,7 @@ uses
   Data.DBXCommon, System.DateUtils,
 
   Base_DM, VBBase_DM, CommonValues, VBCommonValues,
-
+                                                      b
   IPPeerClient, Data.DB, Data.SqlExpr,
 
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error,
@@ -229,6 +229,13 @@ type
     cdsReleaseToPeriodPERIOD_NAME: TStringField;
     cdsReleaseCFwdPERIOD_NAME: TStringField;
     cdsTimesheetDATE_CARRIED_FORWARD: TDateField;
+    dtsContactDetailCo: TDataSource;
+    cdsContactDetailCo: TFDMemTable;
+    cdsContactDetailCoCONTACT_TYPE_ID: TIntegerField;
+    cdsContactDetailCoCUSTOMER_ID: TIntegerField;
+    cdsContactDetailCoCONTACT_TYPE: TStringField;
+    cdsContactDetailCoVALUE: TStringField;
+    cdsContactDetailCoCONTACT_DETAIL_CO_ID: TIntegerField;
     procedure dtsTimesheetStateChange(Sender: TObject);
     procedure cdsCustomerLookupCalcFields(DataSet: TDataSet);
     procedure cdsTimesheetNewRecord(DataSet: TDataSet);

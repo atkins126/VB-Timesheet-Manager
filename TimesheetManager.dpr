@@ -41,7 +41,8 @@ uses
   CarryForwardManager_Frm in 'General\CarryForwardManager_Frm.pas' {CarryForwardManagerFrm},
   VBProxyClass in '..\Lib\VBProxyClass.pas',
   CustomerSearch_Frm in 'General\CustomerSearch_Frm.pas' {CustomerSearchFrm},
-  Lookup_DM in 'Data Modules\Lookup_DM.pas' {LookupDM: TDataModule};
+  Lookup_DM in 'Data Modules\Lookup_DM.pas' {LookupDM: TDataModule},
+  CustomerContactDetail_Frm in 'General\CustomerContactDetail_Frm.pas' {CustomerContactDetailFrm};
 
 {$R *.res}
 

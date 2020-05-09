@@ -259,6 +259,12 @@ type
     imesheetData1: TMenuItem;
     Edit2: TMenuItem;
     PrintingExporting1: TMenuItem;
+    actCustomerContactInfo: TAction;
+    sepCustomerContactInfo: TdxBarSeparator;
+    btnCustomerContactinfo: TdxBarButton;
+    Customer1: TMenuItem;
+    CustomerContactInfo1: TMenuItem;
+    lblDisplay: TcxLabel;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoEditInsertEntry(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
@@ -302,9 +308,16 @@ type
     procedure DoReleaseCarryForwardManager(Sender: TObject);
     procedure DoSelectAllTimesheetItems(Sender: TObject);
     procedure DoClearTimesheetSelection(Sender: TObject);
-    procedure cbxIncludeReleasedItemsPropertiesEditValueChanged(
-      Sender: TObject);
+    procedure cbxIncludeReleasedItemsPropertiesEditValueChanged(Sender: TObject);
     procedure btnSelectAllClick(Sender: TObject);
+    procedure DoCustomerContactInfo(Sender: TObject);
+
+    procedure viewTimesheetFocusedRecordChanged(Sender: TcxCustomGridTableView;
+      APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord;
+      ANewItemRecordFocusingChanged: Boolean);
+
+    procedure lucCustomerGetDisplayText(Sender: TcxCustomGridTableItem;
+      ARecord: TcxCustomGridRecord; var AText: string);
   private
     { Private declarations }
     FTSUserID: Integer;
@@ -313,6 +326,7 @@ type
     FShowingForm: Boolean;
     FFromDate: TDateTime;
     FToDate: TDateTime;
+    FCustomerName: string;
 
     procedure UpdateApplicationSkin(SkinResourceFileName, SkinName: string);
     procedure OpenTables;
@@ -355,7 +369,8 @@ uses
   TimesheetActivitySummary_Frm,
   InvoiceItem_Frm,
   MonthlyBillableReport_Frm,
-  CarryForwardManager_Frm;
+  CarryForwardManager_Frm,
+  CustomerContactDetail_Frm;
 //  ReleaseCFwd_Frm;
 
 procedure TMainFrm.DrawCellBorder(var Msg: TMessage);
@@ -566,6 +581,9 @@ begin
   if MsgDialogFrm <> nil then
     FreeAndNil(MsgDialogFrm);
 
+  if CustomerContactDetailFrm <> nil then
+    FreeAndNil(CustomerContactDetailFrm);
+
   if Assigned(BaseFrm) then
     FreeAndNil(BaseFrm);
 
@@ -592,6 +610,16 @@ begin
   inherited;
   CopyCellContentOnly := TAction(Sender).Tag = 0;
   CopyRecordData(viewTimesheet, CopyCellContentOnly);
+end;
+
+procedure TMainFrm.DoCustomerContactInfo(Sender: TObject);
+begin
+  inherited;
+  if CustomerContactDetailFrm = nil then
+    CustomerContactDetailFrm := TCustomerContactDetailFrm.Create(nil);
+
+  SendMessage(CustomerContactDetailFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(FCustomerName)), 0);
+  CustomerContactDetailFrm.Show;
 end;
 
 procedure TMainFrm.DoDeleteEntry(Sender: TObject);
@@ -1558,7 +1586,8 @@ begin
         ' AND T.ACTIVITY_DATE >=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FFromDate), '''') +
         ' AND T.ACTIVITY_DATE <=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FToDate), '''');
 
-    OrderByClause := ' ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
+    OrderByClause := ' ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE, T.ID';
+//    OrderByClause := ' ORDER BY T.ID';
     WhereClause := WhereClause + OrderByClause;
   end;
 
@@ -1756,6 +1785,15 @@ procedure TMainFrm.viewTimesheetDblClick(Sender: TObject);
 begin
   inherited;
   actEdit.Execute;
+end;
+
+procedure TMainFrm.viewTimesheetFocusedRecordChanged(
+  Sender: TcxCustomGridTableView; APrevFocusedRecord,
+  AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
+begin
+  inherited;
+  if CustomerContactDetailFrm <> nil then
+    SendMessage(CustomerContactDetailFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(FCustomerName)), 0);
 end;
 
 procedure TMainFrm.viewTimesheetSelectionChanged(Sender: TcxCustomGridTableView);
@@ -2006,6 +2044,23 @@ begin
 // finally
 // MyMsg.Result := -1;
 // end;
+end;
+
+procedure TMainFrm.lucCustomerGetDisplayText(Sender: TcxCustomGridTableItem;
+  ARecord: TcxCustomGridRecord; var AText: string);
+begin
+  inherited;
+//  if ARecord <> nil then
+//  begin
+////  if Sender = lucCustomer then
+////    FCustomerName := Sender.FocusedCellViewInfo.DisplayValue;
+//    FCustomerName := AText;
+//    lblDisplay.Caption := FcustomerName;
+//  end;
+//////  FCustomerName := AText;
+////  if ARecord <> nil then
+//////    AText := TcxLookupComboBox(lucCustomer).Properties.ListSource.DataSet.FieldByName('NAME').AsString;
+////    FCustomerName := TSDM.cdsCustomerLookup.FieldByName('NAME').AsString;
 end;
 
 procedure TMainFrm.lucPeriodPropertiesEditValueChanged(Sender: TObject);

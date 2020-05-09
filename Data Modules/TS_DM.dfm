@@ -676,6 +676,19 @@ inherited TSDM: TTSDM
     FieldDefs = <>
     CachedUpdates = True
     IndexDefs = <>
+    Indexes = <
+      item
+        Active = True
+        Name = 'idxID'
+        Fields = 'ID'
+      end
+      item
+        Active = True
+        Selected = True
+        Name = 'idxActivityDate'
+        Fields = 'THE_PERIOD;ACTIVITY_DATE;ID'
+      end>
+    IndexName = 'idxActivityDate'
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
     FetchOptions.RecordCountMode = cmTotal
@@ -1500,5 +1513,81 @@ inherited TSDM: TTSDM
     DataSet = cdsToPeriod
     Left = 585
     Top = 175
+  end
+  object dtsContactDetailCo: TDataSource
+    DataSet = cdsContactDetailCo
+    Left = 50
+    Top = 300
+  end
+  object cdsContactDetailCo: TFDMemTable
+    Tag = 9
+    ActiveStoredUsage = [auDesignTime]
+    FilterOptions = [foCaseInsensitive]
+    FieldDefs = <>
+    CachedUpdates = True
+    IndexDefs = <>
+    Indexes = <
+      item
+        Active = True
+        Selected = True
+        Name = 'idxCustomerID'
+        Fields = 'CUSTOMER_ID'
+      end>
+    IndexName = 'idxCustomerID'
+    ConstraintsEnabled = True
+    MasterSource = dtsTimesheet
+    MasterFields = 'CUSTOMER_ID'
+    DetailFields = 'CUSTOMER_ID'
+    FetchOptions.AssignedValues = [evMode, evRecordCountMode, evDetailDelay]
+    FetchOptions.Mode = fmAll
+    FetchOptions.RecordCountMode = cmTotal
+    FormatOptions.AssignedValues = [fvMaxBcdPrecision, fvMaxBcdScale, fvDataSnapCompatibility]
+    FormatOptions.MaxBcdPrecision = 2147483647
+    FormatOptions.MaxBcdScale = 1073741823
+    FormatOptions.DataSnapCompatibility = True
+    ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
+    ResourceOptions.Persistent = True
+    ResourceOptions.StorePrettyPrint = True
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvUpdateChngFields, uvUpdateMode, uvLockMode, uvLockPoint, uvLockWait, uvRefreshMode, uvFetchGeneratorsPoint, uvGeneratorName, uvCheckRequired, uvCheckReadOnly, uvCheckUpdatable, uvAutoCommitUpdates]
+    UpdateOptions.LockWait = True
+    UpdateOptions.FetchGeneratorsPoint = gpNone
+    UpdateOptions.GeneratorName = 'CONTACT_DETAIL_CO_ID_GEN'
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    UpdateOptions.UpdateTableName = 'CONTACT_DETAIL_CO'
+    StoreDefs = True
+    Left = 50
+    Top = 250
+    object cdsContactDetailCoCONTACT_DETAIL_CO_ID: TIntegerField
+      DisplayLabel = 'CDC ID'
+      FieldName = 'CONTACT_DETAIL_CO_ID'
+    end
+    object cdsContactDetailCoCONTACT_TYPE_ID: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'Contact Type'
+      FieldName = 'CONTACT_TYPE_ID'
+      Origin = 'CONTACT_TYPE_ID'
+      Required = True
+    end
+    object cdsContactDetailCoCUSTOMER_ID: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'C ID'
+      FieldName = 'CUSTOMER_ID'
+      Origin = 'CUSTOMER_ID'
+      Required = True
+    end
+    object cdsContactDetailCoCONTACT_TYPE: TStringField
+      DisplayLabel = 'Contact Type'
+      FieldName = 'CONTACT_TYPE'
+      Size = 30
+    end
+    object cdsContactDetailCoVALUE: TStringField
+      DisplayLabel = 'Value'
+      FieldName = 'VALUE'
+      Origin = '"VALUE"'
+      Required = True
+      Size = 75
+    end
   end
 end
