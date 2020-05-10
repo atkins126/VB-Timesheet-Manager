@@ -7,7 +7,7 @@ uses
   Data.DBXCommon, System.DateUtils,
 
   Base_DM, VBBase_DM, CommonValues, VBCommonValues,
-                                                      b
+
   IPPeerClient, Data.DB, Data.SqlExpr,
 
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error,

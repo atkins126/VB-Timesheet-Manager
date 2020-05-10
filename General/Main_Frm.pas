@@ -265,8 +265,9 @@ type
     Customer1: TMenuItem;
     CustomerContactInfo1: TMenuItem;
     lblDisplay: TcxLabel;
+    btnReturnID: TdxBarLargeButton;
+    edtFirstName: TcxTextEdit;
     procedure DoExitTimesheetManager(Sender: TObject);
-    procedure DoEditInsertEntry(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
     procedure DoRefresh(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -318,6 +319,8 @@ type
 
     procedure lucCustomerGetDisplayText(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AText: string);
+    procedure btnReturnIDClick(Sender: TObject);
+    procedure DiEditInsertEntry(Sender: TObject);
   private
     { Private declarations }
     FTSUserID: Integer;
@@ -603,6 +606,35 @@ begin
   MainFrm.Close;
 end;
 
+procedure TMainFrm.DiEditInsertEntry(Sender: TObject);
+begin
+  inherited;
+  Screen.Cursor := crHourglass;
+  try
+    case TAction(Sender).Tag of
+      0: TSDM.cdsTimesheet.Insert;
+      1: TSDM.cdsTimesheet.Edit;
+    end;
+
+    if TimesheetEditFrm = nil then
+      TimesheetEditFrm := TTimesheetEditFrm.Create(nil);
+
+    VBBaseDM.MyDataSet := TSDM.cdsTimesheet;
+    VBBaseDM.MyDataSource := TSDM.dtsTimesheet;
+
+    if TimesheetEditFrm.ShowModal = mrCancel then
+      if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
+        TSDM.cdsTimesheet.Cancel
+      else
+        actRefresh.Execute;
+
+    TimesheetEditFrm.Close;
+    FreeAndNil(TimesheetEditFrm);
+  finally
+    Screen.Cursor := crDefault;
+  end;
+end;
+
 procedure TMainFrm.DoCopyCell(Sender: TObject);
 var
   CopyCellContentOnly: Boolean;
@@ -782,6 +814,30 @@ begin
 ////    2: popInvoice.Popup(APopupPoint.X, APopupPoint.Y);
 ////    3: popCarryForward.Popup(APopupPoint.X, APopupPoint.Y);
 ////  end;
+end;
+
+procedure TMainFrm.btnReturnIDClick(Sender: TObject);
+var
+  Response, SQLStatement, Value: string;
+  NextID: Integer;
+begin
+  inherited;
+//  Response := RUtils.CreateStringList(PIPE, DOUBLE_QUOTE);
+  if Length(Trim(edtFirstName.Text)) = 0 then
+    Exit;
+
+  Value := AnsiQuotedStr(edtFirstName.Text, '''');
+  SQLStatement := ' INSERT INTO TEST(FIRST_NAME) VALUES(' + Value + ') RETURNING ID';
+
+//  try
+  NextID := StrToInt(VBBaseDM.InsertRecord(SQLStatement, Response));
+
+//    if SameText(Response.Values['RESPONSE'], 'ERROR') then
+//      raise EServerError.Create('One or more errors occurred when executing an SQL command with error message:' + CRLF + CRLF +
+//        Response.Values['ERROR_MESSAGE']);
+//  finally
+//    Response.Free;
+//  end;
 end;
 
 procedure TMainFrm.btnSelectAllClick(Sender: TObject);
@@ -2263,35 +2319,6 @@ begin
   end;
 // if not FShowingForm then
 // actGetTimesheetData.Execute;
-end;
-
-procedure TMainFrm.DoEditInsertEntry(Sender: TObject);
-begin
-  inherited;
-  Screen.Cursor := crHourglass;
-  try
-    case TAction(Sender).Tag of
-      0: TSDM.cdsTimesheet.Insert;
-      1: TSDM.cdsTimesheet.Edit;
-    end;
-
-    if TimesheetEditFrm = nil then
-      TimesheetEditFrm := TTimesheetEditFrm.Create(nil);
-
-    VBBaseDM.MyDataSet := TSDM.cdsTimesheet;
-    VBBaseDM.MyDataSource := TSDM.dtsTimesheet;
-
-    if TimesheetEditFrm.ShowModal = mrCancel then
-      if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
-        TSDM.cdsTimesheet.Cancel
-      else
-        actRefresh.Execute;
-
-    TimesheetEditFrm.Close;
-    FreeAndNil(TimesheetEditFrm);
-  finally
-    Screen.Cursor := crDefault;
-  end;
 end;
 
 procedure TMainFrm.DoOptions(Sender: TObject);

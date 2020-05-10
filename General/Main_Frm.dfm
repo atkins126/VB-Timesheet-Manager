@@ -1444,6 +1444,13 @@ inherited MainFrm: TMainFrm
     Caption = 'Display'
     Transparent = True
   end
+  object edtFirstName: TcxTextEdit [7]
+    Left = 1190
+    Top = 137
+    BeepOnEnter = False
+    TabOrder = 11
+    Width = 121
+  end
   inherited styRepository: TcxStyleRepository
     Left = 420
     Top = 235
@@ -1473,7 +1480,7 @@ inherited MainFrm: TMainFrm
       Hint = 'Add a new timesheet item'
       ImageIndex = 6
       ShortCut = 45
-      OnExecute = DoEditInsertEntry
+      OnExecute = DiEditInsertEntry
     end
     object actEdit: TAction
       Tag = 1
@@ -1482,7 +1489,7 @@ inherited MainFrm: TMainFrm
       Hint = 'Edit selected timesheet item'
       ImageIndex = 7
       ShortCut = 13
-      OnExecute = DoEditInsertEntry
+      OnExecute = DiEditInsertEntry
     end
     object actApprove: TAction
       Tag = 100
@@ -8292,6 +8299,10 @@ inherited MainFrm: TMainFrm
         item
           Visible = True
           ItemName = 'btnOtherActions'
+        end
+        item
+          Visible = True
+          ItemName = 'btnReturnID'
         end>
       OneOnRow = True
       Row = 0
@@ -8773,6 +8784,13 @@ inherited MainFrm: TMainFrm
     object btnCustomerContactinfo: TdxBarButton
       Action = actCustomerContactInfo
       Category = 0
+    end
+    object btnReturnID: TdxBarLargeButton
+      Caption = 'Return ID'
+      Category = 0
+      Hint = 'Return ID'
+      Visible = ivAlways
+      OnClick = btnReturnIDClick
     end
   end
   object imgNav32: TcxImageList

@@ -198,7 +198,6 @@
             <Form>CarryForwardManagerFrm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\Lib\VBProxyClass.pas"/>
         <DCCReference Include="General\CustomerSearch_Frm.pas">
             <Form>CustomerSearchFrm</Form>
             <FormType>dfm</FormType>
@@ -212,6 +211,7 @@
             <Form>CustomerContactDetailFrm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="..\Lib\VBProxyClass.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
