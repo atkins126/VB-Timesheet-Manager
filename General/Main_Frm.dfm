@@ -241,8 +241,44 @@ inherited MainFrm: TMainFrm
           Position.ColIndex = 7
           Position.RowIndex = 0
         end
+        object edtCustomerName: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'CUSTOMER_NAME'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          MinWidth = 300
+          Options.Editing = False
+          Options.HorzSizing = False
+          Width = 300
+          Position.BandIndex = 0
+          Position.ColIndex = 8
+          Position.RowIndex = 0
+        end
+        object edtPriceItem: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'PRICE_LIST_ITEM'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          MinWidth = 300
+          Options.Editing = False
+          Options.HorzSizing = False
+          Width = 300
+          Position.BandIndex = 0
+          Position.ColIndex = 9
+          Position.RowIndex = 0
+        end
+        object edtActivityType: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'ACTIVITY_TYPE'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          MinWidth = 200
+          Options.Editing = False
+          Options.HorzSizing = False
+          Width = 200
+          Position.BandIndex = 0
+          Position.ColIndex = 10
+          Position.RowIndex = 0
+        end
         object lucCustomer: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'CUSTOMER_ID'
+          DataBinding.FieldName = 'CUSTOMER_NAME'
           PropertiesClassName = 'TcxLookupComboBoxProperties'
           Properties.DropDownListStyle = lsFixedList
           Properties.ImmediatePost = True
@@ -253,17 +289,18 @@ inherited MainFrm: TMainFrm
             end>
           Properties.ListSource = TSDM.dtsCustomerLookup
           Properties.ReadOnly = True
+          Visible = False
           OnGetDisplayText = lucCustomerGetDisplayText
           MinWidth = 300
           Options.Editing = False
           Options.HorzSizing = False
           Width = 300
           Position.BandIndex = 0
-          Position.ColIndex = 8
+          Position.ColIndex = 11
           Position.RowIndex = 0
         end
         object lucPriceItem: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'PRICE_LIST_ITEM_ID'
+          DataBinding.FieldName = 'PRICE_LIST_ITEM'
           PropertiesClassName = 'TcxLookupComboBoxProperties'
           Properties.DropDownListStyle = lsFixedList
           Properties.ImmediatePost = True
@@ -275,17 +312,18 @@ inherited MainFrm: TMainFrm
             end>
           Properties.ListSource = TSDM.dtsPriceList
           Properties.ReadOnly = True
+          Visible = False
           MinWidth = 300
           Options.Editing = False
           Options.Filtering = False
           Options.HorzSizing = False
           Width = 300
           Position.BandIndex = 0
-          Position.ColIndex = 9
+          Position.ColIndex = 12
           Position.RowIndex = 0
         end
         object lucActivityType: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'ACTIVITY_TYPE_ID'
+          DataBinding.FieldName = 'ACTIVITY_TYPE'
           PropertiesClassName = 'TcxLookupComboBoxProperties'
           Properties.DropDownListStyle = lsFixedList
           Properties.ImmediatePost = True
@@ -296,12 +334,13 @@ inherited MainFrm: TMainFrm
             end>
           Properties.ListSource = TSDM.dtsActivityType
           Properties.ReadOnly = True
+          Visible = False
           MinWidth = 200
           Options.Editing = False
           Options.HorzSizing = False
           Width = 200
           Position.BandIndex = 0
-          Position.ColIndex = 10
+          Position.ColIndex = 13
           Position.RowIndex = 0
         end
         object memActivity: TcxGridDBBandedColumn
@@ -318,7 +357,7 @@ inherited MainFrm: TMainFrm
           Options.Sorting = False
           Width = 300
           Position.BandIndex = 0
-          Position.ColIndex = 11
+          Position.ColIndex = 14
           Position.RowIndex = 0
         end
         object cbxBillable: TcxGridDBBandedColumn
@@ -467,7 +506,8 @@ inherited MainFrm: TMainFrm
               FieldName = 'NAME'
             end>
           Properties.ListSource = TSDM.dtsRateUnit
-          MinWidth = 90
+          Visible = False
+          MinWidth = 50
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
@@ -475,7 +515,7 @@ inherited MainFrm: TMainFrm
           Options.HorzSizing = False
           Options.Moving = False
           Options.Sorting = False
-          Width = 90
+          Width = 50
           Position.BandIndex = 2
           Position.ColIndex = 2
           Position.RowIndex = 0
@@ -501,7 +541,7 @@ inherited MainFrm: TMainFrm
           Options.Sorting = False
           Width = 80
           Position.BandIndex = 2
-          Position.ColIndex = 3
+          Position.ColIndex = 4
           Position.RowIndex = 0
         end
         object edtInvoiceID: TcxGridDBBandedColumn
@@ -577,7 +617,7 @@ inherited MainFrm: TMainFrm
           Options.Moving = False
           Width = 60
           Position.BandIndex = 0
-          Position.ColIndex = 13
+          Position.ColIndex = 16
           Position.RowIndex = 0
         end
         object cbxLocked: TcxGridDBBandedColumn
@@ -599,7 +639,7 @@ inherited MainFrm: TMainFrm
           Options.HorzSizing = False
           Width = 40
           Position.BandIndex = 0
-          Position.ColIndex = 12
+          Position.ColIndex = 15
           Position.RowIndex = 0
         end
         object dteModified: TcxGridDBBandedColumn
@@ -621,7 +661,7 @@ inherited MainFrm: TMainFrm
           Options.Moving = False
           VisibleForCustomization = False
           Position.BandIndex = 0
-          Position.ColIndex = 14
+          Position.ColIndex = 17
           Position.RowIndex = 0
         end
         object edtDayOrder: TcxGridDBBandedColumn
@@ -643,7 +683,7 @@ inherited MainFrm: TMainFrm
           VisibleForCustomization = False
           Width = 90
           Position.BandIndex = 0
-          Position.ColIndex = 15
+          Position.ColIndex = 18
           Position.RowIndex = 0
         end
         object edtDateCarriedForward: TcxGridDBBandedColumn
@@ -689,16 +729,193 @@ inherited MainFrm: TMainFrm
           Properties.DisplayFormat = '######'
           Properties.EditFormat = '######'
           Properties.ReadOnly = True
-          MinWidth = 65
+          MinWidth = 70
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
           Options.HorzSizing = False
           Options.Moving = False
           Options.Sorting = False
-          Width = 65
+          Width = 70
           Position.BandIndex = 4
           Position.ColIndex = 2
+          Position.RowIndex = 0
+        end
+        object edtCustomerTypeID: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'CUSTOMER_TYPE_ID'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = '##0'
+          Properties.EditFormat = '##0'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 50
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 50
+          Position.BandIndex = 0
+          Position.ColIndex = 19
+          Position.RowIndex = 0
+        end
+        object edtFirstName: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'FIRST_NAME'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 120
+          Options.Editing = False
+          Options.Filtering = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 120
+          Position.BandIndex = 0
+          Position.ColIndex = 20
+          Position.RowIndex = 0
+        end
+        object edtLastName: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'LAST_NAME'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 120
+          Options.Editing = False
+          Options.Filtering = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 120
+          Position.BandIndex = 0
+          Position.ColIndex = 21
+          Position.RowIndex = 0
+        end
+        object edtLoginName: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'LOGIN_NAME'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 120
+          Options.Editing = False
+          Options.HorzSizing = False
+          Width = 120
+          Position.BandIndex = 0
+          Position.ColIndex = 22
+          Position.RowIndex = 0
+        end
+        object edtCustomerType: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'CUSTOMER_TYPE'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 200
+          Options.Editing = False
+          Options.HorzSizing = False
+          Width = 200
+          Position.BandIndex = 0
+          Position.ColIndex = 23
+          Position.RowIndex = 0
+        end
+        object edtAbbreviation: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'ABBREVIATION'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 39
+          Options.Editing = False
+          Options.HorzSizing = False
+          Position.BandIndex = 2
+          Position.ColIndex = 5
+          Position.RowIndex = 0
+        end
+        object edtrateUnit: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'RATE_UNIT'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          MinWidth = 100
+          Options.Editing = False
+          Options.HorzSizing = False
+          Width = 100
+          Position.BandIndex = 2
+          Position.ColIndex = 3
+          Position.RowIndex = 0
+        end
+        object edtBillableStr: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'BILLABLE_STR'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 11
+          Options.Editing = False
+          Options.HorzSizing = False
+          Position.BandIndex = 1
+          Position.ColIndex = 4
+          Position.RowIndex = 0
+        end
+        object edtLockedStr: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'LOCKED_STR'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 11
+          Options.Editing = False
+          Options.HorzSizing = False
+          Position.BandIndex = 0
+          Position.ColIndex = 24
+          Position.RowIndex = 0
+        end
+        object cbxAdditionlaWorkStr: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'IS_ADDITIONAL_WORK_STR'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 11
+          Options.Editing = False
+          Options.HorzSizing = False
+          Position.BandIndex = 1
+          Position.ColIndex = 5
+          Position.RowIndex = 0
+        end
+        object edtCustomerGroupLink: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'CUSTOMER_GROUP_LINK_NAME'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 300
+          Options.Editing = False
+          Options.HorzSizing = False
+          Width = 300
+          Position.BandIndex = 0
+          Position.ColIndex = 25
+          Position.RowIndex = 0
+        end
+        object edtCarryForwardStr: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'CARRY_FORWARD_STR'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 11
+          Options.Editing = False
+          Options.HorzSizing = False
+          Position.BandIndex = 0
+          Position.ColIndex = 26
+          Position.RowIndex = 0
+        end
+        object edtFullName: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'FULL_NAME'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 200
+          Options.Editing = False
+          Options.HorzSizing = False
+          Width = 200
+          Position.BandIndex = 0
+          Position.ColIndex = 27
           Position.RowIndex = 0
         end
       end
@@ -828,8 +1045,8 @@ inherited MainFrm: TMainFrm
     end
   end
   object grdTimesheetBillable: TcxGrid [2]
-    Left = 1391
-    Top = 174
+    Left = 1372
+    Top = 159
     Width = 1181
     Height = 421
     Font.Charset = ANSI_CHARSET
@@ -1443,13 +1660,6 @@ inherited MainFrm: TMainFrm
     Top = 138
     Caption = 'Display'
     Transparent = True
-  end
-  object edtFirstName: TcxTextEdit [7]
-    Left = 1190
-    Top = 137
-    BeepOnEnter = False
-    TabOrder = 11
-    Width = 121
   end
   inherited styRepository: TcxStyleRepository
     Left = 420
@@ -8790,7 +9000,6 @@ inherited MainFrm: TMainFrm
       Category = 0
       Hint = 'Return ID'
       Visible = ivAlways
-      OnClick = btnReturnIDClick
     end
   end
   object imgNav32: TcxImageList
