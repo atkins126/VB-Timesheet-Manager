@@ -295,7 +295,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       object viewCarryForwardDetail: TcxGridDBBandedTableView
         Tag = 1
         PopupMenu = popTimesheet
-        OnDblClick = viewTimesheetDblClick
+        OnDblClick = viewTimesheetDetailsDblClick
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
         OnCustomDrawCell = viewBillableSummaryCustomDrawCell
@@ -926,18 +926,18 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
         GridView = viewCarryForwardDetail
       end
     end
-    object grdTimesheet: TcxGrid [3]
+    object grdTimesheetDetails: TcxGrid [3]
       Left = 25
       Top = 493
       Width = 1073
       Height = 164
       TabOrder = 5
-      object viewTimesheet: TcxGridDBBandedTableView
+      object viewTimesheetDetails: TcxGridDBBandedTableView
         PopupMenu = popTimesheet
-        OnDblClick = viewTimesheetDblClick
+        OnDblClick = viewTimesheetDetailsDblClick
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
-        OnCustomDrawCell = viewTimesheetCustomDrawCell
+        OnCustomDrawCell = viewTimesheetDetailsCustomDrawCell
         DataController.DataSource = ReportDM.dtsTimesheetDetail
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <
@@ -1619,8 +1619,8 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           Position.RowIndex = 0
         end
       end
-      object lvlTimesheet: TcxGridLevel
-        GridView = viewTimesheet
+      object lvlTimesheetDetails: TcxGridLevel
+        GridView = viewTimesheetDetails
       end
     end
     object cbxRemoveZeroBillableItems: TcxCheckBox [4]
@@ -1728,7 +1728,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       AlignVert = avClient
       CaptionOptions.Text = 'Timesheet Details'
       CaptionOptions.Visible = False
-      Control = grdTimesheet
+      Control = grdTimesheetDetails
       ControlOptions.OriginalHeight = 350
       ControlOptions.OriginalWidth = 1181
       ControlOptions.ShowBorder = False

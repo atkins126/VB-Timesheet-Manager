@@ -984,9 +984,9 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
     FormatVersion = 1
   end
   object styReadOnly: TcxEditStyleController
-    Style.Color = 15132415
-    Left = 375
-    Top = 145
+    Style.Color = 13434879
+    Left = 420
+    Top = 115
     PixelsPerInch = 96
   end
   object styEditStatus: TcxEditStyleController
@@ -996,8 +996,8 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
     Style.Font.Name = 'Verdana'
     Style.Font.Style = [fsBold]
     Style.IsFontAssigned = True
-    Left = 470
-    Top = 145
+    Left = 510
+    Top = 115
     PixelsPerInch = 96
   end
 end

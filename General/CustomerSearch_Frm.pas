@@ -159,12 +159,14 @@ implementation
 
 {$R *.dfm}
 
-uses Lookup_DM;
+uses
+  TS_DM,
+  Lookup_DM;
 
 procedure TCustomerSearchFrm.DoCloseForm(Sender: TObject);
 begin
   inherited;
-Self.ModalResult :=  mrOk;
+  Self.ModalResult := mrOk;
 end;
 
 procedure TCustomerSearchFrm.DoEmailCustomer(Sender: TObject);
@@ -174,3 +176,4 @@ begin
 end;
 
 end.
+

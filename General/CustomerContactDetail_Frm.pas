@@ -16,7 +16,7 @@ uses
   cxCurrencyEdit, cxDBLookupComboBox, cxTextEdit, dxBar, cxGridLevel, cxGrid,
   cxGridInplaceEditForm, cxGridCustomTableView, cxGridTableView,
   cxGridBandedTableView, cxGridDBBandedTableView, cxGridCustomView, dxScreenTip,
-  dxCustomHint, cxHint;
+  dxCustomHint, cxHint, cxCheckBox, dxLayoutcxEditAdapters, cxContainer;
 
 type
   TCustomerContactDetailFrm = class(TBaseLayoutFrm)
@@ -42,12 +42,27 @@ type
     tipClose: TdxScreenTip;
     tipEmail: TdxScreenTip;
     styHintController: TcxHintStyleController;
+    edtContactDetailCoID: TcxGridDBBandedColumn;
+    edtContactTypeID: TcxGridDBBandedColumn;
+    edtFirstName: TcxGridDBBandedColumn;
+    edtLastName: TcxGridDBBandedColumn;
+    cbxIsPrimaryContact: TcxGridDBBandedColumn;
+    litPrimaryContact: TdxLayoutItem;
+    edtPrimaryContact: TcxTextEdit;
+    styReadOnly: TcxEditStyleController;
     procedure FormCreate(Sender: TObject);
     procedure DoCloseForm(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure viewContactDetailCoFocusedRecordChanged(
+      Sender: TcxCustomGridTableView; APrevFocusedRecord,
+      AFocusedRecord: TcxCustomGridRecord;
+      ANewItemRecordFocusingChanged: Boolean);
+    procedure DoEmail(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     procedure HandleCaption(var MyMsg: TMessage); message WM_DOWNLOAD_CAPTION;
+    procedure HandleContactType(var MyMsg: TMessage); message WM_CONTACT_TYPE;
   public
     { Public declarations }
   end;
@@ -64,7 +79,8 @@ uses TS_DM;
 procedure TCustomerContactDetailFrm.DoCloseForm(Sender: TObject);
 begin
   inherited;
-  Self.Close;
+  Self.Hide;
+//  Self.Close;
 end;
 
 procedure TCustomerContactDetailFrm.FormCreate(Sender: TObject);
@@ -72,8 +88,10 @@ begin
   inherited;
   layMain.Align := alClient;
   layMain.LookAndFeel := lafCustomSkin;
-  Self.Height := 270;
+  Self.Height := 300;
   Self.Width := 420;
+  Self.Top := 50;
+  Self.Left := Screen.Width - Self.Width - 100;
   viewContactDetailCo.DataController.DataSource := TSDM.dtsContactDetailCo;
 
 //  VBBaseDM.GetData(54, TSDM.cdsContactDetailCo, TSDM.cdsContactDetailCo.Name, ' ORDER BY O.CUSTOMER_ID',
@@ -81,19 +99,62 @@ begin
 //    TSDM.cdsContactDetailCo.UpdateOptions.UpdateTableName);
 end;
 
+procedure TCustomerContactDetailFrm.FormShow(Sender: TObject);
+begin
+  inherited;
+  grdContactDetailCo.SetFocus;
+  viewContactDetailCo.Focused := True;
+  viewContactDetailCo.DataController.FocusedRecordIndex := 0;
+  viewContactDetailCo.Controller.FocusedRecord.Selected := True;
+  viewContactDetailCo.Controller.FocusedItem := lucCDContactTypeID;
+  viewContactDetailCo.Controller.MakeFocusedItemVisible;
+  actEmail.Enabled := (edtContactTypeID.EditValue = 3)
+    and (viewContactDetailCo.DataController.RecordCount > 0);
+end;
+
+procedure TCustomerContactDetailFrm.DoEmail(Sender: TObject);
+begin
+  inherited;
+//
+end;
+
 procedure TCustomerContactDetailFrm.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
   inherited;
-  Action := caFree;
-  CustomerContactDetailFrm := nil;
+//  Action := caFree;
+//  CustomerContactDetailFrm := nil;
+end;
+
+procedure TCustomerContactDetailFrm.viewContactDetailCoFocusedRecordChanged(
+  Sender: TcxCustomGridTableView; APrevFocusedRecord,
+  AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
+begin
+  inherited;
+  if AFocusedRecord <> nil then
+    actEmail.Enabled := (edtContactTypeID.EditValue = 3)
+      and (viewContactDetailCo.DataController.RecordCount > 0);
 end;
 
 procedure TCustomerContactDetailFrm.HandleCaption(var MyMsg: TMessage);
 begin
   try
-    viewContactDetailCo.Bands[0].Caption := 'Contact details for: ' +  PChar(MyMsg.WParam);
+    Caption := 'Contact details for: ' + PChar(MyMsg.WParam);
+    viewContactDetailCo.Bands[0].Caption := 'Contact details for: ' + PChar(MyMsg.WParam);
+    edtPrimaryContact.Text :=
+      TSDM.cdsContactDetailCo.FieldByName('FIRST_NAME').AsString + ' ' +
+      TSDM.cdsContactDetailCo.FieldByName('LAST_NAME').AsString;
     Update;
+  finally
+    MyMsg.Result := 1;
+  end;
+end;
+
+procedure TCustomerContactDetailFrm.HandleContactType(var MyMsg: TMessage);
+begin
+  try
+    actEmail.Enabled := (edtContactTypeID.EditValue = 3)
+      and (viewContactDetailCo.DataController.RecordCount > 0);
   finally
     MyMsg.Result := 1;
   end;

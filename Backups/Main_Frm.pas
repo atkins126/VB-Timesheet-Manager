@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Forms,
   System.Classes, Vcl.Graphics, System.ImageList, Vcl.ImgList, Vcl.Controls,
   Vcl.Dialogs, System.Actions, Vcl.ActnList, System.Win.Registry, Data.DB,
-  System.DateUtils, System.IOUtils, Winapi.ShellApi, System.Types, Vcl.StdCtrls,
+  System.DateUtils, System.IOUtils, Winapi.ShellApi, System.Types,
 
   Base_Frm, BaseLayout_Frm, VBProxyClass, VBCommonValues, CommonFunctions, CommonValues,
 
@@ -22,7 +22,7 @@ uses
   dxBarExtItems, cxBarEditItem, cxMemo, Vcl.Menus, dxScrollbarAnnotations,
   dxRibbonSkins, dxRibbonCustomizationForm, dxRibbon, dxPrnDev, dxPrnDlg,
   cxGridExportLink, cxDataUtils, dxLayoutcxEditAdapters, cxImage, cxLabel,
-  cxButtons, dxRibbonStatusBar;
+  Vcl.StdCtrls, cxButtons, dxRibbonStatusBar, dxSkinMoneyTwins;
 
 type
   TMainFrm = class(TBaseLayoutFrm)
@@ -331,7 +331,7 @@ type
     FToDate: TDateTime;
     FCustomerName: string;
 
-    procedure UpdateApplicationSkin(SkinResourceFileName {, SkinName}: string);
+    procedure UpdateApplicationSkin(SkinResourceFileName, SkinName: string);
     procedure OpenTables;
     procedure SetButtonStatus(EditMode: Boolean);
     procedure VerifyRegistry;
@@ -397,7 +397,7 @@ end;
 procedure TMainFrm.FormShow(Sender: TObject);
 var
   VBShell: string;
-  {$IFDEF DEBUG}ErrorMsg, {$ENDIF}SkinResourceFileName {, SkinName}: string;
+  {$IFDEF DEBUG}ErrorMsg, {$ENDIF}SkinResourceFileName, SkinName: string;
   RegKey: TRegistry;
 begin
   inherited;
@@ -449,12 +449,12 @@ begin
     VBBaseDM.CheckForUpdates(3, '');
     TSDM.ShellResource := VBBaseDM.GetShellResource;
     SkinResourceFileName := RESOURCE_FOLDER + SKIN_RESOURCE_FILE;
-//    SkinName := TSDM.ShellResource.SkinName;
-//
-//    if Length(Trim(SkinName)) = 0 then
-//      SkinName := DEFAULT_SKIN_NAME;
+    SkinName := TSDM.ShellResource.SkinName;
 
-    UpdateApplicationSkin(SkinResourceFileName {, SkinName});
+    if Length(Trim(SkinName)) = 0 then
+      SkinName := DEFAULT_SKIN_NAME;
+
+    UpdateApplicationSkin(SkinResourceFileName, SkinName);
 
     if BaseFrm = nil then
       BaseFrm := TBaseFrm.Create(nil);
@@ -542,6 +542,7 @@ begin
       viewTimesheet.Controller.FocusedItem := edtActivityDate;
 
       viewTimesheet.Controller.MakeFocusedItemVisible;
+
     end;
 
     VBBaseDM.DBAction := acBrowsing;
@@ -581,22 +582,13 @@ procedure TMainFrm.FormDestroy(Sender: TObject);
 begin
   inherited;
   if MsgDialogFrm <> nil then
-  begin
-    msgDialogFrm.Close;
     FreeAndNil(MsgDialogFrm);
-  end;
 
   if CustomerContactDetailFrm <> nil then
-  begin
-    CustomerContactDetailFrm.Close;
     FreeAndNil(CustomerContactDetailFrm);
-  end;
 
   if Assigned(BaseFrm) then
-  begin
-    BaseFrm.Close;
     FreeAndNil(BaseFrm);
-  end;
 
   if Assigned(TSDM) then
     FreeAndNil(TSDM);
@@ -655,19 +647,11 @@ end;
 procedure TMainFrm.DoCustomerContactInfo(Sender: TObject);
 begin
   inherited;
-  Screen.Cursor := crHourglass;
+  if CustomerContactDetailFrm = nil then
+    CustomerContactDetailFrm := TCustomerContactDetailFrm.Create(nil);
 
-  try
-    if CustomerContactDetailFrm = nil then
-      CustomerContactDetailFrm := TCustomerContactDetailFrm.Create(nil);
-//  CustomerContactDetailFrm.Caption := 'Contact details for: ' + FCustomerName;
-//  CustomerContactDetailFrm.viewContactDetailCo.Bands[0].Caption := 'Contact details for: ' + FCustomerName;
-
-    SendMessage(CustomerContactDetailFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(FCustomerName)), 0);
-    CustomerContactDetailFrm.Show;
-  finally
-    Screen.Cursor := crDefault;
-  end;
+  SendMessage(CustomerContactDetailFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(FCustomerName)), 0);
+  CustomerContactDetailFrm.Show;
 end;
 
 procedure TMainFrm.DoDeleteEntry(Sender: TObject);
@@ -846,7 +830,7 @@ begin
   SQLStatement := ' INSERT INTO TEST(FIRST_NAME) VALUES(' + Value + ') RETURNING ID';
 
 //  try
-  NextID := StrToInt(VBBaseDM.ModifyRecord(SQLStatement, Response));
+  NextID := StrToInt(VBBaseDM.InsertRecord(SQLStatement, Response));
 
 //    if SameText(Response.Values['RESPONSE'], 'ERROR') then
 //      raise EServerError.Create('One or more errors occurred when executing an SQL command with error message:' + CRLF + CRLF +
@@ -1694,11 +1678,8 @@ begin
   end;
 end;
 
-procedure TMainFrm.UpdateApplicationSkin(SkinResourceFileName {, SkinName}: string);
-var
-  SkinName: string;
+procedure TMainFrm.UpdateApplicationSkin(SkinResourceFileName, SkinName: string);
 begin
-  SkinName := VBBaseDM.GetSkinFromRegistry;
   sknController.BeginUpdate;
   try
     sknController.NativeStyle := False;
@@ -1868,11 +1849,7 @@ procedure TMainFrm.viewTimesheetFocusedRecordChanged(
 begin
   inherited;
   if CustomerContactDetailFrm <> nil then
-  begin
     SendMessage(CustomerContactDetailFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(FCustomerName)), 0);
-    SendMessage(CustomerContactDetailFrm.Handle, WM_CONTACT_TYPE, DWORD(PChar('')), 0);
-//    SendMessage(ProgressFrm.Handle, WM_CONTACT_TYPE, DWORD(PChar('Opening Customer Contact detail Table')), 0);
-  end;
 end;
 
 procedure TMainFrm.viewTimesheetSelectionChanged(Sender: TcxCustomGridTableView);
@@ -1913,7 +1890,7 @@ begin
       TSDM.cdsCustomerLookup.CreateDataSet;
 
     // Price List
-    Inc(Counter);
+    inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
 
 //    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Price List Table' + '|PROGRESS=' + FIteration.ToString)), 0);
@@ -1927,7 +1904,7 @@ begin
       TSDM.cdsPriceList.CreateDataSet;
 
     // Activity Type
-    Inc(Counter);
+    inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
 
 //    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Activity Type Table' + '|PROGRESS=' + FIteration.ToString)), 0);
@@ -1941,7 +1918,7 @@ begin
       TSDM.cdsActivityType.CreateDataSet;
 
     // Customer Group
-    Inc(Counter);
+    inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
 
 //    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Customer Group Table' + '|PROGRESS=' + FIteration.ToString)), 0);
@@ -1955,7 +1932,7 @@ begin
       TSDM.cdsCustomerGroup.CreateDataSet;
 
     // Rate Unit
-    Inc(Counter);
+    inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
 
 //    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Rate Unit Table' + '|PROGRESS=' + FIteration.ToString)), 0);
@@ -1969,7 +1946,7 @@ begin
       TSDM.cdsRateUnit.CreateDataSet;
 
     // Period - From timesheet
-    Inc(Counter);
+    inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
 
 //    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Timesheet Period Table' + '|PROGRESS=' + FIteration.ToString)), 0);
@@ -1982,11 +1959,18 @@ begin
     if not TSDM.cdsTSPeriod.Active then
       TSDM.cdsTSPeriod.CreateDataSet;
 
-    Inc(Counter);
+// // Timesheet
+// Inc(Counter);
+// FIteration := Counter / TABLE_COUNT * 100;
+//
+// SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Timesheet Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+// actGetTimesheetData.Execute;
+
+    inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
 
     // System User
-    Inc(Counter);
+    inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
 
 //    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening System User Table' + '|PROGRESS=' + FIteration.ToString)), 0);
@@ -1999,16 +1983,96 @@ begin
     if not TSDM.cdsSystemUser.Active then
       TSDM.cdsSystemUser.CreateDataSet;
 
-    // Customer contact details
-    Inc(Counter);
+    inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
-
-    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('Opening Customer Contact detail Table')), 0);
-    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FIteration.ToString)), 0);
-
-    VBBaseDM.GetData(54, TSDM.cdsContactDetailCo, TSDM.cdsContactDetailCo.Name, ' ORDER BY O.CUSTOMER_ID, O.CONTACT_TYPE',
-      'C:\Data\Xml\View Contact Detail Co.xml', TSDM.cdsContactDetailCo.UpdateOptions.Generatorname,
-      TSDM.cdsContactDetailCo.UpdateOptions.UpdateTableName);
+// // Vehicle
+// Inc(Counter);
+// FIteration := Counter / TABLE_COUNT * 100;
+//
+// SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Vehicle Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+// VBBaseDM.GetData(49, TSDM.cdsVehicle, TSDM.cdsVehicle.Name, ONE_SPACE,
+// 'C:\Data\Xml\Vehicle.xml', TSDM.cdsVehicle.UpdateOptions.Generatorname,
+// TSDM.cdsVehicle.UpdateOptions.UpdateTableName);
+//
+// if not TSDM.cdsVehicle.Active then
+// TSDM.cdsVehicle.CreateDataSet;
+//
+/// / Open all lookup tables  -----------------------------------------------------
+//
+// // Contact type
+// Inc(Counter);
+// FIteration := Counter / TABLE_COUNT * 100;
+//
+// SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Contact Type Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+// VBBaseDM.GetData(11, LookupDM.cdsContactType, LookupDM.cdsContactType.Name, ONE_SPACE,
+// 'C:\Data\Xml\Contact Type.xml', LookupDM.cdsContactType.UpdateOptions.Generatorname,
+// LookupDM.cdsContactType.UpdateOptions.UpdateTableName);
+//
+// // Salutation
+// Inc(Counter);
+// FIteration := Counter / TABLE_COUNT * 100;
+//
+// SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Salutation Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+// VBBaseDM.GetData(23, LookupDM.cdsSalutation, LookupDM.cdsSalutation.Name, ONE_SPACE,
+// 'C:\Data\Xml\Slutation.xml', LookupDM.cdsSalutation.UpdateOptions.Generatorname,
+// LookupDM.cdsSalutation.UpdateOptions.UpdateTableName);
+//
+// LookupDM.cdsBFSalutation.Close;
+// LookupDM.cdsDirectorSalutation.Close;
+//
+// LookupDM.cdsBFSalutation.Data := LookupDM.cdsSalutation.Data;
+// LookupDM.cdsDirectorSalutation.Data := LookupDM.cdsSalutation.Data;
+//
+// // Job function
+// Inc(Counter);
+// FIteration := Counter / TABLE_COUNT * 100;
+//
+// SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Job Function Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+// VBBaseDM.GetData(19, LookupDM.cdsJobFunction, LookupDM.cdsJobFunction.Name, ONE_SPACE,
+// 'C:\Data\Xml\Job Function.xml', LookupDM.cdsJobFunction.UpdateOptions.Generatorname,
+// LookupDM.cdsJobFunction.UpdateOptions.UpdateTableName);
+//
+// // Bank
+// Inc(Counter);
+// FIteration := Counter / TABLE_COUNT * 100;
+//
+// SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Bank Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+// VBBaseDM.GetData(5, LookupDM.cdsBank, LookupDM.cdsBank.Name, ONE_SPACE,
+// 'C:\Data\Xml\Bank.xml', LookupDM.cdsBank.UpdateOptions.Generatorname,
+// LookupDM.cdsBank.UpdateOptions.UpdateTableName);
+//
+// // Bank account type
+// Inc(Counter);
+// FIteration := Counter / TABLE_COUNT * 100;
+//
+// SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Bank Account Type Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+// VBBaseDM.GetData(6, LookupDM.cdsBankAccountType, LookupDM.cdsBankAccountType.Name, ONE_SPACE,
+// 'C:\Data\Xml\Bank Account Type.xml', LookupDM.cdsBankAccountType.UpdateOptions.Generatorname,
+// LookupDM.cdsBankAccountType.UpdateOptions.UpdateTableName);
+//
+// // Vehicle make
+// Inc(Counter);
+// FIteration := Counter / TABLE_COUNT * 100;
+//
+// SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Vehicle Make Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+// VBBaseDM.GetData(48, LookupDM.cdsVehicleMake, LookupDM.cdsVehicleMake.Name, ONE_SPACE,
+// 'C:\Data\Xml\Vehicle Make.xml', LookupDM.cdsVehicleMake.UpdateOptions.Generatorname,
+// LookupDM.cdsVehicleMake.UpdateOptions.UpdateTableName);
+//
+// // Month of Year
+// Inc(Counter);
+// FIteration := Counter / TABLE_COUNT * 100;
+//
+// SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Month of Year Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+// VBBaseDM.GetData(20, LookupDM.cdsMonthOfYear, LookupDM.cdsMonthOfYear.Name, ONE_SPACE,
+// 'C:\Data\Xml\Month of Year.xml', LookupDM.cdsMonthOfYear.UpdateOptions.Generatorname,
+// LookupDM.cdsMonthOfYear.UpdateOptions.UpdateTableName);
+//
+// LookupDM.cdsARMonthOfYear.Close;
+// LookupDM.cdsVATMonth.Close;
+//
+// LookupDM.cdsARMonthOfYear.Data := LookupDM.cdsSalutation.Data;
+// LookupDM.cdsVATMonth.Data := LookupDM.cdsSalutation.Data;
   finally
 // ProgressFrm.Close;
 // FreeAndNil(ProgressFrm);
@@ -2042,19 +2106,17 @@ procedure TMainFrm.lucCustomerGetDisplayText(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AText: string);
 begin
   inherited;
-  if ARecord <> nil then
-  begin
-    if Sender = lucCustomer then
-    begin
-//    FCustomerName := Sender.FocusedCellViewInfo.DisplayValue;
-      FCustomerName := AText;
-      lblDisplay.Caption := FcustomerName;
-    end;
-  end;
-////  FCustomerName := AText;
 //  if ARecord <> nil then
-////    AText := TcxLookupComboBox(lucCustomer).Properties.ListSource.DataSet.FieldByName('NAME').AsString;
-//    FCustomerName := TSDM.cdsCustomerLookup.FieldByName('NAME').AsString;
+//  begin
+////  if Sender = lucCustomer then
+////    FCustomerName := Sender.FocusedCellViewInfo.DisplayValue;
+//    FCustomerName := AText;
+//    lblDisplay.Caption := FcustomerName;
+//  end;
+//////  FCustomerName := AText;
+////  if ARecord <> nil then
+//////    AText := TcxLookupComboBox(lucCustomer).Properties.ListSource.DataSet.FieldByName('NAME').AsString;
+////    FCustomerName := TSDM.cdsCustomerLookup.FieldByName('NAME').AsString;
 end;
 
 procedure TMainFrm.lucPeriodPropertiesEditValueChanged(Sender: TObject);

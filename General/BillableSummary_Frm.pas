@@ -86,8 +86,8 @@ type
     cbxCFAddWork: TcxGridDBBandedColumn;
     edtCFCGID: TcxGridDBBandedColumn;
     lvlCarryForwardDetail: TcxGridLevel;
-    grdTimesheet: TcxGrid;
-    viewTimesheet: TcxGridDBBandedTableView;
+    grdTimesheetDetails: TcxGrid;
+    viewTimesheetDetails: TcxGridDBBandedTableView;
     edtTSID: TcxGridDBBandedColumn;
     edtTSCID: TcxGridDBBandedColumn;
     edtTSPID: TcxGridDBBandedColumn;
@@ -113,7 +113,7 @@ type
     cbxTSApproved: TcxGridDBBandedColumn;
     cbxTSAddWork: TcxGridDBBandedColumn;
     edtTSCGrpID: TcxGridDBBandedColumn;
-    lvlTimesheet: TcxGridLevel;
+    lvlTimesheetDetails: TcxGridLevel;
     dlgPrint: TdxPrintDialog;
     dlgFileSave: TSaveDialog;
     grdBillCfwdExcel: TcxGrid;
@@ -203,7 +203,7 @@ type
     procedure DoEditItem(Sender: TObject);
     procedure cbxRemoveZeroBillableItemsPropertiesEditValueChanged(Sender: TObject);
     procedure cbxIncludeReleasedItemsPropertiesEditValueChanged(Sender: TObject);
-    procedure viewTimesheetDblClick(Sender: TObject);
+    procedure viewTimesheetDetailsDblClick(Sender: TObject);
 
     procedure viewBillableSummaryFocusedRecordChanged(Sender: TcxCustomGridTableView;
       APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord;
@@ -216,7 +216,7 @@ type
       ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
     procedure edtBHoursGetDisplayText(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AText: string);
-    procedure viewTimesheetCustomDrawCell(Sender: TcxCustomGridTableView;
+    procedure viewTimesheetDetailsCustomDrawCell(Sender: TcxCustomGridTableView;
       ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
       var ADone: Boolean);
     procedure cbxFetchPreviousPeriodDataPropertiesEditValueChanged(
@@ -290,7 +290,7 @@ begin
 
   viewBillableSummary.DataController.DataSource := ReportDM.dtsBillableSummary;
   viewBillCfwdExcel.DataController.DataSource := ReportDM.dtsBillCFwdExcel;
-  viewTimesheet.DataController.DataSource := ReportDM.dtsTimesheetDetail;
+  viewTimesheetDetails.DataController.DataSource := ReportDM.dtsTimesheetDetail;
   viewCarryForwardDetail.DataController.DataSource := ReportDM.dtsTimesheetCF;
   grpData.ItemIndex := 0;
 
@@ -1230,7 +1230,7 @@ begin
   end;
 end;
 
-procedure TBillableSummaryFrm.viewTimesheetCustomDrawCell(
+procedure TBillableSummaryFrm.viewTimesheetDetailsCustomDrawCell(
   Sender: TcxCustomGridTableView; ACanvas: TcxCanvas;
   AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
 begin
@@ -1260,7 +1260,7 @@ begin
   end;
 end;
 
-procedure TBillableSummaryFrm.viewTimesheetDblClick(Sender: TObject);
+procedure TBillableSummaryFrm.viewTimesheetDetailsDblClick(Sender: TObject);
 begin
   inherited;
   GroupItemIndex := grpData.ItemIndex;

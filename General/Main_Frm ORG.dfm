@@ -17,21 +17,35 @@ inherited MainFrm: TMainFrm
     ExplicitTop = 115
     ExplicitWidth = 1366
     ExplicitHeight = 617
-    object grdTimesheet: TcxGrid [0]
+    object lblCFwdItemColour: TcxLabel [0]
+      Left = 32
+      Top = 592
+      Caption = 'Items carried foward from previous periods'
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      Transparent = True
+    end
+    object imgCFwdItemColour: TcxImage [1]
+      Left = 11
+      Top = 591
+      Properties.ReadOnly = True
+      Style.Color = 15007690
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 1
+      Height = 15
+      Width = 15
+    end
+    object grdTimesheet: TcxGrid [2]
       Left = 11
       Top = 11
       Width = 1344
       Height = 574
       TabOrder = 0
       object viewTimesheet: TcxGridDBBandedTableView
-        PopupMenu = popTimesheet
-        OnDblClick = viewTimesheetDblClick
         Navigator.Buttons.CustomButtons = <>
         FilterBox.CustomizeButtonAlignment = fbaLeft
         ScrollbarAnnotations.CustomAnnotations = <>
-        OnCustomDrawCell = viewTimesheetCustomDrawCell
-        OnFocusedRecordChanged = viewTimesheetFocusedRecordChanged
-        OnSelectionChanged = viewTimesheetSelectionChanged
         DataController.DataSource = TSDM.dtsTimesheet
         DataController.Filter.Options = [fcoCaseInsensitive]
         DataController.Options = [dcoCaseInsensitive, dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoMultiSelectionSyncGroupWithChildren]
@@ -143,7 +157,6 @@ inherited MainFrm: TMainFrm
           Properties.ReadOnly = True
           Properties.ValueChecked = 1
           Properties.ValueUnchecked = 0
-          OnCustomDrawCell = cbxApprovedCustomDrawCell
           HeaderAlignmentHorz = taCenter
           HeaderHint = 'Approved status'
           MinWidth = 35
@@ -253,7 +266,6 @@ inherited MainFrm: TMainFrm
             end>
           Properties.ListSource = TSDM.dtsCustomerLookup
           Properties.ReadOnly = True
-          OnGetDisplayText = lucCustomerGetDisplayText
           MinWidth = 300
           Options.Editing = False
           Options.HorzSizing = False
@@ -706,34 +718,14 @@ inherited MainFrm: TMainFrm
         GridView = viewTimesheet
       end
     end
-    object lblCFwdItemColour: TcxLabel [1]
-      Left = 32
-      Top = 592
-      Caption = 'Items carried foward from previous periods'
-      Style.HotTrack = False
-      Style.TransparentBorder = False
-      Transparent = True
-    end
-    object imgCFwdItemColour: TcxImage [2]
-      Left = 11
-      Top = 591
-      Properties.ReadOnly = True
-      Style.Color = 15007690
-      Style.HotTrack = False
-      Style.TransparentBorder = False
-      TabOrder = 1
-      Height = 15
-      Width = 15
-    end
     object litTimesheet: TdxLayoutItem
       Parent = layMainGroup_Root
       AlignHorz = ahClient
       AlignVert = avClient
-      CaptionOptions.Text = 'Timesheet'
       CaptionOptions.Visible = False
       Control = grdTimesheet
-      ControlOptions.OriginalHeight = 426
-      ControlOptions.OriginalWidth = 786
+      ControlOptions.OriginalHeight = 574
+      ControlOptions.OriginalWidth = 1344
       ControlOptions.ShowBorder = False
       Index = 0
     end
@@ -828,8 +820,8 @@ inherited MainFrm: TMainFrm
     end
   end
   object grdTimesheetBillable: TcxGrid [2]
-    Left = 1391
-    Top = 174
+    Left = 1372
+    Top = 159
     Width = 1181
     Height = 421
     Font.Charset = ANSI_CHARSET
@@ -1444,15 +1436,8 @@ inherited MainFrm: TMainFrm
     Caption = 'Display'
     Transparent = True
   end
-  object edtFirstName: TcxTextEdit [7]
-    Left = 1190
-    Top = 137
-    BeepOnEnter = False
-    TabOrder = 7
-    Width = 121
-  end
   inherited styRepository: TcxStyleRepository
-    Left = 500
+    Left = 420
     Top = 235
     PixelsPerInch = 96
   end
@@ -1480,7 +1465,7 @@ inherited MainFrm: TMainFrm
       Hint = 'Add a new timesheet item'
       ImageIndex = 6
       ShortCut = 45
-      OnExecute = DiEditInsertEntry
+      OnExecute = DoEditInsertEntry
     end
     object actEdit: TAction
       Tag = 1
@@ -1489,7 +1474,7 @@ inherited MainFrm: TMainFrm
       Hint = 'Edit selected timesheet item'
       ImageIndex = 7
       ShortCut = 13
-      OnExecute = DiEditInsertEntry
+      OnExecute = DoEditInsertEntry
     end
     object actApprove: TAction
       Tag = 100
@@ -8790,7 +8775,6 @@ inherited MainFrm: TMainFrm
       Category = 0
       Hint = 'Return ID'
       Visible = ivAlways
-      OnClick = btnReturnIDClick
     end
   end
   object imgNav32: TcxImageList

@@ -1448,11 +1448,11 @@ inherited MainFrm: TMainFrm
     Left = 1190
     Top = 137
     BeepOnEnter = False
-    TabOrder = 7
+    TabOrder = 11
     Width = 121
   end
   inherited styRepository: TcxStyleRepository
-    Left = 500
+    Left = 420
     Top = 235
     PixelsPerInch = 96
   end
