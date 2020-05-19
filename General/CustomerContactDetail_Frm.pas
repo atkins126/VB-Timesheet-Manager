@@ -16,7 +16,8 @@ uses
   cxCurrencyEdit, cxDBLookupComboBox, cxTextEdit, dxBar, cxGridLevel, cxGrid,
   cxGridInplaceEditForm, cxGridCustomTableView, cxGridTableView,
   cxGridBandedTableView, cxGridDBBandedTableView, cxGridCustomView, dxScreenTip,
-  dxCustomHint, cxHint, cxCheckBox, dxLayoutcxEditAdapters, cxContainer;
+  dxCustomHint, cxHint, cxCheckBox, dxLayoutcxEditAdapters, cxContainer,
+  Vcl.Menus;
 
 type
   TCustomerContactDetailFrm = class(TBaseLayoutFrm)
@@ -50,6 +51,8 @@ type
     litPrimaryContact: TdxLayoutItem;
     edtPrimaryContact: TcxTextEdit;
     styReadOnly: TcxEditStyleController;
+    popEmail: TPopupMenu;
+    Email1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure DoCloseForm(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -61,6 +64,8 @@ type
     procedure FormShow(Sender: TObject);
   private
     { Private declarations }
+    FItemValue: string;
+
     procedure HandleCaption(var MyMsg: TMessage); message WM_DOWNLOAD_CAPTION;
     procedure HandleContactType(var MyMsg: TMessage); message WM_CONTACT_TYPE;
   public
@@ -74,7 +79,7 @@ implementation
 
 {$R *.dfm}
 
-uses TS_DM;
+uses TS_DM, Email_Frm;
 
 procedure TCustomerContactDetailFrm.DoCloseForm(Sender: TObject);
 begin
@@ -85,43 +90,53 @@ end;
 
 procedure TCustomerContactDetailFrm.FormCreate(Sender: TObject);
 begin
-  inherited;
+//  inherited;
   layMain.Align := alClient;
   layMain.LookAndFeel := lafCustomSkin;
   Self.Height := 300;
   Self.Width := 420;
   Self.Top := 50;
   Self.Left := Screen.Width - Self.Width - 100;
-  viewContactDetailCo.DataController.DataSource := TSDM.dtsContactDetailCo;
-
-//  VBBaseDM.GetData(54, TSDM.cdsContactDetailCo, TSDM.cdsContactDetailCo.Name, ' ORDER BY O.CUSTOMER_ID',
-//    'C:\Data\Xml\View Contact Detail Co.xml', TSDM.cdsContactDetailCo.UpdateOptions.Generatorname,
-//    TSDM.cdsContactDetailCo.UpdateOptions.UpdateTableName);
 end;
 
 procedure TCustomerContactDetailFrm.FormShow(Sender: TObject);
 begin
-  inherited;
+//  inherited;
+  viewContactDetailCo.DataController.DataSource := TSDM.dtsContactDetailCo;
   grdContactDetailCo.SetFocus;
   viewContactDetailCo.Focused := True;
   viewContactDetailCo.DataController.FocusedRecordIndex := 0;
   viewContactDetailCo.Controller.FocusedRecord.Selected := True;
   viewContactDetailCo.Controller.FocusedItem := lucCDContactTypeID;
   viewContactDetailCo.Controller.MakeFocusedItemVisible;
+
+  if viewContactDetailCo.Controller.FocusedRecord <> nil then
+    FItemValue := viewContactDetailCo.Controller.FocusedRecord.Values[edtCDValue.Index];
+
   actEmail.Enabled := (edtContactTypeID.EditValue = 3)
     and (viewContactDetailCo.DataController.RecordCount > 0);
+//  VBBaseDM.GetData(54, TSDM.cdsContactDetailCo, TSDM.cdsContactDetailCo.Name, ' ORDER BY O.CUSTOMER_ID',
+//    'C:\Data\Xml\View Contact Detail Co.xml', TSDM.cdsContactDetailCo.UpdateOptions.Generatorname,
+//    TSDM.cdsContactDetailCo.UpdateOptions.UpdateTableName);
 end;
 
 procedure TCustomerContactDetailFrm.DoEmail(Sender: TObject);
 begin
-  inherited;
-//
+//  inherited;
+  if EmailFrm = nil then
+    EmailFrm := TEmailFrm.Create(nil);
+
+  EmailFrm.lstRecipient.Clear;
+  EmailFrm.lstRecipient.Items.Add(FItemValue);
+  EmailFrm.ShowModal;
+  EmailFrm.Close;
+  FreeAndNil(EmailFrm);
 end;
 
 procedure TCustomerContactDetailFrm.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
-  inherited;
+//  inherited;
 //  Action := caFree;
 //  CustomerContactDetailFrm := nil;
 end;
@@ -130,10 +145,13 @@ procedure TCustomerContactDetailFrm.viewContactDetailCoFocusedRecordChanged(
   Sender: TcxCustomGridTableView; APrevFocusedRecord,
   AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
 begin
-  inherited;
+//  inherited;
   if AFocusedRecord <> nil then
+  begin
+    FItemValue := AFocusedRecord.Values[edtCDValue.Index];
     actEmail.Enabled := (edtContactTypeID.EditValue = 3)
       and (viewContactDetailCo.DataController.RecordCount > 0);
+  end;
 end;
 
 procedure TCustomerContactDetailFrm.HandleCaption(var MyMsg: TMessage);
@@ -141,9 +159,12 @@ begin
   try
     Caption := 'Contact details for: ' + PChar(MyMsg.WParam);
     viewContactDetailCo.Bands[0].Caption := 'Contact details for: ' + PChar(MyMsg.WParam);
+
     edtPrimaryContact.Text :=
       TSDM.cdsContactDetailCo.FieldByName('FIRST_NAME').AsString + ' ' +
       TSDM.cdsContactDetailCo.FieldByName('LAST_NAME').AsString;
+
+    actEmail.Caption := 'Send email to: ' + edtPrimaryContact.Text;
     Update;
   finally
     MyMsg.Result := 1;

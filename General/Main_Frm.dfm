@@ -843,7 +843,6 @@ inherited MainFrm: TMainFrm
     object viewTimesheetBillable: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       ScrollbarAnnotations.CustomAnnotations = <>
-      DataController.DataSource = ReportDM.dtsTSBillable
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
@@ -1221,7 +1220,7 @@ inherited MainFrm: TMainFrm
         Properties.DisplayFormat = '######'
         Properties.EditFormat = '######'
         Properties.ReadOnly = True
-        MinWidth = 74
+        MinWidth = 64
         Options.Editing = False
         Options.Filtering = False
         Options.IncSearch = False
@@ -1257,7 +1256,7 @@ inherited MainFrm: TMainFrm
         Properties.DisplayFormat = '######'
         Properties.EditFormat = '######'
         Properties.ReadOnly = True
-        MinWidth = 74
+        MinWidth = 64
         Options.Editing = False
         Options.Filtering = False
         Options.IncSearch = False
