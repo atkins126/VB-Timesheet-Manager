@@ -161,7 +161,6 @@ procedure TCarryForwardManagerFrm.FormCreate(Sender: TObject);
 var
   RegKey: TRegistry;
 begin
-  inherited;
   Caption := 'Carry forward manager';
   FShowingForm := True;
   FItemsRelease := False;
@@ -200,7 +199,6 @@ procedure TCarryForwardManagerFrm.edtTThePeriodGetDisplayText(
 var
   TheYear, TheMonth: Integer;
 begin
-  inherited;
   if ARecord is TcxGridGroupRow then
   begin
     if TcxCustomGridTableItem(Sender).Name = 'edtTThePeriod' then
@@ -217,7 +215,6 @@ end;
 
 procedure TCarryForwardManagerFrm.FormShow(Sender: TObject);
 begin
-  inherited;
   WindowState := wsMaximized;
   FShowingForm := False;
   Screen.Cursor := crDefault;
@@ -227,7 +224,6 @@ procedure TCarryForwardManagerFrm.DoCloseForm(Sender: TObject);
 //var
 //  RegKey: TRegistry;
 begin
-  inherited;
   Self.ModalResult := mrOK;
 //  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
 //  RegKey.RootKey := HKEY_CURRENT_USER;
@@ -251,7 +247,6 @@ end;
 
 procedure TCarryForwardManagerFrm.DoGetTimesheetData(Sender: TObject);
 begin
-  inherited;
   Screen.Cursor := crHourglass;
   try
     GetTimesheetData;
@@ -263,7 +258,6 @@ end;
 
 procedure TCarryForwardManagerFrm.DoOptions(Sender: TObject);
 begin
-  inherited;
 //  Screen.Cursor := crHourglass;
 //  try
 //    if TimesheetOptionsFrm = nil then
@@ -294,7 +288,6 @@ var
   ARecord: TcxCustomGridRecord;
   Response: TStringList;
 begin
-  inherited;
   C := viewTimesheet.Controller;
   SelectCount := C.SelectedRecordCount;
 
@@ -405,14 +398,12 @@ end;
 
 procedure TCarryForwardManagerFrm.lucPeriodKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
-  inherited;
   if not TcxComboBox(Sender).DroppedDown then
     Abort;
 end;
 
 procedure TCarryForwardManagerFrm.lucPeriodPropertiesCloseUp(Sender: TObject);
 begin
-  inherited;
   DoMyMouseWheel(TcxLookupComboBox(Sender), False)
 end;
 
@@ -420,7 +411,6 @@ procedure TCarryForwardManagerFrm.lucPeriodPropertiesEditValueChanged(Sender: TO
 var
   RegKey: TRegistry;
 begin
-  inherited;
   if not FShowingForm then
   begin
     if not TcxLookupComboBox(Sender).DroppedDown then
@@ -451,14 +441,12 @@ end;
 
 procedure TCarryForwardManagerFrm.lucPeriodPropertiesInitPopup(Sender: TObject);
 begin
-  inherited;
   if TcxLookupComboBox(Sender).DroppedDown then
     DoMyMouseWheel(TcxLookupComboBox(Sender), True);
 end;
 
 procedure TCarryForwardManagerFrm.lucPeriodPropertiesPopup(Sender: TObject);
 begin
-  inherited;
   if TcxLookupComboBox(Sender).DroppedDown then
     DoMyMouseWheel(TcxLookupComboBox(Sender), True)
   else
@@ -469,7 +457,6 @@ procedure TCarryForwardManagerFrm.lucReleaseToPeriodPropertiesEditValueChanged(S
 var
   RegKey: TRegistry;
 begin
-  inherited;
   if not FShowingForm then
   begin
     if not TcxLookupComboBox(Sender).DroppedDown then
@@ -492,7 +479,6 @@ procedure TCarryForwardManagerFrm.viewTimesheetCustomDrawCell(
   Sender: TcxCustomGridTableView; ACanvas: TcxCanvas;
   AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
 begin
-  inherited;
   if AViewInfo.GridRecord = nil then
     Exit;
 
@@ -517,7 +503,6 @@ end;
 procedure TCarryForwardManagerFrm.viewTimesheetStylesGetGroupStyle(
   Sender: TcxGridTableView; ARecord: TcxCustomGridRecord; ALevel: Integer; var AStyle: TcxStyle);
 begin
-  inherited;
   if ARecord is TcxGridGroupRow then
     if ARecord.Expanded then
       AStyle := styGroupFormat;

@@ -97,7 +97,8 @@ inherited InvoiceItemFrm: TInvoiceItemFrm
       Lines.Strings = (
         'Any selected items that have not '
         'been approved or that have already '
-        'been invoiced will not be affected by '
+        'been invoiced will not be affected '
+        'by '
         'this action!')
       Properties.ReadOnly = True
       Style.HotTrack = False

@@ -18,7 +18,7 @@ uses
   cxGridLevel, cxGridCustomView, cxGridCustomTableView, cxGridTableView,
   cxGridBandedTableView, cxGridDBBandedTableView, cxGrid, cxCurrencyEdit,
   cxTextEdit, dxLayoutcxEditAdapters, dxLayoutControlAdapters, cxContainer,
-  Vcl.Menus, Vcl.StdCtrls, cxButtons;
+  Vcl.Menus, Vcl.StdCtrls, cxButtons, cxLabel;
 
 type
   TStdActivityFrm = class(TBaseLayoutFrm)
@@ -59,7 +59,6 @@ uses TS_DM;
 
 procedure TStdActivityFrm.btnOKClick(Sender: TObject);
 begin
-  inherited;
   if viewStdActivity.Controller.SelectedRecordCount = 0 then
     raise ESelectionException.Create('No standard activity selected.');
 
@@ -89,7 +88,6 @@ end;
 
 procedure TStdActivityFrm.FormCreate(Sender: TObject);
 begin
-  inherited;
   Caption := 'Standard Activiy';
   Width := 660;
   Height := 490; //530;
@@ -105,7 +103,6 @@ end;
 
 procedure TStdActivityFrm.FormShow(Sender: TObject);
 begin
-  inherited;
   grdStdActivity.SetFocus;
   viewStdActivity.Focused := True;
   if not TSDM.cdsStdActivity.IsEmpty then
@@ -122,7 +119,6 @@ procedure TStdActivityFrm.viewStdActivityCustomDrawCell(
   Sender: TcxCustomGridTableView; ACanvas: TcxCanvas;
   AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
 begin
-  inherited;
   if AViewInfo.GridRecord = nil then
     Exit;
 

@@ -24,7 +24,7 @@ uses
   cxGridDBBandedTableView, cxGridCustomView, cxGrid, cxBarEditItem, dxScreenTip,
   cxGridExportLink, dxCustomHint, cxHint, cxGridDBTableView, cxCustomListBox,
   cxCheckListBox, cxButtons, cxGridDBDataDefinitions, dxLayoutControlAdapters,
-  dxCoreClasses, dxHashUtils;
+  dxCoreClasses, dxHashUtils, cxLabel;
 
 type
   TTimesheetDetailReportFrm = class(TBaseLayoutFrm)
@@ -390,7 +390,6 @@ var
   RegKey: TRegistry;
   DownloadCaption: string;
 begin
-  inherited;
   Width := 1300;
   Height := 800;
   layMain.Align := alClient;
@@ -610,7 +609,6 @@ end;
 
 procedure TTimesheetDetailReportFrm.FormDestroy(Sender: TObject);
 begin
-  inherited;
   if FSortListID <> nil then
     FSortListID.Free;
 
@@ -620,7 +618,6 @@ end;
 
 procedure TTimesheetDetailReportFrm.FormShow(Sender: TObject);
 begin
-  inherited;
   if lucDateType.ItemIndex = 0 then
   begin
     if lucPeriod.CanFocus and Self.Showing then
@@ -644,7 +641,6 @@ end;
 
 procedure TTimesheetDetailReportFrm.lucFromDatePropertiesEditValueChanged(Sender: TObject);
 begin
-  inherited;
   if not FShowingForm then
 //    HideTabs;
 //  Showtabs;
@@ -654,7 +650,6 @@ end;
 procedure TTimesheetDetailReportFrm.edtTLoginNameGetDisplayText(
   Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord; var AText: string);
 begin
-  inherited;
   if ARecord is TcxGridGroupRow then
     AText := TcxGridGroupRow(ARecord).Value;
 end;
@@ -663,7 +658,6 @@ procedure TTimesheetDetailReportFrm.FormClose(Sender: TObject; var Action: TClos
 var
   RegKey: TRegistry;
 begin
-  inherited;
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   RegKey.RootKey := HKEY_CURRENT_USER;
   RegKey.OpenKey(KEY_TIMESHEET_DETAIL_REPORT, True);
@@ -699,7 +693,6 @@ procedure TTimesheetDetailReportFrm.cbxExportSelectedOnlyToExcelPropertiesChange
 var
   RegKey: TRegistry;
 begin
-  inherited;
   if not FShowingForm then
   begin
     RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
@@ -716,7 +709,6 @@ end;
 
 procedure TTimesheetDetailReportFrm.cbxIncludePropertiesEditValueChanged(Sender: TObject);
 begin
-  inherited;
   ReportDM.cdsTSSortOrder.Post;
 end;
 
@@ -1131,7 +1123,6 @@ end;
 
 procedure TTimesheetDetailReportFrm.lucReportTypePropertiesEditValueChanged(Sender: TObject);
 begin
-  inherited;
 //  HideTabs;
 //  Showtabs;
   CloseTSDataSets;
@@ -1157,7 +1148,6 @@ end;
 
 procedure TTimesheetDetailReportFrm.lucDateTypePropertiesEditValueChanged(Sender: TObject);
 begin
-  inherited;
   if not FShowingForm then
   begin
     HideTabs;
@@ -1186,7 +1176,6 @@ end;
 
 procedure TTimesheetDetailReportFrm.lucPeriodPropertiesEditValueChanged(Sender: TObject);
 begin
-  inherited;
   if not FShowingForm then
   begin
     lucFromDate.EditValue := GetMonthStartDate(lucPeriod.EditValue);
@@ -1202,7 +1191,6 @@ procedure TTimesheetDetailReportFrm.lucSelectReportByPropertiesEditValueChanged(
 var
   RegKey: TRegistry;
 begin
-  inherited;
   CloseTSDataSets;
 
   if not FShowingForm then
@@ -1348,7 +1336,6 @@ end;
 procedure TTimesheetDetailReportFrm.viewSortOrderStartDrag(Sender: TObject;
   var DragObject: TDragObject);
 begin
-  inherited;
 //  FSourceRecordIndex := viewSortOrder.Controller.FocusedRecord.Index;
   FID := TcxGridDBTableView(TcxGridSite(Sender).GridView).DataController.DataSet.FieldValues['ID'];
 end;
@@ -1655,7 +1642,6 @@ var
   SummaryItem: TcxGridDBTableSummaryItem;
   AValue: Variant;
 begin
-  inherited;
   SummaryItem := Arguments.SummaryItem as TcxGridDBTableSummaryItem;
 
   if SummaryItem.Column = edtBCItemValue then
@@ -1723,7 +1709,6 @@ end;
 procedure TTimesheetDetailReportFrm.viewSystemUserCustomDrawCell(Sender: TcxCustomGridTableView;
   ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
 begin
-  inherited;
   if AViewInfo.GridRecord = nil then
     Exit;
 
@@ -1744,7 +1729,6 @@ procedure TTimesheetDetailReportFrm.viewSystemUserKeyUp(Sender: TObject;
 var
   AView: TcxGridBandedTableView;
 begin
-  inherited;
   if key = VK_SPACE then
   begin
     AView := TcxGridBandedTableView(TcxGridSite(Sender).GridView);
@@ -1755,7 +1739,6 @@ end;
 
 procedure TTimesheetDetailReportFrm.DoExcel(Sender: TObject);
 begin
-  inherited;
   case lucReportType.ItemIndex of
     0: ExportTimesheetDetailsToExcel;
     1: ExportBillCFwdToExcel;
@@ -1767,7 +1750,6 @@ var
   FolderPath, ExportFileName: string;
   FileSaved: Boolean;
 begin
-  inherited;
   grdTimesheet.Visible := False;
   try
     CheckSelection;
@@ -1881,7 +1863,6 @@ var
   FolderPath, ExportFileName: string;
   FileSaved: Boolean;
 begin
-  inherited;
   Screen.Cursor := crHourglass;
 //  grdTimesheet.Visible := False;
 //  CheckSelection;
@@ -1956,13 +1937,11 @@ end;
 
 procedure TTimesheetDetailReportFrm.DoExpandTimesheet(Sender: TObject);
 begin
-  inherited;
   viewTimesheet.ViewData.Expand(True);
 end;
 
 procedure TTimesheetDetailReportFrm.DoOptions(Sender: TObject);
 begin
-  inherited;
   Screen.Cursor := crHourglass;
   try
     if TimesheetOptionsFrm = nil then
@@ -1979,20 +1958,17 @@ end;
 
 procedure TTimesheetDetailReportFrm.DoCollapseTimesheet(Sender: TObject);
 begin
-  inherited;
   viewTimesheet.ViewData.Collapse(True);
 end;
 
 procedure TTimesheetDetailReportFrm.DoCloseForm(Sender: TObject);
 begin
-  inherited;
   CloseDataSets;
   Self.Close;
 end;
 
 procedure TTimesheetDetailReportFrm.DoPDF(Sender: TObject);
 begin
-  inherited;
   Screen.Cursor := crHourglass;
   grdTimesheet.Visible := False;
   CheckSelection;
@@ -2066,7 +2042,6 @@ var
   DC: TcxCustomDataController;
 //  RepFileName: string;
 begin
-  inherited;
   grdTimesheet.Visible := False;
   CheckSelection;
   ReportDM.frxPDFExport.ShowDialog := False;
@@ -2132,7 +2107,6 @@ var
   DC: TcxCustomDataController;
 //  RepFileName: string;
 begin
-  inherited;
   CheckSelection;
   ReportDM.frxPDFExport.ShowDialog := False;
   ReportDM.frxPDFExport.Background := True;
@@ -2247,7 +2221,6 @@ end;
 
 procedure TTimesheetDetailReportFrm.DoPrint(Sender: TObject);
 begin
-  inherited;
   Screen.Cursor := crHourglass;
   grdTimesheet.Visible := False;
   try

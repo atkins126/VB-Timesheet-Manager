@@ -17,7 +17,7 @@ uses
   cxGridInplaceEditForm, cxGridCustomTableView, cxGridTableView,
   cxGridBandedTableView, cxGridDBBandedTableView, cxGridCustomView, dxScreenTip,
   dxCustomHint, cxHint, cxCheckBox, dxLayoutcxEditAdapters, cxContainer,
-  Vcl.Menus;
+  Vcl.Menus, cxLabel;
 
 type
   TCustomerContactDetailFrm = class(TBaseLayoutFrm)
@@ -52,7 +52,7 @@ type
     edtPrimaryContact: TcxTextEdit;
     styReadOnly: TcxEditStyleController;
     popEmail: TPopupMenu;
-    Email1: TMenuItem;
+    mnuEmail: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure DoCloseForm(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -83,14 +83,12 @@ uses TS_DM, Email_Frm;
 
 procedure TCustomerContactDetailFrm.DoCloseForm(Sender: TObject);
 begin
-  inherited;
   Self.Hide;
 //  Self.Close;
 end;
 
 procedure TCustomerContactDetailFrm.FormCreate(Sender: TObject);
 begin
-//  inherited;
   layMain.Align := alClient;
   layMain.LookAndFeel := lafCustomSkin;
   Self.Height := 300;
@@ -101,7 +99,6 @@ end;
 
 procedure TCustomerContactDetailFrm.FormShow(Sender: TObject);
 begin
-//  inherited;
   viewContactDetailCo.DataController.DataSource := TSDM.dtsContactDetailCo;
   grdContactDetailCo.SetFocus;
   viewContactDetailCo.Focused := True;
@@ -122,7 +119,6 @@ end;
 
 procedure TCustomerContactDetailFrm.DoEmail(Sender: TObject);
 begin
-//  inherited;
   if EmailFrm = nil then
     EmailFrm := TEmailFrm.Create(nil);
 
@@ -136,7 +132,6 @@ end;
 procedure TCustomerContactDetailFrm.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
-//  inherited;
 //  Action := caFree;
 //  CustomerContactDetailFrm := nil;
 end;
@@ -145,7 +140,6 @@ procedure TCustomerContactDetailFrm.viewContactDetailCoFocusedRecordChanged(
   Sender: TcxCustomGridTableView; APrevFocusedRecord,
   AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
 begin
-//  inherited;
   if AFocusedRecord <> nil then
   begin
     FItemValue := AFocusedRecord.Values[edtCDValue.Index];
@@ -164,7 +158,7 @@ begin
       TSDM.cdsContactDetailCo.FieldByName('FIRST_NAME').AsString + ' ' +
       TSDM.cdsContactDetailCo.FieldByName('LAST_NAME').AsString;
 
-    actEmail.Caption := 'Send email to: ' + edtPrimaryContact.Text;
+    mnuEmail.Caption := 'Send email to: ' + edtPrimaryContact.Text;
     Update;
   finally
     MyMsg.Result := 1;

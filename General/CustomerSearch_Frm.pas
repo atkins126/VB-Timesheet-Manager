@@ -16,7 +16,7 @@ uses
   cxCurrencyEdit, cxDBLookupComboBox, cxTextEdit, cxCheckBox, cxCalendar, cxGrid,
   cxVGrid, cxDBVGrid, cxInplaceContainer, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridBandedTableView, cxGridDBBandedTableView,
-  cxGridCustomView, dxBar, cxGridInplaceEditForm;
+  cxGridCustomView, dxBar, cxGridInplaceEditForm, cxContainer, cxLabel;
 
 type
   TCustomerSearchFrm = class(TBaseLayoutFrm)
@@ -165,13 +165,11 @@ uses
 
 procedure TCustomerSearchFrm.DoCloseForm(Sender: TObject);
 begin
-  inherited;
   Self.ModalResult := mrOk;
 end;
 
 procedure TCustomerSearchFrm.DoEmailCustomer(Sender: TObject);
 begin
-  inherited;
 //
 end;
 

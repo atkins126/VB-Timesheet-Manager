@@ -1189,7 +1189,6 @@ inherited CustomerSearchFrm: TCustomerSearchFrm
       Navigator.Buttons.CustomButtons = <>
       FilterBox.CustomizeButtonAlignment = fbaLeft
       ScrollbarAnnotations.CustomAnnotations = <>
-      DataController.DataSource = TSDM.dtsTimesheetOLD
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Options = [dcoCaseInsensitive, dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoMultiSelectionSyncGroupWithChildren]
       DataController.Summary.DefaultGroupSummaryItems = <>
@@ -1577,7 +1576,7 @@ inherited CustomerSearchFrm: TCustomerSearchFrm
         Properties.UseThousandSeparator = True
         HeaderAlignmentHorz = taRightJustify
         HeaderHint = 'Actual rate value'
-        MinWidth = 74
+        MinWidth = 64
         Options.Editing = False
         Options.Filtering = False
         Options.IncSearch = False
@@ -1599,7 +1598,7 @@ inherited CustomerSearchFrm: TCustomerSearchFrm
         Properties.UseThousandSeparator = True
         HeaderAlignmentHorz = taRightJustify
         HeaderHint = 'Standard rate value'
-        MinWidth = 74
+        MinWidth = 64
         Options.Editing = False
         Options.Filtering = False
         Options.IncSearch = False
@@ -1767,7 +1766,7 @@ inherited CustomerSearchFrm: TCustomerSearchFrm
         Properties.SaveTime = False
         Properties.ShowTime = False
         Visible = False
-        MinWidth = 74
+        MinWidth = 64
         Options.Editing = False
         Options.Filtering = False
         Options.IncSearch = False

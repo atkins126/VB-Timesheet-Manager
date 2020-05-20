@@ -831,7 +831,7 @@ inherited CustomerContactDetailFrm: TCustomerContactDetailFrm
     Images = img16
     Left = 290
     Top = 275
-    object Email1: TMenuItem
+    object mnuEmail: TMenuItem
       Action = actEmail
     end
   end

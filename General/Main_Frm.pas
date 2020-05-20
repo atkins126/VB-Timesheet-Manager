@@ -24,8 +24,6 @@ uses
   cxGridExportLink, cxDataUtils, dxLayoutcxEditAdapters, cxImage, cxLabel,
   cxButtons, dxRibbonStatusBar, cxFormats;
 
-  Remove all inherited statements!!
-
 type
   TMainFrm = class(TBaseLayoutFrm)
     sknController: TdxSkinController;
@@ -387,7 +385,6 @@ end;
 
 procedure TMainFrm.FormCreate(Sender: TObject);
 begin
-//  inherited;
   {TODO: Change individual action buttons to one button}
   Caption := Application.Title;
   Self.Scaled := False;
@@ -413,7 +410,6 @@ var
   {$IFDEF DEBUG}ErrorMsg, {$ENDIF}SkinResourceFileName {, SkinName}: string;
   RegKey: TRegistry;
 begin
-//  inherited;
   Screen.Cursor := crHourglass;
   dxBarMakeInactiveImagesDingy := False;
   FSwitchPrefix := ['/'];
@@ -585,14 +581,12 @@ end;
 
 procedure TMainFrm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-//  inherited;
   if FCallingFromShell then
     SendMessageToApp('VB Shell', 'Close App')
 end;
 
 procedure TMainFrm.FormDestroy(Sender: TObject);
 begin
-//  inherited;
   if MsgDialogFrm <> nil then
   begin
     msgDialogFrm.Close;
@@ -623,13 +617,11 @@ end;
 
 procedure TMainFrm.DoExitTimesheetManager(Sender: TObject);
 begin
-// inherited;
   MainFrm.Close;
 end;
 
 procedure TMainFrm.DiEditInsertEntry(Sender: TObject);
 begin
-//  inherited;
   Screen.Cursor := crHourglass;
   try
     case TAction(Sender).Tag of
@@ -660,14 +652,12 @@ procedure TMainFrm.DoCopyCell(Sender: TObject);
 var
   CopyCellContentOnly: Boolean;
 begin
-//  inherited;
   CopyCellContentOnly := TAction(Sender).Tag = 0;
   CopyRecordData(viewTimesheet, CopyCellContentOnly);
 end;
 
 procedure TMainFrm.DoCustomerContactInfo(Sender: TObject);
 begin
-//  inherited;
   Screen.Cursor := crHourglass;
 
   try
@@ -687,7 +677,6 @@ procedure TMainFrm.DoDeleteEntry(Sender: TObject);
 var
   C: TcxCustomGridTableController;
 begin
-//  inherited;
   if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
     TSDM.cdsTimesheet.Cancel;
 
@@ -722,7 +711,6 @@ var
   ID, RecordIndex: Integer;
   DC: TcxDBDataController;
 begin
-//  inherited;
   Screen.Cursor := crHourglass;
   actRefresh.Enabled := False;
   DC := viewTimesheet.DataController;
@@ -753,7 +741,6 @@ end;
 
 procedure TMainFrm.DoRefreshLookupTables(Sender: TObject);
 begin
-//  inherited;
   Screen.Cursor := crHourglass;
   actRefreshLookupTables.Enabled := False;
 
@@ -775,7 +762,6 @@ procedure TMainFrm.DoReleaseCarryForwardManager(Sender: TObject);
 var
   ID: Integer;
 begin
-//  inherited;
   Screen.Cursor := crHourglass;
   ID := 0;
 
@@ -806,13 +792,11 @@ end;
 
 procedure TMainFrm.DoSelectAllTimesheetItems(Sender: TObject);
 begin
-//  inherited;
   viewTimesheet.Controller.SelectAll;
 end;
 
 procedure TMainFrm.DoTimeSheetDetail(Sender: TObject);
 begin
-//  inherited;
   Screen.Cursor := crHourglass;
   try
     if TimesheetDetailReportFrm = nil then
@@ -830,7 +814,6 @@ procedure TMainFrm.btnApproveClick(Sender: TObject);
 //  aControl: TdxBarItemControl;
 //  APopupPoint: TPoint;
 begin
-//  inherited;
 //  aControl := TdxBarButton(Sender).ClickItemLink.Control;
 //  APopupPoint := Point(aControl.ItemBounds.Left, aControl.ItemBounds.Bottom);
 //  APopupPoint := aControl.Parent.ClientToScreen(APopupPoint);
@@ -850,7 +833,6 @@ var
   Response, SQLStatement, Value: string;
   NextID: Integer;
 begin
-//  inherited;
 //  Response := RUtils.CreateStringList(PIPE, DOUBLE_QUOTE);
   if Length(Trim(edtFirstName.Text)) = 0 then
     Exit;
@@ -873,7 +855,6 @@ procedure TMainFrm.btnSelectAllClick(Sender: TObject);
 var
   C: TcxCustomGridTableController;
 begin
-//  inherited;
   C := viewTimesheet.Controller;
   case Tcxbutton(Sender).Tag of
     0: C.SelectAll;
@@ -889,7 +870,6 @@ var
   Msg, IDValues, CommandString: string;
   Response: TStringList;
 begin
-//  inherited;
   Msg := 'All selected items will be marked as carried forward. ' +
     ' are you sure you want to proceed?';
 
@@ -950,7 +930,6 @@ procedure TMainFrm.DoApprovalStatus(Sender: TObject);
 var
   Msg: string;
 begin
-//  inherited;
   case TAction(Sender).Tag of
     100: Msg := 'All selected un-approved items will be marked as approved. ' +
       ' are you sure you want to proceed?';
@@ -987,7 +966,6 @@ var
   IDValues, CommandString: string;
   Response: TStringList;
 begin
-//  inherited;
   DC := viewTimesheet.DataController;
   C := viewTimesheet.Controller;
 
@@ -1130,13 +1108,11 @@ end;
 
 procedure TMainFrm.DoCarryForward(Sender: TObject);
 begin
-//  inherited;
   CarryForwardItem;
 end;
 
 procedure TMainFrm.DoClearTimesheetSelection(Sender: TObject);
 begin
-//  inherited;
   viewTimesheet.Controller.ClearSelection;
 end;
 
@@ -1144,7 +1120,6 @@ procedure TMainFrm.DoBillable(Sender: TObject);
 var
   Msg: string;
 begin
-//  inherited;
   case TAction(Sender).Tag of
     110: Msg := 'All selected billable items will be marked as not billable. ' +
       ' are you sure you want to proceed?';
@@ -1175,7 +1150,6 @@ var
   IDValues, CommandString: string;
   Response: TStringList;
 begin
-//  inherited;
   DC := viewTimesheet.DataController;
   C := viewTimesheet.Controller;
 
@@ -1332,7 +1306,6 @@ end;
 
 procedure TMainFrm.DoInvoiceItem(Sender: TObject);
 begin
-//  inherited;
   case TAction(Sender).Tag of
     120: InvoiceTimesheetItem;
     121: UnInvoiceTimesheetItem;
@@ -1347,7 +1320,6 @@ var
   RecIndex: Integer;
   InvoiceDate: TDateTime;
 begin
-//  inherited;
   C := viewTimesheet.Controller;
 
   if C.SelectedRecordCount = 0 then
@@ -1440,7 +1412,6 @@ var
   I, ChangeCount: Integer;
   RecIndex: Integer;
 begin
-//  inherited;
   DC := viewTimesheet.DataController;
   C := viewTimesheet.Controller;
   ChangeCount := 0;
@@ -1499,7 +1470,6 @@ procedure TMainFrm.cbxApprovedCustomDrawCell(Sender: TcxCustomGridTableView;
 var
   DC: TcxDBDataController;
 begin
-//  inherited;
   DC := viewTimesheet.DataController;
 
   if DC.Values[AViewInfo.GridRecord.Index, cbxApproved.Index] then
@@ -1513,7 +1483,6 @@ var
   RegKey: TRegistry;
   ID: Integer;
 begin
-//  inherited;
   TSDM.TimesheetOption.IncludeCarryForwardItems := cbxIncludeReleasedItems.EditValue;
 
   if not FShowingForm then
@@ -1540,7 +1509,6 @@ procedure TMainFrm.cbxPersistentSelectionPropertiesEditValueChanged(Sender: TObj
 var
   RegKey: TRegistry;
 begin
-//  inherited;
   TSDM.TimesheetOption.PersitentRecordSelection := cbxPersistentSelection.EditValue;
 
   if TSDM.TimesheetOption.PersitentRecordSelection then
@@ -1565,7 +1533,6 @@ end;
 
 procedure TMainFrm.DoActivitySummary(Sender: TObject);
 begin
-//  inherited;
   Screen.Cursor := crHourglass;
   try
     if TimesheetActivitySummaryFrm = nil then
@@ -1580,7 +1547,6 @@ end;
 
 procedure TMainFrm.DoBillableSummary(Sender: TObject);
 begin
-//  inherited;
   Screen.Cursor := crHourglass;
   try
     if BillableSummaryFrm = nil then
@@ -1597,13 +1563,11 @@ end;
 
 procedure TMainFrm.DoLayoutManager(Sender: TObject);
 begin
-//  inherited;
 //
 end;
 
 procedure TMainFrm.DoMonthlyBilling(Sender: TObject);
 begin
-//  inherited;
   Screen.Cursor := crHourglass;
   try
     if MonthlyBillableReportFrm = nil then
@@ -1621,7 +1585,6 @@ var
   WhereClause, OrderByClause, CarryForwardClause: string;
   AToDateEdit: TcxDateEdit;
 begin
-//  inherited;
   Screen.Cursor := crHourglass;
   if lucViewMode.ItemIndex = 0 then
   begin
@@ -1832,7 +1795,6 @@ end;
 
 procedure TMainFrm.ribMainTabChanged(Sender: TdxCustomRibbon);
 begin
-//  inherited;
   litTimesheet.Visible :=
     (ribMain.ActiveTab = tabTimesheet)
     or (ribMain.ActiveTab = tabReports);
@@ -1843,7 +1805,6 @@ end;
 procedure TMainFrm.viewTimesheetCustomDrawCell(Sender: TcxCustomGridTableView;
   ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
 begin
-//  inherited;
   if AViewInfo.GridRecord = nil then
     Exit;
 
@@ -1871,7 +1832,6 @@ end;
 
 procedure TMainFrm.viewTimesheetDblClick(Sender: TObject);
 begin
-//  inherited;
   actEdit.Execute;
 end;
 
@@ -1879,7 +1839,6 @@ procedure TMainFrm.viewTimesheetFocusedRecordChanged(
   Sender: TcxCustomGridTableView; APrevFocusedRecord,
   AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
 begin
-//  inherited;
   if CustomerContactDetailFrm <> nil then
   begin
     SendMessage(CustomerContactDetailFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(FCustomerName)), 0);
@@ -1892,7 +1851,6 @@ procedure TMainFrm.viewTimesheetSelectionChanged(Sender: TcxCustomGridTableView)
 var
   C: TcxCustomGridTableController;
 begin
-//  inherited;
   C := viewTimesheet.Controller;
   actInsert.Enabled := C.SelectedRecordCount <= 1;
   actEdit.Enabled := C.SelectedRecordCount <= 1;
@@ -2054,7 +2012,6 @@ end;
 procedure TMainFrm.lucCustomerGetDisplayText(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AText: string);
 begin
-//  inherited;
   if ARecord <> nil then
   begin
     if Sender = lucCustomer then
@@ -2074,7 +2031,6 @@ procedure TMainFrm.lucPeriodPropertiesEditValueChanged(Sender: TObject);
 var
   RegKey: TRegistry;
 begin
-//  inherited;
   // This still works!
   FTimesheetPeriod := lucPeriod.EditValue;
   lucFromDate.EditValue := GetMonthStartDate(FTimesheetPeriod);
@@ -2097,7 +2053,6 @@ end;
 
 procedure TMainFrm.lucUserPropertiesEditValueChanged(Sender: TObject);
 begin
-//  inherited;
   FTSUserID := lucUser.EditValue;
   if not FShowingForm then
     actGetTimesheetData.Execute;
@@ -2109,7 +2064,6 @@ var
   RegKey: TRegistry;
   // ATag: integer;
 begin
-//  inherited;
   lucFromDate.SetFocus;
   AFromDateEdit := TcxBarEditItemControl(lucFromDate.Links[0].Control).Edit as TcxDateEdit;
   FFromDate := AFromDateEdit.Date;
@@ -2136,7 +2090,6 @@ var
   RegKey: TRegistry;
   // ATag: integer;
 begin
-//  inherited;
   lucToDate.SetFocus;
   AToDateEdit := TcxBarEditItemControl(lucToDate.Links[0].Control).Edit as TcxDateEdit;
   FToDate := AToDateEdit.Date;
@@ -2165,7 +2118,6 @@ var
   RegKey: TRegistry;
 // MonthEndDate: TDateTime;
 begin
-//  inherited;
   ribMain.BeginUpdate;
 // AComboBox := TcxBarEditItemControl(lucViewMode.Links[0].Control).Edit as TcxComboBox;
   lucPeriod.Enabled := lucViewMode.ItemIndex = 0;
@@ -2226,7 +2178,6 @@ var
   RegKey: TRegistry;
 // MonthEndDate: TDateTime;
 begin
-//  inherited;
 // barToolbar.Bars.BeginUpdate;
 // AComboBox := TcxBarEditItemControl(lucViewMode.Links[0].Control).Edit as TcxComboBox;
   lucPeriod.Enabled := lucViewMode.ItemIndex = 0;
@@ -2274,7 +2225,6 @@ end;
 
 procedure TMainFrm.DoOptions(Sender: TObject);
 begin
-//  inherited;
   Screen.Cursor := crHourglass;
   try
     if TimesheetOptionsFrm = nil then
@@ -2292,7 +2242,6 @@ var
   WhereClause, UserClause, OrderByClause, DateClause, FileName,
     RepFileName {, CarryForwardClause}: string;
 begin
-//  inherited;
   Screen.Cursor := crHourglass;
   FileName := 'Timesheet Detail by User';
   DateClause := 'WHERE T.THE_PERIOD = ' + FTimesheetPeriod.ToString;
@@ -2340,7 +2289,6 @@ var
   FolderPath, ExportFileName: string;
   FileSaved: Boolean;
 begin
-//  inherited;
   FolderPath := EXCEL_DOCS;
 // FolderPath := MainFrm.FShellResource.RootFolder + '\' + FSHIFT_FOLDER + 'Export\';
   TDirectory.CreateDirectory(FolderPath);
@@ -2418,7 +2366,6 @@ var
   FileSaved: Boolean;
   DC: TcxCustomDataController;
 begin
-//  inherited;
   Screen.Cursor := crHourglass;
   ReportDM.frxPDFExport.ShowDialog := False;
   ReportDM.frxPDFExport.Background := True;

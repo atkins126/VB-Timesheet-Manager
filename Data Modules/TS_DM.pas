@@ -372,7 +372,6 @@ uses RUtils;
 
 procedure TTSDM.cdsCustomerLookupCalcFields(DataSet: TDataSet);
 begin
-  inherited;
   case cdsCustomerLookup.FieldByName('IS_ACTIVE').Asinteger of
     0: cdsCustomerLookup.FieldByName('ACTIVE_STATUS').AsString := 'No';
     1: cdsCustomerLookup.FieldByName('ACTIVE_STATUS').AsString := 'Yes';
@@ -381,7 +380,6 @@ end;
 
 procedure TTSDM.cdsCustomerLookupPrefCalcFields(DataSet: TDataSet);
 begin
-  inherited;
   case cdsCustomerLookupPref.FieldByName('IS_ACTIVE').Asinteger of
     0: cdsCustomerLookupPref.FieldByName('ACTIVE_STATUS').AsString := 'No';
     1: cdsCustomerLookupPref.FieldByName('ACTIVE_STATUS').AsString := 'Yes';
@@ -390,19 +388,16 @@ end;
 
 procedure TTSDM.cdsTimesheetAfterPost(DataSet: TDataSet);
 begin
-  inherited;
   VBBaseDM.DBAction := acBrowsing;
 end;
 
 procedure TTSDM.cdsTimesheetBeforeEdit(DataSet: TDataSet);
 begin
-  inherited;
   VBBaseDM.DBAction := acEdit;
 end;
 
 procedure TTSDM.cdsTimesheetBeforePost(DataSet: TDataSet);
 begin
-  inherited;
 //  cdsTimesheet.FieldByName('THE_PERIOD').AsInteger :=
 //    cdsTimesheet.FieldByName('ACTIVITY_DATE').Asinteger div 100 +
 //    cdsTimesheet.FieldByName('ACTIVITY_DATE').AsInteger mod 100;
@@ -427,13 +422,11 @@ end;
 
 procedure TTSDM.cdsTimesheetCalcFields(DataSet: TDataSet);
 begin
-  inherited;
   CalculateFieldValues(TFDMemTable(DataSet));
 end;
 
 procedure TTSDM.cdsTimesheetNewRecord(DataSet: TDataSet);
 begin
-  inherited;
   {Note to devleoper.
    Do NOT under any circumstance set the values for the following fields:
    ITEM_VALUE

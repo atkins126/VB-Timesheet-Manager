@@ -142,7 +142,6 @@ uses
 
 procedure TTimesheetEditFrm.FormCreate(Sender: TObject);
 begin
-  inherited;
   // Width = 800;  Height = 405.
   Self.Width := 830;
   Self.Height := 670;
@@ -152,7 +151,6 @@ end;
 
 procedure TTimesheetEditFrm.FormShow(Sender: TObject);
 begin
-  inherited;
   edtTimeSpent.Properties.OnEditValueChanged := nil;
   edtRate.Properties.OnEditValueChanged := nil;
   lucRateUnit.Properties.OnEditValueChanged := nil;
@@ -224,7 +222,6 @@ end;
 
 procedure TTimesheetEditFrm.btnCancelClick(Sender: TObject);
 begin
-  inherited;
   FClosingForm := True;
   if VBBaseDM.MyDataSet.State in [dsEdit, dsInsert] then
     VBBaseDM.MyDataSet.Cancel;
@@ -238,7 +235,6 @@ var
   SQLStatement: string;
   Response: TStringList;
 begin
-  inherited;
   if VarIsNull(lucActivityDate.EditValue) or SameText(Trim(lucActivityDate.Text), '') then
   begin
     lucActivityDate.SetFocus;
@@ -336,7 +332,6 @@ end;
 
 procedure TTimesheetEditFrm.btnStdActivityClick(Sender: TObject);
 begin
-  inherited;
   Screen.Cursor := crHourglass;
   try
     if StdActivityFrm = nil then
@@ -360,7 +355,6 @@ end;
 
 procedure TTimesheetEditFrm.cbxBillablePropertiesEditValueChanged(Sender: TObject);
 begin
-  inherited;
 //  RecalcValues;
 //  if VBBaseDM.MyDataSet.State in [dsEdit, dsInsert] then
 //  begin
@@ -407,7 +401,6 @@ end;
 
 procedure TTimesheetEditFrm.lucPriceListItemPropertiesEditValueChanged(Sender: TObject);
 begin
-  inherited;
   if VBBaseDM.MyDataSet.State in [dsEdit, dsInsert] then
   begin
 //    edtRate.Properties.OnChange := nil;
@@ -436,7 +429,6 @@ end;
 
 procedure TTimesheetEditFrm.lucRateUnitPropertiesEditValueChanged(Sender: TObject);
 begin
-  inherited;
   if not FClosingForm then
   begin
 //    if VBBaseDM.MyDataSet.State in [dsEdit, dsInsert] then
@@ -537,13 +529,11 @@ end;
 
 procedure TTimesheetEditFrm.doStdActivity(Sender: TObject);
 begin
-  inherited;
 //
 end;
 
 procedure TTimesheetEditFrm.lucActivityDatePropertiesEditValueChanged(Sender: TObject);
 begin
-  inherited;
   if VarIsNull(lucActivityDate.EditValue) then
     Exit;
 
@@ -556,7 +546,6 @@ end;
 
 procedure TTimesheetEditFrm.edtRatePropertiesChange(Sender: TObject);
 begin
-  inherited;
 ////  RecalcValues;
 //  if VBBaseDM.MyDataSet.State in [dsEdit, dsInsert] then
 //  begin
@@ -577,7 +566,6 @@ end;
 
 procedure TTimesheetEditFrm.edtRatePropertiesEditValueChanged(Sender: TObject);
 begin
-  inherited;
 //  RecalcValues;
 //  if VBBaseDM.MyDataSet.State in [dsEdit, dsInsert] then
 //  begin
@@ -613,7 +601,6 @@ end;
 
 procedure TTimesheetEditFrm.edtTimeSpentPropertiesChange(Sender: TObject);
 begin
-  inherited;
 ////  RecalcValues;
 //  if VBBaseDM.MyDataSet.State in [dsEdit, dsInsert] then
 //  begin
@@ -641,7 +628,6 @@ end;
 
 procedure TTimesheetEditFrm.edtTimeSpentPropertiesEditValueChanged(Sender: TObject);
 begin
-  inherited;
   if not FClosingForm then
   begin
     if cbxBillable.Checked then
@@ -697,7 +683,6 @@ end;
 procedure TTimesheetEditFrm.edtTimeSpentPropertiesValidate(Sender: TObject;
   var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
 begin
-  inherited;
   ErrorText := 'Invalid value for time spent. Please enter a value greater than 0 with a maximum of ' +
     FormatFloat('#,##0', edtTimeSpent.Properties.MaxValue);
 end;

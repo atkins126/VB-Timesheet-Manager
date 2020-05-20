@@ -585,7 +585,6 @@ uses
 
 procedure TReportDM.cdsTimesheetAfterPost(DataSet: TDataSet);
 begin
-  inherited;
 //  DataSet := cdsTimesheet;
 //  SetLength(VBBaseDM.DataSetArray, 1);
 //  VBBaseDM.DataSetArray[0] := TFDMemTable(DataSet);
@@ -599,13 +598,11 @@ end;
 
 procedure TReportDM.cdsTimesheetBeforeEdit(DataSet: TDataSet);
 begin
-  inherited;
   VBBaseDM.MadeChanges := False;
 end;
 
 procedure TReportDM.cdsTimesheetBeforePost(DataSet: TDataSet);
 begin
-  inherited;
   FID := cdsTimesheet.FieldByName('ID').AsInteger;
 end;
 
@@ -614,7 +611,6 @@ procedure TReportDM.cdsTimesheetCalcFields(DataSet: TDataSet);
 //  Day, Month, Year: Word;
 //  PeriodMonth: Integer;
 begin
-  inherited;
 //  if cdsTimesheet.FieldByName('TIME_SPENT').AsFloat = 0 then
 //    cdsTimesheet.FieldByName('TIME_HOURS').AsFloat := 0
 //  else
@@ -659,7 +655,6 @@ end;
 
 procedure TReportDM.cdsTimesheetDetailCalcFields(DataSet: TDataSet);
 begin
-  inherited;
   VBBaseDM.CalculateFieldValues(TFDMemTable(DataSet));
 
 //  DataSet.FieldByName('FULL_NAME').AsString :=
@@ -693,7 +688,6 @@ end;
 
 procedure TReportDM.DataModuleCreate(Sender: TObject);
 begin
-  inherited;
   SetLength(FReportFileName, REPORT_COUNT);
 
   FReportFileName[0] := 'TimesheetByUser.fr3';
@@ -706,13 +700,11 @@ end;
 
 procedure TReportDM.cdsCarryForwardDetailBeforePost(DataSet: TDataSet);
 begin
-  inherited;
   FID := cdsCarryForwardDetail.FieldByName('ID').AsInteger;
 end;
 
 procedure TReportDM.cdsCarryForwardDetailCalcFields(DataSet: TDataSet);
 begin
-  inherited;
 //  if cdsCarryForwardDetail.FieldByName('TIME_SPENT').AsFloat = 0 then
 //    cdsCarryForwardDetail.FieldByName('TIME_HOURS').AsFloat := 0
 //  else

@@ -265,7 +265,6 @@ procedure TBillableSummaryFrm.FormCreate(Sender: TObject);
 var
   RegKey: TRegistry;
 begin
-  inherited;
   Caption := 'Billable Summary Report';
   FShowingForm := True;
   TcxLookupComboBoxProperties(lucPeriod.Properties).ListSource := ReportDM.dtsPeriod;
@@ -323,7 +322,6 @@ end;
 
 procedure TBillableSummaryFrm.FormShow(Sender: TObject);
 begin
-  inherited;
 //  GetBillableSummary;
 //  GetBillableTimesheet;
   FShowingForm := False;
@@ -333,7 +331,6 @@ end;
 
 procedure TBillableSummaryFrm.DoCloseForm(Sender: TObject);
 begin
-  inherited;
   CloseDataSets;
   Self.ModalResult := mrOK;
 end;
@@ -342,7 +339,6 @@ procedure TBillableSummaryFrm.DoEditItem(Sender: TObject);
 var
   TSID: Integer;
 begin
-  inherited;
   Screen.Cursor := crHourglass;
 
   try
@@ -427,7 +423,6 @@ var
   CustomerID: Integer;
 //  ProgressDialog: TExcelExportProgressFrm;
 begin
-  inherited;
   FolderPath := EXCEL_DOCS;
 //  FolderPath := MainFrm.FShellResource.RootFolder + '\' + FSHIFT_FOLDER + 'Export\';
   TDirectory.CreateDirectory(FolderPath);
@@ -508,7 +503,6 @@ var
   AComboBox: TcxComboBox;
   CustomerID: Integer;
 begin
-  inherited;
   ReportDM.frxPDFExport.ShowDialog := False;
   ReportDM.frxPDFExport.Background := True;
   ReportDM.frxPDFExport.OpenAfterExport := True; // cbxOepnDocument.Checked;
@@ -562,7 +556,6 @@ end;
 
 procedure TBillableSummaryFrm.DoGetData(Sender: TObject);
 begin
-  inherited;
   GetBillableSummary;
 end;
 
@@ -572,7 +565,6 @@ var
   RepFileName: string;
   CustomerID: Integer;
 begin
-  inherited;
   CustomerID := ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger;
   ReportDM.cdsBillableSummary.IndexName := 'idxBillableCustomer';
   ReportDM.Report := ReportDM.rptBillableSummaryByCustomer;
@@ -628,7 +620,6 @@ const
   SQL_PERIOD = 'SELECT THE_PERIOD FROM SourcePeriod WHERE THE_PERIOD = %d';
   SQL_DELETE_SUMMARY_DATA = 'DELETE FROM BILLABLE_SUMMARY WHERE USER_ID = %d';
 begin
-  inherited;
   ReportDM.Report := ReportDM.rptBillableSummaryByCustomer;
   ReportDM.locSQL.Active := True;
   Response := RUtils.CreateStringList(PIPE, DOUBLE_QUOTE);
@@ -850,7 +841,6 @@ end;
 
 procedure TBillableSummaryFrm.lucPeriodPropertiesEditValueChanged(Sender: TObject);
 begin
-  inherited;
   FPeriod := ReportDM.qryPeriod.FieldByName('THE_PERIOD').AsInteger;
 end;
 
@@ -957,7 +947,6 @@ procedure TBillableSummaryFrm.cbxRemoveZeroBillableItemsPropertiesEditValueChang
 var
   RegKey: TRegistry;
 begin
-  inherited;
   if not FShowingForm then
   begin
     RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
@@ -983,7 +972,6 @@ procedure TBillableSummaryFrm.cbxFetchPreviousPeriodDataPropertiesEditValueChang
 var
   RegKey: TRegistry;
 begin
-  inherited;
   if not FShowingForm then
   begin
     RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
@@ -1003,7 +991,6 @@ procedure TBillableSummaryFrm.cbxIncludeReleasedItemsPropertiesEditValueChanged(
 var
   RegKey: TRegistry;
 begin
-  inherited;
   if not FShowingForm then
   begin
     RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
@@ -1043,7 +1030,6 @@ procedure TBillableSummaryFrm.viewBillableSummaryCustomDrawCell(
   Sender: TcxCustomGridTableView; ACanvas: TcxCanvas;
   AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
 begin
-  inherited;
   if AViewInfo.GridRecord = nil then
     Exit;
 
@@ -1068,7 +1054,6 @@ var
   Pos: Integer;
   AText: string;
 begin
-  inherited;
   AText := AViewInfo.Text;
 
 //  aText := System.StrUtils.ReplaceStr(aText, ' :', ':');
@@ -1090,7 +1075,6 @@ procedure TBillableSummaryFrm.viewBillableSummaryFocusedRecordChanged(
   Sender: TcxCustomGridTableView; APrevFocusedRecord,
   AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
 begin
-  inherited;
   if AFocusedRecord = nil then
     Exit;
 
@@ -1110,7 +1094,6 @@ procedure TBillableSummaryFrm.EditTimesheet(ItemIndex: integer);
 var
   TSID: Integer;
 begin
-  inherited;
   Screen.Cursor := crHourglass;
 
   try
@@ -1190,7 +1173,6 @@ procedure TBillableSummaryFrm.edtBHoursGetDisplayText(
 var
   FieldName: string;
 begin
-  inherited;
   if ARecord <> nil then
   begin
 //    if (TcxCustomGridTableItem(Sender).Name = 'edtBHours')
@@ -1234,7 +1216,6 @@ procedure TBillableSummaryFrm.viewTimesheetDetailsCustomDrawCell(
   Sender: TcxCustomGridTableView; ACanvas: TcxCanvas;
   AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
 begin
-  inherited;
   if AViewInfo.GridRecord = nil then
     Exit;
 
@@ -1262,7 +1243,6 @@ end;
 
 procedure TBillableSummaryFrm.viewTimesheetDetailsDblClick(Sender: TObject);
 begin
-  inherited;
   GroupItemIndex := grpData.ItemIndex;
   actEditItem.Execute;
 //  EditTimesheet(grpData.ItemIndex);

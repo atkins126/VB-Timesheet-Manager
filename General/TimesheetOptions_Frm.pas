@@ -117,7 +117,6 @@ uses
 
 procedure TTimesheetOptionsFrm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
-  inherited;
 //  CanClose := not FMadeChanges;
 //  if not CanClose then
 //    if
@@ -137,7 +136,6 @@ end;
 
 procedure TTimesheetOptionsFrm.FormCreate(Sender: TObject);
 begin
-  inherited;
   // Width = 800;  Height = 490
   Self.Width := 800;
   Self.Height := 600;
@@ -168,7 +166,6 @@ end;
 
 procedure TTimesheetOptionsFrm.FormShow(Sender: TObject);
 begin
-  inherited;
   SetControlValues;
   ReadTimesheetRegValues;
 //  cbxUseDefaultCustomerPropertiesEditValueChanged(nil);
@@ -199,7 +196,6 @@ end;
 
 procedure TTimesheetOptionsFrm.btnCancelClick(Sender: TObject);
 begin
-  inherited;
   if FMadeChanges then
   begin
     if
@@ -224,7 +220,6 @@ procedure TTimesheetOptionsFrm.btnOKClick(Sender: TObject);
 var
   RegKey: TRegistry;
 begin
-  inherited;
   if cbxUseDefaultCustomer.Checked and (VarIsNull(lucCustomer.EditValue)
     or (lucCustomer.EditValue = 0)) then
   begin
@@ -277,7 +272,6 @@ end;
 
 procedure TTimesheetOptionsFrm.cbxIncrementalFilteringPropertiesEditValueChanged(Sender: TObject);
 begin
-  inherited;
   cbxHighlightSearchMatch.Enabled := cbxIncrementalFiltering.Checked;
   if not cbxIncrementalFiltering.Checked then
     cbxHighlightSearchMatch.Checked := False;
@@ -285,7 +279,6 @@ end;
 
 procedure TTimesheetOptionsFrm.cbxUseDefaultCustomerMouseEnter(Sender: TObject);
 begin
-  inherited;
   if Sender is TcxCheckBox then
     memDescription.Text := FHintArray[TcxCheckBox(Sender).Tag];
 end;
@@ -305,20 +298,17 @@ end;
 
 procedure TTimesheetOptionsFrm.cbxUseDefaultCustomerMouseLeave(Sender: TObject);
 begin
-  inherited;
   memDescription.Lines.Clear;
 end;
 
 procedure TTimesheetOptionsFrm.cbxUseDefaultCustomerPropertiesChange(Sender: TObject);
 begin
-  inherited;
   FMadeChanges := True;
   btnOK.Enabled := FMadeChanges;
 end;
 
 procedure TTimesheetOptionsFrm.cbxUseDefaultCustomerPropertiesEditValueChanged(Sender: TObject);
 begin
-  inherited;
   lucCustomer.Properties.ReadOnly := not cbxUseDefaultCustomer.Checked;
   if not cbxUseDefaultCustomer.Checked then
     lucCustomer.EditValue := 0;
@@ -330,7 +320,6 @@ end;
 
 procedure TTimesheetOptionsFrm.cbxUseDefaultPriceItemPropertiesEditValueChanged(Sender: TObject);
 begin
-  inherited;
   lucPriceItem.Properties.ReadOnly := not cbxUseDefaultPriceItem.Checked;
 //  cbxUseDefaultRate.Enabled := cbxUseDefaultPriceItem.Checked;
 //  lucRateUnit.Enabled := not cbxUseDefaultPriceItem.Checked;
@@ -345,7 +334,6 @@ end;
 
 procedure TTimesheetOptionsFrm.cbxUseDefaultRatePropertiesEditValueChanged(Sender: TObject);
 begin
-  inherited;
 //  edtDefaultRate.Properties.ReadOnly := cbxUseDefaultRate.Checked;
 
   if cbxUseDefaultRate.Checked and lucPriceItem.EditValue > 0 then
@@ -357,7 +345,6 @@ end;
 
 procedure TTimesheetOptionsFrm.DoGetDefaultRate(Sender: TObject);
 begin
-  inherited;
   if lucPriceItem.EditValue <= 0 then
     raise EValidateException.Create('Please select a default price item from which to obtain the default rate.');
 
@@ -367,7 +354,6 @@ end;
 
 procedure TTimesheetOptionsFrm.lucPriceItemPropertiesEditValueChanged(Sender: TObject);
 begin
-  inherited;
   edtDefaultRate.Value := TSDM.cdsPriceListPref.FieldByName('RATE').AsFloat;
   lucRateUnit.EditValue := TSDM.cdsPriceListPref.FieldByName('RATE_UNIT_ID').AsInteger;
 end;

@@ -19,7 +19,8 @@ uses
   cxDBLookupEdit, cxDBLookupComboBox, cxFilter, cxData, cxDataStorage, cxNavigator,
   dxDateRanges, dxScrollbarAnnotations, cxDBData, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridBandedTableView, cxGrid, dxPrnDev,
-  cxGridDBBandedTableView, cxCurrencyEdit, dxPrnDlg, cxCheckBox, cxGridExportLink;
+  cxGridDBBandedTableView, cxCurrencyEdit, dxPrnDlg, cxCheckBox, cxGridExportLink,
+  cxLabel;
 
 type
   TMonthlyBillableReportFrm = class(TBaseLayoutFrm)
@@ -110,7 +111,6 @@ procedure TMonthlyBillableReportFrm.FormCreate(Sender: TObject);
 var
   FirstPeriod: Integer;
 begin
-  inherited;
   Caption := 'Monthly Billable Summary';
   Self.Width := 545;
   Self.Height := 600;
@@ -148,19 +148,16 @@ end;
 
 procedure TMonthlyBillableReportFrm.FormShow(Sender: TObject);
 begin
-  inherited;
   Screen.Cursor := crDefault;
 end;
 
 procedure TMonthlyBillableReportFrm.cbxGetAllPropertiesChange(Sender: TObject);
 begin
-  inherited;
   FMadeChanges := True;
 end;
 
 procedure TMonthlyBillableReportFrm.DoCloseForm(Sender: TObject);
 begin
-  inherited;
   MonthlyBillableReportFrm.Close;
 end;
 
@@ -218,7 +215,6 @@ var
 //  CustomerID: Integer;
   ThePeriod: Integer;
 begin
-  inherited;
   if (ReportDM.cdsMonthlyBilling.IsEmpty) or (FMadeChanges) then
     GetMonthlyBilling;
 
@@ -302,7 +298,6 @@ var
   DC: TcxCustomDataController;
   ThePeriod: Integer;
 begin
-  inherited;
   if (ReportDM.cdsMonthlyBilling.IsEmpty) or (FMadeChanges) then
     GetMonthlyBilling;
 
@@ -362,7 +357,6 @@ procedure TMonthlyBillableReportFrm.DoPrint(Sender: TObject);
 var
   RepFileName: string;
 begin
-  inherited;
   Screen.Cursor := crHourglass;
 
   if (ReportDM.cdsMonthlyBilling.IsEmpty) or (FMadeChanges) then
@@ -425,21 +419,18 @@ end;
 
 procedure TMonthlyBillableReportFrm.lucFromPeriodPropertiesChange(Sender: TObject);
 begin
-  inherited;
   SetPeriod(False);
   FMadeChanges := True;
 end;
 
 procedure TMonthlyBillableReportFrm.lucFromYearPropertiesChange(Sender: TObject);
 begin
-  inherited;
   SetPeriod(True);
   FMadeChanges := True;
 end;
 
 procedure TMonthlyBillableReportFrm.lucSelectByPropertiesChange(Sender: TObject);
 begin
-  inherited;
   grpPeriod.Visible := lucSelectBy.ItemIndex = 0;
   grpYear.Visible := not grpPeriod.Visible;
   SetPeriod(grpYear.Visible);
@@ -464,7 +455,6 @@ procedure TMonthlyBillableReportFrm.viewMonthlyBillingCustomDrawGroupSummaryCell
   AColumn: TcxGridColumn; ASummaryItem: TcxDataSummaryItem;
   AViewInfo: TcxCustomGridViewCellViewInfo; var ADone: Boolean);
 begin
-  inherited;
   ADone := ARow.Expanded;
 end;
 

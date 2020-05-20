@@ -18,7 +18,7 @@ uses
   cxFilter, cxDataStorage, cxNavigator, dxDateRanges, dxScrollbarAnnotations,
   cxDBData, cxCurrencyEdit, cxCalendar, cxMemo, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridBandedTableView, cxGridDBBandedTableView, cxGridCustomView,
-  cxGrid, dxPrnDev, dxPrnDlg, cxGridExportLink;
+  cxGrid, dxPrnDev, dxPrnDlg, cxGridExportLink, cxLabel;
 
 type
   TTimesheetActivitySummaryFrm = class(TBaseLayoutFrm)
@@ -151,7 +151,6 @@ uses
 
 procedure TTimesheetActivitySummaryFrm.FormCreate(Sender: TObject);
 begin
-  inherited;
   Caption := 'Timesheet Summary by Activity';
   viewSummaryByActivity.DataController.DataSource := ReportDM.dtsTSSummaryByActivity;
   lucPeriod.Properties.ListSource := ReportDM.dtsPeriod;
@@ -167,7 +166,6 @@ end;
 
 procedure TTimesheetActivitySummaryFrm.FormShow(Sender: TObject);
 begin
-  inherited;
   Self.WindowState := wsMaximized;
 end;
 
@@ -183,7 +181,6 @@ end;
 
 procedure TTimesheetActivitySummaryFrm.lucPeriodPropertiesEditValueChanged(Sender: TObject);
 begin
-  inherited;
   Screen.Cursor := crHourglass;
   try
     actGetData.Execute;
@@ -196,7 +193,6 @@ procedure TTimesheetActivitySummaryFrm.viewSummaryByActivityCustomDrawCell(
   Sender: TcxCustomGridTableView; ACanvas: TcxCanvas;
   AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
 begin
-  inherited;
   if AViewInfo.GridRecord = nil then
     Exit;
 
@@ -216,7 +212,6 @@ end;
 
 procedure TTimesheetActivitySummaryFrm.DoCloseForm(Sender: TObject);
 begin
-  inherited;
   Self.ModalResult := mrOK;
 end;
 
@@ -226,7 +221,6 @@ var
   ActivityTypeID: Integer;
   RepFileName: string;
 begin
-  inherited;
   ReportDM.frxPDFExport.ShowDialog := False;
   ReportDM.frxPDFExport.Background := True;
   ReportDM.frxPDFExport.OpenAfterExport := True; // cbxOepnDocument.Checked;
@@ -282,7 +276,6 @@ var
   RepFileName: string;
   ActivityTypeID: Integer;
 begin
-  inherited;
   RepFileName := TSDM.ShellResource.ReportFolder + 'TSSummaryByActivity.fr3';
 
   if not TFile.Exists(RepFileName) then
@@ -329,7 +322,6 @@ var
   FileSaved: Boolean;
 //  ProgressDialog: TExcelExportProgressFrm;
 begin
-  inherited;
   //FolderPath := RUtils.GetMyDocumentsFolder(VBBaseDM.FShellResource.RootFolder) + EXCEL_DOCS;
   FolderPath := EXCEL_DOCS;
 //  FolderPath := MainFrm.FShellResource.RootFolder + '\' + FSHIFT_FOLDER + 'Export\';
@@ -382,7 +374,6 @@ procedure TTimesheetActivitySummaryFrm.DoGetData(Sender: TObject);
 var
   WhereClause, GroupByClause, OrderByClause: string;
 begin
-  inherited;
   WhereClause := ' WHERE T.THE_PERIOD = ' + VarToStr(lucPeriod.EditValue);
   GroupByClause := ' GROUP BY T.THE_PERIOD, A.ID, A."NAME" ';
   OrderByClause := 'ORDER BY A."NAME"';

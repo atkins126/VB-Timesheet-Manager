@@ -58,7 +58,6 @@ uses
 
 procedure TInvoiceItemFrm.FormCreate(Sender: TObject);
 begin
-  inherited;
   Caption := 'Invoice Date';
   Width := 250;
   Height := 300;
@@ -69,7 +68,6 @@ end;
 
 procedure TInvoiceItemFrm.btnOKClick(Sender: TObject);
 begin
-  inherited;
   if VarIsNull(edtInvoicNo.EditValue) then
     raise EValidateException.Create('Invalid invoice number.');
 
@@ -84,14 +82,12 @@ end;
 
 procedure TInvoiceItemFrm.btnSetDefaultDateClick(Sender: TObject);
 begin
-  inherited;
   lucInvoiceDate.EditValue := TSDM.GetDefaulttInvoiceDate;
   TSDM.DefaultInvoiceDate := lucInvoiceDate.Date;
 end;
 
 procedure TInvoiceItemFrm.dteInvoiceDatePropertiesEditValueChanged(Sender: TObject);
 begin
-  inherited;
   TSDM.DefaultInvoiceDate := lucInvoiceDate.Date;
 end;
 
