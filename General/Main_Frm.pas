@@ -236,7 +236,7 @@ type
     btnSelectNone: TcxButton;
     cntSelectNone: TdxBarControlContainerItem;
     tipSelectAll: TdxScreenTip;
-    tipSelectNone: TdxScreenTip;
+    tipClearSelection: TdxScreenTip;
     actSelectAll: TAction;
     actClearAllSelectedItems: TAction;
     Sep8: TdxBarSeparator;
@@ -264,9 +264,10 @@ type
     btnCustomerContactinfo: TdxBarButton;
     Customer1: TMenuItem;
     CustomerContactInfo1: TMenuItem;
-    lblDisplay: TcxLabel;
     btnReturnID: TdxBarLargeButton;
     edtFirstName: TcxTextEdit;
+    actDirectorLink: TAction;
+    DirectorLink1: TMenuItem;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
     procedure DoRefresh(Sender: TObject);
@@ -321,6 +322,7 @@ type
       ARecord: TcxCustomGridRecord; var AText: string);
     procedure btnReturnIDClick(Sender: TObject);
     procedure DiEditInsertEntry(Sender: TObject);
+    procedure DoDirectorlink(Sender: TObject);
   private
     { Private declarations }
     FTSUserID: Integer;
@@ -352,7 +354,7 @@ var
   MainFrm: TMainFrm;
 
 const
-  TABLE_COUNT = 8;
+  TABLE_COUNT = 9;
 
 implementation
 
@@ -373,7 +375,7 @@ uses
   InvoiceItem_Frm,
   MonthlyBillableReport_Frm,
   CarryForwardManager_Frm,
-  CustomerContactDetail_Frm;
+  CustomerContactDetail_Frm, CustomerDirector_Frm;
 //  ReleaseCFwd_Frm;
 
 procedure TMainFrm.DrawCellBorder(var Msg: TMessage);
@@ -407,7 +409,7 @@ end;
 procedure TMainFrm.FormShow(Sender: TObject);
 var
   VBShell: string;
-  {$IFDEF DEBUG}ErrorMsg, {$ENDIF}SkinResourceFileName {, SkinName}: string;
+{$IFDEF DEBUG}ErrorMsg, {$ENDIF}SkinResourceFileName {, SkinName}: string;
   RegKey: TRegistry;
 begin
   Screen.Cursor := crHourglass;
@@ -420,7 +422,7 @@ begin
     MsgDialogFrm := TMsgDialogFrm.Create(nil);
 
   try
-    {$IFDEF DEBUG}
+{$IFDEF DEBUG}
     Self.BorderStyle := bsSizeable;
     ErrorMsg := '';
     // Sart the local debug web server if not already running.
@@ -438,7 +440,7 @@ begin
         [mbOK]
         );
     end;
-    {$ENDIF}
+{$ENDIF}
 
     if VBBaseDM = nil then
       VBBaseDM := TVBBaseDM.Create(nil);
@@ -458,10 +460,10 @@ begin
     VBBaseDM.CheckForUpdates(3, '');
     TSDM.ShellResource := VBBaseDM.GetShellResource;
     SkinResourceFileName := RESOURCE_FOLDER + SKIN_RESOURCE_FILE;
-//    SkinName := TSDM.ShellResource.SkinName;
-//
-//    if Length(Trim(SkinName)) = 0 then
-//      SkinName := DEFAULT_SKIN_NAME;
+    //    SkinName := TSDM.ShellResource.SkinName;
+    //
+    //    if Length(Trim(SkinName)) = 0 then
+    //      SkinName := DEFAULT_SKIN_NAME;
 
     UpdateApplicationSkin(SkinResourceFileName {, SkinName});
 
@@ -506,10 +508,10 @@ begin
       ReadRegValues;
 
       RegKey.OpenKey(KEY_TIMESHEET, True);
-//      FFromDate := RegKey.ReadDate('From Date');
-//      lucFromDate.EditValue := FFromDate;
-//      FToDate := RegKey.ReadDate('To Date');
-//      lucToDate.EditValue := FToDate;
+      //      FFromDate := RegKey.ReadDate('From Date');
+      //      lucFromDate.EditValue := FFromDate;
+      //      FToDate := RegKey.ReadDate('To Date');
+      //      lucToDate.EditValue := FToDate;
       FTimesheetPeriod := RegKey.ReadInteger('Period');
       lucPeriod.EditValue := FTimesheetPeriod;
       cbxPersistentSelection.EditValue := TSDM.TimesheetOption.PersitentRecordSelection;
@@ -571,8 +573,8 @@ begin
       end;
       WindowState := wsMaximized;
     end;
-// else
-// WindowState := wsMaximized;
+    // else
+    // WindowState := wsMaximized;
   finally
     FShowingForm := False;
     Screen.Cursor := crDefault;
@@ -597,6 +599,12 @@ begin
   begin
     CustomerContactDetailFrm.Close;
     FreeAndNil(CustomerContactDetailFrm);
+  end;
+
+  if CustomerDirectorFrm <> nil then
+  begin
+    CustomerDirectorFrm.Close;
+    FreeAndNil(CustomerDirectorFrm);
   end;
 
   if Assigned(BaseFrm) then
@@ -663,11 +671,27 @@ begin
   try
     if CustomerContactDetailFrm = nil then
       CustomerContactDetailFrm := TCustomerContactDetailFrm.Create(nil);
-//  CustomerContactDetailFrm.Caption := 'Contact details for: ' + FCustomerName;
-//  CustomerContactDetailFrm.viewContactDetailCo.Bands[0].Caption := 'Contact details for: ' + FCustomerName;
+
+    //  CustomerContactDetailFrm.Caption := 'Contact details for: ' + FCustomerName;
+    //  CustomerContactDetailFrm.viewContactDetailCo.Bands[0].Caption := 'Contact details for: ' + FCustomerName;
 
     SendMessage(CustomerContactDetailFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(FCustomerName)), 0);
     CustomerContactDetailFrm.Show;
+  finally
+    Screen.Cursor := crDefault;
+  end;
+end;
+
+procedure TMainFrm.DoDirectorlink(Sender: TObject);
+begin
+  Screen.Cursor := crHourglass;
+
+  try
+    if CustomerDirectorFrm = nil then
+      CustomerDirectorFrm := TCustomerDirectorFrm.Create(nil);
+
+    SendMessage(CustomerDirectorFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(FCustomerName)), 0);
+    CustomerDirectorFrm.Show;
   finally
     Screen.Cursor := crDefault;
   end;
@@ -791,8 +815,34 @@ begin
 end;
 
 procedure TMainFrm.DoSelectAllTimesheetItems(Sender: TObject);
+var
+  C: TcxCustomGridTableController;
 begin
-  viewTimesheet.Controller.SelectAll;
+  C := viewTimesheet.Controller;
+
+  case Tcxbutton(Sender).Tag of
+    5:
+      begin
+        C.SelectAll;
+
+        grdTimesheet.SetFocus;
+        viewTimesheet.Focused := True;
+
+        if not TSDM.cdsTimesheet.IsEmpty then
+        begin
+          viewTimesheet.DataController.FocusedRecordIndex := 0;
+
+          if not TSDM.TimesheetOption.PersitentRecordSelection then
+            viewTimesheet.Controller.FocusedRecord.Selected := True;
+
+          viewTimesheet.Controller.FocusedItem := edtActivityDate;
+
+          viewTimesheet.Controller.MakeFocusedItemVisible;
+        end;
+      end;
+
+    6: C.ClearSelection;
+  end;
 end;
 
 procedure TMainFrm.DoTimeSheetDetail(Sender: TObject);
@@ -802,7 +852,7 @@ begin
     if TimesheetDetailReportFrm = nil then
       TimesheetDetailReportFrm := TTimesheetDetailReportFrm.Create(nil);
     TimesheetDetailReportFrm.ShowModal;
-//    TimesheetDetailReportFrm.Close;
+    //    TimesheetDetailReportFrm.Close;
     FreeAndNil(TimesheetDetailReportFrm);
   finally
     Screen.Cursor := crDefault;
@@ -814,18 +864,18 @@ procedure TMainFrm.btnApproveClick(Sender: TObject);
 //  aControl: TdxBarItemControl;
 //  APopupPoint: TPoint;
 begin
-//  aControl := TdxBarButton(Sender).ClickItemLink.Control;
-//  APopupPoint := Point(aControl.ItemBounds.Left, aControl.ItemBounds.Bottom);
-//  APopupPoint := aControl.Parent.ClientToScreen(APopupPoint);
-//
-//  popTimesheet.Popup(APopupPoint.X, APopupPoint.Y);
-//
-////  case TdxBarLargeButton(Sender).Tag of
-////    0: popApproval.Popup(APopupPoint.X, APopupPoint.Y);
-////    1: popBillable.Popup(APopupPoint.X, APopupPoint.Y);
-////    2: popInvoice.Popup(APopupPoint.X, APopupPoint.Y);
-////    3: popCarryForward.Popup(APopupPoint.X, APopupPoint.Y);
-////  end;
+  //  aControl := TdxBarButton(Sender).ClickItemLink.Control;
+  //  APopupPoint := Point(aControl.ItemBounds.Left, aControl.ItemBounds.Bottom);
+  //  APopupPoint := aControl.Parent.ClientToScreen(APopupPoint);
+  //
+  //  popTimesheet.Popup(APopupPoint.X, APopupPoint.Y);
+  //
+  ////  case TdxBarLargeButton(Sender).Tag of
+  ////    0: popApproval.Popup(APopupPoint.X, APopupPoint.Y);
+  ////    1: popBillable.Popup(APopupPoint.X, APopupPoint.Y);
+  ////    2: popInvoice.Popup(APopupPoint.X, APopupPoint.Y);
+  ////    3: popCarryForward.Popup(APopupPoint.X, APopupPoint.Y);
+  ////  end;
 end;
 
 procedure TMainFrm.btnReturnIDClick(Sender: TObject);
@@ -833,22 +883,22 @@ var
   Response, SQLStatement, Value: string;
   NextID: Integer;
 begin
-//  Response := RUtils.CreateStringList(PIPE, DOUBLE_QUOTE);
+  //  Response := RUtils.CreateStringList(PIPE, DOUBLE_QUOTE);
   if Length(Trim(edtFirstName.Text)) = 0 then
     Exit;
 
   Value := AnsiQuotedStr(edtFirstName.Text, '''');
   SQLStatement := ' INSERT INTO TEST(FIRST_NAME) VALUES(' + Value + ') RETURNING ID';
 
-//  try
+  //  try
   NextID := StrToInt(VBBaseDM.ModifyRecord(SQLStatement, Response));
 
-//    if SameText(Response.Values['RESPONSE'], 'ERROR') then
-//      raise EServerError.Create('One or more errors occurred when executing an SQL command with error message:' + CRLF + CRLF +
-//        Response.Values['ERROR_MESSAGE']);
-//  finally
-//    Response.Free;
-//  end;
+  //    if SameText(Response.Values['RESPONSE'], 'ERROR') then
+  //      raise EServerError.Create('One or more errors occurred when executing an SQL command with error message:' + CRLF + CRLF +
+  //        Response.Values['ERROR_MESSAGE']);
+  //  finally
+  //    Response.Free;
+  //  end;
 end;
 
 procedure TMainFrm.btnSelectAllClick(Sender: TObject);
@@ -857,7 +907,25 @@ var
 begin
   C := viewTimesheet.Controller;
   case Tcxbutton(Sender).Tag of
-    0: C.SelectAll;
+    0:
+      begin
+        C.SelectAll;
+
+        grdTimesheet.SetFocus;
+        viewTimesheet.Focused := True;
+
+        if not TSDM.cdsTimesheet.IsEmpty then
+        begin
+          viewTimesheet.DataController.FocusedRecordIndex := 0;
+
+          if not TSDM.TimesheetOption.PersitentRecordSelection then
+            viewTimesheet.Controller.FocusedRecord.Selected := True;
+
+          viewTimesheet.Controller.FocusedItem := edtActivityDate;
+
+          viewTimesheet.Controller.MakeFocusedItemVisible;
+        end;
+      end;
     1: C.ClearSelection;
   end;
 end;
@@ -950,11 +1018,11 @@ begin
 
   ApproveTimesheetItem(TAction(Sender).Tag);
 
-// case TAction(Sender).Tag of
-// 100: ApproveTimesheetItem(apApprove);
-// 101: ApproveTimesheetItem(apUnApprove);
-// 102: ApproveTimesheetItem(apToggleApproval);
-// end;
+  // case TAction(Sender).Tag of
+  // 100: ApproveTimesheetItem(apApprove);
+  // 101: ApproveTimesheetItem(apUnApprove);
+  // 102: ApproveTimesheetItem(apToggleApproval);
+  // end;
 end;
 
 procedure TMainFrm.ApproveTimesheetItem(ATag: Integer);
@@ -1039,7 +1107,7 @@ begin
       if SameText(Response.Values['RESPNSE'], 'ERROR') then
         raise EServerError.Create('One or more errors occurred when posting data to the database with message;' + CRLF + CRLF +
           Response.Values['ERROR_MESSAGE']);
-//      VBBaseDM.PostData(TSDM.cdsTimesheet);
+      //      VBBaseDM.PostData(TSDM.cdsTimesheet);
     finally
       Response.Free;
     end;
@@ -1171,14 +1239,14 @@ begin
     RecIndex := C.SelectedRecords[I].RecordIndex;
     DC.FocusedRecordIndex := RecIndex;
 
-//    if DC.Values[C.SelectedRecords[I].RecordIndex, cbxLocked.Index] = 0 then
+    //    if DC.Values[C.SelectedRecords[I].RecordIndex, cbxLocked.Index] = 0 then
     if (DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] <= 0)
       and (DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 0) then
     begin
       case ATag of
         110:
           begin
-//              if (DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 0)
+            //              if (DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 0)
             if (DC.Values[C.SelectedRecords[I].RecordIndex, cbxBillable.Index] = 0) then
             begin
               DC.Edit;
@@ -1334,7 +1402,7 @@ begin
   try
     if InvoiceItemFrm.ShowModal = mrOK then
     begin
-//      InvoiceDate := VarAsType(InvoiceItemFrm.edtInvoiceDate.EditValue, varDate);
+      //      InvoiceDate := VarAsType(InvoiceItemFrm.edtInvoiceDate.EditValue, varDate);
       InvoiceDate := TSDM.DefaultInvoiceDate;
       DC := viewTimesheet.DataController;
       ChangeCount := 0;
@@ -1345,14 +1413,14 @@ begin
 //        if DC.Values[C.SelectedRecords[I].RecordIndex, cbxLocked.Index] = 0 then
         if DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] <= 0 then
         begin
-//          DC.Edit;
+          //          DC.Edit;
           RecIndex := C.SelectedRecords[I].RecordIndex;
           DC.FocusedRecordIndex := RecIndex;
 
           // If item is approved AND it is NOT carried forward...
           if (DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 1)
             and (DC.Values[C.SelectedRecords[I].RecordIndex, cbxCarryForward.Index] = 0) then
-//            if DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] <= 0 then
+            //            if DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] <= 0 then
           begin
             DC.Edit;
             DC.SetEditValue(edtInvoiceID.Index, 1, evsValue);
@@ -1370,7 +1438,7 @@ begin
 
       if ChangeCount > 0 then
         VBBaseDM.PostData(TSDM.cdsTimesheet);
-//        actRefresh.Execute;
+      //        actRefresh.Execute;
 
       if AlreadyInvoiced > 0 then
       begin
@@ -1416,7 +1484,7 @@ begin
   C := viewTimesheet.Controller;
   ChangeCount := 0;
 
-//  DC.BeginUpdate;
+  //  DC.BeginUpdate;
   try
     for I := 0 to C.SelectedRecordCount - 1 do
     begin
@@ -1435,32 +1503,32 @@ begin
         Inc(ChangeCount);
       end;
       DC.Post(True);
-//      end;
+      //      end;
     end;
 
-//    if ChangeCount = 0 then
-//    begin
-//      Beep;
-//      DisplayMsg(
-//        Application.Title,
-//        'Data Validation Error',
-//        'One or more items could not be un-invoiced.' + CRLF + CRLF +
-//        'Possible reason(s):' + CRLF +
-//        'Item is locked.' + CRLF +
-//        'Item has already been invoiced.' + CRLF +
-//        'Item is carried forward.',
-//        mtError,
-//        [mbOK]
-//        );
-//    end
-//    else
-//    begin
+    //    if ChangeCount = 0 then
+    //    begin
+    //      Beep;
+    //      DisplayMsg(
+    //        Application.Title,
+    //        'Data Validation Error',
+    //        'One or more items could not be un-invoiced.' + CRLF + CRLF +
+    //        'Possible reason(s):' + CRLF +
+    //        'Item is locked.' + CRLF +
+    //        'Item has already been invoiced.' + CRLF +
+    //        'Item is carried forward.',
+    //        mtError,
+    //        [mbOK]
+    //        );
+    //    end
+    //    else
+    //    begin
     if ChangeCount > 0 then
       VBBaseDM.PostData(TSDM.cdsTimesheet);
-//      actRefresh.Execute;
-//    end;
+    //      actRefresh.Execute;
+    //    end;
   finally
-//    DC.EndUpdate;
+    //    DC.EndUpdate;
     Screen.Cursor := crDefault;
   end;
 end;
@@ -1556,14 +1624,14 @@ begin
     BillableSummaryFrm.Close;
     FreeAndNil(BillableSummaryFrm);
   finally
-// ribMain.ActiveTab := tabTimesheet;
+    // ribMain.ActiveTab := tabTimesheet;
     Screen.Cursor := crDefault;
   end;
 end;
 
 procedure TMainFrm.DoLayoutManager(Sender: TObject);
 begin
-//
+  //
 end;
 
 procedure TMainFrm.DoMonthlyBilling(Sender: TObject);
@@ -1606,9 +1674,9 @@ begin
     OrderByClause := ' ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
     WhereClause := WhereClause + OrderByClause;
 
-//    ParamList := ' WHERE T.USER_ID=' + FTSUserID.ToString +
-//      ' AND T.THE_PERIOD=' + FTimesheetPeriod.ToString + SEMI_COLON +
-//      ONE_SPACE + SEMI_COLON + 'ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
+    //    ParamList := ' WHERE T.USER_ID=' + FTSUserID.ToString +
+    //      ' AND T.THE_PERIOD=' + FTimesheetPeriod.ToString + SEMI_COLON +
+    //      ONE_SPACE + SEMI_COLON + 'ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
   end
   else if lucViewMode.ItemIndex = 1 then
   begin
@@ -1635,7 +1703,7 @@ begin
         ' AND T.ACTIVITY_DATE <=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FToDate), '''');
 
     OrderByClause := ' ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE, T.ID';
-//    OrderByClause := ' ORDER BY T.ID';
+    //    OrderByClause := ' ORDER BY T.ID';
     WhereClause := WhereClause + OrderByClause;
   end;
 
@@ -1643,14 +1711,14 @@ begin
   try
     if (FIteration > 0) and (ProgressFrm <> nil) then
     begin
-//      SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Price List Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+      //      SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Price List Table' + '|PROGRESS=' + FIteration.ToString)), 0);
       SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('Opening Timesheet Table')), 0);
       SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FIteration.ToString)), 0);
     end;
 
-// ParamList := ' WHERE T.USER_ID=' + FTSUserID.ToString +
-// ' AND T.THE_PERIOD=' + FTimesheetPeriod.ToString + SEMI_COLON +
-// ONE_SPACE + SEMI_COLON + 'ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
+    // ParamList := ' WHERE T.USER_ID=' + FTSUserID.ToString +
+    // ' AND T.THE_PERIOD=' + FTimesheetPeriod.ToString + SEMI_COLON +
+    // ONE_SPACE + SEMI_COLON + 'ORDER BY T.THE_PERIOD, T.ACTIVITY_DATE';
 
     VBBaseDM.GetData(27, TSDM.cdsTimesheet, TSDM.cdsTimesheet.Name, WhereClause {ParamList},
       'C:\Data\Xml\Timesheet.xml', TSDM.cdsTimesheet.UpdateOptions.Generatorname,
@@ -1839,11 +1907,16 @@ procedure TMainFrm.viewTimesheetFocusedRecordChanged(
   Sender: TcxCustomGridTableView; APrevFocusedRecord,
   AFocusedRecord: TcxCustomGridRecord; ANewItemRecordFocusingChanged: Boolean);
 begin
-  if CustomerContactDetailFrm <> nil then
+  if AFocusedRecord <> nil then
   begin
-    SendMessage(CustomerContactDetailFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(FCustomerName)), 0);
-    SendMessage(CustomerContactDetailFrm.Handle, WM_CONTACT_TYPE, DWORD(PChar('')), 0);
-//    SendMessage(ProgressFrm.Handle, WM_CONTACT_TYPE, DWORD(PChar('Opening Customer Contact detail Table')), 0);
+    if CustomerContactDetailFrm <> nil then
+    begin
+      SendMessage(CustomerContactDetailFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(FCustomerName)), 0);
+      SendMessage(CustomerContactDetailFrm.Handle, WM_CONTACT_TYPE, DWORD(PChar('')), 0);
+    end;
+
+    if CustomerDirectorFrm <> nil then
+      SendMessage(CustomerDirectorFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(FCustomerName)), 0);
   end;
 end;
 
@@ -1859,8 +1932,8 @@ end;
 procedure TMainFrm.OpenTables;
 var
   Counter: Integer;
-// Iteration: Extended;
-// ParamList: string;
+  // Iteration: Extended;
+  // ParamList: string;
 begin
   if ProgressFrm = nil then
     ProgressFrm := TProgressFrm.Create(nil);
@@ -1887,7 +1960,7 @@ begin
     Inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
 
-//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Price List Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+    //    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Price List Table' + '|PROGRESS=' + FIteration.ToString)), 0);
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('Opening Pricelist Table Table')), 0);
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FIteration.ToString)), 0);
     VBBaseDM.GetData(42, TSDM.cdsPriceList, TSDM.cdsPriceList.Name, ONE_SPACE,
@@ -1901,7 +1974,7 @@ begin
     Inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
 
-//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Activity Type Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+    //    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Activity Type Table' + '|PROGRESS=' + FIteration.ToString)), 0);
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('Opening Activity Type Table')), 0);
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FIteration.ToString)), 0);
     VBBaseDM.GetData(39, TSDM.cdsActivityType, TSDM.cdsActivityType.Name, ONE_SPACE,
@@ -1915,7 +1988,7 @@ begin
     Inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
 
-//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Customer Group Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+    //    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Customer Group Table' + '|PROGRESS=' + FIteration.ToString)), 0);
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('Opening Customer Group Table')), 0);
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FIteration.ToString)), 0);
     VBBaseDM.GetData(56, TSDM.cdsCustomerGroup, TSDM.cdsCustomerGroup.Name, ONE_SPACE,
@@ -1929,7 +2002,7 @@ begin
     Inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
 
-//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Rate Unit Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+    //    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Rate Unit Table' + '|PROGRESS=' + FIteration.ToString)), 0);
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('Opening Rate Unit Table')), 0);
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FIteration.ToString)), 0);
     VBBaseDM.GetData(38, TSDM.cdsRateUnit, TSDM.cdsRateUnit.Name, ONE_SPACE,
@@ -1943,7 +2016,7 @@ begin
     Inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
 
-//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Timesheet Period Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+    //    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening Timesheet Period Table' + '|PROGRESS=' + FIteration.ToString)), 0);
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('Opening Timesheet Period Table')), 0);
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FIteration.ToString)), 0);
     VBBaseDM.GetData(62, TSDM.cdsTSPeriod, TSDM.cdsTSPeriod.Name, ONE_SPACE,
@@ -1960,9 +2033,10 @@ begin
     Inc(Counter);
     FIteration := Counter / TABLE_COUNT * 100;
 
-//    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening System User Table' + '|PROGRESS=' + FIteration.ToString)), 0);
+    //    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('CAPTION=Opening System User Table' + '|PROGRESS=' + FIteration.ToString)), 0);
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('Opening System User Table')), 0);
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FIteration.ToString)), 0);
+
     VBBaseDM.GetData(24, TSDM.cdsSystemUser, TSDM.cdsSystemUser.Name, ONE_SPACE,
       'C:\Data\Xml\System User.xml', TSDM.cdsSystemUser.UpdateOptions.Generatorname,
       TSDM.cdsSystemUser.UpdateOptions.UpdateTableName);
@@ -1980,9 +2054,20 @@ begin
     VBBaseDM.GetData(54, TSDM.cdsContactDetailCo, TSDM.cdsContactDetailCo.Name, ' ORDER BY O.CUSTOMER_ID, O.CONTACT_TYPE',
       'C:\Data\Xml\View Contact Detail Co.xml', TSDM.cdsContactDetailCo.UpdateOptions.Generatorname,
       TSDM.cdsContactDetailCo.UpdateOptions.UpdateTableName);
+
+    // Director linked to customer
+    Inc(Counter);
+    FIteration := Counter / TABLE_COUNT * 100;
+
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('Opening Customer Contact detail Table')), 0);
+    SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FIteration.ToString)), 0);
+
+    VBBaseDM.GetData(70, TSDM.cdsDirector, TSDM.cdsDirector.Name, ' ORDER BY D.CUSTOMER_ID, D.FIRST_NAME, D.LAST_NAME',
+      'C:\Data\Xml\Director Link.xml', TSDM.cdsDirector.UpdateOptions.Generatorname,
+      TSDM.cdsDirector.UpdateOptions.UpdateTableName);
   finally
-// ProgressFrm.Close;
-// FreeAndNil(ProgressFrm);
+    // ProgressFrm.Close;
+    // FreeAndNil(ProgressFrm);
   end;
 end;
 
@@ -1999,14 +2084,11 @@ var
   EditMode: Boolean;
 begin
   EditMode := StringToBoolean(PChar(MyMsg.WParam));
-  SetButtonStatus(EditMode);
-//
-// try
-// if SL.Values['REQUEST'] = 'REFRESH_DATA' then
-// SendMessage(CustomerFrm.Handle, WM_RECORD_ID, DWORD(PChar(SL.DelimitedText)), 0);
-// finally
-// MyMsg.Result := -1;
-// end;
+  try
+    SetButtonStatus(EditMode);
+  finally
+    MyMsg.Result := -1;
+  end;
 end;
 
 procedure TMainFrm.lucCustomerGetDisplayText(Sender: TcxCustomGridTableItem;
@@ -2015,16 +2097,12 @@ begin
   if ARecord <> nil then
   begin
     if Sender = lucCustomer then
-    begin
-//    FCustomerName := Sender.FocusedCellViewInfo.DisplayValue;
       FCustomerName := AText;
-      lblDisplay.Caption := FcustomerName;
-    end;
   end;
-////  FCustomerName := AText;
-//  if ARecord <> nil then
-////    AText := TcxLookupComboBox(lucCustomer).Properties.ListSource.DataSet.FieldByName('NAME').AsString;
-//    FCustomerName := TSDM.cdsCustomerLookup.FieldByName('NAME').AsString;
+  ////  FCustomerName := AText;
+  //  if ARecord <> nil then
+  ////    AText := TcxLookupComboBox(lucCustomer).Properties.ListSource.DataSet.FieldByName('NAME').AsString;
+  //    FCustomerName := TSDM.cdsCustomerLookup.FieldByName('NAME').AsString;
 end;
 
 procedure TMainFrm.lucPeriodPropertiesEditValueChanged(Sender: TObject);
@@ -2112,14 +2190,14 @@ end;
 
 procedure TMainFrm.lucViewModeChange(Sender: TObject);
 var
-// AComboBox: TcxComboBox;
-// ALookupComboBox: TcxLookupComboBox;
-// AFromDateEdit, AToDateEdit: TcxDateEdit;
+  // AComboBox: TcxComboBox;
+  // ALookupComboBox: TcxLookupComboBox;
+  // AFromDateEdit, AToDateEdit: TcxDateEdit;
   RegKey: TRegistry;
-// MonthEndDate: TDateTime;
+  // MonthEndDate: TDateTime;
 begin
   ribMain.BeginUpdate;
-// AComboBox := TcxBarEditItemControl(lucViewMode.Links[0].Control).Edit as TcxComboBox;
+  // AComboBox := TcxBarEditItemControl(lucViewMode.Links[0].Control).Edit as TcxComboBox;
   lucPeriod.Enabled := lucViewMode.ItemIndex = 0;
   lucFromDate.Enabled := not lucPeriod.Enabled;
   lucToDate.Enabled := not lucPeriod.Enabled;
@@ -2127,15 +2205,15 @@ begin
   if lucViewMode.ItemIndex = 0 then
   begin
     lbl1.Visible := ivAlways;
-//    lbl3.Visible := ivNever;
+    //    lbl3.Visible := ivNever;
   end
   else
   begin
     lbl1.Visible := ivNever;
-//    lbl3.Visible := ivAlways;
+    //    lbl3.Visible := ivAlways;
   end;
 
-// MonthEndDate := GetMonthEndDate(FTimesheetPeriod);
+  // MonthEndDate := GetMonthEndDate(FTimesheetPeriod);
 
   try
     case lucViewMode.ItemIndex of
@@ -2172,44 +2250,44 @@ end;
 
 procedure TMainFrm.lucViewModePropertiesEditValueChanged(Sender: TObject);
 var
-// AComboBox: TcxComboBox;
-// ALookupComboBox: TcxLookupComboBox;
-// AFromDateEdit, AToDateEdit: TcxDateEdit;
+  // AComboBox: TcxComboBox;
+  // ALookupComboBox: TcxLookupComboBox;
+  // AFromDateEdit, AToDateEdit: TcxDateEdit;
   RegKey: TRegistry;
-// MonthEndDate: TDateTime;
+  // MonthEndDate: TDateTime;
 begin
-// barToolbar.Bars.BeginUpdate;
-// AComboBox := TcxBarEditItemControl(lucViewMode.Links[0].Control).Edit as TcxComboBox;
+  // barToolbar.Bars.BeginUpdate;
+  // AComboBox := TcxBarEditItemControl(lucViewMode.Links[0].Control).Edit as TcxComboBox;
   lucPeriod.Enabled := lucViewMode.ItemIndex = 0;
   lucFromDate.Enabled := not lucPeriod.Enabled;
   lucToDate.Enabled := not lucPeriod.Enabled;
-// MonthEndDate := GetMonthEndDate(FTimesheetPeriod);
+  // MonthEndDate := GetMonthEndDate(FTimesheetPeriod);
 
-// try
-// case AComboBox.ItemIndex of
-// 0:
-// begin
-// lucPeriod.Visible := ivAlways;
-// lblPeriod.Visible := ivAlways;
-// lblFromDate.Visible := ivNever;
-// lucFromDate.Visible := ivNever;
-// lblToDate.Visible := ivNever;
-// lucToDate.Visible := ivNever;
-// end;
-//
-// 1:
-// begin
-// lucPeriod.Visible := ivNever;
-// lblPeriod.Visible := ivNever;
-// lblFromDate.Visible := ivAlways;
-// lucFromDate.Visible := ivAlways;
-// lblToDate.Visible := ivAlways;
-// lucToDate.Visible := ivAlways;
-// end;
-// end;
-// finally
-// barToolbar.Bars.EndUpdate(True);
-// end;
+  // try
+  // case AComboBox.ItemIndex of
+  // 0:
+  // begin
+  // lucPeriod.Visible := ivAlways;
+  // lblPeriod.Visible := ivAlways;
+  // lblFromDate.Visible := ivNever;
+  // lucFromDate.Visible := ivNever;
+  // lblToDate.Visible := ivNever;
+  // lucToDate.Visible := ivNever;
+  // end;
+  //
+  // 1:
+  // begin
+  // lucPeriod.Visible := ivNever;
+  // lblPeriod.Visible := ivNever;
+  // lblFromDate.Visible := ivAlways;
+  // lucFromDate.Visible := ivAlways;
+  // lblToDate.Visible := ivAlways;
+  // lucToDate.Visible := ivAlways;
+  // end;
+  // end;
+  // finally
+  // barToolbar.Bars.EndUpdate(True);
+  // end;
 
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   try
@@ -2219,8 +2297,8 @@ begin
   finally
     RegKey.Free
   end;
-// if not FShowingForm then
-// actGetTimesheetData.Execute;
+  // if not FShowingForm then
+  // actGetTimesheetData.Execute;
 end;
 
 procedure TMainFrm.DoOptions(Sender: TObject);
@@ -2246,11 +2324,11 @@ begin
   FileName := 'Timesheet Detail by User';
   DateClause := 'WHERE T.THE_PERIOD = ' + FTimesheetPeriod.ToString;
   UserClause := ' AND T.USER_ID IN (' + FTSUserID.ToString + ')';
-//  CarryForwardClause = ' AND T.CARRY_FORWARD = 1 ';
+  //  CarryForwardClause = ' AND T.CARRY_FORWARD = 1 ';
 
   OrderByClause := 'ORDER BY T.ACTIVITY_DATE';
   WhereClause := DateClause + {CarryForwardClause + }UserClause + ' ';
-//  ReportDM.Report := ReportDM.rptTimesheetByUser;
+  //  ReportDM.Report := ReportDM.rptTimesheetByUser;
   ReportDM.Report := ReportDM.rptTimesheetDetail;
 
   try
@@ -2290,7 +2368,7 @@ var
   FileSaved: Boolean;
 begin
   FolderPath := EXCEL_DOCS;
-// FolderPath := MainFrm.FShellResource.RootFolder + '\' + FSHIFT_FOLDER + 'Export\';
+  // FolderPath := MainFrm.FShellResource.RootFolder + '\' + FSHIFT_FOLDER + 'Export\';
   TDirectory.CreateDirectory(FolderPath);
   dlgFileSave.DefaultExt := 'xlsx';
   dlgFileSave.InitialDir := FolderPath;
@@ -2300,7 +2378,7 @@ begin
   if not FileSaved then
     Exit;
 
-// if dlgFileSave.Execute then
+  // if dlgFileSave.Execute then
   if TFile.Exists(dlgFileSave.FileName) then
   begin
     Beep;
@@ -2326,7 +2404,7 @@ begin
   UserClause := ' AND T.USER_ID IN (' + FTSUserID.ToString + ')';
   OrderByClause := 'ORDER BY T.ACTIVITY_DATE';
   WhereClause := DateClause + UserClause + ' ';
-//  ReportDM.Report := ReportDM.rptTimesheetByUser;
+  //  ReportDM.Report := ReportDM.rptTimesheetByUser;
   ReportDM.Report := ReportDM.rptTimesheetDetail;
 
   VBBaseDM.GetData(45, ReportDM.cdsTSBillable, ReportDM.cdsTSBillable.Name, WhereClause + ';' + OrderByClause,
@@ -2353,7 +2431,7 @@ begin
       True, // Use native format
       'xlsx');
 
-// if cbxOepnDocument.Checked then
+    // if cbxOepnDocument.Checked then
     ShellExecute(0, 'open', PChar('Excel.exe'), PChar('"' + ExportFileName + '"'), nil, SW_SHOWNORMAL)
   finally
     viewTimesheetBillable.OptionsView.BandHeaders := True;
@@ -2399,7 +2477,7 @@ begin
     UserClause := ' AND T.USER_ID IN (' + FTSUserID.ToString + ')';
     OrderByClause := 'ORDER BY T.ACTIVITY_DATE';
     WhereClause := DateClause + UserClause + ' ';
-//    ReportDM.Report := ReportDM.rptTimesheetByUser;
+    //    ReportDM.Report := ReportDM.rptTimesheetByUser;
     ReportDM.Report := ReportDM.rptTimesheetDetail;
 
     VBBaseDM.GetData(45, ReportDM.cdsTSBillable, ReportDM.cdsTSBillable.Name, WhereClause + ';' + OrderByClause,

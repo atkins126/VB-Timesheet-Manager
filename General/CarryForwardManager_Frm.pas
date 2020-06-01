@@ -24,40 +24,40 @@ uses
   dxLayoutControlAdapters, cxButtons, cxLabel, dxBarExtItems, cxBarEditItem;
 
 type
-//  TcxLookupComboBoxAccess = class (TcxLookupComboBox);
+  //  TcxLookupComboBoxAccess = class (TcxLookupComboBox);
 
   TCarryForwardManagerFrm = class(TBaseLayoutFrm)
     grdTimesheet: TcxGrid;
     viewTimesheet: TcxGridDBBandedTableView;
-    edtTID: TcxGridDBBandedColumn;
-    edtTFirstName: TcxGridDBBandedColumn;
-    edtTLastName: TcxGridDBBandedColumn;
-    edtTThePeriod: TcxGridDBBandedColumn;
-    edtTLoginName: TcxGridDBBandedColumn;
-    edtTActivityDate: TcxGridDBBandedColumn;
-    edtTCustomerType: TcxGridDBBandedColumn;
-    edtTCustomerName: TcxGridDBBandedColumn;
-    edtTActivtyType: TcxGridDBBandedColumn;
-    edtTAActivty: TcxGridDBBandedColumn;
-    edtTPriceItem: TcxGridDBBandedColumn;
-    edtTTimeSpent: TcxGridDBBandedColumn;
-    edtTHours: TcxGridDBBandedColumn;
-    edtTRate: TcxGridDBBandedColumn;
-    edtTStdRate: TcxGridDBBandedColumn;
+    edtID: TcxGridDBBandedColumn;
+    edtFirstName: TcxGridDBBandedColumn;
+    edtLastName: TcxGridDBBandedColumn;
+    edtThePeriod: TcxGridDBBandedColumn;
+    edtLoginName: TcxGridDBBandedColumn;
+    edtActivityDate: TcxGridDBBandedColumn;
+    edtCustomerType: TcxGridDBBandedColumn;
+    edtCustomerName: TcxGridDBBandedColumn;
+    edtActivtyType: TcxGridDBBandedColumn;
+    edtAActivty: TcxGridDBBandedColumn;
+    edtPriceItem: TcxGridDBBandedColumn;
+    edtTimeSpent: TcxGridDBBandedColumn;
+    edtHours: TcxGridDBBandedColumn;
+    edtRate: TcxGridDBBandedColumn;
+    edtStdRate: TcxGridDBBandedColumn;
     edtAbbreviation: TcxGridDBBandedColumn;
-    edtTItemValue: TcxGridDBBandedColumn;
-    edtTCFwdValue: TcxGridDBBandedColumn;
-    edtTBillable: TcxGridDBBandedColumn;
-    edtTBillableStr: TcxGridDBBandedColumn;
-    edtTInvoiceNo: TcxGridDBBandedColumn;
-    edtTInvDate: TcxGridDBBandedColumn;
-    edtTCreditNoteNo: TcxGridDBBandedColumn;
-    edtTLocked: TcxGridDBBandedColumn;
-    edtTLockedStr: TcxGridDBBandedColumn;
-    edtTCFwd: TcxGridDBBandedColumn;
-    edtTCFwdStr: TcxGridDBBandedColumn;
-    edtTAddWork: TcxGridDBBandedColumn;
-    edtTAddWorkStr: TcxGridDBBandedColumn;
+    edtItemValue: TcxGridDBBandedColumn;
+    edtCFwdValue: TcxGridDBBandedColumn;
+    edtBillable: TcxGridDBBandedColumn;
+    edtBillableStr: TcxGridDBBandedColumn;
+    edtInvoiceNo: TcxGridDBBandedColumn;
+    edtInvDate: TcxGridDBBandedColumn;
+    edtCreditNoteNo: TcxGridDBBandedColumn;
+    edtLocked: TcxGridDBBandedColumn;
+    edtLockedStr: TcxGridDBBandedColumn;
+    edtCFwd: TcxGridDBBandedColumn;
+    edtCFwdStr: TcxGridDBBandedColumn;
+    edtAddWork: TcxGridDBBandedColumn;
+    edtAddWorkStr: TcxGridDBBandedColumn;
     lvlTimesheet: TcxGridLevel;
     repScreenTip: TdxScreenTipRepository;
     tipClose: TdxScreenTip;
@@ -65,33 +65,24 @@ type
     tipPrint: TdxScreenTip;
     tipPDF: TdxScreenTip;
     tipExcel: TdxScreenTip;
-    tipToScreen: TdxScreenTip;
-    tipGroupedReport: TdxScreenTip;
-    tipRefreshData: TdxScreenTip;
-    tipExportFormattedExcelData: TdxScreenTip;
+    tipGetCFwdData: TdxScreenTip;
     styHintController: TcxHintStyleController;
     dlgPrint: TdxPrintDialog;
     dlgFileSave: TSaveDialog;
     lucPeriod: TcxLookupComboBox;
     barManager: TdxBarManager;
-    barToolbar: TdxBar;
-    litToolbar: TdxLayoutItem;
-    docToolbar: TdxBarDockControl;
+    barToolbarCFwd: TdxBar;
+    litCFwdToolbar: TdxLayoutItem;
+    docToolbarCFwd: TdxBarDockControl;
     btnClose: TdxBarLargeButton;
-    grpPeriodSelection: TdxLayoutGroup;
-    litFromPeriod: TdxLayoutItem;
     btnToScreen: TdxBarLargeButton;
     actCloseForm: TAction;
-    actGetTimeSheetData: TAction;
-    litGrid: TdxLayoutItem;
+    actGetTimeSheetDataCFwd: TAction;
+    litCFwdGrid: TdxLayoutItem;
     lucReleasePeriod: TcxLookupComboBox;
-    litReleaseToPeriod: TdxLayoutItem;
-    sep1: TdxLayoutSeparatorItem;
     styReadOnly: TcxEditStyleController;
-    tipExpandAll: TdxScreenTip;
-    tipCollapseAll: TdxScreenTip;
     styGroupFormat: TcxStyle;
-    edtTPeriodName: TcxGridDBBandedColumn;
+    edtPeriodName: TcxGridDBBandedColumn;
     btnRelease: TdxBarLargeButton;
     actRelease: TAction;
     tipRelease: TdxScreenTip;
@@ -102,17 +93,66 @@ type
     lblPeriod: TdxBarStatic;
     lblReleasePeriod: TdxBarStatic;
     lblSpace01: TdxBarStatic;
+    cntPersistentSelection: TdxBarControlContainerItem;
+    cbxPersistentSelection: TcxCheckBox;
+    tipPersistentRecordSelection: TdxScreenTip;
+    lblSpace02: TdxBarStatic;
+    tipDataPeriod: TdxScreenTip;
+    tipReleasePeriod: TdxScreenTip;
+    grpCFwdRelease: TdxLayoutGroup;
+    grpCarryForward: TdxLayoutGroup;
+    grpRelease: TdxLayoutGroup;
+    litReleaseToolbar: TdxLayoutItem;
+    litReleaseGrid: TdxLayoutItem;
+    docTolbarRelease: TdxBarDockControl;
+    barRelease: TdxBar;
+    btnCloseFormR: TdxBarLargeButton;
+    btnGetDataR: TdxBarLargeButton;
+    btnReleaseR: TdxBarLargeButton;
+    btnReverse: TdxBarLargeButton;
+    grdTimesheetRelease: TcxGrid;
+    viewTimesheetRelease: TcxGridDBBandedTableView;
+    edtRID: TcxGridDBBandedColumn;
+    edtRFirstName: TcxGridDBBandedColumn;
+    edtRLastName: TcxGridDBBandedColumn;
+    edtRThePeriod: TcxGridDBBandedColumn;
+    edtRPeriodName: TcxGridDBBandedColumn;
+    edtRLoginName: TcxGridDBBandedColumn;
+    edtRActivityDate: TcxGridDBBandedColumn;
+    edtRCustomerType: TcxGridDBBandedColumn;
+    edtRCustomerName: TcxGridDBBandedColumn;
+    edtRActivtyType: TcxGridDBBandedColumn;
+    edtRAActivty: TcxGridDBBandedColumn;
+    edtRPriceItem: TcxGridDBBandedColumn;
+    edtRTimeSpent: TcxGridDBBandedColumn;
+    edtRHours: TcxGridDBBandedColumn;
+    edtRRate: TcxGridDBBandedColumn;
+    edtRStdRate: TcxGridDBBandedColumn;
+    edtRAbbreviation: TcxGridDBBandedColumn;
+    edtRItemValue: TcxGridDBBandedColumn;
+    edtRCFwdValue: TcxGridDBBandedColumn;
+    edtRBillable: TcxGridDBBandedColumn;
+    edtRBillableStr: TcxGridDBBandedColumn;
+    edtRInvoiceNo: TcxGridDBBandedColumn;
+    edtRInvDate: TcxGridDBBandedColumn;
+    edtRCreditNoteNo: TcxGridDBBandedColumn;
+    edtRLocked: TcxGridDBBandedColumn;
+    edtRLockedStr: TcxGridDBBandedColumn;
+    edtRCFwd: TcxGridDBBandedColumn;
+    edtRCFwdStr: TcxGridDBBandedColumn;
+    edtRAddWork: TcxGridDBBandedColumn;
+    edtRAddWorkStr: TcxGridDBBandedColumn;
+    lvlTimesheetRelease: TcxGridLevel;
+    actGetTimesheetDataRelease: TAction;
+    actChangeReleasePeriod: TAction;
+    tipChangeReleasePeriod: TdxScreenTip;
+    tipGetReleaseData: TdxScreenTip;
+    actReverseRelease: TAction;
+    tipReverseRelease: TdxScreenTip;
     procedure FormCreate(Sender: TObject);
     procedure DoCloseForm(Sender: TObject);
     procedure DoGetTimesheetData(Sender: TObject);
-    procedure viewTimesheetCustomDrawCell(Sender: TcxCustomGridTableView;
-      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
-      var ADone: Boolean);
     procedure FormShow(Sender: TObject);
-    procedure edtTThePeriodGetDisplayText(Sender: TcxCustomGridTableItem;
-      ARecord: TcxCustomGridRecord; var AText: string);
-    procedure viewTimesheetStylesGetGroupStyle(Sender: TcxGridTableView;
-      ARecord: TcxCustomGridRecord; ALevel: Integer; var AStyle: TcxStyle);
     procedure DoRelease(Sender: TObject);
     procedure lucPeriodKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure lucPeriodPropertiesPopup(Sender: TObject);
@@ -121,15 +161,29 @@ type
     procedure lucPeriodPropertiesInitPopup(Sender: TObject);
     procedure lucPeriodPropertiesEditValueChanged(Sender: TObject);
     procedure lucReleaseToPeriodPropertiesEditValueChanged(Sender: TObject);
+    procedure cbxPersistentRecordSelectionPropertiesEditValueChanged(Sender: TObject);
+
+    procedure viewTimesheetCustomDrawCell(Sender: TcxCustomGridTableView;
+      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
+
+    procedure edtThePeriodGetDisplayText(Sender: TcxCustomGridTableItem;
+      ARecord: TcxCustomGridRecord; var AText: string);
+
+    procedure viewTimesheetStylesGetGroupStyle(Sender: TcxGridTableView;
+      ARecord: TcxCustomGridRecord; ALevel: Integer; var AStyle: TcxStyle);
+    procedure DoChangeReleasePeriod(Sender: TObject);
+    procedure DoReverseRelease(Sender: TObject);
   private
     { Private declarations }
     FShowingForm: Boolean;
-    FPeriod: Integer;
+    FCFwdPeriod: Integer;
+    FReleasePeriod: Integer;
     FReleaseToPeriod: Integer;
     FItemsRelease: Boolean;
 
     procedure GetPeriods;
-    procedure GetTimesheetData;
+    procedure GetTimesheetDataCFwd;
+    procedure GetTimesheetDataRelease;
     procedure DrawCellBorder(var Msg: TMessage); message CM_DRAWBORDER;
   public
     { Public declarations }
@@ -164,12 +218,14 @@ begin
   Caption := 'Carry forward manager';
   FShowingForm := True;
   FItemsRelease := False;
-  viewTimesheet.DataController.DataSource := TSDM.dtsReleaseCFwd;
+  viewTimesheet.DataController.DataSource := TSDM.dtsCarryForward;
   lucPeriod.Properties.ListSource := TSDM.dtsPeriod;
   lucReleasePeriod.Properties.ListSource := TSDM.dtsReleaseToPeriod;
   layMain.Align := alClient;
   layMain.LayoutLookAndFeel := lafCustomSkin;
+  grpCFwdRelease.ItemIndex := 0;
   DoMyMouseWheel(lucPeriod, False);
+  cbxPersistentSelection.EditValue := TSDM.TimesheetOption.PersitentRecordSelection;
 
   if ReportDM = nil then
     ReportDM := TReportDM.Create(nil);
@@ -179,38 +235,44 @@ begin
   RegKey.OpenKey(KEY_TIMESHEET_CARRY_FORWARD_MANAGER, True);
 
   try
-    if not RegKey.ValueExists('Period') then
-      RegKey.WriteInteger('Period', VBBaseDM.CurrentPeriod);
+    if not RegKey.ValueExists('CFwdPeriod') then
+      RegKey.WriteInteger('CFwdPeriod', VBBaseDM.CurrentPeriod);
+
+    if not RegKey.ValueExists('ReleasePeriod') then
+      RegKey.WriteInteger('ReleasePeriod', VBBaseDM.CurrentPeriod);
 
     if not RegKey.ValueExists('Release To Period') then
       RegKey.WriteInteger('Release To Period', VBBaseDM.CurrentPeriod);
 
-    FPeriod := RegKey.ReadInteger('Period');
+    FCFwdPeriod := RegKey.ReadInteger('CFwdPeriod');
+    FReleasePeriod := RegKey.ReadInteger('ReleasePeriod');
     GetPeriods;
     RegKey.CloseKey;
-    actGetTimeSheetData.Execute;
+    actGetTimeSheetDataCFwd.Execute;
+    actGetTimesheetDataRelease.Execute;
   finally
     Regkey.Free;
   end;
 end;
 
-procedure TCarryForwardManagerFrm.edtTThePeriodGetDisplayText(
+procedure TCarryForwardManagerFrm.edtThePeriodGetDisplayText(
   Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord; var AText: string);
 var
   TheYear, TheMonth: Integer;
 begin
   if ARecord is TcxGridGroupRow then
   begin
-    if TcxCustomGridTableItem(Sender).Name = 'edtTThePeriod' then
+    if (TcxCustomGridTableItem(Sender).Name = 'edtThePeriod')
+      or (TcxCustomGridTableItem(Sender).Name = 'edtRThePeriod') then
     begin
       TheYear := TcxGridGroupRow(ARecord).Value div 100;
       TheMonth := TcxGridGroupRow(ARecord).Value mod 100;
       AText := ShortMonths[TheMonth] + ' ' + TheYear.ToString;
     end
+    // Do we need this??
     else
       AText := TcxGridGroupRow(ARecord).Value;
   end;
-//    AText := TcxGridGroupRow(ARecord).Values[edtTPeriodName.Index];
 end;
 
 procedure TCarryForwardManagerFrm.FormShow(Sender: TObject);
@@ -220,37 +282,76 @@ begin
   Screen.Cursor := crDefault;
 end;
 
+procedure TCarryForwardManagerFrm.cbxPersistentRecordSelectionPropertiesEditValueChanged(Sender: TObject);
+var
+  RegKey: TRegistry;
+begin
+  TSDM.TimesheetOption.PersitentRecordSelection := cbxPersistentSelection.EditValue;
+
+  if TSDM.TimesheetOption.PersitentRecordSelection then
+    viewTimesheet.OptionsSelection.MultiSelectMode := msmPersistent
+  else
+    viewTimesheet.OptionsSelection.MultiSelectMode := msmStandard;
+
+  if not FShowingForm then
+  begin
+    RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+    try
+      RegKey.RootKey := HKEY_CURRENT_USER;
+      RegKey.OpenKey(KEY_TIMESHEET, True);
+      RegKey.WriteBool('Persistent Selection', TSDM.TimesheetOption.PersitentRecordSelection);
+      RegKey.CloseKey;
+    finally
+      RegKey.Free;
+      viewTimesheet.Controller.ClearSelection;
+    end;
+  end;
+end;
+
 procedure TCarryForwardManagerFrm.DoCloseForm(Sender: TObject);
 //var
 //  RegKey: TRegistry;
 begin
   Self.ModalResult := mrOK;
-//  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
-//  RegKey.RootKey := HKEY_CURRENT_USER;
-//  RegKey.OpenKey(KEY_TIMESHEET_CARRY_FORWARD_MANAGER, True);
+  //  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+  //  RegKey.RootKey := HKEY_CURRENT_USER;
+  //  RegKey.OpenKey(KEY_TIMESHEET_CARRY_FORWARD_MANAGER, True);
 
-  {TODO: Do this on-the-fly for each control}
-//  try
-//    if cbxSaveSettingsOnExit.EditValue then
-//    begin
-//      RegKey.WriteInteger('Period', lucPeriod.EditValue);
-//      RegKey.WriteBool('Fetch All Periods', cbxAllPeriods.Checked);
-//      RegKey.WriteInteger('Billable Status Index', lucBillable.ItemIndex);
-//      RegKey.WriteInteger('Release To Period', lucReleaseToPeriod.EditValue);
-//      RegKey.CloseKey;
-//    end;
-//  finally
-//    RegKey.Free;
-//    Self.ModalResult := mrOK;
-//  end;
+    {TODO: Do this on-the-fly for each control}
+  //  try
+  //    if cbxSaveSettingsOnExit.EditValue then
+  //    begin
+  //      RegKey.WriteInteger('Period', lucPeriod.EditValue);
+  //      RegKey.WriteBool('Fetch All Periods', cbxAllPeriods.Checked);
+  //      RegKey.WriteInteger('Billable Status Index', lucBillable.ItemIndex);
+  //      RegKey.WriteInteger('Release To Period', lucReleaseToPeriod.EditValue);
+  //      RegKey.CloseKey;
+  //    end;
+  //  finally
+  //    RegKey.Free;
+  //    Self.ModalResult := mrOK;
+  //  end;
 end;
 
 procedure TCarryForwardManagerFrm.DoGetTimesheetData(Sender: TObject);
 begin
   Screen.Cursor := crHourglass;
   try
-    GetTimesheetData;
-    viewTimesheet.ViewData.Expand(True);
+    case TAction(Sender).Tag of
+      10:
+        begin
+          GetTimesheetDataCFwd;
+          viewTimesheet.ViewData.Expand(True);
+
+        end;
+      11:
+        begin
+          GetTimesheetDataCFwd;
+          viewTimesheet.ViewData.Expand(True);
+
+        end;
+
+    end;
   finally
     Screen.Cursor := crDefault;
   end;
@@ -258,18 +359,18 @@ end;
 
 procedure TCarryForwardManagerFrm.DoOptions(Sender: TObject);
 begin
-//  Screen.Cursor := crHourglass;
-//  try
-//    if TimesheetOptionsFrm = nil then
-//      TimesheetOptionsFrm := TTimesheetOptionsFrm.Create(nil);
-//
-//    TimesheetOptionsFrm.OptionsTabindex := 2;
-//    TimesheetOptionsFrm.ShowModal;
-//    TimesheetOptionsFrm.Close;
-//    FreeAndNil(TimesheetOptionsFrm);
-//  finally
-//    Screen.Cursor := crDefault;
-//  end;
+  //  Screen.Cursor := crHourglass;
+  //  try
+  //    if TimesheetOptionsFrm = nil then
+  //      TimesheetOptionsFrm := TTimesheetOptionsFrm.Create(nil);
+  //
+  //    TimesheetOptionsFrm.OptionsTabindex := 2;
+  //    TimesheetOptionsFrm.ShowModal;
+  //    TimesheetOptionsFrm.Close;
+  //    FreeAndNil(TimesheetOptionsFrm);
+  //  finally
+  //    Screen.Cursor := crDefault;
+  //  end;
 end;
 
 procedure TCarryForwardManagerFrm.DoRelease(Sender: TObject);
@@ -292,7 +393,10 @@ begin
   SelectCount := C.SelectedRecordCount;
 
   if SelectCount = 0 then
-    raise ESelectionException.Create('No timesheet items selected. Please select at least one item to release.');
+    raise ESelectionException.Create('No carried forwared items selected. Please select at least one item to release.');
+
+  if VarIsNull(lucReleasePeriod.EditValue) then
+    raise ESelectionException.Create('Please select the period you into which want to release the selected carried forward items.');
 
   Beep;
   if DisplayMsg(
@@ -317,7 +421,7 @@ begin
       ARecord := C.SelectedRecords[I];
       if not (ARecord is TcxGridGroupRow) then
       begin
-        IDValues := IDValues + IntToStr(ARecord.Values[edtTID.Index]);
+        IDValues := IDValues + IntToStr(ARecord.Values[edtID.Index]);
         if I < C.SelectedRecordCount - 1 then
           IDValues := IDValues + ',';
       end;
@@ -355,7 +459,99 @@ begin
         [mbOK]);
     end;
 
-    actGetTimesheetData.Execute;
+    actGetTimeSheetDataCFwd.Execute;
+    actGetTimesheetDataRelease.Execute;
+  finally
+    Response.Free;
+  end;
+end;
+
+procedure TCarryForwardManagerFrm.DoReverseRelease(Sender: TObject);
+begin
+  inherited;
+//
+end;
+
+procedure TCarryForwardManagerFrm.DoChangeReleasePeriod(Sender: TObject);
+var
+  C: TcxGridBandedTableController;
+  IDValues, CommandString: string;
+  I, SelectCount: Integer;
+  ARecord: TcxCustomGridRecord;
+  Response: TStringList;
+begin
+  C := viewTimesheetRelease.Controller;
+  SelectCount := C.SelectedRecordCount;
+
+  if SelectCount = 0 then
+    raise ESelectionException.Create('No relased items selected. Please select at least one item for which to change the release date.');
+
+  if VarIsNull(lucReleasePeriod.EditValue) then
+    raise ESelectionException.Create('Please select the period you into which want to release the selected carried forward items.');
+
+  Beep;
+  if DisplayMsg(
+    Application.Title,
+    'Release Carry Forward Confirmation',
+    'You have selected ' + SelectCount.ToString +
+    ' carried forward items to be released to billing period ' +
+    TSDM.cdsReleaseToPeriod.FieldByName('PERIOD_NAME').AsString + CRLF + CRLF +
+    'Are you sure you want to proceed?',
+    mtConfirmation,
+    [mbYes, mbNo]
+    ) = mrNo then
+    Exit;
+
+  ItemsRelease := True;
+  CommandString := '';
+  Response := RUtils.CreateStringList(PIPE, DOUBLE_QUOTE);
+
+  try
+    for I := 0 to SelectCount - 1 do
+    begin
+      ARecord := C.SelectedRecords[I];
+      if not (ARecord is TcxGridGroupRow) then
+      begin
+        IDValues := IDValues + IntToStr(ARecord.Values[edtRID.Index]);
+        if I < C.SelectedRecordCount - 1 then
+          IDValues := IDValues + ',';
+      end;
+    end;
+
+    CommandString := Format(RELEASE_CARRY_FORWARD, [
+      TSDM.cdsReleaseToPeriod.FieldByName('THE_PERIOD').AsInteger,
+        AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', Date), ''''),
+        IDValues
+        ]);
+
+    Response.DelimitedText := VBBaseDM.Client.ExecuteSQLCommand(CommandString);
+
+    if SameText(Response.Values['RESPONSE'], 'ERROR') then
+    begin
+      Beep;
+      DisplayMsg(
+        Application.Title,
+        'VB Remote Server Error',
+        'One or more errors occurred when trying to update the VB database.' + CRLF + CRLF +
+        'Error message from server' + CRLF +
+        Response.Values['ERROR_MESSAGE'],
+        mtError,
+        [mbOK]
+        );
+    end
+    else
+    begin
+      Beep;
+      DisplayMsg(
+        Application.Title,
+        'Carry Forward released',
+        SelectCount.ToString + ' Carried forward item(s) successfully released for billing.',
+        mtInformation,
+        [mbOK]);
+    end;
+
+    actGetTimeSheetDataCFwd.Execute;
+    actGetTimsheetDataRelease.Execute;
   finally
     Response.Free;
   end;
@@ -373,16 +569,16 @@ begin
   TSDM.cdsToPeriod.Data := TSDM.cdsPeriod.Data;
   TSDM.cdsReleaseToPeriod.Data := TSDM.cdsPeriod.Data;
 
-  if not TSDM.cdsPeriod.Locate('THE_PERIOD', FPeriod, []) then
+  if not TSDM.cdsPeriod.Locate('THE_PERIOD', FCFwdPeriod, []) then
     TSDM.cdsPeriod.First;
 
-  lucPeriod.EditValue := FPeriod;
+  lucPeriod.EditValue := FCFwdPeriod;
 end;
 
-procedure TCarryForwardManagerFrm.GetTimesheetData;
+procedure TCarryForwardManagerFrm.GetTimesheetDataCFwd;
 var
   WhereClause, OrderByClause, FileName, DateClause, BillableClause: string;
-//  ActivityClause, BillableClause, WorkTypeClause, FileName: string;
+  //  ActivityClause, BillableClause, WorkTypeClause, FileName: string;
 begin
   WhereClause := ' WHERE T.CARRY_FORWARD = 1 ';
   BillableClause := ' AND T.BILLABLE = 1';
@@ -391,9 +587,26 @@ begin
   FileName := 'Carry Forward Items';
   WhereClause := WhereClause + DateClause + BillableClause + OrderByClause;
 
-  VBBaseDM.GetData(45, TSDM.cdsReleaseCFwd, TSDM.cdsReleaseCFwd.Name, WhereClause,
-    'C:\Data\Xml\' + FileName + '.xml', TSDM.cdsReleaseCFwd.UpdateOptions.Generatorname,
-    TSDM.cdsReleaseCFwd.UpdateOptions.UpdateTableName);
+  VBBaseDM.GetData(45, TSDM.cdsCarryForward, TSDM.cdsCarryForward.Name, WhereClause,
+    'C:\Data\Xml\' + FileName + '.xml', TSDM.cdsCarryForward.UpdateOptions.Generatorname,
+    TSDM.cdsCarryForward.UpdateOptions.UpdateTableName);
+end;
+
+procedure TCarryForwardManagerFrm.GetTimesheetDataRelease;
+var
+  WhereClause, OrderByClause, FileName, DateClause, BillableClause: string;
+begin
+  //  WhereClause := ' WHERE T.CARRY_FORWARD = 0 AND T.RELEASE_CFWD_TO_PERIOD > 0';
+  WhereClause := ' WHERE T.RELEASE_CFWD_TO_PERIOD > 0';
+  BillableClause := ' AND T.BILLABLE = 1';
+  DateClause := ' AND T.THE_PERIOD = ' + IntToStr(TSDM.cdsPeriod.FieldByName('THE_PERIOD').AsInteger);
+  OrderByClause := ' ORDER BY T.THE_PERIOD, T.CUSTOMER_NAME';
+  FileName := 'Released Items Items';
+  WhereClause := WhereClause + DateClause + BillableClause + OrderByClause;
+
+  VBBaseDM.GetData(45, TSDM.cdsRelease, TSDM.cdsRelease.Name, WhereClause,
+    'C:\Data\Xml\' + FileName + '.xml', TSDM.cdsRelease.UpdateOptions.Generatorname,
+    TSDM.cdsRelease.UpdateOptions.UpdateTableName);
 end;
 
 procedure TCarryForwardManagerFrm.lucPeriodKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -427,7 +640,7 @@ begin
       else if SameText(TcxLookupComboBox(Sender).Name, 'lucReleaseToPeriod') then
         RegKey.WriteInteger('Release To Period', lucReleasePeriod.EditValue);
 
-      FPeriod := RegKey.ReadInteger('Period');
+      FCFwdPeriod := RegKey.ReadInteger('Period');
       FReleaseToPeriod := RegKey.ReadInteger('Release To Period');
 
       RegKey.CloseKey;
@@ -484,12 +697,12 @@ begin
 
   try
     if AViewInfo.GridRecord.Focused then
-  // This renders the background and font colours of the focused record
+      // This renders the background and font colours of the focused record
     begin
       if AViewInfo.Item <> nil then
         if AViewInfo.Item.Focused then
         begin
-        // This renders the background and border colour of the focused cell
+          // This renders the background and border colour of the focused cell
           ACanvas.Brush.Color := $B6EDFA;
           ACanvas.Font.Color := RootLookAndFeel.SkinPainter.DefaultSelectionColor;
           PostMessage(Handle, CM_DRAWBORDER, Integer(ACanvas), Integer(AViewInfo));

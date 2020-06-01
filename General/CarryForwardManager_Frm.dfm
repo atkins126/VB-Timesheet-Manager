@@ -12,10 +12,10 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
     ExplicitWidth = 1096
     ExplicitHeight = 706
     object grdTimesheet: TcxGrid [0]
-      Left = 11
-      Top = 71
-      Width = 1074
-      Height = 624
+      Left = 25
+      Top = 108
+      Width = 1043
+      Height = 570
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -27,7 +27,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
         OnCustomDrawCell = viewTimesheetCustomDrawCell
-        DataController.DataSource = TSDM.dtsReleaseCFwd
+        DataController.DataSource = TSDM.dtsCarryForward
         DataController.Options = [dcoCaseInsensitive, dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding]
         DataController.Summary.DefaultGroupSummaryItems = <
           item
@@ -35,58 +35,58 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
             Kind = skSum
             Position = spFooter
             FieldName = 'TIME_HOURS'
-            Column = edtTHours
+            Column = edtHours
           end
           item
             Format = '#,##0.00'
             Kind = skSum
             Position = spFooter
             FieldName = 'ITEM_VALUE'
-            Column = edtTItemValue
+            Column = edtItemValue
           end
           item
             Format = '#,##0.00'
             Kind = skSum
             Position = spFooter
             FieldName = 'CARRY_FORWARD_VALUE'
-            Column = edtTCFwdValue
+            Column = edtCFwdValue
           end>
         DataController.Summary.FooterSummaryItems = <
           item
             Format = '#,##0.00'
             Kind = skSum
             FieldName = 'ITEM_VALUE'
-            Column = edtTItemValue
+            Column = edtItemValue
           end
           item
             Format = '#,##0.00'
             Kind = skSum
             FieldName = 'TIME_HOURS'
-            Column = edtTHours
+            Column = edtHours
           end
           item
             Format = '#,##0.00'
             Kind = skSum
             FieldName = 'CARRY_FORWARD_VALUE'
-            Column = edtTCFwdValue
+            Column = edtCFwdValue
           end
           item
             Format = '#,##0.00'
             Kind = skSum
             FieldName = 'ITEM_VALUE'
-            Column = edtTItemValue
+            Column = edtItemValue
           end
           item
             Format = '#,##0.00'
             Kind = skSum
             FieldName = 'TIME_HOURS'
-            Column = edtTHours
+            Column = edtHours
           end
           item
             Format = '#,##0.00'
             Kind = skSum
             FieldName = 'CARRY_FORWARD_VALUE'
-            Column = edtTCFwdValue
+            Column = edtCFwdValue
           end>
         DataController.Summary.SummaryGroups = <>
         OptionsBehavior.CellHints = True
@@ -116,7 +116,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           item
             Caption = 'General Information'
           end>
-        object edtTID: TcxGridDBBandedColumn
+        object edtID: TcxGridDBBandedColumn
           DataBinding.FieldName = 'ID'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.Alignment.Vert = taTopJustify
@@ -137,7 +137,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 0
           Position.RowIndex = 0
         end
-        object edtTFirstName: TcxGridDBBandedColumn
+        object edtFirstName: TcxGridDBBandedColumn
           DataBinding.FieldName = 'FIRST_NAME'
           PropertiesClassName = 'TcxTextEditProperties'
           Properties.Alignment.Vert = taTopJustify
@@ -154,7 +154,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 0
           Position.RowIndex = 0
         end
-        object edtTLastName: TcxGridDBBandedColumn
+        object edtLastName: TcxGridDBBandedColumn
           DataBinding.FieldName = 'LAST_NAME'
           PropertiesClassName = 'TcxTextEditProperties'
           Properties.Alignment.Vert = taTopJustify
@@ -171,7 +171,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 1
           Position.RowIndex = 0
         end
-        object edtTThePeriod: TcxGridDBBandedColumn
+        object edtThePeriod: TcxGridDBBandedColumn
           DataBinding.FieldName = 'THE_PERIOD'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.Alignment.Vert = taTopJustify
@@ -180,7 +180,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Properties.EditFormat = '######'
           Properties.ReadOnly = True
           Visible = False
-          OnGetDisplayText = edtTThePeriodGetDisplayText
+          OnGetDisplayText = edtThePeriodGetDisplayText
           MinWidth = 60
           Options.Editing = False
           Options.IncSearch = False
@@ -190,12 +190,12 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 3
           Position.RowIndex = 0
         end
-        object edtTPeriodName: TcxGridDBBandedColumn
+        object edtPeriodName: TcxGridDBBandedColumn
           DataBinding.FieldName = 'PERIOD_NAME'
           PropertiesClassName = 'TcxTextEditProperties'
           Properties.ReadOnly = True
           Visible = False
-          OnGetDisplayText = edtTThePeriodGetDisplayText
+          OnGetDisplayText = edtThePeriodGetDisplayText
           MinWidth = 70
           Options.Editing = False
           Options.HorzSizing = False
@@ -204,12 +204,12 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 2
           Position.RowIndex = 0
         end
-        object edtTLoginName: TcxGridDBBandedColumn
+        object edtLoginName: TcxGridDBBandedColumn
           DataBinding.FieldName = 'LOGIN_NAME'
           PropertiesClassName = 'TcxTextEditProperties'
           Properties.Alignment.Vert = taTopJustify
           Properties.ReadOnly = True
-          OnGetDisplayText = edtTThePeriodGetDisplayText
+          OnGetDisplayText = edtThePeriodGetDisplayText
           MinWidth = 120
           Options.Editing = False
           Options.Grouping = False
@@ -220,12 +220,12 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 5
           Position.RowIndex = 0
         end
-        object edtTActivityDate: TcxGridDBBandedColumn
+        object edtActivityDate: TcxGridDBBandedColumn
           DataBinding.FieldName = 'ACTIVITY_DATE'
           PropertiesClassName = 'TcxDateEditProperties'
           Properties.Alignment.Vert = taTopJustify
           Properties.ReadOnly = True
-          OnGetDisplayText = edtTThePeriodGetDisplayText
+          OnGetDisplayText = edtThePeriodGetDisplayText
           MinWidth = 90
           Options.Editing = False
           Options.Grouping = False
@@ -236,12 +236,12 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 4
           Position.RowIndex = 0
         end
-        object edtTCustomerType: TcxGridDBBandedColumn
+        object edtCustomerType: TcxGridDBBandedColumn
           DataBinding.FieldName = 'CUSTOMER_TYPE'
           PropertiesClassName = 'TcxTextEditProperties'
           Properties.Alignment.Vert = taTopJustify
           Properties.ReadOnly = True
-          OnGetDisplayText = edtTThePeriodGetDisplayText
+          OnGetDisplayText = edtThePeriodGetDisplayText
           MinWidth = 200
           Options.Editing = False
           Options.Grouping = False
@@ -252,12 +252,12 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 6
           Position.RowIndex = 0
         end
-        object edtTCustomerName: TcxGridDBBandedColumn
+        object edtCustomerName: TcxGridDBBandedColumn
           DataBinding.FieldName = 'CUSTOMER_NAME'
           PropertiesClassName = 'TcxTextEditProperties'
           Properties.Alignment.Vert = taTopJustify
           Properties.ReadOnly = True
-          OnGetDisplayText = edtTThePeriodGetDisplayText
+          OnGetDisplayText = edtThePeriodGetDisplayText
           MinWidth = 400
           Options.Editing = False
           Options.Grouping = False
@@ -268,12 +268,12 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 7
           Position.RowIndex = 0
         end
-        object edtTActivtyType: TcxGridDBBandedColumn
+        object edtActivtyType: TcxGridDBBandedColumn
           DataBinding.FieldName = 'ACTIVITY_TYPE'
           PropertiesClassName = 'TcxTextEditProperties'
           Properties.Alignment.Vert = taTopJustify
           Properties.ReadOnly = True
-          OnGetDisplayText = edtTThePeriodGetDisplayText
+          OnGetDisplayText = edtThePeriodGetDisplayText
           MinWidth = 250
           Options.Editing = False
           Options.Grouping = False
@@ -284,7 +284,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 8
           Position.RowIndex = 0
         end
-        object edtTAActivty: TcxGridDBBandedColumn
+        object edtAActivty: TcxGridDBBandedColumn
           DataBinding.FieldName = 'ACTIVITY'
           PropertiesClassName = 'TcxMemoProperties'
           Properties.ReadOnly = True
@@ -300,7 +300,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 9
           Position.RowIndex = 0
         end
-        object edtTPriceItem: TcxGridDBBandedColumn
+        object edtPriceItem: TcxGridDBBandedColumn
           DataBinding.FieldName = 'PRICE_LIST_ITEM'
           PropertiesClassName = 'TcxTextEditProperties'
           Properties.Alignment.Vert = taTopJustify
@@ -316,7 +316,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 10
           Position.RowIndex = 0
         end
-        object edtTTimeSpent: TcxGridDBBandedColumn
+        object edtTimeSpent: TcxGridDBBandedColumn
           DataBinding.FieldName = 'TIME_SPENT'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.Alignment.Horz = taRightJustify
@@ -337,7 +337,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 1
           Position.RowIndex = 0
         end
-        object edtTHours: TcxGridDBBandedColumn
+        object edtHours: TcxGridDBBandedColumn
           DataBinding.FieldName = 'TIME_HOURS'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.Alignment.Horz = taRightJustify
@@ -358,7 +358,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 2
           Position.RowIndex = 0
         end
-        object edtTRate: TcxGridDBBandedColumn
+        object edtRate: TcxGridDBBandedColumn
           DataBinding.FieldName = 'ACTUAL_RATE'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.Alignment.Horz = taRightJustify
@@ -379,7 +379,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 3
           Position.RowIndex = 0
         end
-        object edtTStdRate: TcxGridDBBandedColumn
+        object edtStdRate: TcxGridDBBandedColumn
           DataBinding.FieldName = 'STD_RATE'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.Alignment.Horz = taRightJustify
@@ -419,7 +419,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 5
           Position.RowIndex = 0
         end
-        object edtTItemValue: TcxGridDBBandedColumn
+        object edtItemValue: TcxGridDBBandedColumn
           DataBinding.FieldName = 'ITEM_VALUE'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.Alignment.Horz = taRightJustify
@@ -440,7 +440,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 6
           Position.RowIndex = 0
         end
-        object edtTCFwdValue: TcxGridDBBandedColumn
+        object edtCFwdValue: TcxGridDBBandedColumn
           DataBinding.FieldName = 'CARRY_FORWARD_VALUE'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.Alignment.Horz = taRightJustify
@@ -461,7 +461,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 7
           Position.RowIndex = 0
         end
-        object edtTBillable: TcxGridDBBandedColumn
+        object edtBillable: TcxGridDBBandedColumn
           DataBinding.FieldName = 'BILLABLE'
           PropertiesClassName = 'TcxCheckBoxProperties'
           Properties.Alignment = taCenter
@@ -482,7 +482,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 8
           Position.RowIndex = 0
         end
-        object edtTBillableStr: TcxGridDBBandedColumn
+        object edtBillableStr: TcxGridDBBandedColumn
           DataBinding.FieldName = 'BILLABLE_STR'
           PropertiesClassName = 'TcxTextEditProperties'
           Properties.Alignment.Horz = taCenter
@@ -500,7 +500,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 9
           Position.RowIndex = 0
         end
-        object edtTInvoiceNo: TcxGridDBBandedColumn
+        object edtInvoiceNo: TcxGridDBBandedColumn
           DataBinding.FieldName = 'INVOICE_ID'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.Alignment.Horz = taRightJustify
@@ -520,7 +520,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 0
           Position.RowIndex = 0
         end
-        object edtTInvDate: TcxGridDBBandedColumn
+        object edtInvDate: TcxGridDBBandedColumn
           DataBinding.FieldName = 'INVOICE_DATE'
           PropertiesClassName = 'TcxDateEditProperties'
           Properties.Alignment.Vert = taTopJustify
@@ -536,7 +536,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 1
           Position.RowIndex = 0
         end
-        object edtTCreditNoteNo: TcxGridDBBandedColumn
+        object edtCreditNoteNo: TcxGridDBBandedColumn
           DataBinding.FieldName = 'CN_ID'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.Alignment.Horz = taRightJustify
@@ -556,7 +556,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 2
           Position.RowIndex = 0
         end
-        object edtTLocked: TcxGridDBBandedColumn
+        object edtLocked: TcxGridDBBandedColumn
           DataBinding.FieldName = 'LOCKED'
           PropertiesClassName = 'TcxCheckBoxProperties'
           Properties.Alignment = taCenter
@@ -577,7 +577,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 0
           Position.RowIndex = 0
         end
-        object edtTLockedStr: TcxGridDBBandedColumn
+        object edtLockedStr: TcxGridDBBandedColumn
           DataBinding.FieldName = 'LOCKED_STR'
           PropertiesClassName = 'TcxTextEditProperties'
           Properties.Alignment.Horz = taCenter
@@ -597,7 +597,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 1
           Position.RowIndex = 0
         end
-        object edtTCFwd: TcxGridDBBandedColumn
+        object edtCFwd: TcxGridDBBandedColumn
           Caption = 'CF'
           DataBinding.FieldName = 'CARRY_FORWARD'
           PropertiesClassName = 'TcxCheckBoxProperties'
@@ -619,7 +619,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 2
           Position.RowIndex = 0
         end
-        object edtTCFwdStr: TcxGridDBBandedColumn
+        object edtCFwdStr: TcxGridDBBandedColumn
           Caption = 'CF'
           DataBinding.FieldName = 'CARRY_FORWARD_STR'
           PropertiesClassName = 'TcxTextEditProperties'
@@ -638,7 +638,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 3
           Position.RowIndex = 0
         end
-        object edtTAddWork: TcxGridDBBandedColumn
+        object edtAddWork: TcxGridDBBandedColumn
           Caption = 'Ad Wk'
           DataBinding.FieldName = 'IS_ADDITIONAL_WORK'
           PropertiesClassName = 'TcxCheckBoxProperties'
@@ -660,7 +660,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Position.ColIndex = 4
           Position.RowIndex = 0
         end
-        object edtTAddWorkStr: TcxGridDBBandedColumn
+        object edtAddWorkStr: TcxGridDBBandedColumn
           Caption = 'Ad Wk'
           DataBinding.FieldName = 'IS_ADDITIONAL_WORK_STR'
           PropertiesClassName = 'TcxTextEditProperties'
@@ -683,45 +683,699 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
         GridView = viewTimesheet
       end
     end
-    object docToolbar: TdxBarDockControl [1]
-      Left = 11
-      Top = 11
-      Width = 1074
+    object docToolbarCFwd: TdxBarDockControl [1]
+      Left = 25
+      Top = 48
+      Width = 1043
       Height = 54
       Align = dalNone
       BarManager = barManager
     end
-    inherited layMainGroup_Root: TdxLayoutGroup
-      ItemIndex = 1
+    object docTolbarRelease: TdxBarDockControl [2]
+      Left = 10000
+      Top = 10000
+      Width = 1043
+      Height = 54
+      Align = dalNone
+      BarManager = barManager
+      Visible = False
     end
-    object litToolbar: TdxLayoutItem
-      Parent = layMainGroup_Root
+    object grdTimesheetRelease: TcxGrid [3]
+      Left = 10000
+      Top = 10000
+      Width = 1043
+      Height = 570
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Verdana'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 3
+      Visible = False
+      object viewTimesheetRelease: TcxGridDBBandedTableView
+        Navigator.Buttons.CustomButtons = <>
+        ScrollbarAnnotations.CustomAnnotations = <>
+        DataController.DataSource = TSDM.dtsRelease
+        DataController.Options = [dcoCaseInsensitive, dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding]
+        DataController.Summary.DefaultGroupSummaryItems = <
+          item
+            Format = '#,##0.00'
+            Kind = skSum
+            Position = spFooter
+            FieldName = 'TIME_HOURS'
+            Column = edtRHours
+          end
+          item
+            Format = '#,##0.00'
+            Kind = skSum
+            Position = spFooter
+            FieldName = 'ITEM_VALUE'
+            Column = edtRItemValue
+          end
+          item
+            Format = '#,##0.00'
+            Kind = skSum
+            Position = spFooter
+            FieldName = 'CARRY_FORWARD_VALUE'
+            Column = edtRCFwdValue
+          end>
+        DataController.Summary.FooterSummaryItems = <
+          item
+            Format = '#,##0.00'
+            Kind = skSum
+            FieldName = 'ITEM_VALUE'
+            Column = edtRItemValue
+          end
+          item
+            Format = '#,##0.00'
+            Kind = skSum
+            FieldName = 'TIME_HOURS'
+            Column = edtRHours
+          end
+          item
+            Format = '#,##0.00'
+            Kind = skSum
+            FieldName = 'CARRY_FORWARD_VALUE'
+            Column = edtRCFwdValue
+          end
+          item
+            Format = '#,##0.00'
+            Kind = skSum
+            FieldName = 'ITEM_VALUE'
+            Column = edtRItemValue
+          end
+          item
+            Format = '#,##0.00'
+            Kind = skSum
+            FieldName = 'TIME_HOURS'
+            Column = edtRHours
+          end
+          item
+            Format = '#,##0.00'
+            Kind = skSum
+            FieldName = 'CARRY_FORWARD_VALUE'
+            Column = edtRCFwdValue
+          end>
+        DataController.Summary.SummaryGroups = <>
+        OptionsBehavior.CellHints = True
+        OptionsBehavior.FocusCellOnTab = True
+        OptionsBehavior.IncSearch = True
+        OptionsBehavior.FocusCellOnCycle = True
+        OptionsCustomize.ColumnsQuickCustomization = True
+        OptionsSelection.MultiSelect = True
+        OptionsSelection.CheckBoxVisibility = [cbvDataRow, cbvColumnHeader]
+        OptionsSelection.MultiSelectMode = msmPersistent
+        OptionsView.NoDataToDisplayInfoText = '<No Timesheet data to display>'
+        OptionsView.Footer = True
+        OptionsView.GroupByBox = False
+        OptionsView.GroupFooters = gfVisibleWhenExpanded
+        OptionsView.GroupSummaryLayout = gslAlignWithColumns
+        Bands = <
+          item
+            Caption = 'Calculations'
+          end
+          item
+            Caption = 'Timesheet Details'
+          end
+          item
+            Caption = 'Invoicing'
+          end
+          item
+            Caption = 'General Information'
+          end>
+        object edtRID: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'ID'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = '###,##0'
+          Properties.EditFormat = '###,##0'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 60
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 60
+          Position.BandIndex = 0
+          Position.ColIndex = 0
+          Position.RowIndex = 0
+        end
+        object edtRFirstName: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'FIRST_NAME'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 165
+          Options.Editing = False
+          Options.Filtering = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 165
+          Position.BandIndex = 1
+          Position.ColIndex = 0
+          Position.RowIndex = 0
+        end
+        object edtRLastName: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'LAST_NAME'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 165
+          Options.Editing = False
+          Options.Filtering = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 165
+          Position.BandIndex = 1
+          Position.ColIndex = 1
+          Position.RowIndex = 0
+        end
+        object edtRThePeriod: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'THE_PERIOD'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = '######'
+          Properties.EditFormat = '######'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 60
+          Options.Editing = False
+          Options.IncSearch = False
+          Options.HorzSizing = False
+          Width = 60
+          Position.BandIndex = 1
+          Position.ColIndex = 3
+          Position.RowIndex = 0
+        end
+        object edtRPeriodName: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'PERIOD_NAME'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 70
+          Options.Editing = False
+          Options.HorzSizing = False
+          Width = 70
+          Position.BandIndex = 1
+          Position.ColIndex = 2
+          Position.RowIndex = 0
+        end
+        object edtRLoginName: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'LOGIN_NAME'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.ReadOnly = True
+          MinWidth = 120
+          Options.Editing = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 120
+          Position.BandIndex = 1
+          Position.ColIndex = 5
+          Position.RowIndex = 0
+        end
+        object edtRActivityDate: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'ACTIVITY_DATE'
+          PropertiesClassName = 'TcxDateEditProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.ReadOnly = True
+          MinWidth = 90
+          Options.Editing = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 90
+          Position.BandIndex = 1
+          Position.ColIndex = 4
+          Position.RowIndex = 0
+        end
+        object edtRCustomerType: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'CUSTOMER_TYPE'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.ReadOnly = True
+          MinWidth = 200
+          Options.Editing = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 200
+          Position.BandIndex = 1
+          Position.ColIndex = 6
+          Position.RowIndex = 0
+        end
+        object edtRCustomerName: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'CUSTOMER_NAME'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.ReadOnly = True
+          MinWidth = 400
+          Options.Editing = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 400
+          Position.BandIndex = 1
+          Position.ColIndex = 7
+          Position.RowIndex = 0
+        end
+        object edtRActivtyType: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'ACTIVITY_TYPE'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.ReadOnly = True
+          MinWidth = 250
+          Options.Editing = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 250
+          Position.BandIndex = 1
+          Position.ColIndex = 8
+          Position.RowIndex = 0
+        end
+        object edtRAActivty: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'ACTIVITY'
+          PropertiesClassName = 'TcxMemoProperties'
+          Properties.ReadOnly = True
+          MinWidth = 500
+          Options.Editing = False
+          Options.Filtering = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 500
+          Position.BandIndex = 1
+          Position.ColIndex = 9
+          Position.RowIndex = 0
+        end
+        object edtRPriceItem: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'PRICE_LIST_ITEM'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.ReadOnly = True
+          MinWidth = 400
+          Options.Editing = False
+          Options.Filtering = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 400
+          Position.BandIndex = 1
+          Position.ColIndex = 10
+          Position.RowIndex = 0
+        end
+        object edtRTimeSpent: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'TIME_SPENT'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DisplayFormat = '###,###,##0.00'
+          Properties.EditFormat = '###,###,##0.00'
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taRightJustify
+          MinWidth = 60
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 60
+          Position.BandIndex = 0
+          Position.ColIndex = 1
+          Position.RowIndex = 0
+        end
+        object edtRHours: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'TIME_HOURS'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DisplayFormat = '###,###,##0.00'
+          Properties.EditFormat = '###,###,##0.00'
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taRightJustify
+          MinWidth = 60
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 60
+          Position.BandIndex = 0
+          Position.ColIndex = 2
+          Position.RowIndex = 0
+        end
+        object edtRRate: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'ACTUAL_RATE'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DisplayFormat = '###,###,##0.00'
+          Properties.EditFormat = '###,###,##0.00'
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taRightJustify
+          MinWidth = 90
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 90
+          Position.BandIndex = 0
+          Position.ColIndex = 3
+          Position.RowIndex = 0
+        end
+        object edtRStdRate: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'STD_RATE'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DisplayFormat = '###,###,##0.00'
+          Properties.EditFormat = '###,###,##0.00'
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taRightJustify
+          MinWidth = 90
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 90
+          Position.BandIndex = 0
+          Position.ColIndex = 4
+          Position.RowIndex = 0
+        end
+        object edtRAbbreviation: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'ABBREVIATION'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.Alignment.Horz = taCenter
+          Properties.Alignment.Vert = taTopJustify
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taCenter
+          MinWidth = 25
+          Options.Editing = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 25
+          Position.BandIndex = 0
+          Position.ColIndex = 5
+          Position.RowIndex = 0
+        end
+        object edtRItemValue: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'ITEM_VALUE'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DisplayFormat = '###,###,##0.00'
+          Properties.EditFormat = '###,###,##0.00'
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taRightJustify
+          MinWidth = 90
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 90
+          Position.BandIndex = 0
+          Position.ColIndex = 6
+          Position.RowIndex = 0
+        end
+        object edtRCFwdValue: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'CARRY_FORWARD_VALUE'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DisplayFormat = '###,##0.00'
+          Properties.EditFormat = '###,##0.00'
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taRightJustify
+          MinWidth = 90
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 90
+          Position.BandIndex = 0
+          Position.ColIndex = 7
+          Position.RowIndex = 0
+        end
+        object edtRBillable: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'BILLABLE'
+          PropertiesClassName = 'TcxCheckBoxProperties'
+          Properties.Alignment = taCenter
+          Properties.ReadOnly = True
+          Properties.ValueChecked = 1
+          Properties.ValueUnchecked = 0
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          MinWidth = 25
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 25
+          Position.BandIndex = 0
+          Position.ColIndex = 8
+          Position.RowIndex = 0
+        end
+        object edtRBillableStr: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'BILLABLE_STR'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.Alignment.Horz = taCenter
+          Properties.Alignment.Vert = taTopJustify
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taCenter
+          MinWidth = 25
+          Options.Editing = False
+          Options.Filtering = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 25
+          Position.BandIndex = 0
+          Position.ColIndex = 9
+          Position.RowIndex = 0
+        end
+        object edtRInvoiceNo: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'INVOICE_ID'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = '######'
+          Properties.EditFormat = '######'
+          Properties.ReadOnly = True
+          MinWidth = 74
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Position.BandIndex = 2
+          Position.ColIndex = 0
+          Position.RowIndex = 0
+        end
+        object edtRInvDate: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'INVOICE_DATE'
+          PropertiesClassName = 'TcxDateEditProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.ReadOnly = True
+          MinWidth = 90
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 90
+          Position.BandIndex = 2
+          Position.ColIndex = 1
+          Position.RowIndex = 0
+        end
+        object edtRCreditNoteNo: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'CN_ID'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taTopJustify
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = '######'
+          Properties.EditFormat = '######'
+          Properties.ReadOnly = True
+          MinWidth = 74
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Position.BandIndex = 2
+          Position.ColIndex = 2
+          Position.RowIndex = 0
+        end
+        object edtRLocked: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'LOCKED'
+          PropertiesClassName = 'TcxCheckBoxProperties'
+          Properties.Alignment = taCenter
+          Properties.ReadOnly = True
+          Properties.ValueChecked = 1
+          Properties.ValueUnchecked = 0
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          MinWidth = 40
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 40
+          Position.BandIndex = 3
+          Position.ColIndex = 0
+          Position.RowIndex = 0
+        end
+        object edtRLockedStr: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'LOCKED_STR'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.Alignment.Horz = taCenter
+          Properties.Alignment.Vert = taTopJustify
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taCenter
+          MinWidth = 35
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 35
+          Position.BandIndex = 3
+          Position.ColIndex = 1
+          Position.RowIndex = 0
+        end
+        object edtRCFwd: TcxGridDBBandedColumn
+          Caption = 'CF'
+          DataBinding.FieldName = 'CARRY_FORWARD'
+          PropertiesClassName = 'TcxCheckBoxProperties'
+          Properties.Alignment = taRightJustify
+          Properties.ReadOnly = True
+          Properties.ValueChecked = 1
+          Properties.ValueUnchecked = 0
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          MinWidth = 25
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 25
+          Position.BandIndex = 3
+          Position.ColIndex = 2
+          Position.RowIndex = 0
+        end
+        object edtRCFwdStr: TcxGridDBBandedColumn
+          Caption = 'CF'
+          DataBinding.FieldName = 'CARRY_FORWARD_STR'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taTopJustify
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taCenter
+          MinWidth = 25
+          Options.Editing = False
+          Options.Filtering = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 25
+          Position.BandIndex = 3
+          Position.ColIndex = 3
+          Position.RowIndex = 0
+        end
+        object edtRAddWork: TcxGridDBBandedColumn
+          Caption = 'Ad Wk'
+          DataBinding.FieldName = 'IS_ADDITIONAL_WORK'
+          PropertiesClassName = 'TcxCheckBoxProperties'
+          Properties.Alignment = taCenter
+          Properties.ReadOnly = True
+          Properties.ValueChecked = 1
+          Properties.ValueUnchecked = 0
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          MinWidth = 40
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 40
+          Position.BandIndex = 3
+          Position.ColIndex = 4
+          Position.RowIndex = 0
+        end
+        object edtRAddWorkStr: TcxGridDBBandedColumn
+          Caption = 'Ad Wk'
+          DataBinding.FieldName = 'IS_ADDITIONAL_WORK_STR'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.Alignment.Horz = taCenter
+          Properties.Alignment.Vert = taTopJustify
+          Properties.ReadOnly = True
+          MinWidth = 50
+          Options.Editing = False
+          Options.Filtering = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 50
+          Position.BandIndex = 3
+          Position.ColIndex = 5
+          Position.RowIndex = 0
+        end
+      end
+      object lvlTimesheetRelease: TcxGridLevel
+        GridView = viewTimesheetRelease
+      end
+    end
+    object litCFwdToolbar: TdxLayoutItem
+      Parent = grpCarryForward
       CaptionOptions.Visible = False
-      Control = docToolbar
+      Control = docToolbarCFwd
       ControlOptions.AutoColor = True
       ControlOptions.OriginalHeight = 54
       ControlOptions.OriginalWidth = 600
       ControlOptions.ShowBorder = False
       Index = 0
     end
-    object grpPeriodSelection: TdxLayoutGroup
-      CaptionOptions.Text = 'New Group'
-      ButtonOptions.Buttons = <>
-      LayoutDirection = ldHorizontal
-      ShowBorder = False
-      Index = -1
-    end
-    object litFromPeriod: TdxLayoutItem
-      Parent = grpPeriodSelection
-      CaptionOptions.Text = 'From Period'
-      ControlOptions.OriginalHeight = 19
-      ControlOptions.OriginalWidth = 100
-      ControlOptions.ShowBorder = False
-      Index = 0
-    end
-    object litGrid: TdxLayoutItem
-      Parent = layMainGroup_Root
-      AlignHorz = ahClient
+    object litCFwdGrid: TdxLayoutItem
+      Parent = grpCarryForward
       AlignVert = avClient
       CaptionOptions.Visible = False
       Control = grdTimesheet
@@ -730,24 +1384,54 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
       ControlOptions.ShowBorder = False
       Index = 1
     end
-    object litReleaseToPeriod: TdxLayoutItem
-      Parent = grpPeriodSelection
-      CaptionOptions.Text = 'Release items to period'
-      ControlOptions.OriginalHeight = 19
-      ControlOptions.OriginalWidth = 100
-      ControlOptions.ShowBorder = False
-      Index = 2
+    object grpCFwdRelease: TdxLayoutGroup
+      Parent = layMainGroup_Root
+      AlignVert = avClient
+      CaptionOptions.Text = 'New Group'
+      ButtonOptions.Buttons = <>
+      LayoutDirection = ldTabbed
+      ShowBorder = False
+      Index = 0
     end
-    object sep1: TdxLayoutSeparatorItem
-      Parent = grpPeriodSelection
-      SizeOptions.Width = 15
-      CaptionOptions.Text = 'Separator'
+    object grpCarryForward: TdxLayoutGroup
+      Parent = grpCFwdRelease
+      AlignVert = avClient
+      CaptionOptions.Text = 'Carried Forwared Items'
+      ButtonOptions.Buttons = <>
+      ItemIndex = 1
+      Index = 0
+    end
+    object grpRelease: TdxLayoutGroup
+      Parent = grpCFwdRelease
+      CaptionOptions.Text = 'Released Items'
+      ButtonOptions.Buttons = <>
+      ItemIndex = 1
+      Index = 1
+    end
+    object litReleaseToolbar: TdxLayoutItem
+      Parent = grpRelease
+      CaptionOptions.Visible = False
+      Control = docTolbarRelease
+      ControlOptions.AutoColor = True
+      ControlOptions.OriginalHeight = 54
+      ControlOptions.OriginalWidth = 1349
+      ControlOptions.ShowBorder = False
+      Index = 0
+    end
+    object litReleaseGrid: TdxLayoutItem
+      Parent = grpRelease
+      AlignVert = avClient
+      CaptionOptions.Visible = False
+      Control = grdTimesheetRelease
+      ControlOptions.OriginalHeight = 395
+      ControlOptions.OriginalWidth = 846
+      ControlOptions.ShowBorder = False
       Index = 1
     end
   end
   object lucPeriod: TcxLookupComboBox [1]
-    Left = 245
-    Top = 127
+    Left = 375
+    Top = 243
     BeepOnEnter = False
     Properties.DropDownAutoSize = True
     Properties.DropDownListStyle = lsFixedList
@@ -765,13 +1449,13 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
     Properties.OnPopup = lucPeriodPropertiesPopup
     Style.HotTrack = False
     Style.TransparentBorder = False
-    TabOrder = 5
+    TabOrder = 2
     OnKeyDown = lucPeriodKeyDown
     Width = 100
   end
   object lucReleasePeriod: TcxLookupComboBox [2]
-    Left = 245
-    Top = 149
+    Left = 375
+    Top = 265
     BeepOnEnter = False
     Properties.DropDownAutoSize = True
     Properties.DropDownListStyle = lsFixedList
@@ -786,12 +1470,25 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
     Properties.OnEditValueChanged = lucReleaseToPeriodPropertiesEditValueChanged
     Style.HotTrack = False
     Style.TransparentBorder = False
-    TabOrder = 6
+    TabOrder = 1
     Width = 100
+  end
+  object cbxPersistentSelection: TcxCheckBox [3]
+    Left = 375
+    Top = 298
+    Caption = 'Persistent record selection'
+    ParentShowHint = False
+    Properties.ImmediatePost = True
+    Properties.UseAlignmentWhenInplace = True
+    Properties.OnEditValueChanged = cbxPersistentRecordSelectionPropertiesEditValueChanged
+    ShowHint = True
+    Style.TransparentBorder = False
+    TabOrder = 3
+    Transparent = True
   end
   inherited styRepository: TcxStyleRepository
     Left = 455
-    Top = 250
+    Top = 465
     PixelsPerInch = 96
     object styGroupFormat: TcxStyle
       AssignedValues = [svFont]
@@ -805,13 +1502,20 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
   inherited actList: TActionList
     Images = img32
     Left = 155
-    Top = 305
+    Top = 520
     object actCloseForm: TAction
       Caption = 'Close'
       ImageIndex = 0
       OnExecute = DoCloseForm
     end
-    object actGetTimeSheetData: TAction
+    object actGetTimeSheetDataCFwd: TAction
+      Tag = 10
+      Caption = 'Get Data'
+      ImageIndex = 5
+      OnExecute = DoGetTimesheetData
+    end
+    object actGetTimesheetDataRelease: TAction
+      Tag = 11
       Caption = 'Get Data'
       ImageIndex = 5
       OnExecute = DoGetTimesheetData
@@ -821,26 +1525,36 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
       ImageIndex = 6
       OnExecute = DoRelease
     end
+    object actChangeReleasePeriod: TAction
+      Caption = 'Change'
+      ImageIndex = 6
+      OnExecute = DoChangeReleasePeriod
+    end
     object actOptions: TAction
       Caption = 'Options'
       ImageIndex = 7
       OnExecute = DoOptions
     end
+    object actReverseRelease: TAction
+      Caption = 'Reverse'
+      ImageIndex = 8
+      OnExecute = DoReverseRelease
+    end
   end
   inherited lafLayoutList: TdxLayoutLookAndFeelList
     Left = 215
-    Top = 305
+    Top = 520
     inherited lafCustomSkin: TdxLayoutSkinLookAndFeel
       PixelsPerInch = 96
     end
   end
   inherited img16: TcxImageList
     FormatVersion = 1
-    DesignInfo = 19988535
+    DesignInfo = 34078775
   end
   inherited img32: TcxImageList
     FormatVersion = 1
-    DesignInfo = 19988585
+    DesignInfo = 34078825
     ImageInfo = <
       item
         ImageClass = 'TBitmap'
@@ -1853,6 +2567,140 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           0000000000000000000000000000000000000000000000000000000000000000
           0000000000000000000000000000000000000000000000000000000000000000
           0000000000000000000000000000000000000000000000000000}
+      end
+      item
+        ImageClass = 'TBitmap'
+        Image.Data = {
+          36100000424D3610000000000000360000002800000020000000200000000100
+          2000000000000010000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000003030D1B0E0E334D1B1B627E27278CB03030AFD90B0B
+          293B000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000004041121101039531D1D
+          6885282892B73434BCE83939D3FF3939D7FF3A3AD8FF3A3AD9FF3636C8EB0303
+          0C13000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000050515213030B2DC3939D3FF3939D7FF3A3A
+          D9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3AD9FF1515505F0000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          00000000000000000000000000001C1C6A823A3AD9FF3A3AD9FF3A3AD9FF3A3A
+          D9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3AD9FF2B2BA0BD000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000161655683A3AD9FF3A3AD9FF3A3AD9FF3A3A
+          D9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3AD9FF1D1D6B83000000010000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          000000000000000000000000000007071D2D3A3AD9FF3A3AD9FF3A3AD9FF3A3A
+          D9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3AD9FF3939D7FF2A2A98BE0404
+          101A000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000023737CBEF3A3AD9FF3A3AD9FF3A3A
+          D9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3AD8FF3434
+          BDE70B0B27360000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          00000000000000000000000000000000000029299AB63A3AD9FF3A3AD9FF3A3A
+          D9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3A
+          D9FF3737CAF30C0C2B3B00000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000001B1B687B3A3AD9FF3A3AD9FF3A3A
+          D9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3A
+          D9FF3A3AD9FF3535C5EE07071924000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000C0C2D403A3AD9FF3A3AD9FF3A3A
+          D9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3A
+          D9FF3A3AD9FF3A3AD9FF2D2DA6CB000001030000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000101050A3939D4FA3A3AD9FF3A3A
+          D9FF3A3AD9FF2E2EACCA3939D5FB3A3AD9FF3A3AD9FF3A3AD9FF3A3AD9FF3A3A
+          D9FF3A3AD9FF3A3AD9FF3939D8FF161651670000000000000000000000000001
+          0003051406210000000000000000000000000000000000000000000000000000
+          000000000000000000000000000000000000000000002E2EABC93A3AD9FF3A3A
+          D9FF292999B4000000000505141D21217A903939D3F83A3AD9FF3A3AD9FF3A3A
+          D9FF3A3AD9FF3A3AD9FF3A3AD9FF3232B7DD0000000100000000000000000A28
+          0B3C082009330000000000000000000000000000000000000000000000000000
+          000000000000000000000000000000000000000000002020798F3A3AD9FF3838
+          CEF30606171F00000000000000000000000007071B252C2CA2BF3A3AD9FF3A3A
+          D9FF3A3AD9FF3A3AD9FF3A3AD9FF3939D8FF0B0B293A00000000000000001961
+          1D77124314590000000000000000000000000000000000000000000000000000
+          00000000000000000000000000000000000000000000111140533A3AD9FF1A1A
+          60710000000000000000000000000000000000000000000000011B1B64763939
+          D4FA3A3AD9FF3A3AD9FF3A3AD9FF3A3AD9FF1B1B647A00000000000000002183
+          279E28972EBE0000000000000000000000000000000000000000000000000000
+          000000000000000000000000000000000000000000000101060B1C1C687B0000
+          0103000000000000000000000000000000000000000000000000000000000E0E
+          34413636C8EC3A3AD9FF3A3AD9FF3A3AD9FF242486A100000000000000002592
+          2CB035D23EFF1D6A218B00000001000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          000007071C263333BDDE3A3AD9FF3A3AD9FF282896B200000000000000002590
+          2BAE36D43FFF35D13EFF258A2BB3020903100000000000000000000000000000
+          00000000000000000000000000000000000000000000030E041B000000020000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000505131B3131B7D73A3AD9FF262690AB0000000000000000207B
+          259536D43FFF36D43FFF35D23EFF2FAF36DF0B2A0D3C00000000000000000000
+          000000000000000000000000000000000000030B031532BE3AF0134916600000
+          0000000000000000000000000000000000000000000000000000000000000000
+          00000000000000000000060619233838D2F72020798F00000000000000001451
+          186636D43FFF36D43FFF36D43FFF36D33EFF35CA3EFC1E6D228F0107020D0000
+          0000000000000000000000000000000000001D6E228E36D33EFF26912CB50000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000272792AC14144E5E00000000000000000412
+          051E36D23FFD36D43FFF36D43FFF36D43FFF36D43FFF35D23EFF30B437E6154E
+          18680002000600000000000000000410051C33C73CF636D43FFF34CB3DF80207
+          020E000000000000000000000000000000000000000000000000000000000000
+          00000000000000000000000000001D1D6D800404101900000000000000000000
+          000027982DB736D43FFF36D43FFF36D43FFF36D43FFF36D43FFF36D43FFF35D0
+          3EFF30B437E61C66208609240B37217A269D36D43FFF36D43FFF36D33FFF1142
+          1458000000000000000000000000000000000000000000000000000000000000
+          000000000000000000000000000010103E490000000000000000000000000000
+          00000A280C3636D23FFD36D43FFF36D43FFF36D43FFF36D43FFF36D43FFF36D4
+          3FFF36D43FFF35D23EFF35CD3EFF35D13EFF36D43FFF36D43FFF36D43FFF2387
+          28A9000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000010105080000000000000000000000000000
+          0000000000001E74238C36D43FFF36D43FFF36D43FFF36D43FFF36D43FFF36D4
+          3FFF36D43FFF36D43FFF36D43FFF36D43FFF36D43FFF36D43FFF36D43FFF33C5
+          3BF2000301070000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000002000427992EB836D43FFF36D43FFF36D43FFF36D43FFF36D4
+          3FFF36D43FFF36D43FFF36D43FFF36D43FFF36D43FFF36D43FFF36D43FFF35D3
+          3EFF0E36104B0000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          000000000000000000000106010A26962DB536D43FFF36D43FFF36D43FFF36D4
+          3FFF36D43FFF36D43FFF36D43FFF36D43FFF36D43FFF36D43FFF36D43FFF36D4
+          3FFF207C259C0000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000100031D71228836D23FFD36D43FFF36D4
+          3FFF36D43FFF36D43FFF36D43FFF36D43FFF36D43FFF36D43FFF36D43FFF36D4
+          3FFF31BE39EA0001000300000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          000000000000000000000000000000000000000000000B2F0E3C2DAE34D236D4
+          3FFF36D43FFF36D43FFF36D43FFF36D43FFF36D43FFF36D43FFF36D43FFF36D4
+          3FFF35D33EFF0C2C0D3F00000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000100031E75
+          238D36D43FFF36D43FFF36D43FFF36D43FFF36D43FFF36D43FFF36D43FFF36D4
+          3FFF36D43FFF19601D7800000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000002AA6
+          32C836D43FFF36D43FFF36D43FFF36D43FFF36D43FFF36D43FFF36D43FFF36D4
+          3FFF35CD3DF70A270B3300000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          00000000000000000000000000000000000000000000000000000F3D124F36D4
+          3FFF36D43FFF36D43FFF36D43FFF36D43FFF36D43FFF34CB3DF426952DB4165A
+          1A6D0515061F0000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          00000000000000000000000000000000000000000000000000012DAE34D236D4
+          3FFF36D43FFF36D33FFE2DAF34D31D73228B0D340F4400030107000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          00000000000000000000000000000000000000000000010702102EB235D7248C
+          2AA9145018620411051B00000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000}
       end>
   end
   object repScreenTip: TdxScreenTipRepository
@@ -1873,7 +2721,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
     HeaderFont.Name = 'Verdana'
     HeaderFont.Style = [fsBold]
     Left = 295
-    Top = 305
+    Top = 520
     PixelsPerInch = 96
     object tipClose: TdxScreenTip
       Header.Text = 'Close'
@@ -1895,38 +2743,53 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
       Header.Text = 'Excel'
       Description.Text = 'Export timesheet to Excel'
     end
-    object tipToScreen: TdxScreenTip
-      Header.Text = 'To Screen'
-      Description.Text = 'Fetch data and display in grid format on-screen'
-      Width = 315
+    object tipGetCFwdData: TdxScreenTip
+      Header.Text = 'Get Carry Forward Data'
+      Description.Text = 
+        'Fetch data for carry forward items and display in grid format on' +
+        '-screen'
+      Width = 250
     end
-    object tipGroupedReport: TdxScreenTip
-      Header.Text = 'Grouped Report'
-      Description.Text = 'Report will be grouped by first sort column'
-      Width = 285
-    end
-    object tipRefreshData: TdxScreenTip
-      Header.Text = 'Refresh Data'
-      Description.Text = 'Refresh data when changing sort order'
-      Width = 270
-    end
-    object tipExportFormattedExcelData: TdxScreenTip
-      Header.Text = 'Export Formatted Excel Data'
-      Description.Text = 'When exporting data to Excel, retain grid formatting and colours'
-      Width = 410
-    end
-    object tipExpandAll: TdxScreenTip
-      Header.Text = 'Expand All'
-      Description.Text = 'Expand all groups in grid'
-    end
-    object tipCollapseAll: TdxScreenTip
-      Header.Text = 'Collapse All'
-      Description.Text = 'Collapse all groups in grid'
+    object tipGetReleaseData: TdxScreenTip
+      Header.Text = 'Get Release Data'
+      Description.Text = 
+        'Fetch data for released items and display in grid format on-scre' +
+        'en'
+      Width = 250
     end
     object tipRelease: TdxScreenTip
       Header.Text = 'Release'
       Description.Text = 'Release selected cary forward items to specified period'
       Width = 360
+    end
+    object tipPersistentRecordSelection: TdxScreenTip
+      Header.Text = 'Persistent Record Selection'
+      Description.Text = 
+        'If selected, records stay selected when changing focus to other ' +
+        'records. I not, only the selected records is selected when focus' +
+        'ing other records.'
+      Width = 360
+    end
+    object tipDataPeriod: TdxScreenTip
+      Header.Text = 'Data Period'
+      Description.Text = 'Select period for which to get carry forward data'
+      Width = 325
+    end
+    object tipReleasePeriod: TdxScreenTip
+      Header.Text = 'Release Period'
+      Description.Text = 
+        'Select the period into which you want to release the selected ca' +
+        'rried forward items.'
+      Width = 290
+    end
+    object tipChangeReleasePeriod: TdxScreenTip
+      Header.Text = 'Change Release Period'
+      Description.Text = 'Change the release period for the selected items'
+      Width = 325
+    end
+    object tipReverseRelease: TdxScreenTip
+      Header.Text = 'Reverse'
+      Description.Text = 'Revert selected released items to carry forward status'
     end
   end
   object styHintController: TcxHintStyleController
@@ -1934,29 +2797,27 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
     HintStyleClassName = 'TdxScreenTipStyle'
     HintStyle.ScreenTipLinks = <
       item
-        ScreenTip = tipExpandAll
       end
       item
-        ScreenTip = tipCollapseAll
       end>
     HintStyle.ScreenTipActionLinks = <>
     HintShortPause = 0
     HintPause = 0
     HintHidePause = 15000
     Left = 375
-    Top = 305
+    Top = 520
   end
   object dlgPrint: TdxPrintDialog
     ButtonsEnabled = [pdbPrinterProperties, pdbNetwork, pdbPreview, pdbPageSetup]
     ButtonsVisible = [pdbPrinterProperties, pdbNetwork, pdbPageSetup]
     OptionsEnabled = [pdoPrintToFile, pdoAllPages, pdoCurrentPage, pdoPageRange]
     Left = 515
-    Top = 305
+    Top = 520
   end
   object dlgFileSave: TSaveDialog
     Filter = 'Excel Files (*.xlsx)|*.xlsx'
     Left = 455
-    Top = 305
+    Top = 520
   end
   object barManager: TdxBarManager
     AlwaysSaveText = True
@@ -1977,21 +2838,24 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
     Style = bmsUseLookAndFeel
     UseSystemFont = False
     Left = 575
-    Top = 305
+    Top = 520
     PixelsPerInch = 96
-    object barToolbar: TdxBar
+    object barToolbarCFwd: TdxBar
+      AllowClose = False
+      AllowCustomizing = False
+      AllowQuickCustomizing = False
+      AllowReset = False
       BorderStyle = bbsNone
-      Caption = 'Toolbar'
+      Caption = 'Carry Forward Toolbar'
       CaptionButtons = <>
-      DockControl = docToolbar
-      DockedDockControl = docToolbar
+      DockControl = docToolbarCFwd
+      DockedDockControl = docToolbarCFwd
       DockedLeft = 0
       DockedTop = 0
       FloatLeft = 1377
       FloatTop = 2
       FloatClientWidth = 0
       FloatClientHeight = 0
-      IsMainMenu = True
       ItemLinks = <
         item
           Visible = True
@@ -2028,10 +2892,60 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
         item
           Visible = True
           ItemName = 'cntReleasePeriod'
+        end
+        item
+          Visible = True
+          ItemName = 'lblSpace02'
+        end
+        item
+          Visible = True
+          ItemName = 'cntPersistentSelection'
         end>
-      MultiLine = True
+      NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
       OneOnRow = True
       Row = 0
+      SizeGrip = False
+      UseOwnFont = False
+      Visible = True
+      WholeRow = True
+    end
+    object barRelease: TdxBar
+      AllowClose = False
+      AllowCustomizing = False
+      AllowQuickCustomizing = False
+      AllowReset = False
+      BorderStyle = bbsNone
+      Caption = 'Release Toolbar'
+      CaptionButtons = <>
+      DockControl = docTolbarRelease
+      DockedDockControl = docTolbarRelease
+      DockedLeft = 0
+      DockedTop = 0
+      FloatLeft = 1377
+      FloatTop = 2
+      FloatClientWidth = 0
+      FloatClientHeight = 0
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'btnCloseFormR'
+        end
+        item
+          Visible = True
+          ItemName = 'btnGetDataR'
+        end
+        item
+          Visible = True
+          ItemName = 'btnReleaseR'
+        end
+        item
+          Visible = True
+          ItemName = 'btnReverse'
+        end>
+      NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
+      OneOnRow = True
+      Row = 0
+      SizeGrip = False
       UseOwnFont = False
       Visible = True
       WholeRow = True
@@ -2043,9 +2957,9 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
       AutoGrayScale = False
     end
     object btnToScreen: TdxBarLargeButton
-      Action = actGetTimeSheetData
+      Action = actGetTimeSheetDataCFwd
       Category = 0
-      ScreenTip = tipToScreen
+      ScreenTip = tipGetCFwdData
       AutoGrayScale = False
     end
     object btnRelease: TdxBarLargeButton
@@ -2064,6 +2978,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
       Caption = 'Fetch data for period'
       Category = 0
       Hint = 'Fetch data for period'
+      ScreenTip = tipDataPeriod
       Visible = ivAlways
       Control = lucPeriod
     end
@@ -2071,6 +2986,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
       Caption = 'Release to period'
       Category = 0
       Hint = 'Release to period'
+      ScreenTip = tipReleasePeriod
       Visible = ivAlways
       Control = lucReleasePeriod
     end
@@ -2092,11 +3008,49 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
       Hint = '   '
       Visible = ivAlways
     end
+    object cntPersistentSelection: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      ScreenTip = tipPersistentRecordSelection
+      Visible = ivAlways
+      Control = cbxPersistentSelection
+    end
+    object lblSpace02: TdxBarStatic
+      Caption = '   '
+      Category = 0
+      Hint = '   '
+      Visible = ivAlways
+    end
+    object btnCloseFormR: TdxBarLargeButton
+      Action = actCloseForm
+      Category = 0
+      ScreenTip = tipClose
+      AutoGrayScale = False
+    end
+    object btnGetDataR: TdxBarLargeButton
+      Action = actGetTimesheetDataRelease
+      Category = 0
+      ScreenTip = tipGetReleaseData
+      AutoGrayScale = False
+    end
+    object btnReleaseR: TdxBarLargeButton
+      Action = actChangeReleasePeriod
+      Category = 0
+      ScreenTip = tipChangeReleasePeriod
+      AutoGrayScale = False
+    end
+    object btnReverse: TdxBarLargeButton
+      Action = actReverseRelease
+      Category = 0
+      ScreenTip = tipReverseRelease
+      AutoGrayScale = False
+    end
   end
   object styReadOnly: TcxEditStyleController
     Style.Color = 15132415
     Left = 365
-    Top = 250
+    Top = 465
     PixelsPerInch = 96
   end
 end

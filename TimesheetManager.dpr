@@ -44,8 +44,10 @@ uses
   CustomerContactDetail_Frm in 'General\CustomerContactDetail_Frm.pas' {CustomerContactDetailFrm},
   VBProxyClass in '..\Lib\VBProxyClass.pas',
   SendEmail in '..\..\..\..\Lib\Classes\SendEmail.pas',
-  Email_Frm in '..\..\..\..\Lib\Email_Frm.pas' {EmailFrm},
-  RecipientInput_Frm in '..\..\..\..\Lib\RecipientInput_Frm.pas' {RecipientInputFrm};
+  EmailPerson_Frm in '..\..\..\..\Lib\EmailPerson_Frm.pas' {EmailPersonFrm},
+  RecipientInput_Frm in '..\..\..\..\Lib\RecipientInput_Frm.pas' {RecipientInputFrm},
+  CustomerDirector_Frm in 'General\CustomerDirector_Frm.pas' {CustomerDirectorFrm},
+  ReleaseItemManager_Frm in 'General\ReleaseItemManager_Frm.pas' {ReleaseItemManagerFrm};
 
 {$R *.res}
 

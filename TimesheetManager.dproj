@@ -213,12 +213,20 @@
         </DCCReference>
         <DCCReference Include="..\Lib\VBProxyClass.pas"/>
         <DCCReference Include="..\..\..\..\Lib\Classes\SendEmail.pas"/>
-        <DCCReference Include="..\..\..\..\Lib\Email_Frm.pas">
-            <Form>EmailFrm</Form>
+        <DCCReference Include="..\..\..\..\Lib\EmailPerson_Frm.pas">
+            <Form>EmailPersonFrm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\..\..\Lib\RecipientInput_Frm.pas">
             <Form>RecipientInputFrm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="General\CustomerDirector_Frm.pas">
+            <Form>CustomerDirectorFrm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="General\ReleaseItemManager_Frm.pas">
+            <Form>ReleaseItemManagerFrm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">

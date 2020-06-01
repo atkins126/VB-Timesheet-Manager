@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, Vcl.Forms,
   System.Classes, Vcl.Graphics, System.ImageList, Vcl.ImgList, Vcl.Controls,
-  Vcl.Dialogs, System.Actions, Vcl.ActnList, Data.DB,
+  Vcl.Dialogs, System.Actions, Vcl.ActnList, Data.DB, Vcl.Menus,
 
   VBBase_DM, BaseLayout_Frm, VBCommonValues,
 
@@ -14,10 +14,9 @@ uses
   dxLayoutContainer, dxLayoutControl, cxCustomData, cxFilter, cxData, cxDBData,
   cxDataStorage, cxEdit, cxNavigator, dxDateRanges, dxScrollbarAnnotations,
   cxCurrencyEdit, cxDBLookupComboBox, cxTextEdit, dxBar, cxGridLevel, cxGrid,
-  cxGridInplaceEditForm, cxGridCustomTableView, cxGridTableView,
+  cxGridInplaceEditForm, cxGridCustomTableView, cxGridTableView, dxCustomHint,
   cxGridBandedTableView, cxGridDBBandedTableView, cxGridCustomView, dxScreenTip,
-  dxCustomHint, cxHint, cxCheckBox, dxLayoutcxEditAdapters, cxContainer,
-  Vcl.Menus, cxLabel;
+  cxHint, cxCheckBox, dxLayoutcxEditAdapters, cxContainer, cxLabel;
 
 type
   TCustomerContactDetailFrm = class(TBaseLayoutFrm)
@@ -53,6 +52,11 @@ type
     styReadOnly: TcxEditStyleController;
     popEmail: TPopupMenu;
     mnuEmail: TMenuItem;
+    mnuClose: TMenuItem;
+    btnHide: TdxBarLargeButton;
+    actHide: TAction;
+    Hide1: TMenuItem;
+    tipHide: TdxScreenTip;
     procedure FormCreate(Sender: TObject);
     procedure DoCloseForm(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -62,6 +66,8 @@ type
       ANewItemRecordFocusingChanged: Boolean);
     procedure DoEmail(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure viewContactDetailCoDblClick(Sender: TObject);
+    procedure DoHideForm(Sender: TObject);
   private
     { Private declarations }
     FItemValue: string;
@@ -79,12 +85,13 @@ implementation
 
 {$R *.dfm}
 
-uses TS_DM, Email_Frm;
+uses
+  TS_DM,
+  EmailPerson_Frm;
 
 procedure TCustomerContactDetailFrm.DoCloseForm(Sender: TObject);
 begin
-  Self.Hide;
-//  Self.Close;
+  Self.Close;
 end;
 
 procedure TCustomerContactDetailFrm.FormCreate(Sender: TObject);
@@ -95,11 +102,17 @@ begin
   Self.Width := 420;
   Self.Top := 50;
   Self.Left := Screen.Width - Self.Width - 100;
+  viewContactDetailCo.DataController.DataSource := TSDM.dtsContactDetailCo;
+
+  if viewContactDetailCo.Controller.FocusedRecord <> nil then
+    FItemValue := viewContactDetailCo.Controller.FocusedRecord.Values[edtCDValue.Index];
+
+  actEmail.Enabled := (edtContactTypeID.EditValue = 3)
+    and (viewContactDetailCo.DataController.RecordCount > 0);
 end;
 
 procedure TCustomerContactDetailFrm.FormShow(Sender: TObject);
 begin
-  viewContactDetailCo.DataController.DataSource := TSDM.dtsContactDetailCo;
   grdContactDetailCo.SetFocus;
   viewContactDetailCo.Focused := True;
   viewContactDetailCo.DataController.FocusedRecordIndex := 0;
@@ -112,28 +125,46 @@ begin
 
   actEmail.Enabled := (edtContactTypeID.EditValue = 3)
     and (viewContactDetailCo.DataController.RecordCount > 0);
-//  VBBaseDM.GetData(54, TSDM.cdsContactDetailCo, TSDM.cdsContactDetailCo.Name, ' ORDER BY O.CUSTOMER_ID',
-//    'C:\Data\Xml\View Contact Detail Co.xml', TSDM.cdsContactDetailCo.UpdateOptions.Generatorname,
-//    TSDM.cdsContactDetailCo.UpdateOptions.UpdateTableName);
+  //  VBBaseDM.GetData(54, TSDM.cdsContactDetailCo, TSDM.cdsContactDetailCo.Name, ' ORDER BY O.CUSTOMER_ID',
+  //    'C:\Data\Xml\View Contact Detail Co.xml', TSDM.cdsContactDetailCo.UpdateOptions.Generatorname,
+  //    TSDM.cdsContactDetailCo.UpdateOptions.UpdateTableName);
 end;
 
 procedure TCustomerContactDetailFrm.DoEmail(Sender: TObject);
 begin
-  if EmailFrm = nil then
-    EmailFrm := TEmailFrm.Create(nil);
+  if EmailPersonFrm = nil then
+    EmailPersonFrm := TEmailPersonFrm.Create(nil);
 
-  EmailFrm.lstRecipient.Clear;
-  EmailFrm.lstRecipient.Items.Add(FItemValue);
-  EmailFrm.ShowModal;
-  EmailFrm.Close;
-  FreeAndNil(EmailFrm);
+  EmailPersonFrm.lstRecipient.Clear;
+  EmailPersonFrm.lstRecipient.Items.Add(FItemValue);
+//  EmailPersonFrm.lstRecipient.Items.Add('cvgiesen@gmail.com');
+//  EmailPersonFrm.lstRecipient.Items.Add('gieseng@xt.co.za');
+
+  Self.Hide;
+  try
+    EmailPersonFrm.ShowModal;
+  finally
+    EmailPersonFrm.Close;
+    FreeAndNil(EmailPersonFrm);
+    Self.Show;
+  end;
+end;
+
+procedure TCustomerContactDetailFrm.DoHideForm(Sender: TObject);
+begin
+  Self.Hide;
 end;
 
 procedure TCustomerContactDetailFrm.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
-//  Action := caFree;
-//  CustomerContactDetailFrm := nil;
+  //  Action := caFree;
+  //  CustomerContactDetailFrm := nil;
+end;
+
+procedure TCustomerContactDetailFrm.viewContactDetailCoDblClick(Sender: TObject);
+begin
+  actEmail.Execute;
 end;
 
 procedure TCustomerContactDetailFrm.viewContactDetailCoFocusedRecordChanged(
@@ -152,12 +183,13 @@ procedure TCustomerContactDetailFrm.HandleCaption(var MyMsg: TMessage);
 begin
   try
     Caption := 'Contact details for: ' + PChar(MyMsg.WParam);
-    viewContactDetailCo.Bands[0].Caption := 'Contact details for: ' + PChar(MyMsg.WParam);
+    viewContactDetailCo.Bands[0].Caption := {'Contact details for: ' + }PChar(MyMsg.WParam);
 
     edtPrimaryContact.Text :=
       TSDM.cdsContactDetailCo.FieldByName('FIRST_NAME').AsString + ' ' +
       TSDM.cdsContactDetailCo.FieldByName('LAST_NAME').AsString;
 
+//    actEmail.Caption := 'Email';
     mnuEmail.Caption := 'Send email to: ' + edtPrimaryContact.Text;
     Update;
   finally
