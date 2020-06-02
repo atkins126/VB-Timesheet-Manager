@@ -399,8 +399,8 @@ inherited TSDM: TTSDM
     ResourceOptions.AssignedValues = [rvAutoReconnect]
     ResourceOptions.AutoReconnect = True
     LoginPrompt = False
-    Left = 835
-    Top = 73
+    Left = 930
+    Top = 3
   end
   object cdsCustomerGroup: TFDMemTable
     ActiveStoredUsage = [auDesignTime]
@@ -925,8 +925,8 @@ inherited TSDM: TTSDM
     ResourceOptions.AssignedValues = [rvAutoReconnect]
     ResourceOptions.AutoReconnect = True
     LoginPrompt = False
-    Left = 832
-    Top = 17
+    Left = 827
+    Top = 7
   end
   object cdsStdActivity: TFDMemTable
     ActiveStoredUsage = [auDesignTime]
@@ -1433,7 +1433,7 @@ inherited TSDM: TTSDM
       Size = 10
     end
   end
-  object cdsReleaseToPeriod: TFDMemTable
+  object cdsReleaseDataPeriod: TFDMemTable
     ActiveStoredUsage = [auDesignTime]
     CachedUpdates = True
     Indexes = <
@@ -1459,12 +1459,12 @@ inherited TSDM: TTSDM
     UpdateOptions.UpdateTableName = 'PERIOD'
     Left = 690
     Top = 125
-    object cdsReleaseToPeriodTHE_PERIOD: TIntegerField
+    object cdsReleaseDataPeriodTHE_PERIOD: TIntegerField
       Alignment = taLeftJustify
       DisplayLabel = 'Period'
       FieldName = 'THE_PERIOD'
     end
-    object cdsReleaseToPeriodPERIOD_NAME: TStringField
+    object cdsReleaseDataPeriodPERIOD_NAME: TStringField
       DisplayLabel = 'Period'
       FieldName = 'PERIOD_NAME'
       Size = 10
@@ -1475,8 +1475,8 @@ inherited TSDM: TTSDM
     Left = 505
     Top = 175
   end
-  object dtsReleaseToPeriod: TDataSource
-    DataSet = cdsReleaseToPeriod
+  object dtsReleaseDataPeriod: TDataSource
+    DataSet = cdsReleaseDataPeriod
     Left = 690
     Top = 175
   end
@@ -2218,5 +2218,38 @@ inherited TSDM: TTSDM
       DisplayLabel = 'Release Period'
       FieldName = 'RELEASE_CFWD_TO_PERIOD'
     end
+  end
+  object cdsChangeToPeriod: TFDMemTable
+    ActiveStoredUsage = [auDesignTime]
+    FilterOptions = [foCaseInsensitive]
+    CachedUpdates = True
+    ConstraintsEnabled = True
+    FetchOptions.AssignedValues = [evMode, evRecordCountMode]
+    FetchOptions.Mode = fmAll
+    FetchOptions.RecordCountMode = cmTotal
+    FormatOptions.AssignedValues = [fvDataSnapCompatibility]
+    FormatOptions.DataSnapCompatibility = True
+    ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
+    ResourceOptions.StorePrettyPrint = True
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 810
+    Top = 120
+    object cdsChangeToPeriodTHE_PERIOD: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'Period'
+      FieldName = 'THE_PERIOD'
+    end
+    object cdsChangeToPeriodPERIOD_NAME: TStringField
+      DisplayLabel = 'Period'
+      FieldName = 'PERIOD_NAME'
+      Size = 10
+    end
+  end
+  object dtsChangeToPeriod: TDataSource
+    Left = 810
+    Top = 175
   end
 end

@@ -214,10 +214,10 @@ type
     dtsCarryForward: TDataSource;
     cdsPeriod: TFDMemTable;
     cdsPeriodTHE_PERIOD: TIntegerField;
-    cdsReleaseToPeriod: TFDMemTable;
-    cdsReleaseToPeriodTHE_PERIOD: TIntegerField;
+    cdsReleaseDataPeriod: TFDMemTable;
+    cdsReleaseDataPeriodTHE_PERIOD: TIntegerField;
     dtsPeriod: TDataSource;
-    dtsReleaseToPeriod: TDataSource;
+    dtsReleaseDataPeriod: TDataSource;
     cdsToPeriod: TFDMemTable;
     cdsToPeriodTHE_PERIOD: TIntegerField;
     dtsToPeriod: TDataSource;
@@ -226,7 +226,7 @@ type
     cdsTSPeriodPERIOD_NAME: TStringField;
     cdsPeriodPERIOD_NAME: TStringField;
     cdsToPeriodPERIOD_NAME: TStringField;
-    cdsReleaseToPeriodPERIOD_NAME: TStringField;
+    cdsReleaseDataPeriodPERIOD_NAME: TStringField;
     cdsCarryForwardPERIOD_NAME: TStringField;
     cdsTimesheetDATE_CARRIED_FORWARD: TDateField;
     dtsContactDetailCo: TDataSource;
@@ -335,6 +335,10 @@ type
     cdsCarryForwardRELEASE_CFWD_TO_PERIOD: TIntegerField;
     cdsReleaseDATE_CFWD_RELEASED: TDateTimeField;
     cdsReleaseRELEASE_CFWD_TO_PERIOD: TIntegerField;
+    cdsChangeToPeriod: TFDMemTable;
+    dtsChangeToPeriod: TDataSource;
+    cdsChangeToPeriodTHE_PERIOD: TIntegerField;
+    cdsChangeToPeriodPERIOD_NAME: TStringField;
     procedure dtsTimesheetStateChange(Sender: TObject);
     procedure cdsCustomerLookupCalcFields(DataSet: TDataSet);
     procedure cdsTimesheetNewRecord(DataSet: TDataSet);

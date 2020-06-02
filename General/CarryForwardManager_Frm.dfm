@@ -1453,7 +1453,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
     OnKeyDown = lucPeriodKeyDown
     Width = 100
   end
-  object lucReleasePeriod: TcxLookupComboBox [2]
+  object lucReleaseToPeriod: TcxLookupComboBox [2]
     Left = 375
     Top = 265
     BeepOnEnter = False
@@ -1466,7 +1466,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
         FieldName = 'PERIOD_NAME'
       end>
     Properties.ListOptions.SyncMode = True
-    Properties.ListSource = TSDM.dtsReleaseToPeriod
+    Properties.ListSource = TSDM.dtsToPeriod
     Properties.OnEditValueChanged = lucReleaseToPeriodPropertiesEditValueChanged
     Style.HotTrack = False
     Style.TransparentBorder = False
@@ -1485,6 +1485,34 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
     Style.TransparentBorder = False
     TabOrder = 3
     Transparent = True
+  end
+  object lucReleaseDataPeriod: TcxLookupComboBox [4]
+    Left = 530
+    Top = 242
+    BeepOnEnter = False
+    Properties.DropDownAutoSize = True
+    Properties.DropDownListStyle = lsFixedList
+    Properties.ImmediatePost = True
+    Properties.ListColumns = <>
+    Properties.ListOptions.SyncMode = True
+    Style.HotTrack = False
+    TabOrder = 4
+    Visible = False
+    Width = 100
+  end
+  object lucChangeToPeriod: TcxLookupComboBox [5]
+    Left = 530
+    Top = 264
+    BeepOnEnter = False
+    Properties.DropDownAutoSize = True
+    Properties.DropDownListStyle = lsFixedList
+    Properties.ImmediatePost = True
+    Properties.ListColumns = <>
+    Properties.ListOptions.SyncMode = True
+    Style.HotTrack = False
+    TabOrder = 9
+    Visible = False
+    Width = 100
   end
   inherited styRepository: TcxStyleRepository
     Left = 455
@@ -2988,7 +3016,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
       Hint = 'Release to period'
       ScreenTip = tipReleasePeriod
       Visible = ivAlways
-      Control = lucReleasePeriod
+      Control = lucReleaseToPeriod
     end
     object lblPeriod: TdxBarStatic
       Caption = 'Fetch data for period'

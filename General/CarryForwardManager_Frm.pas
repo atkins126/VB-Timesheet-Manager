@@ -79,7 +79,7 @@ type
     actCloseForm: TAction;
     actGetTimeSheetDataCFwd: TAction;
     litCFwdGrid: TdxLayoutItem;
-    lucReleasePeriod: TcxLookupComboBox;
+    lucReleaseToPeriod: TcxLookupComboBox;
     styReadOnly: TcxEditStyleController;
     styGroupFormat: TcxStyle;
     edtPeriodName: TcxGridDBBandedColumn;
@@ -149,6 +149,8 @@ type
     tipGetReleaseData: TdxScreenTip;
     actReverseRelease: TAction;
     tipReverseRelease: TdxScreenTip;
+    lucReleaseDataPeriod: TcxLookupComboBox;
+    lucChangeToPeriod: TcxLookupComboBox;
     procedure FormCreate(Sender: TObject);
     procedure DoCloseForm(Sender: TObject);
     procedure DoGetTimesheetData(Sender: TObject);
@@ -162,6 +164,8 @@ type
     procedure lucPeriodPropertiesEditValueChanged(Sender: TObject);
     procedure lucReleaseToPeriodPropertiesEditValueChanged(Sender: TObject);
     procedure cbxPersistentRecordSelectionPropertiesEditValueChanged(Sender: TObject);
+    procedure DoReverseRelease(Sender: TObject);
+    procedure DoChangeReleasePeriod(Sender: TObject);
 
     procedure viewTimesheetCustomDrawCell(Sender: TcxCustomGridTableView;
       ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
@@ -171,14 +175,13 @@ type
 
     procedure viewTimesheetStylesGetGroupStyle(Sender: TcxGridTableView;
       ARecord: TcxCustomGridRecord; ALevel: Integer; var AStyle: TcxStyle);
-    procedure DoChangeReleasePeriod(Sender: TObject);
-    procedure DoReverseRelease(Sender: TObject);
   private
     { Private declarations }
     FShowingForm: Boolean;
     FCFwdPeriod: Integer;
-    FReleasePeriod: Integer;
     FReleaseToPeriod: Integer;
+    FReleaseDataPeriod: Integer;
+    FChangeToPeriod: Integer;
     FItemsRelease: Boolean;
 
     procedure GetPeriods;
@@ -201,8 +204,8 @@ uses
   VBBase_DM,
   TS_DM,
   RUtils,
-  Report_DM, TimesheetOptions_Frm;
-//  Progress_Frm;
+  Report_DM,
+  TimesheetOptions_Frm;
 
 procedure TCarryForwardManagerFrm.DrawCellBorder(var Msg: TMessage);
 begin
@@ -220,7 +223,7 @@ begin
   FItemsRelease := False;
   viewTimesheet.DataController.DataSource := TSDM.dtsCarryForward;
   lucPeriod.Properties.ListSource := TSDM.dtsPeriod;
-  lucReleasePeriod.Properties.ListSource := TSDM.dtsReleaseToPeriod;
+  lucReleaseToPeriod.Properties.ListSource := TSDM.dtsToPeriod;
   layMain.Align := alClient;
   layMain.LayoutLookAndFeel := lafCustomSkin;
   grpCFwdRelease.ItemIndex := 0;
@@ -238,14 +241,16 @@ begin
     if not RegKey.ValueExists('CFwdPeriod') then
       RegKey.WriteInteger('CFwdPeriod', VBBaseDM.CurrentPeriod);
 
-    if not RegKey.ValueExists('ReleasePeriod') then
-      RegKey.WriteInteger('ReleasePeriod', VBBaseDM.CurrentPeriod);
-
     if not RegKey.ValueExists('Release To Period') then
       RegKey.WriteInteger('Release To Period', VBBaseDM.CurrentPeriod);
 
+    if not RegKey.ValueExists('Release Data Period') then
+      RegKey.WriteInteger('Release Data Period', VBBaseDM.CurrentPeriod);
+
     FCFwdPeriod := RegKey.ReadInteger('CFwdPeriod');
-    FReleasePeriod := RegKey.ReadInteger('ReleasePeriod');
+    FReleaseToPeriod := RegKey.ReadInteger('Release To Period');
+    FReleaseDataPeriod := RegKey.ReadInteger('Release Data Period');
+
     GetPeriods;
     RegKey.CloseKey;
     actGetTimeSheetDataCFwd.Execute;
@@ -269,7 +274,7 @@ begin
       TheMonth := TcxGridGroupRow(ARecord).Value mod 100;
       AText := ShortMonths[TheMonth] + ' ' + TheYear.ToString;
     end
-    // Do we need this??
+      // Do we need this??
     else
       AText := TcxGridGroupRow(ARecord).Value;
   end;
@@ -469,7 +474,7 @@ end;
 procedure TCarryForwardManagerFrm.DoReverseRelease(Sender: TObject);
 begin
   inherited;
-//
+  //
 end;
 
 procedure TCarryForwardManagerFrm.DoChangeReleasePeriod(Sender: TObject);
@@ -560,14 +565,19 @@ end;
 procedure TCarryForwardManagerFrm.GetPeriods;
 begin
   TSDM.cdsToPeriod.Close;
-  TSDM.cdsReleaseToPeriod.Close;
+  TSDM.cdsReleaseDataPeriod.Close;
+  TSDM.cdsChangeToPeriod.Close;
 
   VBBaseDM.GetData(62, TSDM.cdsPeriod, TSDM.cdsPeriod.Name, ONE_SPACE,
     'C:\Data\Xml\Period.xml', TSDM.cdsPeriod.UpdateOptions.Generatorname,
     TSDM.cdsPeriod.UpdateOptions.UpdateTableName);
 
   TSDM.cdsToPeriod.Data := TSDM.cdsPeriod.Data;
-  TSDM.cdsReleaseToPeriod.Data := TSDM.cdsPeriod.Data;
+  TSDM.cdsReleaseDataPeriod.Data := TSDM.cdsPeriod.Data;
+  TSDM.cdsChangeToPeriod.Data := TSDM.cdsPeriod.Data;
+
+  if not TSDM.cdsPeriod.Locate('THE_PERIOD', FCFwdPeriod, []) then
+    TSDM.cdsPeriod.First;
 
   if not TSDM.cdsPeriod.Locate('THE_PERIOD', FCFwdPeriod, []) then
     TSDM.cdsPeriod.First;
@@ -634,21 +644,34 @@ begin
     RegKey.OpenKey(KEY_TIMESHEET_CARRY_FORWARD_MANAGER, True);
 
     try
-      if SameText(TcxLookupComboBox(Sender).Name, 'lucPeriod') then
-        RegKey.WriteInteger('Period', lucPeriod.EditValue)
+      case grpCFwdRelease.ItemIndex of
+        0:
+          begin
+            if SameText(TcxLookupComboBox(Sender).Name, 'lucPeriod') then
+              RegKey.WriteInteger('CFwdPeriod', lucPeriod.EditValue)
 
-      else if SameText(TcxLookupComboBox(Sender).Name, 'lucReleaseToPeriod') then
-        RegKey.WriteInteger('Release To Period', lucReleasePeriod.EditValue);
+            else if SameText(TcxLookupComboBox(Sender).Name, 'lucReleaseToPeriod') then
+              RegKey.WriteInteger('Release To Period', lucReleaseToPeriod.EditValue);
 
-      FCFwdPeriod := RegKey.ReadInteger('Period');
-      FReleaseToPeriod := RegKey.ReadInteger('Release To Period');
+            FCFwdPeriod := RegKey.ReadInteger('Period');
+            FReleasePeriod := RegKey.ReadInteger('Release To Period');
 
+          end;
+
+        1:
+          begin
+
+          end;
+      end;
       RegKey.CloseKey;
     finally
       RegKey.Free;
     end;
 
-    actGetTimesheetData.Execute;
+    case grpCFwdRelease.ItemIndex of
+      0: actGetTimeSheetDataCFwd.Execute;
+      1: actGetTimesheetDataRelease.Execute;
+    end;
   end;
 end;
 
