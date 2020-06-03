@@ -24,7 +24,7 @@ uses
   dxLayoutControlAdapters, cxButtons, cxLabel, dxBarExtItems, cxBarEditItem;
 
 type
-  //  TcxLookupComboBoxAccess = class (TcxLookupComboBox);
+  // TcxLookupComboBoxAccess = class (TcxLookupComboBox);
 
   TCarryForwardManagerFrm = class(TBaseLayoutFrm)
     grdTimesheet: TcxGrid;
@@ -92,11 +92,11 @@ type
     cntReleasePeriod: TdxBarControlContainerItem;
     lblPeriod: TdxBarStatic;
     lblReleasePeriod: TdxBarStatic;
-    lblSpace01: TdxBarStatic;
+    lblSpace1: TdxBarStatic;
     cntPersistentSelection: TdxBarControlContainerItem;
     cbxPersistentSelection: TcxCheckBox;
     tipPersistentRecordSelection: TdxScreenTip;
-    lblSpace02: TdxBarStatic;
+    lblSpace2: TdxBarStatic;
     tipDataPeriod: TdxScreenTip;
     tipReleasePeriod: TdxScreenTip;
     grpCFwdRelease: TdxLayoutGroup;
@@ -151,6 +151,11 @@ type
     tipReverseRelease: TdxScreenTip;
     lucReleaseDataPeriod: TcxLookupComboBox;
     lucChangeToPeriod: TcxLookupComboBox;
+    cntReleaseDataPeriod: TdxBarControlContainerItem;
+    cntChangeToPeriod: TdxBarControlContainerItem;
+    lblReleaseDataPeriod: TdxBarStatic;
+    lblChangeToPeriod: TdxBarStatic;
+    lblSpacer3: TdxBarStatic;
     procedure FormCreate(Sender: TObject);
     procedure DoCloseForm(Sender: TObject);
     procedure DoGetTimesheetData(Sender: TObject);
@@ -222,8 +227,13 @@ begin
   FShowingForm := True;
   FItemsRelease := False;
   viewTimesheet.DataController.DataSource := TSDM.dtsCarryForward;
+  viewTimesheetRelease.DataController.DataSource := TSDM.dtsRelease;
+
   lucPeriod.Properties.ListSource := TSDM.dtsPeriod;
   lucReleaseToPeriod.Properties.ListSource := TSDM.dtsToPeriod;
+  lucReleaseDataPeriod.Properties.ListSource := TSDM.dtsReleaseDataPeriod;
+  lucChangeToPeriod.Properties.ListSource := TSDM.dtsChangeToPeriod;
+
   layMain.Align := alClient;
   layMain.LayoutLookAndFeel := lafCustomSkin;
   grpCFwdRelease.ItemIndex := 0;
@@ -260,6 +270,13 @@ begin
   end;
 end;
 
+procedure TCarryForwardManagerFrm.FormShow(Sender: TObject);
+begin
+  WindowState := wsMaximized;
+  FShowingForm := False;
+  Screen.Cursor := crDefault;
+end;
+
 procedure TCarryForwardManagerFrm.edtThePeriodGetDisplayText(
   Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord; var AText: string);
 var
@@ -278,13 +295,6 @@ begin
     else
       AText := TcxGridGroupRow(ARecord).Value;
   end;
-end;
-
-procedure TCarryForwardManagerFrm.FormShow(Sender: TObject);
-begin
-  WindowState := wsMaximized;
-  FShowingForm := False;
-  Screen.Cursor := crDefault;
 end;
 
 procedure TCarryForwardManagerFrm.cbxPersistentRecordSelectionPropertiesEditValueChanged(Sender: TObject);
@@ -314,46 +324,49 @@ begin
 end;
 
 procedure TCarryForwardManagerFrm.DoCloseForm(Sender: TObject);
-//var
-//  RegKey: TRegistry;
+// var
+// RegKey: TRegistry;
 begin
   Self.ModalResult := mrOK;
-  //  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
-  //  RegKey.RootKey := HKEY_CURRENT_USER;
-  //  RegKey.OpenKey(KEY_TIMESHEET_CARRY_FORWARD_MANAGER, True);
+  // RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+  // RegKey.RootKey := HKEY_CURRENT_USER;
+  // RegKey.OpenKey(KEY_TIMESHEET_CARRY_FORWARD_MANAGER, True);
 
-    {TODO: Do this on-the-fly for each control}
-  //  try
-  //    if cbxSaveSettingsOnExit.EditValue then
-  //    begin
-  //      RegKey.WriteInteger('Period', lucPeriod.EditValue);
-  //      RegKey.WriteBool('Fetch All Periods', cbxAllPeriods.Checked);
-  //      RegKey.WriteInteger('Billable Status Index', lucBillable.ItemIndex);
-  //      RegKey.WriteInteger('Release To Period', lucReleaseToPeriod.EditValue);
-  //      RegKey.CloseKey;
-  //    end;
-  //  finally
-  //    RegKey.Free;
-  //    Self.ModalResult := mrOK;
-  //  end;
+    { TODO: Do this on-the-fly for each control }
+  // try
+  // if cbxSaveSettingsOnExit.EditValue then
+  // begin
+  // RegKey.WriteInteger('Period', lucPeriod.EditValue);
+  // RegKey.WriteBool('Fetch All Periods', cbxAllPeriods.Checked);
+  // RegKey.WriteInteger('Billable Status Index', lucBillable.ItemIndex);
+  // RegKey.WriteInteger('Release To Period', lucReleaseToPeriod.EditValue);
+  // RegKey.CloseKey;
+  // end;
+  // finally
+  // RegKey.Free;
+  // Self.ModalResult := mrOK;
+  // end;
 end;
 
 procedure TCarryForwardManagerFrm.DoGetTimesheetData(Sender: TObject);
 begin
   Screen.Cursor := crHourglass;
+
   try
     case TAction(Sender).Tag of
-      10:
+      10: // Carry
         begin
           GetTimesheetDataCFwd;
+          actRelease.Enabled := TSDM.cdsCarryForward.RecordCount > 0;
           viewTimesheet.ViewData.Expand(True);
 
         end;
       11:
         begin
-          GetTimesheetDataCFwd;
-          viewTimesheet.ViewData.Expand(True);
-
+          GetTimesheetDataRelease;
+          actChangeReleasePeriod.Enabled := TSDM.cdsRelease.RecordCount > 0;
+          actReverseRelease.Enabled := TSDM.cdsRelease.RecordCount > 0;
+          viewTimesheetRelease.ViewData.Expand(True);
         end;
 
     end;
@@ -364,28 +377,28 @@ end;
 
 procedure TCarryForwardManagerFrm.DoOptions(Sender: TObject);
 begin
-  //  Screen.Cursor := crHourglass;
-  //  try
-  //    if TimesheetOptionsFrm = nil then
-  //      TimesheetOptionsFrm := TTimesheetOptionsFrm.Create(nil);
+  // Screen.Cursor := crHourglass;
+  // try
+  // if TimesheetOptionsFrm = nil then
+  // TimesheetOptionsFrm := TTimesheetOptionsFrm.Create(nil);
   //
-  //    TimesheetOptionsFrm.OptionsTabindex := 2;
-  //    TimesheetOptionsFrm.ShowModal;
-  //    TimesheetOptionsFrm.Close;
-  //    FreeAndNil(TimesheetOptionsFrm);
-  //  finally
-  //    Screen.Cursor := crDefault;
-  //  end;
+  // TimesheetOptionsFrm.OptionsTabindex := 2;
+  // TimesheetOptionsFrm.ShowModal;
+  // TimesheetOptionsFrm.Close;
+  // FreeAndNil(TimesheetOptionsFrm);
+  // finally
+  // Screen.Cursor := crDefault;
+  // end;
 end;
 
 procedure TCarryForwardManagerFrm.DoRelease(Sender: TObject);
-//const
-//  RELEASE_CARRY_FORWARD =
-//    ' UPDATE TIMESHEET SET ' +
-//    ' RELEASE_CFWD_TO_PERIOD = %d, ' +
-//    ' DATE_CFWD_RELEASED = %s, ' +
-//    ' CARRY_FORWARD = 0 ' +
-//    ' WHERE ID IN(%s)';
+// const
+// RELEASE_CARRY_FORWARD =
+// ' UPDATE TIMESHEET SET ' +
+// ' RELEASE_CFWD_TO_PERIOD = %d, ' +
+// ' DATE_CFWD_RELEASED = %s, ' +
+// ' CARRY_FORWARD = 0 ' +
+// ' WHERE ID IN(%s)';
 
 var
   C: TcxGridBandedTableController;
@@ -400,7 +413,7 @@ begin
   if SelectCount = 0 then
     raise ESelectionException.Create('No carried forwared items selected. Please select at least one item to release.');
 
-  if VarIsNull(lucReleasePeriod.EditValue) then
+  if VarIsNull(lucReleaseToPeriod.EditValue) then
     raise ESelectionException.Create('Please select the period you into which want to release the selected carried forward items.');
 
   Beep;
@@ -409,7 +422,8 @@ begin
     'Release Carry Forward Confirmation',
     'You have selected ' + SelectCount.ToString +
     ' carried forward items to be released to billing period ' +
-    TSDM.cdsReleaseToPeriod.FieldByName('PERIOD_NAME').AsString + CRLF + CRLF +
+    lucReleaseToPeriod.Text + CRLF + CRLF +
+    // TSDM.cdsReleaseToPeriod.FieldByName('PERIOD_NAME').AsString + CRLF + CRLF +
     'Are you sure you want to proceed?',
     mtConfirmation,
     [mbYes, mbNo]
@@ -433,7 +447,8 @@ begin
     end;
 
     CommandString := Format(RELEASE_CARRY_FORWARD, [
-      TSDM.cdsReleaseToPeriod.FieldByName('THE_PERIOD').AsInteger,
+      // TSDM.cdsReleaseToPeriod.FieldByName('THE_PERIOD').AsInteger,
+      lucReleaseToPeriod.Text,
         AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', Date), ''''),
         IDValues
         ]);
@@ -491,8 +506,8 @@ begin
   if SelectCount = 0 then
     raise ESelectionException.Create('No relased items selected. Please select at least one item for which to change the release date.');
 
-  if VarIsNull(lucReleasePeriod.EditValue) then
-    raise ESelectionException.Create('Please select the period you into which want to release the selected carried forward items.');
+  if VarIsNull(lucChangeToPeriod.EditValue) then
+    raise ESelectionException.Create('Please select the period you into which want to move the selected released items.');
 
   Beep;
   if DisplayMsg(
@@ -500,7 +515,8 @@ begin
     'Release Carry Forward Confirmation',
     'You have selected ' + SelectCount.ToString +
     ' carried forward items to be released to billing period ' +
-    TSDM.cdsReleaseToPeriod.FieldByName('PERIOD_NAME').AsString + CRLF + CRLF +
+    lucChangeToPeriod.Text + CRLF + CRLF +
+    // TSDM.cdsReleaseToPeriod.FieldByName('PERIOD_NAME').AsString + CRLF + CRLF +
     'Are you sure you want to proceed?',
     mtConfirmation,
     [mbYes, mbNo]
@@ -524,7 +540,7 @@ begin
     end;
 
     CommandString := Format(RELEASE_CARRY_FORWARD, [
-      TSDM.cdsReleaseToPeriod.FieldByName('THE_PERIOD').AsInteger,
+      lucChangeToPeriod.Text,
         AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', Date), ''''),
         IDValues
         ]);
@@ -556,7 +572,7 @@ begin
     end;
 
     actGetTimeSheetDataCFwd.Execute;
-    actGetTimsheetDataRelease.Execute;
+    actGetTimesheetDataRelease.Execute;
   finally
     Response.Free;
   end;
@@ -579,16 +595,17 @@ begin
   if not TSDM.cdsPeriod.Locate('THE_PERIOD', FCFwdPeriod, []) then
     TSDM.cdsPeriod.First;
 
-  if not TSDM.cdsPeriod.Locate('THE_PERIOD', FCFwdPeriod, []) then
-    TSDM.cdsPeriod.First;
+  if not TSDM.cdsReleaseDataPeriod.Locate('THE_PERIOD', FCFwdPeriod, []) then
+    TSDM.cdsReleaseDataPeriod.First;
 
   lucPeriod.EditValue := FCFwdPeriod;
+  lucReleaseDataPeriod.EditValue := FCFwdPeriod;
 end;
 
 procedure TCarryForwardManagerFrm.GetTimesheetDataCFwd;
 var
   WhereClause, OrderByClause, FileName, DateClause, BillableClause: string;
-  //  ActivityClause, BillableClause, WorkTypeClause, FileName: string;
+  // ActivityClause, BillableClause, WorkTypeClause, FileName: string;
 begin
   WhereClause := ' WHERE T.CARRY_FORWARD = 1 ';
   BillableClause := ' AND T.BILLABLE = 1';
@@ -606,12 +623,12 @@ procedure TCarryForwardManagerFrm.GetTimesheetDataRelease;
 var
   WhereClause, OrderByClause, FileName, DateClause, BillableClause: string;
 begin
-  //  WhereClause := ' WHERE T.CARRY_FORWARD = 0 AND T.RELEASE_CFWD_TO_PERIOD > 0';
+  // WhereClause := ' WHERE T.CARRY_FORWARD = 0 AND T.RELEASE_CFWD_TO_PERIOD > 0';
   WhereClause := ' WHERE T.RELEASE_CFWD_TO_PERIOD > 0';
   BillableClause := ' AND T.BILLABLE = 1';
   DateClause := ' AND T.THE_PERIOD = ' + IntToStr(TSDM.cdsPeriod.FieldByName('THE_PERIOD').AsInteger);
   OrderByClause := ' ORDER BY T.THE_PERIOD, T.CUSTOMER_NAME';
-  FileName := 'Released Items Items';
+  FileName := 'Released Items';
   WhereClause := WhereClause + DateClause + BillableClause + OrderByClause;
 
   VBBaseDM.GetData(45, TSDM.cdsRelease, TSDM.cdsRelease.Name, WhereClause,
@@ -654,8 +671,7 @@ begin
               RegKey.WriteInteger('Release To Period', lucReleaseToPeriod.EditValue);
 
             FCFwdPeriod := RegKey.ReadInteger('Period');
-            FReleasePeriod := RegKey.ReadInteger('Release To Period');
-
+            FReleaseToPeriod := RegKey.ReadInteger('Release To Period');
           end;
 
         1:
@@ -703,7 +719,7 @@ begin
     RegKey.OpenKey(KEY_TIMESHEET_CARRY_FORWARD_MANAGER, True);
 
     try
-      RegKey.WriteInteger('Release To Period', lucReleasePeriod.EditValue);
+      RegKey.WriteInteger('Release To Period', lucReleaseToPeriod.EditValue);
       RegKey.CloseKey;
     finally
       RegKey.Free;

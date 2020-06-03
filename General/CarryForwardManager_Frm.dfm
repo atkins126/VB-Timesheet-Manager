@@ -1493,8 +1493,13 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
     Properties.DropDownAutoSize = True
     Properties.DropDownListStyle = lsFixedList
     Properties.ImmediatePost = True
-    Properties.ListColumns = <>
+    Properties.KeyFieldNames = 'THE_PERIOD'
+    Properties.ListColumns = <
+      item
+        FieldName = 'PERIOD_NAME'
+      end>
     Properties.ListOptions.SyncMode = True
+    Properties.ListSource = TSDM.dtsReleaseDataPeriod
     Style.HotTrack = False
     TabOrder = 4
     Visible = False
@@ -1507,10 +1512,15 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
     Properties.DropDownAutoSize = True
     Properties.DropDownListStyle = lsFixedList
     Properties.ImmediatePost = True
-    Properties.ListColumns = <>
+    Properties.KeyFieldNames = 'THE_PERIOD'
+    Properties.ListColumns = <
+      item
+        FieldName = 'PERIOD_NAME'
+      end>
     Properties.ListOptions.SyncMode = True
+    Properties.ListSource = TSDM.dtsChangeToPeriod
     Style.HotTrack = False
-    TabOrder = 9
+    TabOrder = 5
     Visible = False
     Width = 100
   end
@@ -2911,7 +2921,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
         end
         item
           Visible = True
-          ItemName = 'lblSpace01'
+          ItemName = 'lblSpace1'
         end
         item
           Visible = True
@@ -2923,7 +2933,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
         end
         item
           Visible = True
-          ItemName = 'lblSpace02'
+          ItemName = 'lblSpace2'
         end
         item
           Visible = True
@@ -2969,6 +2979,26 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
         item
           Visible = True
           ItemName = 'btnReverse'
+        end
+        item
+          Visible = True
+          ItemName = 'lblReleaseDataPeriod'
+        end
+        item
+          Visible = True
+          ItemName = 'cntReleaseDataPeriod'
+        end
+        item
+          Visible = True
+          ItemName = 'lblSpacer3'
+        end
+        item
+          Visible = True
+          ItemName = 'lblChangeToPeriod'
+        end
+        item
+          Visible = True
+          ItemName = 'cntChangeToPeriod'
         end>
       NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
       OneOnRow = True
@@ -3030,7 +3060,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
       Hint = 'Release to period'
       Visible = ivAlways
     end
-    object lblSpace01: TdxBarStatic
+    object lblSpace1: TdxBarStatic
       Caption = '   '
       Category = 0
       Hint = '   '
@@ -3044,7 +3074,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
       Visible = ivAlways
       Control = cbxPersistentSelection
     end
-    object lblSpace02: TdxBarStatic
+    object lblSpace2: TdxBarStatic
       Caption = '   '
       Category = 0
       Hint = '   '
@@ -3073,6 +3103,38 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
       Category = 0
       ScreenTip = tipReverseRelease
       AutoGrayScale = False
+    end
+    object cntReleaseDataPeriod: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = lucReleaseDataPeriod
+    end
+    object cntChangeToPeriod: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = lucChangeToPeriod
+    end
+    object lblReleaseDataPeriod: TdxBarStatic
+      Caption = 'Fetch data for period'
+      Category = 0
+      Hint = 'Fetch data for period'
+      Visible = ivAlways
+    end
+    object lblChangeToPeriod: TdxBarStatic
+      Caption = 'Change to period'
+      Category = 0
+      Hint = 'Change to period'
+      Visible = ivAlways
+    end
+    object lblSpacer3: TdxBarStatic
+      Caption = '   '
+      Category = 0
+      Hint = '   '
+      Visible = ivAlways
     end
   end
   object styReadOnly: TcxEditStyleController

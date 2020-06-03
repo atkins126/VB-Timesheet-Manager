@@ -46,8 +46,7 @@ uses
   SendEmail in '..\..\..\..\Lib\Classes\SendEmail.pas',
   EmailPerson_Frm in '..\..\..\..\Lib\EmailPerson_Frm.pas' {EmailPersonFrm},
   RecipientInput_Frm in '..\..\..\..\Lib\RecipientInput_Frm.pas' {RecipientInputFrm},
-  CustomerDirector_Frm in 'General\CustomerDirector_Frm.pas' {CustomerDirectorFrm},
-  ReleaseItemManager_Frm in 'General\ReleaseItemManager_Frm.pas' {ReleaseItemManagerFrm};
+  CustomerDirector_Frm in 'General\CustomerDirector_Frm.pas' {CustomerDirectorFrm};
 
 {$R *.res}
 

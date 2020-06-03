@@ -11,7 +11,6 @@ inherited TSDM: TTSDM
     ConstraintsEnabled = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -102,7 +101,6 @@ inherited TSDM: TTSDM
     ConstraintsEnabled = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -170,7 +168,6 @@ inherited TSDM: TTSDM
     ConstraintsEnabled = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -209,7 +206,6 @@ inherited TSDM: TTSDM
     ConstraintsEnabled = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -253,7 +249,6 @@ inherited TSDM: TTSDM
     ConstraintsEnabled = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
@@ -287,7 +282,6 @@ inherited TSDM: TTSDM
     ConstraintsEnabled = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
@@ -409,7 +403,6 @@ inherited TSDM: TTSDM
     ConstraintsEnabled = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
@@ -451,7 +444,6 @@ inherited TSDM: TTSDM
     ConstraintsEnabled = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvMaxBcdPrecision, fvMaxBcdScale, fvDataSnapCompatibility]
     FormatOptions.MaxBcdPrecision = 2147483647
     FormatOptions.MaxBcdScale = 1073741823
@@ -546,7 +538,6 @@ inherited TSDM: TTSDM
     ConstraintsEnabled = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -624,7 +615,6 @@ inherited TSDM: TTSDM
     ConstraintsEnabled = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -691,7 +681,6 @@ inherited TSDM: TTSDM
     IndexName = 'idxActivityDate'
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -937,7 +926,6 @@ inherited TSDM: TTSDM
     ConstraintsEnabled = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
@@ -980,7 +968,6 @@ inherited TSDM: TTSDM
     IndexDefs = <>
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -1191,14 +1178,13 @@ inherited TSDM: TTSDM
     Indexes = <
       item
         Active = True
-        Name = 'idxTimesheet'
-        Fields = 'CUSTOMER_NAME;ACTIVITY_DATE;LOGIN_NAME;ACTIVITY_TYPE'
-        Options = [soNoCase]
-        FilterOptions = [ekNoCase]
+        Selected = True
+        Name = 'idxActivityDate'
+        Fields = 'ACTIVITY_DATE'
       end>
+    IndexName = 'idxActivityDate'
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -1409,7 +1395,6 @@ inherited TSDM: TTSDM
     IndexName = 'idxFromPeriod'
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -1446,7 +1431,6 @@ inherited TSDM: TTSDM
     IndexName = 'idxToperiod'
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
@@ -1493,7 +1477,6 @@ inherited TSDM: TTSDM
     IndexName = 'idxToperiod'
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
@@ -1548,7 +1531,6 @@ inherited TSDM: TTSDM
     DetailFields = 'CUSTOMER_ID'
     FetchOptions.AssignedValues = [evMode, evRecordCountMode, evDetailDelay]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvMaxBcdPrecision, fvMaxBcdScale, fvDataSnapCompatibility]
     FormatOptions.MaxBcdPrecision = 2147483647
     FormatOptions.MaxBcdScale = 1073741823
@@ -1635,7 +1617,6 @@ inherited TSDM: TTSDM
     IndexName = 'idxActivityDate'
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -1931,7 +1912,6 @@ inherited TSDM: TTSDM
     DetailFields = 'CUSTOMER_ID'
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
@@ -2021,14 +2001,15 @@ inherited TSDM: TTSDM
     Indexes = <
       item
         Active = True
-        Name = 'idxTimesheet'
-        Fields = 'CUSTOMER_NAME;ACTIVITY_DATE;LOGIN_NAME;ACTIVITY_TYPE'
+        Selected = True
+        Name = 'idxActivityDate'
+        Fields = 'ACTIVITY_DATE'
         Options = [soNoCase]
         FilterOptions = [ekNoCase]
       end>
+    IndexName = 'idxActivityDate'
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -2226,7 +2207,6 @@ inherited TSDM: TTSDM
     ConstraintsEnabled = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
@@ -2249,6 +2229,7 @@ inherited TSDM: TTSDM
     end
   end
   object dtsChangeToPeriod: TDataSource
+    DataSet = cdsChangeToPeriod
     Left = 810
     Top = 175
   end

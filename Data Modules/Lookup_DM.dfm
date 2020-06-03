@@ -72,7 +72,6 @@ inherited LookupDM: TLookupDM
     DetailFields = 'CONTACT_PERSON_ID;CUSTOMER_ID'
     FetchOptions.AssignedValues = [evMode, evRecordCountMode, evDetailDelay]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FetchOptions.DetailDelay = 450
     FormatOptions.AssignedValues = [fvMaxBcdPrecision, fvMaxBcdScale, fvDataSnapCompatibility]
     FormatOptions.MaxBcdPrecision = 2147483647
@@ -173,7 +172,6 @@ inherited LookupDM: TLookupDM
     DetailFields = 'CUSTOMER_ID'
     FetchOptions.AssignedValues = [evMode, evRecordCountMode, evDetailDelay]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FetchOptions.DetailDelay = 450
     FormatOptions.AssignedValues = [fvMaxBcdPrecision, fvMaxBcdScale, fvDataSnapCompatibility]
     FormatOptions.MaxBcdPrecision = 2147483647
@@ -303,7 +301,6 @@ inherited LookupDM: TLookupDM
     ConstraintsEnabled = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode, evDetailDelay]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvMaxBcdPrecision, fvMaxBcdScale, fvDataSnapCompatibility]
     FormatOptions.MaxBcdPrecision = 2147483647
     FormatOptions.MaxBcdScale = 1073741823
@@ -982,7 +979,6 @@ inherited LookupDM: TLookupDM
     DetailFields = 'CUSTOMER_ID'
     FetchOptions.AssignedValues = [evMode, evRecordCountMode, evDetailDelay]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FetchOptions.DetailDelay = 450
     FormatOptions.AssignedValues = [fvMaxBcdPrecision, fvMaxBcdScale, fvDataSnapCompatibility]
     FormatOptions.MaxBcdPrecision = 2147483647

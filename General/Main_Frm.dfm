@@ -1653,7 +1653,7 @@ inherited MainFrm: TMainFrm
     object actCarryForwardManagaer: TAction
       Tag = 131
       Category = 'Carry Forward'
-      Caption = 'Release Carry Forward Items'
+      Caption = 'Carry Forward Manager'
       Hint = 'Launch carry forward managaer'
       ImageIndex = 28
       OnExecute = DoReleaseCarryForwardManager

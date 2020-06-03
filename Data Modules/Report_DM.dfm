@@ -40,7 +40,6 @@ inherited ReportDM: TReportDM
     IndexName = 'idxBillableCustomer'
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -110,7 +109,6 @@ inherited ReportDM: TReportDM
     IndexName = 'idxFromPeriod'
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -147,7 +145,6 @@ inherited ReportDM: TReportDM
     IndexName = 'idxToperiod'
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
@@ -233,7 +230,6 @@ inherited ReportDM: TReportDM
       end>
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -2055,7 +2051,6 @@ inherited ReportDM: TReportDM
     CachedUpdates = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
@@ -2087,7 +2082,6 @@ inherited ReportDM: TReportDM
     CachedUpdates = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
@@ -2166,7 +2160,6 @@ inherited ReportDM: TReportDM
     CachedUpdates = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
@@ -2206,7 +2199,6 @@ inherited ReportDM: TReportDM
     IndexDefs = <>
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -2377,7 +2369,6 @@ inherited ReportDM: TReportDM
     IndexDefs = <>
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -2574,7 +2565,6 @@ inherited ReportDM: TReportDM
     CachedUpdates = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
@@ -4636,7 +4626,6 @@ inherited ReportDM: TReportDM
     IndexName = 'idxActivityDate'
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -4874,7 +4863,6 @@ inherited ReportDM: TReportDM
     IndexName = 'idxActivityDate'
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -5102,7 +5090,6 @@ inherited ReportDM: TReportDM
     ConstraintsEnabled = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvMaxBcdPrecision, fvMaxBcdScale, fvDataSnapCompatibility]
     FormatOptions.MaxBcdPrecision = 2147483647
     FormatOptions.MaxBcdScale = 1073741823
@@ -5132,7 +5119,6 @@ inherited ReportDM: TReportDM
     ConstraintsEnabled = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
@@ -5222,7 +5208,6 @@ inherited ReportDM: TReportDM
     CachedUpdates = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
@@ -5287,7 +5272,6 @@ inherited ReportDM: TReportDM
     CachedUpdates = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
@@ -5331,7 +5315,6 @@ inherited ReportDM: TReportDM
     CachedUpdates = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
@@ -6235,7 +6218,6 @@ inherited ReportDM: TReportDM
     IndexName = 'idxActivityDate'
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -6516,7 +6498,6 @@ inherited ReportDM: TReportDM
     CachedUpdates = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
@@ -6660,7 +6641,6 @@ inherited ReportDM: TReportDM
     ConstraintsEnabled = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -6806,7 +6786,6 @@ inherited ReportDM: TReportDM
     ConstraintsEnabled = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -6894,7 +6873,6 @@ inherited ReportDM: TReportDM
     ConstraintsEnabled = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -6983,7 +6961,6 @@ inherited ReportDM: TReportDM
       end>
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -7218,7 +7195,6 @@ inherited ReportDM: TReportDM
     ConstraintsEnabled = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -7694,7 +7670,6 @@ inherited ReportDM: TReportDM
     ConstraintsEnabled = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
@@ -7732,7 +7707,6 @@ inherited ReportDM: TReportDM
     ConstraintsEnabled = True
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -9030,7 +9004,6 @@ inherited ReportDM: TReportDM
     IndexDefs = <>
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -9220,7 +9193,6 @@ inherited ReportDM: TReportDM
     IndexDefs = <>
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
@@ -10031,7 +10003,6 @@ inherited ReportDM: TReportDM
     IndexName = 'idxActivityDate'
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
@@ -10329,7 +10300,6 @@ inherited ReportDM: TReportDM
       end>
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
-    FetchOptions.RecordCountMode = cmTotal
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
     ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
