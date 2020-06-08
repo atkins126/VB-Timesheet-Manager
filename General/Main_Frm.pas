@@ -8,7 +8,8 @@ uses
   Vcl.Dialogs, System.Actions, Vcl.ActnList, System.Win.Registry, Data.DB,
   System.DateUtils, System.IOUtils, Winapi.ShellApi, System.Types, Vcl.StdCtrls,
 
-  Base_Frm, BaseLayout_Frm, VBProxyClass, VBCommonValues, CommonFunctions, CommonValues,
+  Base_Frm, BaseLayout_Frm, VBProxyClass, VBCommonValues, CommonFunctions,
+  CommonValues,
 
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore,
   dxSkinsDefaultPainters, cxImageList, dxLayoutLookAndFeels, cxClasses, cxStyles,
@@ -264,8 +265,6 @@ type
     btnCustomerContactinfo: TdxBarButton;
     Customer1: TMenuItem;
     CustomerContactInfo1: TMenuItem;
-    btnReturnID: TdxBarLargeButton;
-    edtFirstName: TcxTextEdit;
     actDirectorLink: TAction;
     DirectorLink1: TMenuItem;
     procedure DoExitTimesheetManager(Sender: TObject);
@@ -277,12 +276,8 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure lucPeriodPropertiesEditValueChanged(Sender: TObject);
     procedure DoGetTimesheetData(Sender: TObject);
-    procedure viewTimesheetCustomDrawCell(Sender: TcxCustomGridTableView;
-      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
     procedure lucViewModePropertiesEditValueChanged(Sender: TObject);
     procedure lucUserPropertiesEditValueChanged(Sender: TObject);
-    procedure dteFromDatePropertiesEditValueChanged(Sender: TObject);
-    procedure dteToDatePropertiesEditValueChanged(Sender: TObject);
     procedure lucViewModeChange(Sender: TObject);
     procedure DoPrint(Sender: TObject);
     procedure DoPDF(Sender: TObject);
@@ -302,9 +297,6 @@ type
     procedure DoBillable(Sender: TObject);
     procedure DoInvoiceItem(Sender: TObject);
     procedure DoCarryForward(Sender: TObject);
-
-    procedure cbxApprovedCustomDrawCell(Sender: TcxCustomGridTableView;
-      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
     procedure DoMonthlyBilling(Sender: TObject);
     procedure cbxPersistentSelectionPropertiesEditValueChanged(Sender: TObject);
     procedure DoReleaseCarryForwardManager(Sender: TObject);
@@ -313,16 +305,23 @@ type
     procedure cbxIncludeReleasedItemsPropertiesEditValueChanged(Sender: TObject);
     procedure btnSelectAllClick(Sender: TObject);
     procedure DoCustomerContactInfo(Sender: TObject);
+    procedure DiEditInsertEntry(Sender: TObject);
+    procedure DoDirectorlink(Sender: TObject);
+    procedure lucFromDatePropertiesEditValueChanged(Sender: TObject);
+    procedure lucToDatePropertiesEditValueChanged(Sender: TObject);
+
+    procedure viewTimesheetCustomDrawCell(Sender: TcxCustomGridTableView;
+      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
+
+    procedure lucCustomerGetDisplayText(Sender: TcxCustomGridTableItem;
+      ARecord: TcxCustomGridRecord; var AText: string);
+
+    procedure cbxApprovedCustomDrawCell(Sender: TcxCustomGridTableView;
+      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
 
     procedure viewTimesheetFocusedRecordChanged(Sender: TcxCustomGridTableView;
       APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord;
       ANewItemRecordFocusingChanged: Boolean);
-
-    procedure lucCustomerGetDisplayText(Sender: TcxCustomGridTableItem;
-      ARecord: TcxCustomGridRecord; var AText: string);
-    procedure btnReturnIDClick(Sender: TObject);
-    procedure DiEditInsertEntry(Sender: TObject);
-    procedure DoDirectorlink(Sender: TObject);
   private
     { Private declarations }
     FTSUserID: Integer;
@@ -375,8 +374,8 @@ uses
   InvoiceItem_Frm,
   MonthlyBillableReport_Frm,
   CarryForwardManager_Frm,
-  CustomerContactDetail_Frm, CustomerDirector_Frm;
-//  ReleaseCFwd_Frm;
+  CustomerContactDetail_Frm,
+  CustomerDirector_Frm;
 
 procedure TMainFrm.DrawCellBorder(var Msg: TMessage);
 begin
@@ -387,7 +386,6 @@ end;
 
 procedure TMainFrm.FormCreate(Sender: TObject);
 begin
-  {TODO: Change individual action buttons to one button}
   Caption := Application.Title;
   Self.Scaled := False;
   Self.ScaleBy(Screen.PixelsPerInch, 96);
@@ -739,17 +737,24 @@ begin
   actRefresh.Enabled := False;
   DC := viewTimesheet.DataController;
   RecordIndex := DC.FocusedRecordIndex;
+  viewTimesheet.DataController.DataSource := nil;
 
   try
     if not TSDM.cdsTimesheet.IsEmpty then
     begin
       ID := TSDM.cdsTimesheet.FieldByName('ID').AsInteger;
-      actGetTimesheetData.Execute;
+      try
+        actGetTimesheetData.Execute;
+      finally
+        viewTimesheet.DataController.DataSource := TSDM.dtsTimesheet;
+      end;
+
       if not TSDM.cdsTimesheet.Locate('ID', ID, []) then
         TSDM.cdsTimesheet.First;
 
       grdTimesheet.SetFocus;
       viewTimesheet.Focused := True;
+
       if not TSDM.cdsTimesheet.IsEmpty then
       begin
         viewTimesheet.DataController.FocusedRecordIndex := RecordIndex;
@@ -797,18 +802,18 @@ begin
       CarryForwardManagerFrm := TCarryForwardManagerFrm.Create(nil);
 
     CarryForwardManagerFrm.ShowModal;
-
-    if CarryForwardManagerFrm.ItemsRelease then
-    begin
-      actGetTimesheetData.Execute;
-      viewTimesheet.Controller.ClearSelection;
-
-      if not TSDM.cdsTimesheet.Locate('ID', ID, []) then
-        TSDM.cdsTimesheet.First;
-    end;
-
     CarryForwardManagerFrm.Close;
     FreeAndNil(CarryForwardManagerFrm);
+
+    ////    if CarryForwardManagerFrm.ReleaseItems then
+    ////    begin
+    //      actGetTimesheetData.Execute;
+    //      viewTimesheet.Controller.ClearSelection;
+    //
+    //      if not TSDM.cdsTimesheet.Locate('ID', ID, []) then
+    //        TSDM.cdsTimesheet.First;
+    ////    end;
+
   finally
     Screen.Cursor := crDefault;
   end;
@@ -876,29 +881,6 @@ begin
   ////    2: popInvoice.Popup(APopupPoint.X, APopupPoint.Y);
   ////    3: popCarryForward.Popup(APopupPoint.X, APopupPoint.Y);
   ////  end;
-end;
-
-procedure TMainFrm.btnReturnIDClick(Sender: TObject);
-var
-  Response, SQLStatement, Value: string;
-  NextID: Integer;
-begin
-  //  Response := RUtils.CreateStringList(PIPE, DOUBLE_QUOTE);
-  if Length(Trim(edtFirstName.Text)) = 0 then
-    Exit;
-
-  Value := AnsiQuotedStr(edtFirstName.Text, '''');
-  SQLStatement := ' INSERT INTO TEST(FIRST_NAME) VALUES(' + Value + ') RETURNING ID';
-
-  //  try
-  NextID := StrToInt(VBBaseDM.ModifyRecord(SQLStatement, Response));
-
-  //    if SameText(Response.Values['RESPONSE'], 'ERROR') then
-  //      raise EServerError.Create('One or more errors occurred when executing an SQL command with error message:' + CRLF + CRLF +
-  //        Response.Values['ERROR_MESSAGE']);
-  //  finally
-  //    Response.Free;
-  //  end;
 end;
 
 procedure TMainFrm.btnSelectAllClick(Sender: TObject);
@@ -1044,6 +1026,7 @@ begin
   AlreadyApproved := 0;
   AlreadyUnApproved := 0;
   AlreadyInvoiced := 0;
+  Approve := 0;
 
   case ATag of
     100: Approve := 1; // Approve
@@ -1228,6 +1211,7 @@ begin
   AlreadyApproved := 0;
   AlreadyBillable := 0;
   NotBillable := 0;
+  Bill := 0;
 
   case ATag of
     110: Bill := 1;
@@ -1538,12 +1522,12 @@ procedure TMainFrm.cbxApprovedCustomDrawCell(Sender: TcxCustomGridTableView;
 var
   DC: TcxDBDataController;
 begin
-  DC := viewTimesheet.DataController;
-
-  if DC.Values[AViewInfo.GridRecord.Index, cbxApproved.Index] then
-    ACanvas.Brush.Color := clGreen
-  else
-    ACanvas.Brush.Color := clMaroon;
+  //  DC := viewTimesheet.DataController;
+  //
+  //  if DC.Values[AViewInfo.GridRecord.Index, cbxApproved.Index] then
+  //    ACanvas.Brush.Color := clGreen
+  //  else
+  //    ACanvas.Brush.Color := clMaroon;
 end;
 
 procedure TMainFrm.cbxIncludeReleasedItemsPropertiesEditValueChanged(Sender: TObject);
@@ -1665,7 +1649,7 @@ begin
       WhereClause :=
         ' WHERE T.USER_ID =' + FTSUserID.ToString +
         ' AND (T.THE_PERIOD =' + FTimesheetPeriod.ToString +
-        ' OR T.RELEASE_CFWD_TO_PERIOD = ' + FTimesheetPeriod.ToString + ') '
+        ' OR T.RELEASE_TO_PERIOD = ' + FTimesheetPeriod.ToString + ') '
     else
       WhereClause :=
         ' WHERE T.USER_ID=' + FTSUserID.ToString +
@@ -1695,7 +1679,7 @@ begin
         ' WHERE T.USER_ID =' + FTSUserID.ToString +
         ' AND ((T.ACTIVITY_DATE >=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FFromDate), '''') +
         ' AND T.ACTIVITY_DATE <=' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', FToDate), '''') + ') ' +
-        ' OR T.RELEASE_CFWD_TO_PERIOD = ' + FTimesheetPeriod.ToString + ') '
+        ' OR T.RELEASE_TO_PERIOD = ' + FTimesheetPeriod.ToString + ') '
     else
       WhereClause :=
         ' WHERE T.USER_ID =' + FTSUserID.ToString +
@@ -1924,9 +1908,9 @@ procedure TMainFrm.viewTimesheetSelectionChanged(Sender: TcxCustomGridTableView)
 var
   C: TcxCustomGridTableController;
 begin
-  C := viewTimesheet.Controller;
-  actInsert.Enabled := C.SelectedRecordCount <= 1;
-  actEdit.Enabled := C.SelectedRecordCount <= 1;
+  //  C := viewTimesheet.Controller;
+  //  actInsert.Enabled := C.SelectedRecordCount <= 1;
+  //  actEdit.Enabled := C.SelectedRecordCount <= 1;
 end;
 
 procedure TMainFrm.OpenTables;
@@ -2105,6 +2089,31 @@ begin
   //    FCustomerName := TSDM.cdsCustomerLookup.FieldByName('NAME').AsString;
 end;
 
+procedure TMainFrm.lucFromDatePropertiesEditValueChanged(Sender: TObject);
+var
+  AFromDateEdit: TcxDateEdit;
+  RegKey: TRegistry;
+begin
+  lucFromDate.SetFocus;
+  AFromDateEdit := TcxBarEditItemControl(lucFromDate.Links[0].Control).Edit as TcxDateEdit;
+  FFromDate := AFromDateEdit.Date;
+  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+  try
+    RegKey.RootKey := HKEY_CURRENT_USER;
+    RegKey.OpenKey(KEY_TIMESHEET, True);
+
+    if not FShowingForm then
+    begin
+      RegKey.WriteDate('From Date', FFromDate);
+      actGetTimesheetData.Execute;
+    end;
+
+    RegKey.CloseKey;
+  finally
+    RegKey.Free
+  end;
+end;
+
 procedure TMainFrm.lucPeriodPropertiesEditValueChanged(Sender: TObject);
 var
   RegKey: TRegistry;
@@ -2129,40 +2138,7 @@ begin
     actGetTimesheetData.Execute;
 end;
 
-procedure TMainFrm.lucUserPropertiesEditValueChanged(Sender: TObject);
-begin
-  FTSUserID := lucUser.EditValue;
-  if not FShowingForm then
-    actGetTimesheetData.Execute;
-end;
-
-procedure TMainFrm.dteFromDatePropertiesEditValueChanged(Sender: TObject);
-var
-  AFromDateEdit: TcxDateEdit;
-  RegKey: TRegistry;
-  // ATag: integer;
-begin
-  lucFromDate.SetFocus;
-  AFromDateEdit := TcxBarEditItemControl(lucFromDate.Links[0].Control).Edit as TcxDateEdit;
-  FFromDate := AFromDateEdit.Date;
-  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
-  try
-    RegKey.RootKey := HKEY_CURRENT_USER;
-    RegKey.OpenKey(KEY_TIMESHEET, True);
-
-    if not FShowingForm then
-    begin
-      RegKey.WriteDate('From Date', FFromDate);
-      actGetTimesheetData.Execute;
-    end;
-
-    RegKey.CloseKey;
-  finally
-    RegKey.Free
-  end;
-end;
-
-procedure TMainFrm.dteToDatePropertiesEditValueChanged(Sender: TObject);
+procedure TMainFrm.lucToDatePropertiesEditValueChanged(Sender: TObject);
 var
   AToDateEdit: TcxDateEdit;
   RegKey: TRegistry;
@@ -2186,6 +2162,14 @@ begin
   finally
     RegKey.Free
   end;
+end;
+
+procedure TMainFrm.lucUserPropertiesEditValueChanged(Sender: TObject);
+begin
+  FTSUserID := lucUser.EditValue;
+
+  if not FShowingForm then
+    actGetTimesheetData.Execute;
 end;
 
 procedure TMainFrm.lucViewModeChange(Sender: TObject);

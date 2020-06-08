@@ -4823,14 +4823,14 @@ inherited ReportDM: TReportDM
       Size = 1
       Calculated = True
     end
-    object cdsTimesheetDATE_CFWD_RELEASED: TDateField
+    object cdsTimesheetDATE_RELEASED: TDateField
       DisplayLabel = 'Released'
-      FieldName = 'DATE_CFWD_RELEASED'
+      FieldName = 'DATE_RELEASED'
     end
     object cdsTimesheetRELEASE_CFWD_TO_PERIOD: TIntegerField
       Alignment = taLeftJustify
       DisplayLabel = 'To Period'
-      FieldName = 'RELEASE_CFWD_TO_PERIOD'
+      FieldName = 'RELEASE_TO_PERIOD'
     end
     object cdsTimesheetCARRY_FORWARD_VALUE: TFloatField
       DisplayLabel = 'CFwd Value'
@@ -10177,9 +10177,9 @@ inherited ReportDM: TReportDM
       FieldName = 'IS_ADDITIONAL_WORK'
       Origin = 'IS_ADDITIONAL_WORK'
     end
-    object cdsTimesheetDetailDATE_CFWD_RELEASED: TDateField
+    object cdsTimesheetDetailDATE_RELEASED: TDateField
       DisplayLabel = 'Released'
-      FieldName = 'DATE_CFWD_RELEASED'
+      FieldName = 'DATE_RELEASED'
     end
     object cdsTimesheetDetailRELEASE_CFWD_TO_PERIOD: TIntegerField
       Alignment = taLeftJustify

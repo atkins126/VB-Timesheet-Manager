@@ -7,14 +7,14 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
   PixelsPerInch = 96
   TextHeight = 13
   inherited layMain: TdxLayoutControl
-    Width = 1096
+    Width = 1281
     Height = 706
-    ExplicitWidth = 1096
+    ExplicitWidth = 1281
     ExplicitHeight = 706
     object grdTimesheet: TcxGrid [0]
       Left = 25
       Top = 108
-      Width = 1043
+      Width = 1228
       Height = 570
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
@@ -24,6 +24,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
       ParentFont = False
       TabOrder = 1
       object viewTimesheet: TcxGridDBBandedTableView
+        PopupMenu = popReleaseCFwd
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
         OnCustomDrawCell = viewTimesheetCustomDrawCell
@@ -94,21 +95,24 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
         OptionsBehavior.IncSearch = True
         OptionsBehavior.FocusCellOnCycle = True
         OptionsCustomize.ColumnsQuickCustomization = True
+        OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Editing = False
+        OptionsData.Inserting = False
         OptionsSelection.MultiSelect = True
         OptionsSelection.CheckBoxVisibility = [cbvDataRow, cbvColumnHeader]
         OptionsSelection.MultiSelectMode = msmPersistent
         OptionsView.NoDataToDisplayInfoText = '<No Timesheet data to display>'
         OptionsView.Footer = True
-        OptionsView.GroupByBox = False
         OptionsView.GroupFooters = gfVisibleWhenExpanded
         OptionsView.GroupSummaryLayout = gslAlignWithColumns
         Styles.OnGetGroupStyle = viewTimesheetStylesGetGroupStyle
         Bands = <
           item
-            Caption = 'Calculations'
+            Caption = 'Timesheet Details'
           end
           item
-            Caption = 'Timesheet Details'
+            Caption = 'Calculations'
           end
           item
             Caption = 'Invoicing'
@@ -150,8 +154,8 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.HorzSizing = False
           Options.Moving = False
           Width = 165
-          Position.BandIndex = 1
-          Position.ColIndex = 0
+          Position.BandIndex = 0
+          Position.ColIndex = 1
           Position.RowIndex = 0
         end
         object edtLastName: TcxGridDBBandedColumn
@@ -167,8 +171,8 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.HorzSizing = False
           Options.Moving = False
           Width = 165
-          Position.BandIndex = 1
-          Position.ColIndex = 1
+          Position.BandIndex = 0
+          Position.ColIndex = 2
           Position.RowIndex = 0
         end
         object edtThePeriod: TcxGridDBBandedColumn
@@ -181,12 +185,13 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Properties.ReadOnly = True
           Visible = False
           OnGetDisplayText = edtThePeriodGetDisplayText
+          GroupIndex = 0
           MinWidth = 60
           Options.Editing = False
           Options.IncSearch = False
           Options.HorzSizing = False
           Width = 60
-          Position.BandIndex = 1
+          Position.BandIndex = 0
           Position.ColIndex = 3
           Position.RowIndex = 0
         end
@@ -201,7 +206,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.HorzSizing = False
           Width = 70
           Position.BandIndex = 1
-          Position.ColIndex = 2
+          Position.ColIndex = 9
           Position.RowIndex = 0
         end
         object edtLoginName: TcxGridDBBandedColumn
@@ -216,7 +221,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.HorzSizing = False
           Options.Moving = False
           Width = 120
-          Position.BandIndex = 1
+          Position.BandIndex = 0
           Position.ColIndex = 5
           Position.RowIndex = 0
         end
@@ -232,12 +237,45 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.HorzSizing = False
           Options.Moving = False
           Width = 90
-          Position.BandIndex = 1
+          Position.BandIndex = 0
           Position.ColIndex = 4
           Position.RowIndex = 0
         end
         object edtCustomerType: TcxGridDBBandedColumn
           DataBinding.FieldName = 'CUSTOMER_TYPE'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.ReadOnly = True
+          Visible = False
+          OnGetDisplayText = edtThePeriodGetDisplayText
+          MinWidth = 200
+          Options.Editing = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 200
+          Position.BandIndex = 0
+          Position.ColIndex = 6
+          Position.RowIndex = 0
+        end
+        object edtCustomerName: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'CUSTOMER_NAME'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.ReadOnly = True
+          OnGetDisplayText = edtThePeriodGetDisplayText
+          MinWidth = 300
+          Options.Editing = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 300
+          Position.BandIndex = 0
+          Position.ColIndex = 7
+          Position.RowIndex = 0
+        end
+        object edtActivtyType: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'ACTIVITY_TYPE'
           PropertiesClassName = 'TcxTextEditProperties'
           Properties.Alignment.Vert = taTopJustify
           Properties.ReadOnly = True
@@ -248,39 +286,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.HorzSizing = False
           Options.Moving = False
           Width = 200
-          Position.BandIndex = 1
-          Position.ColIndex = 6
-          Position.RowIndex = 0
-        end
-        object edtCustomerName: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'CUSTOMER_NAME'
-          PropertiesClassName = 'TcxTextEditProperties'
-          Properties.Alignment.Vert = taTopJustify
-          Properties.ReadOnly = True
-          OnGetDisplayText = edtThePeriodGetDisplayText
-          MinWidth = 400
-          Options.Editing = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Width = 400
-          Position.BandIndex = 1
-          Position.ColIndex = 7
-          Position.RowIndex = 0
-        end
-        object edtActivtyType: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'ACTIVITY_TYPE'
-          PropertiesClassName = 'TcxTextEditProperties'
-          Properties.Alignment.Vert = taTopJustify
-          Properties.ReadOnly = True
-          OnGetDisplayText = edtThePeriodGetDisplayText
-          MinWidth = 250
-          Options.Editing = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Width = 250
-          Position.BandIndex = 1
+          Position.BandIndex = 0
           Position.ColIndex = 8
           Position.RowIndex = 0
         end
@@ -288,31 +294,32 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           DataBinding.FieldName = 'ACTIVITY'
           PropertiesClassName = 'TcxMemoProperties'
           Properties.ReadOnly = True
-          MinWidth = 500
+          MinWidth = 300
           Options.Editing = False
           Options.Filtering = False
           Options.Grouping = False
           Options.HorzSizing = False
           Options.Moving = False
           Options.Sorting = False
-          Width = 500
-          Position.BandIndex = 1
+          Width = 300
+          Position.BandIndex = 0
           Position.ColIndex = 9
           Position.RowIndex = 0
         end
         object edtPriceItem: TcxGridDBBandedColumn
+          Caption = 'Price Item'
           DataBinding.FieldName = 'PRICE_LIST_ITEM'
           PropertiesClassName = 'TcxTextEditProperties'
           Properties.Alignment.Vert = taTopJustify
           Properties.ReadOnly = True
-          MinWidth = 400
+          MinWidth = 300
           Options.Editing = False
           Options.Filtering = False
           Options.Grouping = False
           Options.HorzSizing = False
           Options.Moving = False
-          Width = 400
-          Position.BandIndex = 1
+          Width = 300
+          Position.BandIndex = 0
           Position.ColIndex = 10
           Position.RowIndex = 0
         end
@@ -333,8 +340,8 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.HorzSizing = False
           Options.Moving = False
           Width = 60
-          Position.BandIndex = 0
-          Position.ColIndex = 1
+          Position.BandIndex = 1
+          Position.ColIndex = 0
           Position.RowIndex = 0
         end
         object edtHours: TcxGridDBBandedColumn
@@ -354,8 +361,8 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.HorzSizing = False
           Options.Moving = False
           Width = 60
-          Position.BandIndex = 0
-          Position.ColIndex = 2
+          Position.BandIndex = 1
+          Position.ColIndex = 1
           Position.RowIndex = 0
         end
         object edtRate: TcxGridDBBandedColumn
@@ -375,8 +382,8 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.HorzSizing = False
           Options.Moving = False
           Width = 90
-          Position.BandIndex = 0
-          Position.ColIndex = 3
+          Position.BandIndex = 1
+          Position.ColIndex = 2
           Position.RowIndex = 0
         end
         object edtStdRate: TcxGridDBBandedColumn
@@ -396,8 +403,8 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.HorzSizing = False
           Options.Moving = False
           Width = 90
-          Position.BandIndex = 0
-          Position.ColIndex = 4
+          Position.BandIndex = 1
+          Position.ColIndex = 3
           Position.RowIndex = 0
         end
         object edtAbbreviation: TcxGridDBBandedColumn
@@ -415,8 +422,8 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.Moving = False
           Options.Sorting = False
           Width = 25
-          Position.BandIndex = 0
-          Position.ColIndex = 5
+          Position.BandIndex = 1
+          Position.ColIndex = 4
           Position.RowIndex = 0
         end
         object edtItemValue: TcxGridDBBandedColumn
@@ -436,8 +443,8 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.HorzSizing = False
           Options.Moving = False
           Width = 90
-          Position.BandIndex = 0
-          Position.ColIndex = 6
+          Position.BandIndex = 1
+          Position.ColIndex = 5
           Position.RowIndex = 0
         end
         object edtCFwdValue: TcxGridDBBandedColumn
@@ -457,8 +464,8 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.HorzSizing = False
           Options.Moving = False
           Width = 90
-          Position.BandIndex = 0
-          Position.ColIndex = 7
+          Position.BandIndex = 1
+          Position.ColIndex = 6
           Position.RowIndex = 0
         end
         object edtBillable: TcxGridDBBandedColumn
@@ -478,8 +485,8 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.HorzSizing = False
           Options.Moving = False
           Width = 25
-          Position.BandIndex = 0
-          Position.ColIndex = 8
+          Position.BandIndex = 1
+          Position.ColIndex = 7
           Position.RowIndex = 0
         end
         object edtBillableStr: TcxGridDBBandedColumn
@@ -496,8 +503,8 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.HorzSizing = False
           Options.Moving = False
           Width = 25
-          Position.BandIndex = 0
-          Position.ColIndex = 9
+          Position.BandIndex = 1
+          Position.ColIndex = 8
           Position.RowIndex = 0
         end
         object edtInvoiceNo: TcxGridDBBandedColumn
@@ -574,7 +581,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.Moving = False
           Width = 40
           Position.BandIndex = 3
-          Position.ColIndex = 0
+          Position.ColIndex = 2
           Position.RowIndex = 0
         end
         object edtLockedStr: TcxGridDBBandedColumn
@@ -594,7 +601,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.Sorting = False
           Width = 35
           Position.BandIndex = 3
-          Position.ColIndex = 1
+          Position.ColIndex = 3
           Position.RowIndex = 0
         end
         object edtCFwd: TcxGridDBBandedColumn
@@ -616,7 +623,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.Moving = False
           Width = 25
           Position.BandIndex = 3
-          Position.ColIndex = 2
+          Position.ColIndex = 4
           Position.RowIndex = 0
         end
         object edtCFwdStr: TcxGridDBBandedColumn
@@ -635,7 +642,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.Moving = False
           Width = 25
           Position.BandIndex = 3
-          Position.ColIndex = 3
+          Position.ColIndex = 5
           Position.RowIndex = 0
         end
         object edtAddWork: TcxGridDBBandedColumn
@@ -657,7 +664,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.Moving = False
           Width = 40
           Position.BandIndex = 3
-          Position.ColIndex = 4
+          Position.ColIndex = 6
           Position.RowIndex = 0
         end
         object edtAddWorkStr: TcxGridDBBandedColumn
@@ -675,7 +682,44 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.Moving = False
           Width = 50
           Position.BandIndex = 3
-          Position.ColIndex = 5
+          Position.ColIndex = 7
+          Position.RowIndex = 0
+        end
+        object edtCFwdReleaseDate: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'DATE_CFWD_RELEASED'
+          PropertiesClassName = 'TcxDateEditProperties'
+          Properties.DisplayFormat = 'dd/MM/yyyy'
+          Properties.EditFormat = 'dd/MM/yyyy'
+          Properties.ReadOnly = True
+          Properties.SaveTime = False
+          Properties.ShowTime = False
+          Properties.ShowToday = False
+          MinWidth = 90
+          Options.Editing = False
+          Options.ExpressionEditing = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 90
+          Position.BandIndex = 3
+          Position.ColIndex = 0
+          Position.RowIndex = 0
+        end
+        object edtCFwdToPeriod: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'RELEASE_CFWD_TO_PERIOD'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = '######'
+          Properties.EditFormat = '######'
+          Properties.ReadOnly = True
+          MinWidth = 60
+          Options.Editing = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 60
+          Position.BandIndex = 3
+          Position.ColIndex = 1
           Position.RowIndex = 0
         end
       end
@@ -686,7 +730,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
     object docToolbarCFwd: TdxBarDockControl [1]
       Left = 25
       Top = 48
-      Width = 1043
+      Width = 1228
       Height = 54
       Align = dalNone
       BarManager = barManager
@@ -694,7 +738,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
     object docTolbarRelease: TdxBarDockControl [2]
       Left = 10000
       Top = 10000
-      Width = 1043
+      Width = 1228
       Height = 54
       Align = dalNone
       BarManager = barManager
@@ -703,7 +747,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
     object grdTimesheetRelease: TcxGrid [3]
       Left = 10000
       Top = 10000
-      Width = 1043
+      Width = 1228
       Height = 570
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
@@ -714,6 +758,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
       TabOrder = 3
       Visible = False
       object viewTimesheetRelease: TcxGridDBBandedTableView
+        PopupMenu = popUndoRelease
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
         DataController.DataSource = TSDM.dtsRelease
@@ -783,20 +828,23 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
         OptionsBehavior.IncSearch = True
         OptionsBehavior.FocusCellOnCycle = True
         OptionsCustomize.ColumnsQuickCustomization = True
+        OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Editing = False
+        OptionsData.Inserting = False
         OptionsSelection.MultiSelect = True
         OptionsSelection.CheckBoxVisibility = [cbvDataRow, cbvColumnHeader]
         OptionsSelection.MultiSelectMode = msmPersistent
         OptionsView.NoDataToDisplayInfoText = '<No Timesheet data to display>'
         OptionsView.Footer = True
-        OptionsView.GroupByBox = False
         OptionsView.GroupFooters = gfVisibleWhenExpanded
         OptionsView.GroupSummaryLayout = gslAlignWithColumns
         Bands = <
           item
-            Caption = 'Calculations'
+            Caption = 'Timesheet Details'
           end
           item
-            Caption = 'Timesheet Details'
+            Caption = 'Calculations'
           end
           item
             Caption = 'Invoicing'
@@ -838,8 +886,8 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.HorzSizing = False
           Options.Moving = False
           Width = 165
-          Position.BandIndex = 1
-          Position.ColIndex = 0
+          Position.BandIndex = 0
+          Position.ColIndex = 1
           Position.RowIndex = 0
         end
         object edtRLastName: TcxGridDBBandedColumn
@@ -855,8 +903,8 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.HorzSizing = False
           Options.Moving = False
           Width = 165
-          Position.BandIndex = 1
-          Position.ColIndex = 1
+          Position.BandIndex = 0
+          Position.ColIndex = 2
           Position.RowIndex = 0
         end
         object edtRThePeriod: TcxGridDBBandedColumn
@@ -868,13 +916,14 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Properties.EditFormat = '######'
           Properties.ReadOnly = True
           Visible = False
+          GroupIndex = 0
           MinWidth = 60
           Options.Editing = False
           Options.IncSearch = False
           Options.HorzSizing = False
           Width = 60
-          Position.BandIndex = 1
-          Position.ColIndex = 3
+          Position.BandIndex = 0
+          Position.ColIndex = 4
           Position.RowIndex = 0
         end
         object edtRPeriodName: TcxGridDBBandedColumn
@@ -886,8 +935,8 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.Editing = False
           Options.HorzSizing = False
           Width = 70
-          Position.BandIndex = 1
-          Position.ColIndex = 2
+          Position.BandIndex = 0
+          Position.ColIndex = 3
           Position.RowIndex = 0
         end
         object edtRLoginName: TcxGridDBBandedColumn
@@ -901,8 +950,8 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.HorzSizing = False
           Options.Moving = False
           Width = 120
-          Position.BandIndex = 1
-          Position.ColIndex = 5
+          Position.BandIndex = 0
+          Position.ColIndex = 6
           Position.RowIndex = 0
         end
         object edtRActivityDate: TcxGridDBBandedColumn
@@ -916,12 +965,43 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.HorzSizing = False
           Options.Moving = False
           Width = 90
-          Position.BandIndex = 1
-          Position.ColIndex = 4
+          Position.BandIndex = 0
+          Position.ColIndex = 5
+          Position.RowIndex = 0
+        end
+        object edtRCustomerName: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'CUSTOMER_NAME'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.ReadOnly = True
+          MinWidth = 300
+          Options.Editing = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 300
+          Position.BandIndex = 0
+          Position.ColIndex = 7
           Position.RowIndex = 0
         end
         object edtRCustomerType: TcxGridDBBandedColumn
           DataBinding.FieldName = 'CUSTOMER_TYPE'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.Alignment.Vert = taTopJustify
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 200
+          Options.Editing = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 200
+          Position.BandIndex = 0
+          Position.ColIndex = 8
+          Position.RowIndex = 0
+        end
+        object edtRActivtyType: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'ACTIVITY_TYPE'
           PropertiesClassName = 'TcxTextEditProperties'
           Properties.Alignment.Vert = taTopJustify
           Properties.ReadOnly = True
@@ -931,70 +1011,41 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.HorzSizing = False
           Options.Moving = False
           Width = 200
-          Position.BandIndex = 1
-          Position.ColIndex = 6
-          Position.RowIndex = 0
-        end
-        object edtRCustomerName: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'CUSTOMER_NAME'
-          PropertiesClassName = 'TcxTextEditProperties'
-          Properties.Alignment.Vert = taTopJustify
-          Properties.ReadOnly = True
-          MinWidth = 400
-          Options.Editing = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Width = 400
-          Position.BandIndex = 1
-          Position.ColIndex = 7
-          Position.RowIndex = 0
-        end
-        object edtRActivtyType: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'ACTIVITY_TYPE'
-          PropertiesClassName = 'TcxTextEditProperties'
-          Properties.Alignment.Vert = taTopJustify
-          Properties.ReadOnly = True
-          MinWidth = 250
-          Options.Editing = False
-          Options.Grouping = False
-          Options.HorzSizing = False
-          Options.Moving = False
-          Width = 250
-          Position.BandIndex = 1
-          Position.ColIndex = 8
+          Position.BandIndex = 0
+          Position.ColIndex = 9
           Position.RowIndex = 0
         end
         object edtRAActivty: TcxGridDBBandedColumn
           DataBinding.FieldName = 'ACTIVITY'
           PropertiesClassName = 'TcxMemoProperties'
           Properties.ReadOnly = True
-          MinWidth = 500
+          MinWidth = 300
           Options.Editing = False
           Options.Filtering = False
           Options.Grouping = False
           Options.HorzSizing = False
           Options.Moving = False
           Options.Sorting = False
-          Width = 500
-          Position.BandIndex = 1
-          Position.ColIndex = 9
+          Width = 300
+          Position.BandIndex = 0
+          Position.ColIndex = 10
           Position.RowIndex = 0
         end
         object edtRPriceItem: TcxGridDBBandedColumn
+          Caption = 'Price Item'
           DataBinding.FieldName = 'PRICE_LIST_ITEM'
           PropertiesClassName = 'TcxTextEditProperties'
           Properties.Alignment.Vert = taTopJustify
           Properties.ReadOnly = True
-          MinWidth = 400
+          MinWidth = 300
           Options.Editing = False
           Options.Filtering = False
           Options.Grouping = False
           Options.HorzSizing = False
           Options.Moving = False
-          Width = 400
-          Position.BandIndex = 1
-          Position.ColIndex = 10
+          Width = 300
+          Position.BandIndex = 0
+          Position.ColIndex = 11
           Position.RowIndex = 0
         end
         object edtRTimeSpent: TcxGridDBBandedColumn
@@ -1014,8 +1065,8 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.HorzSizing = False
           Options.Moving = False
           Width = 60
-          Position.BandIndex = 0
-          Position.ColIndex = 1
+          Position.BandIndex = 1
+          Position.ColIndex = 0
           Position.RowIndex = 0
         end
         object edtRHours: TcxGridDBBandedColumn
@@ -1035,8 +1086,8 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.HorzSizing = False
           Options.Moving = False
           Width = 60
-          Position.BandIndex = 0
-          Position.ColIndex = 2
+          Position.BandIndex = 1
+          Position.ColIndex = 1
           Position.RowIndex = 0
         end
         object edtRRate: TcxGridDBBandedColumn
@@ -1056,8 +1107,8 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.HorzSizing = False
           Options.Moving = False
           Width = 90
-          Position.BandIndex = 0
-          Position.ColIndex = 3
+          Position.BandIndex = 1
+          Position.ColIndex = 2
           Position.RowIndex = 0
         end
         object edtRStdRate: TcxGridDBBandedColumn
@@ -1077,8 +1128,8 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.HorzSizing = False
           Options.Moving = False
           Width = 90
-          Position.BandIndex = 0
-          Position.ColIndex = 4
+          Position.BandIndex = 1
+          Position.ColIndex = 3
           Position.RowIndex = 0
         end
         object edtRAbbreviation: TcxGridDBBandedColumn
@@ -1096,8 +1147,8 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.Moving = False
           Options.Sorting = False
           Width = 25
-          Position.BandIndex = 0
-          Position.ColIndex = 5
+          Position.BandIndex = 1
+          Position.ColIndex = 4
           Position.RowIndex = 0
         end
         object edtRItemValue: TcxGridDBBandedColumn
@@ -1117,8 +1168,8 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.HorzSizing = False
           Options.Moving = False
           Width = 90
-          Position.BandIndex = 0
-          Position.ColIndex = 6
+          Position.BandIndex = 1
+          Position.ColIndex = 5
           Position.RowIndex = 0
         end
         object edtRCFwdValue: TcxGridDBBandedColumn
@@ -1138,8 +1189,8 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.HorzSizing = False
           Options.Moving = False
           Width = 90
-          Position.BandIndex = 0
-          Position.ColIndex = 7
+          Position.BandIndex = 1
+          Position.ColIndex = 6
           Position.RowIndex = 0
         end
         object edtRBillable: TcxGridDBBandedColumn
@@ -1159,8 +1210,8 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.HorzSizing = False
           Options.Moving = False
           Width = 25
-          Position.BandIndex = 0
-          Position.ColIndex = 8
+          Position.BandIndex = 1
+          Position.ColIndex = 7
           Position.RowIndex = 0
         end
         object edtRBillableStr: TcxGridDBBandedColumn
@@ -1177,8 +1228,8 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
           Options.HorzSizing = False
           Options.Moving = False
           Width = 25
-          Position.BandIndex = 0
-          Position.ColIndex = 9
+          Position.BandIndex = 1
+          Position.ColIndex = 8
           Position.RowIndex = 0
         end
         object edtRInvoiceNo: TcxGridDBBandedColumn
@@ -1429,9 +1480,9 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
       Index = 1
     end
   end
-  object lucPeriod: TcxLookupComboBox [1]
-    Left = 375
-    Top = 243
+  object lucReleaseCarryForwardToPeriod: TcxLookupComboBox [1]
+    Left = 350
+    Top = 185
     BeepOnEnter = False
     Properties.DropDownAutoSize = True
     Properties.DropDownListStyle = lsFixedList
@@ -1442,40 +1493,19 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
         FieldName = 'PERIOD_NAME'
       end>
     Properties.ListOptions.SyncMode = True
-    Properties.ListSource = TSDM.dtsPeriod
-    Properties.OnCloseUp = lucPeriodPropertiesCloseUp
-    Properties.OnEditValueChanged = lucPeriodPropertiesEditValueChanged
-    Properties.OnInitPopup = lucPeriodPropertiesInitPopup
-    Properties.OnPopup = lucPeriodPropertiesPopup
-    Style.HotTrack = False
-    Style.TransparentBorder = False
-    TabOrder = 2
-    OnKeyDown = lucPeriodKeyDown
-    Width = 100
-  end
-  object lucReleaseToPeriod: TcxLookupComboBox [2]
-    Left = 375
-    Top = 265
-    BeepOnEnter = False
-    Properties.DropDownAutoSize = True
-    Properties.DropDownListStyle = lsFixedList
-    Properties.ImmediatePost = True
-    Properties.KeyFieldNames = 'THE_PERIOD'
-    Properties.ListColumns = <
-      item
-        FieldName = 'PERIOD_NAME'
-      end>
-    Properties.ListOptions.SyncMode = True
-    Properties.ListSource = TSDM.dtsToPeriod
-    Properties.OnEditValueChanged = lucReleaseToPeriodPropertiesEditValueChanged
+    Properties.ListSource = TSDM.dtsAllPeriod
+    Properties.OnCloseUp = lucReleaseCarryForwardToPeriodPropertiesCloseUp
+    Properties.OnEditValueChanged = lucReleaseCarryForwardToPeriodPropertiesEditValueChanged
+    Properties.OnInitPopup = lucReleaseCarryForwardToPeriodPropertiesInitPopup
+    Properties.OnPopup = lucReleaseCarryForwardToPeriodPropertiesPopup
     Style.HotTrack = False
     Style.TransparentBorder = False
     TabOrder = 1
     Width = 100
   end
-  object cbxPersistentSelection: TcxCheckBox [3]
-    Left = 375
-    Top = 298
+  object cbxPersistentSelection: TcxCheckBox [2]
+    Left = 350
+    Top = 218
     Caption = 'Persistent record selection'
     ParentShowHint = False
     Properties.ImmediatePost = True
@@ -1483,31 +1513,13 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
     Properties.OnEditValueChanged = cbxPersistentRecordSelectionPropertiesEditValueChanged
     ShowHint = True
     Style.TransparentBorder = False
-    TabOrder = 3
+    TabOrder = 2
     Transparent = True
   end
-  object lucReleaseDataPeriod: TcxLookupComboBox [4]
-    Left = 530
-    Top = 242
-    BeepOnEnter = False
-    Properties.DropDownAutoSize = True
-    Properties.DropDownListStyle = lsFixedList
-    Properties.ImmediatePost = True
-    Properties.KeyFieldNames = 'THE_PERIOD'
-    Properties.ListColumns = <
-      item
-        FieldName = 'PERIOD_NAME'
-      end>
-    Properties.ListOptions.SyncMode = True
-    Properties.ListSource = TSDM.dtsReleaseDataPeriod
-    Style.HotTrack = False
-    TabOrder = 4
-    Visible = False
-    Width = 100
-  end
-  object lucChangeToPeriod: TcxLookupComboBox [5]
-    Left = 530
-    Top = 264
+  object lucChangeToPeriod: TcxLookupComboBox [3]
+    Tag = 1
+    Left = 560
+    Top = 191
     BeepOnEnter = False
     Properties.DropDownAutoSize = True
     Properties.DropDownListStyle = lsFixedList
@@ -1520,9 +1532,49 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
     Properties.ListOptions.SyncMode = True
     Properties.ListSource = TSDM.dtsChangeToPeriod
     Style.HotTrack = False
-    TabOrder = 5
+    TabOrder = 3
     Visible = False
     Width = 100
+  end
+  object cbxGetAllCarryForwardItems: TcxCheckBox [4]
+    Left = 560
+    Top = 218
+    Caption = 'Get all carry forward items'
+    ParentShowHint = False
+    Properties.ImmediatePost = True
+    Properties.UseAlignmentWhenInplace = True
+    Properties.OnEditValueChanged = cbxGetAllCarryForwardItemsPropertiesEditValueChanged
+    ShowHint = True
+    Style.TransparentBorder = False
+    TabOrder = 4
+    Transparent = True
+    Visible = False
+  end
+  object lucGroupCFwdBy: TcxComboBox [5]
+    Tag = 20
+    Left = 350
+    Top = 248
+    Properties.DropDownListStyle = lsFixedList
+    Properties.ImmediatePost = True
+    Properties.Items.Strings = (
+      'Period'
+      'Customer')
+    Properties.OnEditValueChanged = lucGroupCFwdByPropertiesEditValueChanged
+    TabOrder = 5
+    Width = 90
+  end
+  object lucGroupReleaseBy: TcxComboBox [6]
+    Tag = 21
+    Left = 560
+    Top = 245
+    Properties.DropDownListStyle = lsFixedList
+    Properties.ImmediatePost = True
+    Properties.Items.Strings = (
+      'Period'
+      'Customer')
+    Properties.OnEditValueChanged = lucGroupCFwdByPropertiesEditValueChanged
+    TabOrder = 10
+    Width = 90
   end
   inherited styRepository: TcxStyleRepository
     Left = 455
@@ -1589,6 +1641,349 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
   inherited img16: TcxImageList
     FormatVersion = 1
     DesignInfo = 34078775
+    ImageInfo = <
+      item
+        ImageClass = 'TBitmap'
+        Image.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000000000000000000000000000000000000000000000000
+          0000000000000000000000000203040411200909274A0909325F09092E5B0404
+          1D3B000009120000000100000000000000000000000000000000000000000000
+          00000000000100001120040440850B0B69D909097CF708087FFD09097EFC0909
+          78F0070768C40404386600000910000000000000000000000000000000000000
+          000101011E37080869C70A0A7EFC090981FF090980FF0A0A80FF0A0A80FF0A0A
+          80FF0A0A80FF0A0A7DF7050553A400000E1B0000000000000000000000000101
+          152709096CCC080880FF00007CFF00007DFF00007EFF080882FF060683FF0000
+          80FF00007DFF01017CFF09097DFC050552A20000060F00000000000003070606
+          4D99090980FD01017EFF1C1C8EFF9D9DCBFF31319AFF000080FF000080FF4E4E
+          A6FF9090C5FF0B0B86FF040482FF09097DF602023462000000010101182E0909
+          72E60B0B86FF020284FFACACD4FFFFFFFFFFEEEEF5FF232396FF4343A5FFFFFF
+          FFFFFFFFFFFF7575BAFF040486FF0C0C88FF070769C000000910040433630C0C
+          82FC0D0D8AFF020287FF4747A6FFFEFEFCFFFFFFFFFFECECF3FFFAFAFBFFFFFF
+          FFFFE6E6F1FF28289BFF05058CFF0D0D8CFF0B0B7EEA01011A30050546850D0D
+          8BFF0E0E8EFF0B0B91FF00008AFF3939A5FFF6F6F9FFFFFFFFFFFFFFFFFFE0E0
+          EEFF1C1C9AFF00008EFF0E0E93FF0F0F90FF0C0C88F7020227490A0A4D880F0F
+          8EFF0E0E92FF0B0B95FF000091FF4545AAFFFBFBFBFFFFFFFFFFFFFFFFFFE6E6
+          F1FF26269FFF000094FF0E0E97FF0F0F95FF11118FF805052B4B0B0B3F6B1515
+          95FD0E0E95FF060696FF5353B1FFFFFFFFFFFFFFFFFFE2E2EEFFF4F4F6FFFFFF
+          FFFFF0F0F5FF3131A6FF0A0A9AFF0F0F96FF191991EE05052036060623382020
+          94EC0D0D97FF070798FFA8A8D3FFFFFFFFFFE5E5EFFF1D1DA6FF3D3DB0FFFFFF
+          FAFFFFFFFFFF7373BFFF08089DFF11119BFF232386CB01010B150000070B2323
+          74AB17179DFE05059BFF1B1BA3FF8D8DC9FF2E2EAEFF0303A9FF0202A8FF4747
+          B7FF8181C7FF0F0FA2FF09099FFF2121A6FA1717517500000002000000000A0A
+          26373232A0DD1414A3FF0808A3FF0B0BA9FF0E0EAEFF1616B4FF1414B5FF0E0E
+          B1FF0B0BACFF0909A7FF1E1EA9FE2D2D87B90202101800000000000000000000
+          000212123A4F3B3BA7DC2323AFFE1111ABFF1313B0FF1515B7FF1616BAFF1313
+          B4FF1414B0FF2C2CB8FC343493BF07071E2B0000000000000000000000000000
+          0000000000020B0B2635323283A74343B7E93434C1FC2F2FC4FF3030C6FF3A3A
+          C2FA4545B2DE28286C890404141E000000000000000000000000000000000000
+          000000000000000000000000060A0A0A25321A1A4C622222647C222261781717
+          445606061B250000030400000000000000000000000000000000}
+      end
+      item
+        ImageClass = 'TBitmap'
+        Image.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000C0C
+          0C801B1B1BEB0505054100000000000000000000000000000000000000000000
+          00000000000000000000000000000000000000000000000000000404043E2828
+          28FF3F3F3FFF272727F305050543000000000000000000000000000000000000
+          00000000000000000000000000000000000000000000000000000101010E2424
+          24CD4F4F4FFF575757FF2D2D2DF3050505430000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000101
+          01142B2B2BCD595959FF5D5D5DFF323230F32920077E5B4609C3735A0CF4735A
+          0CF45B4609C32B22045F01010003000000000000000000000000000000000000
+          0000010101142F2F2FCD5B5955FF705B1CFF846610FF8D6D11FF8B6C0FFF8B6C
+          0FFF8D6D11FF846610FF5C4809C20604000E0000000000000000000000000000
+          00000000000001010114635118E88F7013FF83660FED41320780261D044B261D
+          044B4132078083660FED8F7013FF534108AC0000000000000000000000000000
+          00000000000017120133937314FF8C6D11F23227045B251C0440251C0440251C
+          0440251C04403227045B8C6D11F2937314FF1712013300000000000000000000
+          00000000000045350786A68419FF5F4A09A82920044031290D483930154F3930
+          154F31290D48292004405F4A09A8A68419FF4535078600000000000000000000
+          0000000000005F4A0CA6B28E1BFF513F07844940235A58503767574F3666574F
+          3666585037674940235A513F0784B28E1BFF5F4A0CA600000000000000000000
+          00000000000055420A96C19A1FFF6855199C70674F797068507A70674F797068
+          507A7068507A7068507A6855199CC09A1FFF55420A9600000000000000000000
+          000000000000281F0354CCA322FF9A7C1FE2837C638B857D668B857D668B857D
+          668B857D668B837C638B9A7C1FE2CCA322FF281F035400000000000000000000
+          00000000000002010005937415D9D6AB24FFA28B43DE928A719A968F7999968F
+          7999928A729AA28B44DED6AB24FF937415D90201000500000000000000000000
+          0000000000000000000019130235BD991EF0E3B728FFBC9826F7AF9643E2AF96
+          43E2BC9826F7E3B728FFBD991EF0191302350000000000000000000000000000
+          0000000000000000000000000000130F012A786512B3D6B625FFEDCA2CFFEDCA
+          2CFFD6B625FF786512B3130F012A000000000000000000000000000000000000
+          000000000000000000000000000000000000000000000A080018211902492119
+          02490A0800180000000000000000000000000000000000000000}
+      end
+      item
+        ImageClass = 'TBitmap'
+        Image.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000000000000000000000000000000000000000000000000
+          000000000003000000290000002E0000002E0000002E0000002F0000002F0000
+          002E0000002E0000002B00000024000000030000000000000000000000000000
+          00000000002BC0C0C0F4F9F9F9FFF9F9F9FFF9F9F9FFFAFAFAFFF9F9F9FFF9F9
+          F9FFFBFBFBFFFCFCFCFFC0C0C0F40000002A0000000000000000000000000000
+          00000101013AC2C1C1FFF1F1F1FFF2F2F2FFF3F2F2FFF2F2F2FFF3F3F3FFF3F3
+          F3FFF2F2F2FFF4F3F3FFC2C1C1FF010101380000000000000000020202310D0D
+          0D6015151580A4A2A2FFD9D6D6FFD7D5D5FFD7D4D4FFD8D6D6FFD7D5D5FFD9D7
+          D7FFDCD9D9FFDCDADAFFA4A2A2FF151515830C0C0C5E0202023227272789BBBB
+          BBFFB3B3B3FF4C4949FF5D5858FF5D5858FF5D5757FF5C5757FF5D5858FF5C56
+          56FF5C5757FF5E5858FF4C4949FFB3B3B3FFB9B9B9FF2727278934343488D0D0
+          D0FFCECECEFF444444FF393939FF383838FF373737FF363636FF363636FF3636
+          36FF373737FF383838FF444444FFCDCDCDFFCBCBCBFF363636885252527ED2D2
+          D2FFD3D3D3FFC1C1C1FFB6B6B6FFB7B7B7FFB5B5B5FFB9B9B9FFB9B9B9FFB5B5
+          B5FFB8B8B8FFB7B7B7FFC2C2C2FFD5D5D5FFD0D0D0FF5A5A5A7E5C5C5C78E4E4
+          E4FFE4E4E4FF8B8B8BFF454545FF454545FF464646FF505050FF4F4F4FFF4444
+          44FF454545FF454545FF8B8B8BFFE4E4E4FFE4E4E4FF6363637852525269EDED
+          EDFFEDEDEDFF9B9B9BFF565656FF565656FF565656FF565656FF565656FF5656
+          56FF565656FF565656FF9B9B9BFFEDEDEDFFEDEDEDFF575757692A2A2A48C2C2
+          C2FACCCCCCFAA4A4A4FC858585FE838383FE818181FE7F7F7FFE7F7F7FFE8181
+          81FE838383FE858585FEA4A4A4FCCCCCCCFAC2C2C2FA2D2D2D480505050EA5A5
+          A5FBBEBEBEFF969696FFBEB8B8FFCAC5C5FFD2CDCDFFD5D2D2FFD5D2D2FFD2CD
+          CDFFCAC5C5FFBEB8B8FF969696FFBEBEBEFFA5A5A5FB0505050E000000000000
+          0000000000005757578DD7D3D3FFE2DFDFFFE9E7E7FFEDEBEBFFEDEBEBFFE9E7
+          E7FFE2DFDFFFD7D3D3FF5757578D000000000000000000000000000000000000
+          0000000000004F4F4F88EAE8E8FFF5F3F3FFFAFAFAFFFCFCFCFFFCFCFCFFFAFA
+          FAFFF5F3F3FFEAE8E8FF4F4F4F88000000000000000000000000000000000000
+          00000000000002020209F9F8F8FFFEFEFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFEFEFEFFF9F8F8FF02020209000000000000000000000000000000000000
+          00000000000000000009FEFEFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FFFFFFFFFFFFFEFEFEFF01010109000000000000000000000000000000000000
+          0000000000000000000101010109010101090101010901010109010101090101
+          0109010101090101010900000001000000000000000000000000}
+      end
+      item
+        ImageClass = 'TBitmap'
+        Image.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000000000000000000000000000000000000000000000000
+          000000000000000000000C14052F1E310D6F2B46139F385C19CF45711EFF0000
+          0000000000000000000000000000000000000000000000000000192A0B5F273F
+          118F345517BF45711EFF45711EFF45711EFF45711EFF45711EFF45711EFF0000
+          000045711EFF45711EFF45711EFF45711EFF45711EFF45711EFF45711EFF4571
+          1EFF45711EFF45711EFF45711EFF45711EFF45711EFF45711EFF45711EFF0000
+          000045711EFF45711EFF45711EFF45711EFF45711EFF45711EFF45711EFF4571
+          1EFF45711EFF45711EFF45711EFF45711EFF45711EFF45711EFF45711EFF0000
+          000045711EFFFFFFFFFFFFFFFFFFFFFFFFFF45711EFF45711EFF45711EFF5079
+          2BFF729555FF5B8339FF45711EFF5B8339FF729555FF50792BFF45711EFF0000
+          000045711EFFFFFFFFFFFFFFFFFFFFFFFFFF45711EFF45711EFF45711EFF5B83
+          39FFFFFFFFFFD1DCC7FF45711EFFE8EDE3FFF3F6F1FF50792BFF45711EFF0000
+          000045711EFF45711EFF45711EFF45711EFF45711EFF45711EFF45711EFF4571
+          1EFFADC19CFFFFFFFFFF96AF80FFFFFFFFFFA2B88EFF45711EFF45711EFF0000
+          000045711EFF45711EFF45711EFF45711EFF45711EFF45711EFF45711EFF4571
+          1EFF50792BFFF3F6F1FFFFFFFFFFF3F6F1FF50792BFF45711EFF45711EFF0000
+          000045711EFFFFFFFFFFFFFFFFFFFFFFFFFF45711EFF45711EFF45711EFF4571
+          1EFF45711EFFB9CAAAFFFFFFFFFFB9CAAAFF45711EFF45711EFF45711EFF0000
+          000045711EFFFFFFFFFFFFFFFFFFFFFFFFFF45711EFF45711EFF45711EFF4571
+          1EFF50792BFFF3F6F1FFFFFFFFFFF3F6F1FF50792BFF45711EFF45711EFF0000
+          000045711EFF45711EFF45711EFF45711EFF45711EFF45711EFF45711EFF4571
+          1EFFA2B88EFFFFFFFFFFADC19CFFFFFFFFFFA2B88EFF45711EFF45711EFF0000
+          000045711EFF45711EFF45711EFF45711EFF45711EFF45711EFF45711EFF4571
+          1EFFF3F6F1FFE8EDE3FF45711EFFDCE5D5FFF3F6F1FF45711EFF45711EFF0000
+          000045711EFFFFFFFFFFFFFFFFFFFFFFFFFF45711EFF45711EFF45711EFF4571
+          1EFF45711EFF45711EFF45711EFF45711EFF45711EFF45711EFF45711EFF0000
+          000045711EFFFFFFFFFFFFFFFFFFFFFFFFFF45711EFF45711EFF45711EFF4571
+          1EFF45711EFF45711EFF45711EFF45711EFF45711EFF45711EFF45711EFF0000
+          000045711EFF45711EFF45711EFF45711EFF45711EFF45711EFF192A0B5F273F
+          118F345517BF45711EFF45711EFF45711EFF45711EFF45711EFF45711EFF0000
+          000045711EFF45711EFF45711EFF45711EFF45711EFF45711EFF000000000000
+          000000000000000000000C14052F1E310D6F2B46139F385C19CF45711EFF0000
+          0000000000000000000000000000000000000000000000000000}
+      end
+      item
+        ImageClass = 'TBitmap'
+        Image.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000000000000000000000000000000000000000000003D3D
+          3D63767676957777779576767695747474957373739572727295717171957070
+          70956F6F6F955252527500000000000000000000000000000000000000006B6B
+          6BAAEEEEEEFFEBEBEBFFE8E8E8FFE7E7E7FFE4E4E4FFE2E2E2FFDFDFDFFFDDDD
+          DDFFDADADAFFE0E0E0FF62626283000000000000000000000000000000006C6C
+          6CABECECECFFDCDDE4FF959BD5FFACAFD6FFE4E4E4FFE4E4E4FFE2E2E2FFE0E0
+          E0FFDDDDDDFFE2E2E2FFEBEBEBFE4D4D4D6D0000000000000000000000006C6C
+          6CABEAEAEAFFE6E7EDFF969EDCFFAAAED8FFA0A4D2FFE4E4E4FFE5E5E5FFE2E2
+          E2FFE0E0E0FFE4E4E4FFEFEFEFFFE6E6E6FD3E3E3E5800000000000000006D6D
+          6DACF0F0F0FFF0F0F0FFE9EAEFFFA9AFE0FF626BCCFFCACBDCFFE2E2E2FFE2E2
+          E2FFE2E2E2FFE0E0E0FFDDDDDDFFDADADAFFA9A9A9E700000000000000006C6C
+          6CACF0F0F0FFEFEFEFFFF1F1F1FFF0F0F0FFD6D8E9FF4E58C6FF777DCBFFB0B3
+          D7FFDFDFE1FFBCBDD5FF8A8BC4FFD4D4D9FFABABABE900000000000000006D6D
+          6DADF0F0F0FFEFEFEFFFF1F1F1FFF0F0F0FFF0F0F0FF7E87D5FFD2D3E3FF989C
+          D4FF3B41B7FF191EA9FF1A1DA6FFA5A5CEFFAEAEAEE900000000000000006D6D
+          6DADE7E7E7FFEFEFEFFFF1F1F1FFF1F1F1FFF0F0F0FFB4B9E3FFAEB3DFFFC6C8
+          E2FF444CBDFFE4E4E7FFE6E6E6FFE3E3E3FFB1B1B1E900000000000000006D6D
+          6DADEBEBEBFFEEEEEEFFF0F0F0FFF1F1F1FFF1F1F1FFE2E3EEFF8B94DBFF5963
+          CBFFCACCE5FFEBEBEBFFE9E9E9FFE6E6E6FFB3B3B3E900000000000000006E6E
+          6EAEEFEFEFFFEEEEEEFFF0F0F0FFF0F0F0FFF1F1F1FFF1F1F1FF707BD7FF8A92
+          DAFFF3F3F3FFF1F1F1FFECECECFFE9E9E9FFB6B6B6E900000000000000006A6A
+          6AAEEFEFEFFFEEEEEEFFF0F0F0FFF0F0F0FFF1F1F1FFF1F1F1FF818DDDFFDCDE
+          EDFFF3F3F3FFF3F3F3FFF2F2F2FFEDEDEDFFB7B7B7E900000000000000006161
+          61AFEFEFEFFFEEEEEEFFF0F0F0FFF0F0F0FFF0F0F0FFE9EAF0FF7685DEFFD8DB
+          EDFFF2F2F2FFF3F3F3FFF3F3F3FFF2F2F2FFBBBBBBE900000000000000006161
+          61AFE7E7E7FFEEEEEEFFF0F0F0FFF0F0F0FFF0F0F0FFDEE1EFFF9CA6E6FFD3D6
+          EDFFF2F2F2FFF2F2F2FFF3F3F3FFF3F3F3FFBEBEBEE900000000000000006161
+          61AFECECECFFEEEEEEFFF0F0F0FFF0F0F0FFF0F0F0FFECEDEFFFB0B9EAFFE7E9
+          F0FFF2F2F2FFF2F2F2FFF3F3F3FFF3F3F3FFBFBFBFE900000000000000006161
+          61B0EFEFEFFFEEEEEEFFF0F0F0FFF0F0F0FFF0F0F0FFF0F0F0FFF0F0F0FFF1F1
+          F1FFF1F1F1FFF2F2F2FFF2F2F2FFF3F3F3FFBFBFBFE900000000000000001111
+          113D232323552424245524242455242424552323235423232354232323532323
+          235323232353272727522D2D2D522D2D2D522727274A00000000}
+      end
+      item
+        ImageClass = 'TBitmap'
+        Image.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000040401060505020700000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000F0C
+          0514715A2C917F6A3E98110D0A13000000000000000000000000000000000000
+          00000000000000000000000000000000000000000000000000000B09030F6E56
+          2695BE9747FAC79E51F864543271020200030000000000000000000000000000
+          000000000000000000000000000000000000000000000706010B5F491F88B38C
+          3CF8C19847FFC89D4CFFBB9856DD2A23182F0000000000000000000000000000
+          000000000000000000000000000000000000050300084F3F177BA58234F5B68F
+          3DFFBE9644FFC49B4AFFCA9F50FE8C7546A30907040B00000000000000000000
+          0000000000000000000000000000040200064334106E9C762AF1A98233FEB38C
+          3AFFBA9341FFC29948FFCA9D4DFFC7A156F34F422D5901010001000000000000
+          00000000000000000000000000002119083670591BBA634D18A155441883A380
+          34ECB7903EFFBE9643FFB38D46E3B18C43DFAC8A58CB1B1711200806020E0403
+          01090000000000000000000000000704010B0C080213030100041A140729997A
+          30E6B48D3BFFBA9341FF705B368820190B296B542B793D331E42241C0B3B3227
+          0C4D00000001000000000000000000000000000000000000000029200A3E9F7A
+          2EF2B18937FFB38C3EFA483C2457000000000000000202020003181307297056
+          1CAA100E031A00000000000000000000000000000000000000014B391271A580
+          2DFDAC8733FFA3833BE5231F122B0000000000000000000000000A07030E7A5F
+          1FBA5945168F0605010C000000000000000000000000100A0318826420C4A27D
+          2BFFA88230FF846B35B30807030B000000000000000000000000000000014937
+          1271987426F25842168D130F04210604010A140F04205D4817979C7825FA9F79
+          28FFA37F2EF7463A1F5C0000000000000000000000000000000000000000140E
+          051F7A5C21CF9C7626FB876622D874581CBB876522D89C7526FB9F7927FF9A78
+          25FE7D632AB80D0C071300000000000000000000000000000000000000000101
+          00012E220C4D8C6D24E39F7A28FF9F7A28FF9F7A28FF9F7A28FF9C7926FE8364
+          29D3251D10360000000000000000000000000000000000000000000000000000
+          00000200000327200B426F561CB28D6A22E2916F25EB886921DB644D1CA01E18
+          0B30010100010000000000000000000000000000000000000000000000000000
+          000000000000000000000704010B161105251C15062E120E041E030200070000
+          0000000000000000000000000000000000000000000000000000}
+      end
+      item
+        ImageClass = 'TBitmap'
+        Image.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          000000000000000000000000000000000000000000016C511D9835280F5F0000
+          0001000000000000000000000000000000000000000000000000000000010000
+          000100000001000000010000000100000001000000028E6C26B5D3A139FC7E61
+          24AD060401160000000100000000000000000000000000000000392C116A4937
+          1580493715804937158049371580493715804A381581B48932DADBA63CFED9A6
+          3CFDBA8F35E6281F0C4D00000001000000000000000000000000D9A63EFCDBA7
+          3EFDDBA73EFDDBA73EFDDBA73EFDDBA73EFDDDA83EFEDDA83EFEDDA83EFEDDA8
+          3EFEDDA83EFED7A43DFC6E55219B0302010E0000000000000000E0AB41FEE0AB
+          41FEE1AC41FFE1AC41FFE1AC41FFE1AC41FFE1AC41FFE1AC41FFE1AC41FFE1AC
+          41FFE0AB40FEDFAA40FEDDA940FDB48A36DC1E17093F00000001E3AE43FFE3AE
+          43FFE3AE43FFE3AE43FFE3AE43FFE3AE43FFE3AE43FFE3AE43FFE3AE43FFE3AE
+          43FFE3AE43FFE3AE43FFE2AD43FEE2AD42FED6A641F95E491E88E6B145FFE6B1
+          45FFE6B145FFE6B145FFE6B145FFE6B145FFE6B145FFE6B145FFE6B145FFE6B1
+          45FFE6B145FFE6B145FFE5B045FEE4AF45FEDEAB44FA7459238FE8B348FFE8B3
+          48FFE8B348FFE8B348FFE8B348FFE8B348FFE8B348FFE8B348FFE8B348FFE8B3
+          48FFE7B248FEE6B147FEE5B047FDC89A3EDF291F0C4300000001E8B349FEE8B3
+          4AFEE9B44AFEE9B44AFEE9B44AFEE9B44AFEE9B44AFEE9B44AFEE9B44AFEE9B4
+          4AFEE8B349FEE5B148FC86682A9E05040110000000000000000091702FA3A782
+          36B9A78236B9A78236B9A78236B9A78236B9A98337BAD7A746EBEAB54CFEE9B4
+          4CFDD2A245E63529114F00000001000000000000000000000000000000010000
+          00010000000100000001000000010000000100000002A17D36B8E9B54DFC9776
+          32AC080602160000000100000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000185682D9A4335165D0000
+          0001000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000000}
+      end
+      item
+        ImageClass = 'TBitmap'
+        Image.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000000000000000000000000000000000000000000000000
+          0000000000000005060900010405000000000000000000000000000000000000
+          0000000000000001040400060708000000000000000000000000000000000000
+          00000000000100416B72004D7D8F0017262D0001030400000000000000000001
+          03040017262D004A798F003E6072000001010000000000000000000000000000
+          00000000000000426D770088D9FD0078C5E000497686001B2A30001B2A30004A
+          7685007BC6E00089DAFD00436578000000000000000000000000000000000000
+          000000000000002B4651008ADBF90090E4FF0091E0FD0085CFE90085CEE90092
+          DFFD0092E4FF008DDCF9002C4751000000000000000000000000000000000000
+          000000000000001A2C320086D0EC0096E6FF0098E7FF0099E8FF0099E8FF0099
+          E8FF0097E7FF008AD4EC001C2C32000000000000000000000000000000000000
+          000000000000001522260088CEE4009BE9FF009DEBFF009FECFF009FECFF009E
+          ECFF009DEAFF008ACFE400172127000000000000000000000000000000000000
+          0000000304050041626D0098E1F800A0ECFF00A2EEFF00A4EFFF00A5EFFF00A4
+          EFFF00A2EEFF009BE4F80043646E000305050000000000000000000000000003
+          0505003A5B64008ED8EA00A0EDFF00A4EFFF00A9F1FF00AAF4FF00ACF3FF00AA
+          F2FF00A7F1FF00A4EFFF0091D8EB003E5B64000204060000000000020406003C
+          5D68008DD5EC009FECFF00A4EFFF00A8F2FF00ACF4FF00AFF6FF00B0F6FF00AF
+          F6FF00ACF4FF00A8F1FF00A2EEFF0092D9EC003E5E6800040406001623280C7B
+          B7C70B95DAEE079EE6F903A5EEFE00ABF4FF00B0F8FF00B5FAFF00B6FBFF00B4
+          FAFF00AFF6FF03ABF0FE07A2E9F90B9BDCEE0C7DB8C800162528000304050112
+          1C1E062430350B364B4F0F516C72188CBAC303B2F4FD00B9FCFF00BBFEFF03B6
+          F7FD168FBDC40F526D720B374A4F0625313501141C1E00030405000000000000
+          0000000000000000000000000000031B2426159DCBD300B8FCFF00BCFEFF15A0
+          CFD3031C24260000000000000000000000000000000000000000000000000000
+          00000000000000000000000000000000020211566F7301B0F3FB03B2F4FB1157
+          6F74000002020000000000000000000000000000000000000000000000000000
+          00000000000000000000000000000000000005171D1F139ACAD3139ACBD30517
+          1D1F000000000000000000000000000000000000000000000000000000000000
+          00000000000000000000000000000000000000000202144D6569144D65690000
+          0202000000000000000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000040406000404060000
+          0000000000000000000000000000000000000000000000000000}
+      end
+      item
+        ImageClass = 'TBitmap'
+        Image.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000000000000000000000000000000000000000000000000
+          0000000000000000000000000000000000000000000000000108050514360F0F
+          38671D1D6C992D2DA6CB1B1B6385000000000000000000000000000000000000
+          00000000000000000000000000000000000004040E293737CDF63939D8FF3A3A
+          D9FF3A3AD9FF3636CAEE02020918000000000000000000000000000000000000
+          00000000000000000000000000000000000003030D253A3AD9FF3A3AD9FF3A3A
+          D9FF3A3AD9FF3232BCE007071A36000000000000000000000000000000000000
+          000000000000000000000000000000000000000000003535C5E83A3AD9FF3A3A
+          D9FF3A3AD9FF3A3AD9FF3838D2F90F0F36590000000000000000000000000000
+          0000000000000000000000000000000000000000000026268DAE3A3AD9FF3A3A
+          D9FF3A3AD9FF3A3AD9FF3A3AD9FF3838D2FA08081E3C00000000000000000001
+          00080000000000000000000000000000000000000000131348733A3AD9FF2121
+          7D9F25258AAA3A3AD7FD3A3AD9FF3A3AD9FF2F2FADD0000000000410052D030C
+          03230000000000000000000000000000000000000000060618383131B7D80000
+          01070000000008081E393232BADB3A3AD9FF3939D8FF0404112D0A270B531B67
+          1F9200000000000000000000000000000000000000000000000203030B1F0000
+          000000000000000000000101051029299BBC3A3AD9FF0B0B2A5409250B5035D3
+          3EFF217D26A80104010F00000000000000000000000009230B48010702180000
+          00000000000000000000000000000000010629299ABC0A0A274E020B032136D3
+          3FFE36D33EFF2FB537E20C2F0E5600000001000100072FB637E01143146E0000
+          0000000000000000000000000000000000000909254B02020A1D000000002697
+          2DBA36D43FFF36D43FFF35D33EFF2DAE35DA24892AB436D43FFF28992EBF0000
+          000000000000000000000000000000000000020208140000000000000000030E
+          042432C53BED36D43FFF36D43FFF36D43FFF36D43FFF36D43FFF34CF3DFB0106
+          0114000000000000000000000000000000000000000000000000000000000000
+          00000617073030BA38E036D43FFF36D43FFF36D43FFF36D43FFF36D43FFF0E38
+          1162000000000000000000000000000000000000000000000000000000000000
+          0000000000000104010F1D73229836D43FFF36D43FFF36D43FFF36D43FFF2389
+          29AD000000000000000000000000000000000000000000000000000000000000
+          00000000000000000000185E1C8536D43FFF36D43FFF36D13FFC2AA531C80D33
+          0F52000000000000000000000000000000000000000000000000000000000000
+          000000000000000000042DB035D41F7C259F0C300E5701060113000000000000
+          0000000000000000000000000000000000000000000000000000}
+      end>
   end
   inherited img32: TcxImageList
     FormatVersion = 1
@@ -2913,15 +3308,15 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
         end
         item
           Visible = True
-          ItemName = 'lblPeriod'
+          ItemName = 'lblGroupCFwdBy'
         end
         item
           Visible = True
-          ItemName = 'cntPeriod'
+          ItemName = 'cntGroupCFwdBy'
         end
         item
           Visible = True
-          ItemName = 'lblSpace1'
+          ItemName = 'lblSpace3'
         end
         item
           Visible = True
@@ -2982,11 +3377,11 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
         end
         item
           Visible = True
-          ItemName = 'lblReleaseDataPeriod'
+          ItemName = 'lblGoupReelaseBy'
         end
         item
           Visible = True
-          ItemName = 'cntReleaseDataPeriod'
+          ItemName = 'cntGoupReleaseBy'
         end
         item
           Visible = True
@@ -3032,38 +3427,18 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
       Visible = ivNever
       AutoGrayScale = False
     end
-    object cntPeriod: TdxBarControlContainerItem
-      Caption = 'Fetch data for period'
-      Category = 0
-      Hint = 'Fetch data for period'
-      ScreenTip = tipDataPeriod
-      Visible = ivAlways
-      Control = lucPeriod
-    end
     object cntReleasePeriod: TdxBarControlContainerItem
       Caption = 'Release to period'
       Category = 0
       Hint = 'Release to period'
       ScreenTip = tipReleasePeriod
       Visible = ivAlways
-      Control = lucReleaseToPeriod
-    end
-    object lblPeriod: TdxBarStatic
-      Caption = 'Fetch data for period'
-      Category = 0
-      Hint = 'Fetch data for period'
-      Visible = ivAlways
+      Control = lucReleaseCarryForwardToPeriod
     end
     object lblReleasePeriod: TdxBarStatic
       Caption = 'Release to period'
       Category = 0
       Hint = 'Release to period'
-      Visible = ivAlways
-    end
-    object lblSpace1: TdxBarStatic
-      Caption = '   '
-      Category = 0
-      Hint = '   '
       Visible = ivAlways
     end
     object cntPersistentSelection: TdxBarControlContainerItem
@@ -3104,25 +3479,12 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
       ScreenTip = tipReverseRelease
       AutoGrayScale = False
     end
-    object cntReleaseDataPeriod: TdxBarControlContainerItem
-      Caption = 'New Item'
-      Category = 0
-      Hint = 'New Item'
-      Visible = ivAlways
-      Control = lucReleaseDataPeriod
-    end
     object cntChangeToPeriod: TdxBarControlContainerItem
       Caption = 'New Item'
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
       Control = lucChangeToPeriod
-    end
-    object lblReleaseDataPeriod: TdxBarStatic
-      Caption = 'Fetch data for period'
-      Category = 0
-      Hint = 'Fetch data for period'
-      Visible = ivAlways
     end
     object lblChangeToPeriod: TdxBarStatic
       Caption = 'Change to period'
@@ -3136,11 +3498,68 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
       Hint = '   '
       Visible = ivAlways
     end
+    object cntGroupCFwdBy: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = lucGroupCFwdBy
+    end
+    object cntGoupReleaseBy: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = lucGroupReleaseBy
+    end
+    object lblGoupReelaseBy: TdxBarStatic
+      Caption = 'Group By'
+      Category = 0
+      Hint = 'Group By'
+      Visible = ivAlways
+    end
+    object lblGroupCFwdBy: TdxBarStatic
+      Caption = 'Group By'
+      Category = 0
+      Hint = 'Group By'
+      Visible = ivAlways
+    end
+    object lblSpace3: TdxBarStatic
+      Caption = '   '
+      Category = 0
+      Hint = '   '
+      Visible = ivAlways
+    end
   end
   object styReadOnly: TcxEditStyleController
     Style.Color = 15132415
     Left = 365
     Top = 465
     PixelsPerInch = 96
+  end
+  object popReleaseCFwd: TPopupMenu
+    Images = img16
+    Left = 415
+    Top = 380
+    object Release1: TMenuItem
+      Action = actRelease
+    end
+    object GetData1: TMenuItem
+      Action = actGetTimeSheetDataCFwd
+    end
+  end
+  object popUndoRelease: TPopupMenu
+    Images = img16
+    Left = 515
+    Top = 380
+    object GetData2: TMenuItem
+      Action = actChangeReleasePeriod
+    end
+    object Reverse1: TMenuItem
+      Action = actReverseRelease
+    end
+    object GetData3: TMenuItem
+      Action = actGetTimesheetDataRelease
+    end
   end
 end

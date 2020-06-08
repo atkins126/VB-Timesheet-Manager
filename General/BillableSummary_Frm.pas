@@ -500,7 +500,7 @@ var
   FileSaved: Boolean;
   DC: TcxCustomDataController;
   RepFileName: string;
-  AComboBox: TcxComboBox;
+//  AComboBox: TcxComboBox;
   CustomerID: Integer;
 begin
   ReportDM.frxPDFExport.ShowDialog := False;
@@ -561,7 +561,7 @@ end;
 
 procedure TBillableSummaryFrm.DoPrint(Sender: TObject);
 var
-  AComboBox: TcxComboBox;
+//  AComboBox: TcxComboBox;
   RepFileName: string;
   CustomerID: Integer;
 begin
@@ -613,7 +613,7 @@ var
   Response: TStringList;
 //  FromPeriod, Period: Integer;
   WhereClause, OrderByClause, FileName: string;
-  AComboBox: TcxComboBox;
+//  AComboBox: TcxComboBox;
 //  SamePeriod: Boolean;
 const
 //  SQL_PERIOD = 'SELECT THE_PERIOD FROM SourcePeriod WHERE THE_PERIOD >= %d AND THE_PERIOD <= %d';
@@ -710,17 +710,17 @@ begin
     WhereClause :=
       'WHERE T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ' +
       ' AND (T.THE_PERIOD <= ' + FPeriod.ToString +
-      ' OR T.RELEASE_CFWD_TO_PERIOD = ' + FPeriod.ToString + ') ' +
+      ' OR T.RELEASE_TO_PERIOD = ' + FPeriod.ToString + ') ' +
       ' AND T.CARRY_FORWARD = 1 ';
 
 //    WhereClause :=
 //      'WHERE T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ' +
 //      ' AND (T.THE_PERIOD <= ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) +
-//      ' OR T.RELEASE_CFWD_TO_PERIOD = ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) + ') ' +
+//      ' OR T.RELEASE_TO_PERIOD = ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) + ') ' +
 //      ' AND T.CARRY_FORWARD = 1 ';
 
 //        ' AND (T.THE_PERIOD =' + FTimesheetPeriod.ToString +
-//        ' OR T.RELEASE_CFWD_TO_PERIOD = ' + FTimesheetPeriod.ToString + ') '
+//        ' OR T.RELEASE_TO_PERIOD = ' + FTimesheetPeriod.ToString + ') '
 
     OrderByClause := ' ORDER BY T.ACTIVITY_DATE';
     FileName := 'C:\Data\Xml\Carry Forward Summary.xml';
@@ -748,7 +748,7 @@ begin
       WhereClause :=
         'WHERE T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) +
         ' AND (T.THE_PERIOD = ' + FPeriod.ToString +
-        ' OR T.RELEASE_CFWD_TO_PERIOD = ' + FPeriod.ToString + ') ' +
+        ' OR T.RELEASE_TO_PERIOD = ' + FPeriod.ToString + ') ' +
         ' AND T.CARRY_FORWARD = 0 '
     else
       WhereClause :=
@@ -759,7 +759,7 @@ begin
 //    if cbxIncludeReleasedItems.Checked then
 //      WhereClause :=
 //        'WHERE (T.THE_PERIOD = ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) +
-//        ' OR T.RELEASE_CFWD_TO_PERIOD = ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) + ') ' +
+//        ' OR T.RELEASE_TO_PERIOD = ' + VarAsType(ReportDM.cdsBillableSummary.FieldByName('THE_PERIOD').AsInteger, varString) + ') ' +
 //        ' AND T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ' +
 //        ' AND T.CARRY_FORWARD = 0 '
 //    else
@@ -1170,8 +1170,8 @@ end;
 
 procedure TBillableSummaryFrm.edtBHoursGetDisplayText(
   Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord; var AText: string);
-var
-  FieldName: string;
+//var
+//  FieldName: string;
 begin
   if ARecord <> nil then
   begin

@@ -538,10 +538,10 @@ type
     cdsTimesheetDetailAPPROVED: TIntegerField;
     cdsTimesheetDetailFULL_NAME: TStringField;
     cdsTimesheetDetailDATE_CARRIED_FORWARD: TDateField;
-    cdsTimesheetDetailDATE_CFWD_RELEASED: TDateField;
+    cdsTimesheetDetailDATE_RELEASED: TDateField;
     cdsTimesheetDetailRELEASE_CFWD_TO_PERIOD: TIntegerField;
     cdsTimesheetDATE_CARRIED_FORWARD: TDateField;
-    cdsTimesheetDATE_CFWD_RELEASED: TDateField;
+    cdsTimesheetDATE_RELEASED: TDateField;
     cdsTimesheetRELEASE_CFWD_TO_PERIOD: TIntegerField;
     qryPeriodTHE_PERIOD: TIntegerField;
     cdsRelease: TFDMemTable;

@@ -843,7 +843,6 @@ inherited MainFrm: TMainFrm
     object viewTimesheetBillable: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       ScrollbarAnnotations.CustomAnnotations = <>
-      DataController.DataSource = ReportDM.dtsTSBillable
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
@@ -1221,7 +1220,7 @@ inherited MainFrm: TMainFrm
         Properties.DisplayFormat = '######'
         Properties.EditFormat = '######'
         Properties.ReadOnly = True
-        MinWidth = 74
+        MinWidth = 64
         Options.Editing = False
         Options.Filtering = False
         Options.IncSearch = False
@@ -1257,7 +1256,7 @@ inherited MainFrm: TMainFrm
         Properties.DisplayFormat = '######'
         Properties.EditFormat = '######'
         Properties.ReadOnly = True
-        MinWidth = 74
+        MinWidth = 64
         Options.Editing = False
         Options.Filtering = False
         Options.IncSearch = False
@@ -1435,13 +1434,6 @@ inherited MainFrm: TMainFrm
     Font.Height = -11
     Font.Name = 'Tahoma'
     Font.Style = []
-  end
-  object edtFirstName: TcxTextEdit [6]
-    Left = 1190
-    Top = 137
-    BeepOnEnter = False
-    TabOrder = 6
-    Width = 121
   end
   inherited styRepository: TcxStyleRepository
     Left = 500
@@ -8467,15 +8459,11 @@ inherited MainFrm: TMainFrm
         end
         item
           Visible = True
-          ItemName = 'btnPrintExport'
-        end
-        item
-          Visible = True
           ItemName = 'btnOtherActions'
         end
         item
           Visible = True
-          ItemName = 'btnReturnID'
+          ItemName = 'btnPrintExport'
         end>
       OneOnRow = True
       Row = 0
@@ -8657,7 +8645,7 @@ inherited MainFrm: TMainFrm
       Properties.SaveTime = False
       Properties.ShowOnlyValidDates = True
       Properties.ShowTime = False
-      Properties.OnEditValueChanged = dteFromDatePropertiesEditValueChanged
+      Properties.OnEditValueChanged = lucFromDatePropertiesEditValueChanged
     end
     object lucToDate: TcxBarEditItem
       Caption = 'To Date    '
@@ -8672,7 +8660,7 @@ inherited MainFrm: TMainFrm
       Properties.SaveTime = False
       Properties.ShowOnlyValidDates = True
       Properties.ShowTime = False
-      Properties.OnEditValueChanged = dteToDatePropertiesEditValueChanged
+      Properties.OnEditValueChanged = lucToDatePropertiesEditValueChanged
     end
     object btnReports: TdxBarLargeButton
       Action = actTimsheetDetail
@@ -8957,13 +8945,6 @@ inherited MainFrm: TMainFrm
     object btnCustomerContactinfo: TdxBarButton
       Action = actCustomerContactInfo
       Category = 0
-    end
-    object btnReturnID: TdxBarLargeButton
-      Caption = 'Return ID'
-      Category = 0
-      Hint = 'Return ID'
-      Visible = ivAlways
-      OnClick = btnReturnIDClick
     end
   end
   object imgNav32: TcxImageList

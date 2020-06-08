@@ -877,14 +877,14 @@ inherited TSDM: TTSDM
       Origin = 'IS_ADDITIONAL_WORK'
       Required = True
     end
-    object cdsTimesheetDATE_CFWD_RELEASED: TDateField
+    object cdsTimesheetDATE_RELEASED: TDateField
       DisplayLabel = 'Released'
-      FieldName = 'DATE_CFWD_RELEASED'
+      FieldName = 'DATE_RELEASED'
     end
-    object cdsTimesheetRELEASE_CFWD_TO_PERIOD: TIntegerField
+    object cdsTimesheetRELEASE_TO_PERIOD: TIntegerField
       Alignment = taLeftJustify
       DisplayLabel = 'To Period'
-      FieldName = 'RELEASE_CFWD_TO_PERIOD'
+      FieldName = 'RELEASE_TO_PERIOD'
     end
   end
   object dtsTimesheet: TDataSource
@@ -1155,14 +1155,14 @@ inherited TSDM: TTSDM
       Origin = 'IS_ADDITIONAL_WORK'
       Required = True
     end
-    object cdsCarryForward1DATE_CFWD_RELEASED: TDateField
+    object cdsCarryForward1DATE_RELEASED: TDateField
       DisplayLabel = 'Released'
-      FieldName = 'DATE_CFWD_RELEASED'
+      FieldName = 'DATE_RELEASED'
     end
-    object cdsCarryForward1RELEASE_CFWD_TO_PERIOD: TIntegerField
+    object cdsCarryForward1RELEASE_TO_PERIOD: TIntegerField
       Alignment = taLeftJustify
       DisplayLabel = 'To Period'
-      FieldName = 'RELEASE_CFWD_TO_PERIOD'
+      FieldName = 'RELEASE_TO_PERIOD'
     end
   end
   object dtsCarryForward1: TDataSource
@@ -1366,13 +1366,13 @@ inherited TSDM: TTSDM
       DisplayLabel = 'C/Fwd'
       FieldName = 'CARRY_FORWARD_VALUE'
     end
-    object cdsCarryForwardDATE_CFWD_RELEASED: TDateTimeField
+    object cdsCarryForwardDATE_RELEASED: TDateTimeField
       DisplayLabel = 'Release Date'
-      FieldName = 'DATE_CFWD_RELEASED'
+      FieldName = 'DATE_RELEASED'
     end
-    object cdsCarryForwardRELEASE_CFWD_TO_PERIOD: TIntegerField
+    object cdsCarryForwardRELEASE_TO_PERIOD: TIntegerField
       DisplayLabel = 'Release Period'
-      FieldName = 'RELEASE_CFWD_TO_PERIOD'
+      FieldName = 'RELEASE_TO_PERIOD'
     end
   end
   object dtsCarryForward: TDataSource
@@ -1418,7 +1418,7 @@ inherited TSDM: TTSDM
       Size = 10
     end
   end
-  object cdsReleaseDataPeriod: TFDMemTable
+  object cdsAllPeriod: TFDMemTable
     ActiveStoredUsage = [auDesignTime]
     CachedUpdates = True
     Indexes = <
@@ -1441,14 +1441,14 @@ inherited TSDM: TTSDM
     UpdateOptions.CheckRequired = False
     UpdateOptions.AutoCommitUpdates = True
     UpdateOptions.UpdateTableName = 'PERIOD'
-    Left = 690
+    Left = 720
     Top = 125
-    object cdsReleaseDataPeriodTHE_PERIOD: TIntegerField
+    object cdsAllPeriodTHE_PERIOD: TIntegerField
       Alignment = taLeftJustify
       DisplayLabel = 'Period'
       FieldName = 'THE_PERIOD'
     end
-    object cdsReleaseDataPeriodPERIOD_NAME: TStringField
+    object cdsAllPeriodPERIOD_NAME: TStringField
       DisplayLabel = 'Period'
       FieldName = 'PERIOD_NAME'
       Size = 10
@@ -1459,9 +1459,9 @@ inherited TSDM: TTSDM
     Left = 505
     Top = 175
   end
-  object dtsReleaseDataPeriod: TDataSource
-    DataSet = cdsReleaseDataPeriod
-    Left = 690
+  object dtsAllPeriod: TDataSource
+    DataSet = cdsAllPeriod
+    Left = 720
     Top = 175
   end
   object cdsToPeriod: TFDMemTable
@@ -1487,7 +1487,7 @@ inherited TSDM: TTSDM
     UpdateOptions.CheckRequired = False
     UpdateOptions.AutoCommitUpdates = True
     UpdateOptions.UpdateTableName = 'PERIOD'
-    Left = 585
+    Left = 595
     Top = 125
     object cdsToPeriodTHE_PERIOD: TIntegerField
       Alignment = taLeftJustify
@@ -1502,7 +1502,7 @@ inherited TSDM: TTSDM
   end
   object dtsToPeriod: TDataSource
     DataSet = cdsToPeriod
-    Left = 585
+    Left = 595
     Top = 175
   end
   object dtsContactDetailCo: TDataSource
@@ -1876,14 +1876,14 @@ inherited TSDM: TTSDM
       Origin = 'FULL_NAME'
       Size = 61
     end
-    object cdsTimesheetViewDATE_CFWD_RELEASED: TDateField
+    object cdsTimesheetViewDATE_RELEASED: TDateField
       DisplayLabel = 'Released'
-      FieldName = 'DATE_CFWD_RELEASED'
+      FieldName = 'DATE_RELEASED'
       Origin = 'DATE_CFWD_RELEASED'
     end
-    object cdsTimesheetViewRELEASE_CFWD_TO_PERIOD: TIntegerField
+    object cdsTimesheetViewRELEASE_TO_PERIOD: TIntegerField
       DisplayLabel = 'To Period'
-      FieldName = 'RELEASE_CFWD_TO_PERIOD'
+      FieldName = 'RELEASE_TO_PERIOD'
       Origin = 'RELEASE_CFWD_TO_PERIOD'
     end
   end
@@ -2191,13 +2191,13 @@ inherited TSDM: TTSDM
       DisplayLabel = 'C/Fwd'
       FieldName = 'CARRY_FORWARD_VALUE'
     end
-    object cdsReleaseDATE_CFWD_RELEASED: TDateTimeField
+    object cdsReleaseDATE_RELEASED: TDateTimeField
       DisplayLabel = 'Release Date'
-      FieldName = 'DATE_CFWD_RELEASED'
+      FieldName = 'DATE_RELEASED'
     end
-    object cdsReleaseRELEASE_CFWD_TO_PERIOD: TIntegerField
+    object cdsReleaseRELEASE_TO_PERIOD: TIntegerField
       DisplayLabel = 'Release Period'
-      FieldName = 'RELEASE_CFWD_TO_PERIOD'
+      FieldName = 'RELEASE_TO_PERIOD'
     end
   end
   object cdsChangeToPeriod: TFDMemTable
@@ -2215,8 +2215,8 @@ inherited TSDM: TTSDM
     UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
     UpdateOptions.CheckRequired = False
     UpdateOptions.AutoCommitUpdates = True
-    Left = 810
-    Top = 120
+    Left = 840
+    Top = 125
     object cdsChangeToPeriodTHE_PERIOD: TIntegerField
       Alignment = taLeftJustify
       DisplayLabel = 'Period'
@@ -2230,7 +2230,7 @@ inherited TSDM: TTSDM
   end
   object dtsChangeToPeriod: TDataSource
     DataSet = cdsChangeToPeriod
-    Left = 810
+    Left = 840
     Top = 175
   end
 end
