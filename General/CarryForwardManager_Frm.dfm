@@ -12,8 +12,8 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
     ExplicitWidth = 1281
     ExplicitHeight = 706
     object grdTimesheet: TcxGrid [0]
-      Left = 25
-      Top = 108
+      Left = 10000
+      Top = 10000
       Width = 1228
       Height = 570
       Font.Charset = ANSI_CHARSET
@@ -23,13 +23,14 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
       Font.Style = []
       ParentFont = False
       TabOrder = 1
+      Visible = False
       object viewTimesheet: TcxGridDBBandedTableView
         PopupMenu = popReleaseCFwd
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
         OnCustomDrawCell = viewTimesheetCustomDrawCell
         DataController.DataSource = TSDM.dtsCarryForward
-        DataController.Options = [dcoCaseInsensitive, dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding]
+        DataController.Options = [dcoCaseInsensitive, dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoMultiSelectionSyncGroupWithChildren]
         DataController.Summary.DefaultGroupSummaryItems = <
           item
             Format = '#,##0.00'
@@ -100,7 +101,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
         OptionsData.Editing = False
         OptionsData.Inserting = False
         OptionsSelection.MultiSelect = True
-        OptionsSelection.CheckBoxVisibility = [cbvDataRow, cbvColumnHeader]
+        OptionsSelection.CheckBoxVisibility = [cbvDataRow, cbvGroupRow, cbvColumnHeader]
         OptionsSelection.MultiSelectMode = msmPersistent
         OptionsView.NoDataToDisplayInfoText = '<No Timesheet data to display>'
         OptionsView.Footer = True
@@ -728,14 +729,6 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
       end
     end
     object docToolbarCFwd: TdxBarDockControl [1]
-      Left = 25
-      Top = 48
-      Width = 1228
-      Height = 54
-      Align = dalNone
-      BarManager = barManager
-    end
-    object docTolbarRelease: TdxBarDockControl [2]
       Left = 10000
       Top = 10000
       Width = 1228
@@ -744,9 +737,17 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
       BarManager = barManager
       Visible = False
     end
+    object docTolbarRelease: TdxBarDockControl [2]
+      Left = 25
+      Top = 48
+      Width = 1228
+      Height = 54
+      Align = dalNone
+      BarManager = barManager
+    end
     object grdTimesheetRelease: TcxGrid [3]
-      Left = 10000
-      Top = 10000
+      Left = 25
+      Top = 108
       Width = 1228
       Height = 570
       Font.Charset = ANSI_CHARSET
@@ -756,13 +757,12 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
       Font.Style = []
       ParentFont = False
       TabOrder = 3
-      Visible = False
       object viewTimesheetRelease: TcxGridDBBandedTableView
         PopupMenu = popUndoRelease
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
         DataController.DataSource = TSDM.dtsRelease
-        DataController.Options = [dcoCaseInsensitive, dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding]
+        DataController.Options = [dcoCaseInsensitive, dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoMultiSelectionSyncGroupWithChildren]
         DataController.Summary.DefaultGroupSummaryItems = <
           item
             Format = '#,##0.00'
@@ -833,7 +833,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
         OptionsData.Editing = False
         OptionsData.Inserting = False
         OptionsSelection.MultiSelect = True
-        OptionsSelection.CheckBoxVisibility = [cbvDataRow, cbvColumnHeader]
+        OptionsSelection.CheckBoxVisibility = [cbvDataRow, cbvGroupRow, cbvColumnHeader]
         OptionsSelection.MultiSelectMode = msmPersistent
         OptionsView.NoDataToDisplayInfoText = '<No Timesheet data to display>'
         OptionsView.Footer = True
@@ -1440,6 +1440,7 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
       AlignVert = avClient
       CaptionOptions.Text = 'New Group'
       ButtonOptions.Buttons = <>
+      ItemIndex = 1
       LayoutDirection = ldTabbed
       ShowBorder = False
       Index = 0
@@ -1573,7 +1574,8 @@ inherited CarryForwardManagerFrm: TCarryForwardManagerFrm
       'Period'
       'Customer')
     Properties.OnEditValueChanged = lucGroupCFwdByPropertiesEditValueChanged
-    TabOrder = 10
+    TabOrder = 6
+    Visible = False
     Width = 90
   end
   inherited styRepository: TcxStyleRepository

@@ -10181,10 +10181,10 @@ inherited ReportDM: TReportDM
       DisplayLabel = 'Released'
       FieldName = 'DATE_RELEASED'
     end
-    object cdsTimesheetDetailRELEASE_CFWD_TO_PERIOD: TIntegerField
+    object cdsTimesheetDetailRELEASE_TO_PERIOD: TIntegerField
       Alignment = taLeftJustify
       DisplayLabel = 'To Period'
-      FieldName = 'RELEASE_CFWD_TO_PERIOD'
+      FieldName = 'RELEASE_TO_PERIOD'
     end
     object cdsTimesheetDetailIS_ADDITIONAL_WORK_STR: TStringField
       Alignment = taCenter

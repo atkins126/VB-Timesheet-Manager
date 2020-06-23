@@ -250,13 +250,14 @@ begin
   cbxPersistentSelection.EditValue := TSDM.TimesheetOption.PersitentRecordSelection;
   viewTimesheet.OptionsView.GroupByBox := False;
   viewTimesheetRelease.OptionsView.GroupByBox := False;
+  TSDM.CFwdOrreleased := False;
 
   if ReportDM = nil then
     ReportDM := TReportDM.Create(nil);
 
   GetPeriods;
-  actGetTimeSheetDataCFwd.Execute;
-  actGetTimesheetDataRelease.Execute;
+  //  actGetTimeSheetDataCFwd.Execute;
+  //  actGetTimesheetDataRelease.Execute;
 
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   RegKey.RootKey := HKEY_CURRENT_USER;
@@ -269,7 +270,7 @@ begin
     if not RegKey.ValueExists('Release Group By Index') then
       RegKey.WriteInteger('Release Group By Index', 0);
 
-    GetPeriods;
+    //    GetPeriods;
     lucGroupCFwdBy.ItemIndex := RegKey.ReadInteger('CFwd Group By Index');
     lucGroupReleaseBy.ItemIndex := RegKey.ReadInteger('Release Group By Index');
     RegKey.CloseKey;
@@ -323,18 +324,19 @@ begin
   else
     viewTimesheet.OptionsSelection.MultiSelectMode := msmStandard;
 
-  if not FShowingForm then
-  begin
-    RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
-    try
-      RegKey.RootKey := HKEY_CURRENT_USER;
+  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+  RegKey.RootKey := HKEY_CURRENT_USER;
+
+  try
+    if not FShowingForm then
+    begin
       RegKey.OpenKey(KEY_TIMESHEET, True);
       RegKey.WriteBool('Persistent Selection', TSDM.TimesheetOption.PersitentRecordSelection);
       RegKey.CloseKey;
-    finally
-      RegKey.Free;
-      viewTimesheet.Controller.ClearSelection;
     end;
+  finally
+    RegKey.Free;
+    viewTimesheet.Controller.ClearSelection;
   end;
 end;
 
@@ -364,12 +366,8 @@ begin
 end;
 
 procedure TCarryForwardManagerFrm.DoGetTimesheetData(Sender: TObject);
-var
-  I: Integer;
-  CurrentPeriodFound: Boolean;
 begin
   Screen.Cursor := crHourglass;
-  CurrentPeriodFound := False;
 
   try
     case TAction(Sender).Tag of
@@ -378,20 +376,6 @@ begin
           GetTimesheetDataCFwd;
           actRelease.Enabled := TSDM.cdsCarryForward.RecordCount > 0;
           viewTimesheet.ViewData.Collapse(True);
-
-          for I := 0 to viewTimesheet.ViewData.RecordCount - 1 do
-          begin
-            CurrentPeriodFound := viewTimesheet.ViewData.Records[I].Values[edtThePeriod.Index] = RUtils.GetCurrentPeriod(Date);
-            if viewTimesheet.ViewData.Records[I] is TcxGridGroupRow then
-              if CurrentPeriodFound then
-              begin
-                viewTimesheet.ViewData.Records[I].Expand(False);
-                CurrentPeriodFound := True;
-                Break;
-              end;
-          end;
-          if not CurrentPeriodFound then
-            viewTimesheet.ViewData.Records[viewTimesheet.ViewData.RecordCount - 1].Expand(False);
         end;
 
       11: // Released items
@@ -511,6 +495,7 @@ begin
     end
     else
     begin
+      TSDM.CFwdOrreleased := True;
       viewTimesheet.Controller.DeleteSelection;
       actGetTimesheetDataRelease.Execute;
 
@@ -593,6 +578,7 @@ begin
     end
     else
     begin
+      TSDM.CFwdOrreleased := True;
       viewTimesheetRelease.Controller.DeleteSelection;
       actGetTimeSheetDataCFwd.Execute;
 
@@ -719,7 +705,7 @@ end;
 
 procedure TCarryForwardManagerFrm.GetTimesheetDataCFwd;
 var
-  WhereClause, OrderByClause, FileName, DateClause, BillableClause: string;
+  WhereClause, OrderByClause, FileName: string;
   // ActivityClause, BillableClause, WorkTypeClause, FileName: string;
 begin
   WhereClause :=
@@ -740,7 +726,7 @@ end;
 
 procedure TCarryForwardManagerFrm.GetTimesheetDataRelease;
 var
-  WhereClause, OrderByClause, FileName, DateClause, BillableClause: string;
+  WhereClause, OrderByClause, FileName: string;
 begin
   // WhereClause := ' WHERE T.CARRY_FORWARD = 0 AND T.RELEASE_TO_PERIOD > 0';
   WhereClause :=
@@ -765,7 +751,7 @@ procedure TCarryForwardManagerFrm.lucGroupCFwdByPropertiesEditValueChanged(Sende
 var
   RegKey: TRegistry;
 begin
-  RegKey := TRegistry.Create;
+  //  RegKey := TRegistry.Create;
   RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
   RegKey.RootKey := HKEY_CURRENT_USER;
 

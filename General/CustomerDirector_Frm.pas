@@ -96,9 +96,9 @@ begin
   layMain.Align := alClient;
   layMain.LookAndFeel := lafCustomSkin;
   Self.Height := 330;
-  Self.Width := 720;
-  Self.Top := 100;
-  Self.Left := Screen.Width - Self.Width - 100;
+  Self.Width := 680;
+  Self.Top := 350;
+  Self.Left := Screen.Width - Self.Width - 150;
   viewDirector.DataController.DataSource := TSDM.dtsDirector;
   grdVDirector.DataController.DataSource := TSDM.dtsDirector;
 end;
@@ -107,10 +107,13 @@ procedure TCustomerDirectorFrm.FormShow(Sender: TObject);
 begin
   grdDirector.SetFocus;
   viewDirector.Focused := True;
+  if viewDirector.DataController.RecordCount > 0 then
+begin
   viewDirector.DataController.FocusedRecordIndex := 0;
   viewDirector.Controller.FocusedRecord.Selected := True;
   viewDirector.Controller.FocusedItem := edtFirstName;
   viewDirector.Controller.MakeFocusedItemVisible;
+end;
 
   if viewDirector.Controller.FocusedRecord <> nil then
     FItemValue := viewDirector.Controller.FocusedRecord.Values[edtEmailAddress.Index];

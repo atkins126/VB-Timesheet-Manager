@@ -1564,8 +1564,8 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
         object edtDateCarriedForward: TcxGridDBBandedColumn
           DataBinding.FieldName = 'DATE_CARRIED_FORWARD'
           PropertiesClassName = 'TcxDateEditProperties'
-          Properties.DisplayFormat = 'ddMMyyyy'
-          Properties.EditFormat = 'ddMMyyyy'
+          Properties.DisplayFormat = 'dd/MM/yyyy'
+          Properties.EditFormat = 'dd/MM/yyyy'
           Properties.ReadOnly = True
           MinWidth = 90
           Options.Editing = False
@@ -1581,10 +1581,10 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           Position.RowIndex = 0
         end
         object edtDateCFwdReleased: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'DATE_CFWD_RELEASED'
+          DataBinding.FieldName = 'DATE_RELEASED'
           PropertiesClassName = 'TcxDateEditProperties'
-          Properties.DisplayFormat = 'ddMMyyyy'
-          Properties.EditFormat = 'ddMMyyyy'
+          Properties.DisplayFormat = 'dd/MM/yyyy'
+          Properties.EditFormat = 'dd/MM/yyyy'
           Properties.ReadOnly = True
           MinWidth = 90
           Options.Editing = False
@@ -1600,7 +1600,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           Position.RowIndex = 0
         end
         object edtReleaseCFwdToPeriod: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'RELEASE_CFWD_TO_PERIOD'
+          DataBinding.FieldName = 'RELEASE_TO_PERIOD'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DisplayFormat = '######'
           Properties.EditFormat = '######'
@@ -1820,8 +1820,8 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
     end
   end
   object grdBillCfwdExcel: TcxGrid [1]
-    Left = 1245
-    Top = 198
+    Left = 1253
+    Top = 160
     Width = 913
     Height = 361
     Font.Charset = ANSI_CHARSET
@@ -2513,6 +2513,26 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
     object lvlBillCfwdExcel: TcxGridLevel
       GridView = viewBillCfwdExcel
     end
+  end
+  object lucPeriod: TcxLookupComboBox [2]
+    Left = 206
+    Top = 145
+    BeepOnEnter = False
+    Properties.DropDownAutoSize = True
+    Properties.DropDownListStyle = lsFixedList
+    Properties.ImmediatePost = True
+    Properties.KeyFieldNames = 'THE_PERIOD'
+    Properties.ListColumns = <
+      item
+        FieldName = 'PERIOD_NAME'
+      end>
+    Properties.ListOptions.SyncMode = True
+    Properties.ListSource = ReportDM.dtsPeriod
+    Properties.OnChange = lucPeriodPropertiesChange
+    Style.HotTrack = False
+    TabOrder = 2
+    Visible = False
+    Width = 90
   end
   inherited styRepository: TcxStyleRepository
     Left = 840
@@ -3977,10 +3997,12 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           ItemName = 'btnClose'
         end
         item
-          UserDefine = [udWidth]
-          UserWidth = 70
           Visible = True
-          ItemName = 'lucPeriod'
+          ItemName = 'lblPeriod'
+        end
+        item
+          Visible = True
+          ItemName = 'cntPeriod'
         end
         item
           Visible = True
@@ -4041,21 +4063,18 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
       Category = 0
       AutoGrayScale = False
     end
-    object lucPeriod: TcxBarEditItem
+    object cntPeriod: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = lucPeriod
+    end
+    object lblPeriod: TdxBarStatic
       Caption = 'Billable Period'
       Category = 0
       Hint = 'Billable Period'
       Visible = ivAlways
-      ShowCaption = True
-      PropertiesClassName = 'TcxLookupComboBoxProperties'
-      Properties.ImmediatePost = True
-      Properties.KeyFieldNames = 'THE_PERIOD'
-      Properties.ListColumns = <
-        item
-          FieldName = 'THE_PERIOD'
-        end>
-      Properties.ListOptions.SyncMode = True
-      Properties.OnEditValueChanged = lucPeriodPropertiesEditValueChanged
     end
   end
   object dlgPrint: TdxPrintDialog

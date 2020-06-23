@@ -177,7 +177,6 @@ type
     Billable1: TMenuItem;
     NotBillable1: TMenuItem;
     tipAdditionalActions: TdxScreenTip;
-    actInvoiceItem: TAction;
     actUnInvoice: TAction;
     btnInvoiceItem: TdxBarButton;
     btnUnInvoiceItem: TdxBarButton;
@@ -196,8 +195,8 @@ type
     actMonthlyBilling: TAction;
     btnMonthlyBilling: TdxBarLargeButton;
     tipMonthlyBilling: TdxScreenTip;
-    edtDateCFwdReleased: TcxGridDBBandedColumn;
-    edtReleaseCFwdToPeriod: TcxGridDBBandedColumn;
+    edtDateReleased: TcxGridDBBandedColumn;
+    edtReleaseToPeriod: TcxGridDBBandedColumn;
     tipReleaseCFwdManager: TdxScreenTip;
     edtPeriodName: TcxGridDBBandedColumn;
     cbxPersistentSelection: TcxBarEditItem;
@@ -267,6 +266,10 @@ type
     CustomerContactInfo1: TMenuItem;
     actDirectorLink: TAction;
     DirectorLink1: TMenuItem;
+    actInvoce: TAction;
+    actInvoiceList: TAction;
+    InvoiceList1: TMenuItem;
+    btnInvoiceList: TdxBarButton;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
     procedure DoRefresh(Sender: TObject);
@@ -295,7 +298,6 @@ type
     procedure DoApprovalStatus(Sender: TObject);
     procedure btnApproveClick(Sender: TObject);
     procedure DoBillable(Sender: TObject);
-    procedure DoInvoiceItem(Sender: TObject);
     procedure DoCarryForward(Sender: TObject);
     procedure DoMonthlyBilling(Sender: TObject);
     procedure cbxPersistentSelectionPropertiesEditValueChanged(Sender: TObject);
@@ -322,6 +324,9 @@ type
     procedure viewTimesheetFocusedRecordChanged(Sender: TcxCustomGridTableView;
       APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord;
       ANewItemRecordFocusingChanged: Boolean);
+    procedure DoInvoicing(Sender: TObject);
+    procedure DoUnInvoice(Sender: TObject);
+    procedure DoInvoiceList(Sender: TObject);
   private
     { Private declarations }
     FTSUserID: Integer;
@@ -340,7 +345,6 @@ type
     procedure ApproveTimesheetItem(ATag: Integer);
     procedure BillTimesheetItem(ATag: Integer);
     procedure InvoiceTimesheetItem;
-    procedure UnInvoiceTimesheetItem;
     procedure CarryForwardItem;
   protected
     procedure HandleStateChange(var MyMsg: TMessage); message WM_STATE_CHANGE;
@@ -375,7 +379,7 @@ uses
   MonthlyBillableReport_Frm,
   CarryForwardManager_Frm,
   CustomerContactDetail_Frm,
-  CustomerDirector_Frm;
+  CustomerDirector_Frm, Invoicing_Frm, InvoiceList_Frm;
 
 procedure TMainFrm.DrawCellBorder(var Msg: TMessage);
 begin
@@ -802,6 +806,10 @@ begin
       CarryForwardManagerFrm := TCarryForwardManagerFrm.Create(nil);
 
     CarryForwardManagerFrm.ShowModal;
+
+    if TSDM.CFwdOrreleased then
+      actGetTimesheetData.Execute;
+
     CarryForwardManagerFrm.Close;
     FreeAndNil(CarryForwardManagerFrm);
 
@@ -864,6 +872,66 @@ begin
   end;
 end;
 
+procedure TMainFrm.DoUnInvoice(Sender: TObject);
+var
+  DC: TcxDBDataController;
+  C: TcxCustomGridTableController;
+  I, ChangeCount: Integer;
+  RecIndex: Integer;
+begin
+  DC := viewTimesheet.DataController;
+  C := viewTimesheet.Controller;
+  ChangeCount := 0;
+
+  //  DC.BeginUpdate;
+  try
+    for I := 0 to C.SelectedRecordCount - 1 do
+    begin
+      // Can only un-invoice item if it is NOT locked.
+//      if DC.Values[C.SelectedRecords[I].RecordIndex, cbxLocked.Index] = 0 then
+//      begin
+      DC.Edit;
+      RecIndex := C.SelectedRecords[I].RecordIndex;
+      DC.FocusedRecordIndex := RecIndex;
+
+      if DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] >= 0 then
+      begin
+        DC.SetEditValue(edtInvoiceID.Index, 0, evsValue);
+        DC.SetEditValue(cbxLocked.Index, 0, evsValue);
+        DC.SetEditValue(edtInvoiceDate.Index, Null, evsValue);
+        Inc(ChangeCount);
+      end;
+      DC.Post(True);
+      //      end;
+    end;
+
+    //    if ChangeCount = 0 then
+    //    begin
+    //      Beep;
+    //      DisplayMsg(
+    //        Application.Title,
+    //        'Data Validation Error',
+    //        'One or more items could not be un-invoiced.' + CRLF + CRLF +
+    //        'Possible reason(s):' + CRLF +
+    //        'Item is locked.' + CRLF +
+    //        'Item has already been invoiced.' + CRLF +
+    //        'Item is carried forward.',
+    //        mtError,
+    //        [mbOK]
+    //        );
+    //    end
+    //    else
+    //    begin
+    if ChangeCount > 0 then
+      VBBaseDM.PostData(TSDM.cdsTimesheet);
+    //      actRefresh.Execute;
+    //    end;
+  finally
+    //    DC.EndUpdate;
+    Screen.Cursor := crDefault;
+  end;
+end;
+
 procedure TMainFrm.btnApproveClick(Sender: TObject);
 //var
 //  aControl: TdxBarItemControl;
@@ -916,7 +984,7 @@ procedure TMainFrm.CarryForwardItem;
 var
   DC: TcxDBDataController;
   C: TcxCustomGridTableController;
-  I, RecIndex, ChangeCount: Integer;
+  I, RecIndex, ChangeCount, AlreadyApprovedCount, AlreadyInvoicedCount: Integer;
   Msg, IDValues, CommandString: string;
   Response: TStringList;
 begin
@@ -936,44 +1004,61 @@ begin
   DC := viewTimesheet.DataController;
   C := viewTimesheet.Controller;
   ChangeCount := 0;
+  AlreadyApprovedCount := 0;
+  AlreadyInvoicedCount := 0;
 
   for I := 0 to C.SelectedRecordCount - 1 do
   begin
     RecIndex := C.SelectedRecords[I].RecordIndex;
     DC.FocusedRecordIndex := RecIndex;
 
-    if DC.Values[C.SelectedRecords[I].RecordIndex, cbxCarryForward.Index] = 0 then
+    if (DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] > 0)
+      or (VarIsNull(DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceDate.Index])) then
+      //      or ((FormatDatetime('dd/MM/yyyy', DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceDate.Index]) = '30/12/1899')) then
+      Inc(AlreadyInvoicedCount)
+    else if DC.Values[C.SelectedRecords[I].RecordIndex, cbxCarryForward.Index] = 0 then
     begin
-      DC.Edit;
-      DC.SetEditValue(cbxCarryForward.Index, 1, evsValue);
-      DC.SetEditValue(edtInvoiceID.Index, -1, evsValue);
-      DC.SetEditValue(edtDateCarriedForward.Index, Date, evsValue);
-      DC.SetEditValue(edtDateCfwdReleased.Index, Null, evsValue);
-      DC.Post(True);
-      IDValues := IDValues + IntToStr(C.SelectedRecords[I].Values[edtTID.Index]);
+      if DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 1 then
+        Inc(AlreadyApprovedCount)
+      else
+      begin
+        DC.Edit;
+        DC.SetEditValue(cbxCarryForward.Index, 1, evsValue);
+        DC.SetEditValue(edtInvoiceID.Index, -1, evsValue);
+        DC.SetEditValue(edtDateCarriedForward.Index, Date, evsValue);
+        DC.SetEditValue(edtDateReleased.Index, Null, evsValue);
+        DC.Post(True);
+        IDValues := IDValues + IntToStr(C.SelectedRecords[I].Values[edtTID.Index]);
 
-      if I < C.SelectedRecordCount - 1 then
-        IDValues := IDValues + ',';
-      Inc(ChangeCount);
+        if I < C.SelectedRecordCount - 1 then
+          IDValues := IDValues + ',';
+        Inc(ChangeCount);
+      end;
     end;
   end;
 
-  if ChangeCount > 0 then
-  begin
-    Response := RUtils.CreateStringList(PIPE, DOUBLE_QUOTE);
+  try
+    if ChangeCount > 0 then
+    begin
+      Response := RUtils.CreateStringList(PIPE, DOUBLE_QUOTE);
 
-    try
-      CommandString := Format(CARRY_FORWARD_STATUS_CHANGE, [AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', Date), ''''), IDValues]);
-      Response.DelimitedText := VBBaseDM.Client.ExecuteSQLCommand(CommandString);
-      if SameText(Response.Values['RESPONSE'], 'ERROR') then
-        raise EServerError.Create('One or more errors occurred when posting data to the database with message;' + CRLF + CRLF +
-          Response.Values['ERROR_MESSAGE']);
-    finally
-      Response.Free;
+      try
+        CommandString := Format(CARRY_FORWARD_STATUS_CHANGE, [AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', Date), ''''), IDValues]);
+        Response.DelimitedText := VBBaseDM.Client.ExecuteSQLCommand(CommandString);
+        if SameText(Response.Values['RESPONSE'], 'ERROR') then
+          raise EServerError.Create('One or more errors occurred when posting data to the database with message:' + CRLF + CRLF +
+            Response.Values['ERROR_MESSAGE']);
+      finally
+        Response.Free;
+      end;
     end;
-  end;
 
-  viewTimesheet.Controller.ClearSelection;
+    if (AlreadyApprovedCount > 0) or (AlreadyInvoicedCount > 0) then
+      raise EValidateException.Create('One or more selected items have already been approved or invoiced and cannot be carried forward. ' +
+        ChangeCount.ToString + ' item(s) have been carried forward.');
+  finally
+    viewTimesheet.Controller.ClearSelection;
+  end;
 end;
 
 procedure TMainFrm.DoApprovalStatus(Sender: TObject);
@@ -1038,7 +1123,8 @@ begin
     RecIndex := C.SelectedRecords[I].RecordIndex;
     DC.FocusedRecordIndex := RecIndex;
 
-    if DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] <= 0 then
+    if (DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] <= 0)
+      and not VarIsNull(DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceDate.Index]) then
     begin
       case ATag of
         100: // Approve
@@ -1299,69 +1385,61 @@ begin
 
   viewTimesheet.Controller.ClearSelection;
 
-  case ATag of
-    110:
-      begin
-        if AlreadyInvoiced > 0 then
-        begin
-          Beep;
-          DisplayMsg(
-            Application.Title,
-            'Data Update Informaiton',
-            AlreadyInvoiced.ToString + ' items have already been invoiced and cannot be updated.',
-            mtInformation,
-            [mbOK]
-            );
-        end
-
-        else if AlreadyApproved > 0 then
-        begin
-          Beep;
-          DisplayMsg(
-            Application.Title,
-            'Data Update Informaiton',
-            AlreadyBillable.ToString + ' items have already been approved and were thus not updated.',
-            mtInformation,
-            [mbOK]
-            );
-        end
-
-        else if AlreadyBillable > 0 then
-        begin
-          Beep;
-          DisplayMsg(
-            Application.Title,
-            'Data Update Informaiton',
-            AlreadyBillable.ToString + ' items are already billable and were thus not updated.',
-            mtInformation,
-            [mbOK]
-            );
-        end;
-      end;
-
-    111:
-      begin
-        if NotBillable > 0 then
-        begin
-          Beep;
-          DisplayMsg(
-            Application.Title,
-            'Data Update Informaiton',
-            NotBillable.ToString + ' items are already non-billable and were thus not updated.',
-            mtInformation,
-            [mbOK]
-            );
-        end;
-      end;
-  end;
-end;
-
-procedure TMainFrm.DoInvoiceItem(Sender: TObject);
-begin
-  case TAction(Sender).Tag of
-    120: InvoiceTimesheetItem;
-    121: UnInvoiceTimesheetItem;
-  end;
+  //  case ATag of
+  //    110:
+  //      begin
+  //        if AlreadyInvoiced > 0 then
+  //        begin
+  //          Beep;
+  //          DisplayMsg(
+  //            Application.Title,
+  //            'Data Update Informaiton',
+  //            AlreadyInvoiced.ToString + ' items have already been invoiced and cannot be updated.',
+  //            mtInformation,
+  //            [mbOK]
+  //            );
+  //        end
+  //
+  //        else if AlreadyApproved > 0 then
+  //        begin
+  //          Beep;
+  //          DisplayMsg(
+  //            Application.Title,
+  //            'Data Update Informaiton',
+  //            AlreadyBillable.ToString + ' items have already been approved and were thus not updated.',
+  //            mtInformation,
+  //            [mbOK]
+  //            );
+  //        end
+  //
+  //        else if AlreadyBillable > 0 then
+  //        begin
+  //          Beep;
+  //          DisplayMsg(
+  //            Application.Title,
+  //            'Data Update Informaiton',
+  //            AlreadyBillable.ToString + ' items are already billable and were thus not updated.',
+  //            mtInformation,
+  //            [mbOK]
+  //            );
+  //        end;
+  //      end;
+  //
+  //    111:
+  //      begin
+  //        if NotBillable > 0 then
+  //        begin
+  //          Beep;
+  //          DisplayMsg(
+  //            Application.Title,
+  //            'Data Update Informaiton',
+  //            NotBillable.ToString + ' items are already non-billable and were thus not updated.',
+  //            mtInformation,
+  //            [mbOK]
+  //            );
+  //        end;
+  //      end;
+  //  end;
 end;
 
 procedure TMainFrm.InvoiceTimesheetItem;
@@ -1454,66 +1532,6 @@ begin
       InvoiceItemFrm.Close;
       FreeAndNil(InvoiceItemFrm);
     end;
-  end;
-end;
-
-procedure TMainFrm.UnInvoiceTimesheetItem;
-var
-  DC: TcxDBDataController;
-  C: TcxCustomGridTableController;
-  I, ChangeCount: Integer;
-  RecIndex: Integer;
-begin
-  DC := viewTimesheet.DataController;
-  C := viewTimesheet.Controller;
-  ChangeCount := 0;
-
-  //  DC.BeginUpdate;
-  try
-    for I := 0 to C.SelectedRecordCount - 1 do
-    begin
-      // Can only un-invoice item if it is NOT locked.
-//      if DC.Values[C.SelectedRecords[I].RecordIndex, cbxLocked.Index] = 0 then
-//      begin
-      DC.Edit;
-      RecIndex := C.SelectedRecords[I].RecordIndex;
-      DC.FocusedRecordIndex := RecIndex;
-
-      if DC.Values[C.SelectedRecords[I].RecordIndex, edtInvoiceID.Index] >= 0 then
-      begin
-        DC.SetEditValue(edtInvoiceID.Index, 0, evsValue);
-        DC.SetEditValue(cbxLocked.Index, 0, evsValue);
-        DC.SetEditValue(edtInvoiceDate.Index, Null, evsValue);
-        Inc(ChangeCount);
-      end;
-      DC.Post(True);
-      //      end;
-    end;
-
-    //    if ChangeCount = 0 then
-    //    begin
-    //      Beep;
-    //      DisplayMsg(
-    //        Application.Title,
-    //        'Data Validation Error',
-    //        'One or more items could not be un-invoiced.' + CRLF + CRLF +
-    //        'Possible reason(s):' + CRLF +
-    //        'Item is locked.' + CRLF +
-    //        'Item has already been invoiced.' + CRLF +
-    //        'Item is carried forward.',
-    //        mtError,
-    //        [mbOK]
-    //        );
-    //    end
-    //    else
-    //    begin
-    if ChangeCount > 0 then
-      VBBaseDM.PostData(TSDM.cdsTimesheet);
-    //      actRefresh.Execute;
-    //    end;
-  finally
-    //    DC.EndUpdate;
-    Screen.Cursor := crDefault;
   end;
 end;
 
@@ -1691,7 +1709,7 @@ begin
     WhereClause := WhereClause + OrderByClause;
   end;
 
-  viewTimesheet.DataController.BeginUpdate;
+  //  viewTimesheet.DataController.BeginUpdate;
   try
     if (FIteration > 0) and (ProgressFrm <> nil) then
     begin
@@ -1708,18 +1726,57 @@ begin
       'C:\Data\Xml\Timesheet.xml', TSDM.cdsTimesheet.UpdateOptions.Generatorname,
       TSDM.cdsTimesheet.UpdateOptions.UpdateTableName);
 
-    if not TSDM.cdsTimesheet.Active then
-      TSDM.cdsTimesheet.CreateDataSet;
+    //    if not TSDM.cdsTimesheet.Active then
+    //      TSDM.cdsTimesheet.CreateDataSet;
   finally
     if ProgressFrm <> nil then
     begin
       ProgressFrm.Close;
       FreeAndNil(ProgressFrm);
     end;
-    viewTimesheet.DataController.EndUpdate;
+    //    viewTimesheet.DataController.EndUpdate;
     FIteration := 0;
     Screen.Cursor := crDefault;
   end;
+end;
+
+procedure TMainFrm.DoInvoiceList(Sender: TObject);
+begin
+  Screen.Cursor := crHourglass;
+
+  try
+    if InvoiceListFrm = nil then
+      InvoiceListFrm := TInvoiceListFrm.Create(nil);
+    InvoiceListFrm.ShowModal;
+    InvoiceListFrm.Close;
+    FreeAndNil(InvoiceListFrm);
+  finally
+    Screen.Cursor := crDefault;
+  end;
+
+end;
+
+procedure TMainFrm.DoInvoicing(Sender: TObject);
+begin
+  Screen.Cursor := crHourglass;
+  TSDM.CustomerID := TSDM.cdsTimesheet.FieldByName('CUSTOMER_ID').AsInteger;
+
+  if InvoicingFrm = nil then
+    InvoicingFrm := TInvoicingFrm.Create(nil);
+
+  try
+    InvoicingFrm.ShowModal;
+    InvoicingFrm.Close;
+    FreeAndNil(InvoicingFrm);
+  finally
+    Screen.Cursor := crDefault;
+  end;
+
+  //  case TAction(Sender).Tag of
+  //    120: InvoiceTimesheetItem;
+  //    121: UnInvoiceTimesheetItem;
+  //  end;
+
 end;
 
 procedure TMainFrm.UpdateApplicationSkin(SkinResourceFileName {, SkinName}: string);
@@ -1860,7 +1917,7 @@ begin
   if AViewInfo.GridRecord = nil then
     Exit;
 
-  if AViewInfo.GridRecord.Values[edtReleaseCfwdToPeriod.Index] > 0 then
+  if AViewInfo.GridRecord.Values[edtDateReleased.Index] > 0 then
   begin
     if AViewInfo.Item <> nil then
       if AViewInfo.Item <> cbxApproved then

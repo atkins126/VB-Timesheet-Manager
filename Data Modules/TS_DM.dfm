@@ -436,7 +436,7 @@ inherited TSDM: TTSDM
   end
   object cdsCustomerLookupPref: TFDMemTable
     ActiveStoredUsage = [auDesignTime]
-    OnCalcFields = cdsCustomerLookupPrefCalcFields
+    OnCalcFields = cdsCustomerLookupCalcFields
     FilterOptions = [foCaseInsensitive]
     FieldDefs = <>
     CachedUpdates = True
@@ -1630,7 +1630,7 @@ inherited TSDM: TTSDM
     UpdateOptions.UpdateTableName = 'TIMESHEET'
     UpdateOptions.KeyFields = 'ID'
     StoreDefs = True
-    Left = 155
+    Left = 130
     Top = 370
     object cdsTimesheetViewID: TIntegerField
       FieldName = 'ID'
@@ -1889,7 +1889,7 @@ inherited TSDM: TTSDM
   end
   object dtsTimesheetView: TDataSource
     DataSet = cdsTimesheetView
-    Left = 155
+    Left = 130
     Top = 425
   end
   object cdsDirector: TFDMemTable
@@ -1923,7 +1923,7 @@ inherited TSDM: TTSDM
     UpdateOptions.AutoCommitUpdates = True
     UpdateOptions.UpdateTableName = 'DIRECTOR'
     StoreDefs = True
-    Left = 215
+    Left = 226
     Top = 240
     object cdsDirectorID: TIntegerField
       Alignment = taLeftJustify
@@ -1985,7 +1985,7 @@ inherited TSDM: TTSDM
   end
   object dtsDirector: TDataSource
     DataSet = cdsDirector
-    Left = 215
+    Left = 226
     Top = 290
   end
   object dtsRelease: TDataSource
@@ -2232,5 +2232,407 @@ inherited TSDM: TTSDM
     DataSet = cdsChangeToPeriod
     Left = 840
     Top = 175
+  end
+  object cdsTSInvoicing: TFDMemTable
+    ActiveStoredUsage = [auDesignTime]
+    FieldDefs = <>
+    CachedUpdates = True
+    IndexDefs = <>
+    Indexes = <
+      item
+        Active = True
+        Selected = True
+        Name = 'idxCustomerID'
+        Fields = 'CUSTOMER_ID;ACTIVITY_DATE'
+        Options = [soNoCase]
+        FilterOptions = [ekNoCase]
+      end>
+    IndexName = 'idxCustomerID'
+    MasterSource = dtsTSCustomer
+    MasterFields = 'ID'
+    DetailFields = 'CUSTOMER_ID'
+    FetchOptions.AssignedValues = [evMode, evRecordCountMode, evDetailDelay]
+    FetchOptions.Mode = fmAll
+    FetchOptions.DetailDelay = 200
+    FormatOptions.AssignedValues = [fvDataSnapCompatibility]
+    FormatOptions.DataSnapCompatibility = True
+    ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
+    ResourceOptions.Persistent = True
+    ResourceOptions.StorePrettyPrint = True
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    StoreDefs = True
+    Left = 321
+    Top = 370
+    object cdsTSInvoicingID: TIntegerField
+      Alignment = taLeftJustify
+      FieldName = 'ID'
+      Origin = 'ID'
+    end
+    object cdsTSInvoicingFIRST_NAME: TStringField
+      DisplayLabel = 'First Name'
+      FieldName = 'FIRST_NAME'
+      Origin = 'FIRST_NAME'
+      Size = 30
+    end
+    object cdsTSInvoicingLAST_NAME: TStringField
+      DisplayLabel = 'Last Name'
+      FieldName = 'LAST_NAME'
+      Origin = 'LAST_NAME'
+      Size = 30
+    end
+    object cdsTSInvoicingLOGIN_NAME: TStringField
+      DisplayLabel = 'User Name'
+      FieldName = 'LOGIN_NAME'
+      Origin = 'LOGIN_NAME'
+    end
+    object cdsTSInvoicingACTIVITY_DATE: TDateField
+      DisplayLabel = 'Date'
+      FieldName = 'ACTIVITY_DATE'
+      Origin = 'ACTIVITY_DATE'
+    end
+    object cdsTSInvoicingCUSTOMER_TYPE: TStringField
+      DisplayLabel = 'Customer Type'
+      FieldName = 'CUSTOMER_TYPE'
+      Origin = 'CUSTOMER_TYPE'
+      Size = 30
+    end
+    object cdsTSInvoicingCUSTOMER_NAME: TStringField
+      DisplayLabel = 'Customer'
+      FieldName = 'CUSTOMER_NAME'
+      Origin = 'CUSTOMER_NAME'
+      Size = 100
+    end
+    object cdsTSInvoicingACTIVITY_TYPE: TStringField
+      DisplayLabel = 'Activity Type'
+      FieldName = 'ACTIVITY_TYPE'
+      Origin = 'ACTIVITY_TYPE'
+      Size = 50
+    end
+    object cdsTSInvoicingACTIVITY: TStringField
+      DisplayLabel = 'Activity'
+      FieldName = 'ACTIVITY'
+      Origin = 'ACTIVITY'
+      Size = 500
+    end
+    object cdsTSInvoicingPRICE_LIST_ITEM: TStringField
+      DisplayLabel = 'Item Type'
+      FieldName = 'PRICE_LIST_ITEM'
+      Origin = 'PRICE_LIST_ITEM'
+      Size = 200
+    end
+    object cdsTSInvoicingTIME_SPENT: TFloatField
+      DisplayLabel = 'Mins'
+      FieldName = 'TIME_SPENT'
+      Origin = 'TIME_SPENT'
+    end
+    object cdsTSInvoicingTIME_HOURS: TFloatField
+      DisplayLabel = 'Hours'
+      FieldName = 'TIME_HOURS'
+      Origin = 'TIME_HOURS'
+    end
+    object cdsTSInvoicingACTUAL_RATE: TFloatField
+      DisplayLabel = 'Rate'
+      FieldName = 'ACTUAL_RATE'
+      Origin = 'ACTUAL_RATE'
+    end
+    object cdsTSInvoicingSTD_RATE: TFloatField
+      DisplayLabel = 'Std Rate'
+      FieldName = 'STD_RATE'
+      Origin = 'STD_RATE'
+    end
+    object cdsTSInvoicingABBREVIATION: TStringField
+      Alignment = taCenter
+      DisplayLabel = 'RU'
+      FieldName = 'ABBREVIATION'
+      Size = 5
+    end
+    object cdsTSInvoicingITEM_VALUE: TFloatField
+      DisplayLabel = 'Value'
+      FieldName = 'ITEM_VALUE'
+      Origin = 'ITEM_VALUE'
+    end
+    object cdsTSInvoicingTHE_PERIOD: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'Period'
+      FieldName = 'THE_PERIOD'
+      Origin = 'THE_PERIOD'
+    end
+    object cdsTSInvoicingPERIOD_NAME: TStringField
+      DisplayLabel = 'Period'
+      FieldName = 'PERIOD_NAME'
+      Size = 10
+    end
+    object cdsTSInvoicingBILLABLE: TIntegerField
+      Alignment = taCenter
+      DisplayLabel = 'Bill'
+      FieldName = 'BILLABLE'
+      Origin = 'BILLABLE'
+    end
+    object cdsTSInvoicingBILLABLE_STR: TStringField
+      Alignment = taCenter
+      DisplayLabel = 'Bill'
+      FieldName = 'BILLABLE_STR'
+      Origin = 'BILLABLE_STR'
+      FixedChar = True
+      Size = 1
+    end
+    object cdsTSInvoicingINVOICE_ID: TIntegerField
+      DisplayLabel = 'Inv No'
+      FieldName = 'INVOICE_ID'
+      Origin = 'INVOICE_ID'
+    end
+    object cdsTSInvoicingCN_ID: TIntegerField
+      DisplayLabel = 'CN No'
+      FieldName = 'CN_ID'
+      Origin = 'CN_ID'
+    end
+    object cdsTSInvoicingLOCKED: TIntegerField
+      DisplayLabel = 'Lock'
+      FieldName = 'LOCKED'
+      Origin = 'LOCKED'
+    end
+    object cdsTSInvoicingLOCKED_STR: TStringField
+      DisplayLabel = 'Lock'
+      FieldName = 'LOCKED_STR'
+      Size = 1
+    end
+    object cdsTSInvoicingINVOICE_DATE: TDateField
+      DisplayLabel = 'Inv Date'
+      FieldName = 'INVOICE_DATE'
+      Origin = 'INVOICE_DATE'
+    end
+    object cdsTSInvoicingCARRY_FORWARD: TIntegerField
+      DisplayLabel = 'C Fwd'
+      FieldName = 'CARRY_FORWARD'
+      Origin = 'CARRY_FORWARD'
+    end
+    object cdsTSInvoicingCARRY_FORWARD_STR: TStringField
+      Alignment = taRightJustify
+      DisplayLabel = 'C Fwd'
+      FieldName = 'CARRY_FORWARD_STR'
+      Origin = 'CARRY_FORWARD_STR'
+      FixedChar = True
+      Size = 1
+    end
+    object cdsTSInvoicingIS_ADDITIONAL_WORK: TIntegerField
+      Alignment = taCenter
+      DisplayLabel = 'Add Wk'
+      FieldName = 'IS_ADDITIONAL_WORK'
+      Origin = 'IS_ADDITIONAL_WORK'
+    end
+    object cdsTSInvoicingIS_ADDITIONAL_WORK_STR: TStringField
+      Alignment = taCenter
+      DisplayLabel = 'Add Wk'
+      FieldName = 'IS_ADDITIONAL_WORK_STR'
+      Origin = 'IS_ADDITIONAL_WORK_STR'
+      FixedChar = True
+      Size = 1
+    end
+    object cdsTSInvoicingCARRY_FORWARD_VALUE: TFloatField
+      DisplayLabel = 'C/Fwd'
+      FieldName = 'CARRY_FORWARD_VALUE'
+    end
+    object cdsTSInvoicingIntegerField: TIntegerField
+      FieldName = 'USER_ID'
+      Origin = 'USER_ID'
+    end
+    object cdsTSInvoicingIntegerField2: TIntegerField
+      FieldName = 'CUSTOMER_ID'
+      Origin = 'CUSTOMER_ID'
+    end
+    object cdsTSInvoicingCUSTOMER_TYPE_ID: TIntegerField
+      FieldName = 'CUSTOMER_TYPE_ID'
+      Origin = 'CUSTOMER_TYPE_ID'
+    end
+    object cdsTSInvoicingACTIVITY_TYPE_ID: TIntegerField
+      FieldName = 'ACTIVITY_TYPE_ID'
+      Origin = 'ACTIVITY_TYPE_ID'
+    end
+    object cdsTSInvoicingPRICE_LIST_ITEM_ID: TIntegerField
+      FieldName = 'PRICE_LIST_ITEM_ID'
+      Origin = 'PRICE_LIST_ITEM_ID'
+    end
+    object cdsTSInvoicingIntegerField3: TIntegerField
+      FieldName = 'RATE_UNIT_ID'
+      Origin = 'RATE_UNIT_ID'
+    end
+  end
+  object dtsTSInvoicing: TDataSource
+    DataSet = cdsTSInvoicing
+    Left = 321
+    Top = 425
+  end
+  object cdsTSCustomer: TFDMemTable
+    ActiveStoredUsage = [auDesignTime]
+    FilterOptions = [foCaseInsensitive]
+    CachedUpdates = True
+    Indexes = <
+      item
+        Active = True
+        Name = 'idxID'
+        Fields = 'ID'
+      end
+      item
+        Active = True
+        Selected = True
+        Name = 'idxName'
+        Fields = 'NAME'
+        Options = [soNoCase]
+        FilterOptions = [ekNoCase]
+      end>
+    IndexName = 'idxName'
+    ConstraintsEnabled = True
+    FetchOptions.AssignedValues = [evMode, evRecordCountMode, evDetailDelay]
+    FetchOptions.Mode = fmAll
+    FormatOptions.AssignedValues = [fvDataSnapCompatibility]
+    FormatOptions.DataSnapCompatibility = True
+    ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
+    ResourceOptions.StorePrettyPrint = True
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 226
+    Top = 370
+    object cdsTSCustomerID: TIntegerField
+      Alignment = taLeftJustify
+      FieldName = 'ID'
+      Origin = 'ID'
+    end
+    object cdsTSCustomerCUSTOMER_TYPE_ID: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'CT ID'
+      FieldName = 'CUSTOMER_TYPE_ID'
+      Origin = 'CUSTOMER_TYPE_ID'
+    end
+    object cdsTSCustomerSTATUS_ID: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'S ID'
+      FieldName = 'STATUS_ID'
+      Origin = 'STATUS_ID'
+    end
+    object cdsTSCustomerCUSTOMER_GROUP_ID: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'C ID'
+      FieldName = 'CUSTOMER_GROUP_ID'
+      Origin = 'CUSTOMER_GROUP_ID'
+    end
+    object cdsTSCustomerNAME: TStringField
+      DisplayLabel = 'Name'
+      FieldName = 'NAME'
+      Origin = 'NAME'
+      Size = 100
+    end
+    object cdsTSCustomerCUSTOMER_TYPE: TStringField
+      DisplayLabel = 'Type'
+      FieldName = 'CUSTOMER_TYPE'
+      Origin = 'CUSTOMER_TYPE'
+      Size = 30
+    end
+    object cdsTSCustomerCUSTOMER_STATUS: TStringField
+      DisplayLabel = 'Status'
+      FieldName = 'CUSTOMER_STATUS'
+      Origin = 'CUSTOMER_STATUS'
+    end
+    object cdsTSCustomerIS_ACTIVE: TIntegerField
+      Alignment = taCenter
+      DisplayLabel = 'Active'
+      FieldName = 'IS_ACTIVE'
+      Origin = 'IS_ACTIVE'
+    end
+    object cdsTSCustomerCUSTOMER_GROUP_LINK_NAME: TStringField
+      DisplayLabel = 'CG Link Name'
+      FieldName = 'CUSTOMER_GROUP_LINK_NAME'
+      Origin = 'CUSTOMER_GROUP_LINK_NAME'
+      Size = 100
+    end
+  end
+  object dtsTSCustomer: TDataSource
+    DataSet = cdsTSCustomer
+    Left = 226
+    Top = 425
+  end
+  object View_timesheet_customerView: TFDQuery
+    Connection = VbdevConnection
+    SQL.Strings = (
+      'SELECT * FROM VIEW_TIMESHEET_CUSTOMER')
+    Left = 831
+    Top = 64
+  end
+  object cdsInvoiceList: TFDMemTable
+    ActiveStoredUsage = [auDesignTime]
+    FilterOptions = [foCaseInsensitive]
+    CachedUpdates = True
+    Indexes = <
+      item
+        Active = True
+        Selected = True
+        Name = 'idxInvoiceNo'
+        Fields = 'INVOICE_ID;INVOICE_DATE'
+      end>
+    IndexName = 'idxInvoiceNo'
+    ConstraintsEnabled = True
+    FetchOptions.AssignedValues = [evMode, evRecordCountMode]
+    FetchOptions.Mode = fmAll
+    FormatOptions.AssignedValues = [fvDataSnapCompatibility]
+    FormatOptions.DataSnapCompatibility = True
+    ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
+    ResourceOptions.StorePrettyPrint = True
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 425
+    Top = 370
+    object cdsInvoiceListINVOICE_ID: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'Inv No'
+      FieldName = 'INVOICE_ID'
+    end
+    object cdsInvoiceListCUSTOMER_ID: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'C ID'
+      FieldName = 'CUSTOMER_ID'
+    end
+    object cdsInvoiceListCUSTOMER_TYPE_ID: TIntegerField
+      Alignment = taLeftJustify
+      FieldName = 'CUSTOMER_TYPE_ID'
+    end
+    object cdsInvoiceListINVOICE_DATE: TDateTimeField
+      DisplayLabel = 'Inv Date'
+      FieldName = 'INVOICE_DATE'
+    end
+    object cdsInvoiceListNAME: TStringField
+      DisplayLabel = 'Customer'
+      FieldName = 'NAME'
+      Size = 100
+    end
+    object cdsInvoiceListPRICE_LIST_ITEM: TStringField
+      DisplayLabel = 'Price List Item'
+      FieldName = 'PRICE_LIST_ITEM'
+      Size = 200
+    end
+    object cdsInvoiceListITEM_VALUE: TFloatField
+      DisplayLabel = 'Value'
+      FieldName = 'ITEM_VALUE'
+    end
+    object cdsInvoiceListACTIVITY_TYPE: TStringField
+      DisplayLabel = 'Activity Type'
+      FieldName = 'ACTIVITY_TYPE'
+      Size = 50
+    end
+    object cdsInvoiceListACTIVITY: TStringField
+      DisplayLabel = 'Activivity'
+      FieldName = 'ACTIVITY'
+      Size = 500
+    end
+  end
+  object dtsInvoiceList: TDataSource
+    DataSet = cdsInvoiceList
+    Left = 425
+    Top = 425
   end
 end

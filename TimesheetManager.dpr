@@ -42,11 +42,13 @@ uses
   CustomerSearch_Frm in 'General\CustomerSearch_Frm.pas' {CustomerSearchFrm},
   Lookup_DM in 'Data Modules\Lookup_DM.pas' {LookupDM: TDataModule},
   CustomerContactDetail_Frm in 'General\CustomerContactDetail_Frm.pas' {CustomerContactDetailFrm},
-  VBProxyClass in '..\Lib\VBProxyClass.pas',
   SendEmail in '..\..\..\..\Lib\Classes\SendEmail.pas',
   EmailPerson_Frm in '..\..\..\..\Lib\EmailPerson_Frm.pas' {EmailPersonFrm},
   RecipientInput_Frm in '..\..\..\..\Lib\RecipientInput_Frm.pas' {RecipientInputFrm},
-  CustomerDirector_Frm in 'General\CustomerDirector_Frm.pas' {CustomerDirectorFrm};
+  CustomerDirector_Frm in 'General\CustomerDirector_Frm.pas' {CustomerDirectorFrm},
+  Invoicing_Frm in 'General\Invoicing_Frm.pas' {InvoicingFrm},
+  VBProxyClass in '..\Lib\VBProxyClass.pas',
+  InvoiceList_Frm in 'General\InvoiceList_Frm.pas' {InvoiceListFrm};
 
 {$R *.res}
 

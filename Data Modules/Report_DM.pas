@@ -539,7 +539,7 @@ type
     cdsTimesheetDetailFULL_NAME: TStringField;
     cdsTimesheetDetailDATE_CARRIED_FORWARD: TDateField;
     cdsTimesheetDetailDATE_RELEASED: TDateField;
-    cdsTimesheetDetailRELEASE_CFWD_TO_PERIOD: TIntegerField;
+    cdsTimesheetDetailRELEASE_TO_PERIOD: TIntegerField;
     cdsTimesheetDATE_CARRIED_FORWARD: TDateField;
     cdsTimesheetDATE_RELEASED: TDateField;
     cdsTimesheetRELEASE_CFWD_TO_PERIOD: TIntegerField;

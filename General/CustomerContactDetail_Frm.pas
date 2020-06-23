@@ -115,10 +115,13 @@ procedure TCustomerContactDetailFrm.FormShow(Sender: TObject);
 begin
   grdContactDetailCo.SetFocus;
   viewContactDetailCo.Focused := True;
-  viewContactDetailCo.DataController.FocusedRecordIndex := 0;
-  viewContactDetailCo.Controller.FocusedRecord.Selected := True;
-  viewContactDetailCo.Controller.FocusedItem := lucCDContactTypeID;
-  viewContactDetailCo.Controller.MakeFocusedItemVisible;
+  if viewContactDetailCo.DataController.RecordCount > 0 then
+  begin
+    viewContactDetailCo.DataController.FocusedRecordIndex := 0;
+    viewContactDetailCo.Controller.FocusedRecord.Selected := True;
+    viewContactDetailCo.Controller.FocusedItem := lucCDContactTypeID;
+    viewContactDetailCo.Controller.MakeFocusedItemVisible;
+  end;
 
   if viewContactDetailCo.Controller.FocusedRecord <> nil then
     FItemValue := viewContactDetailCo.Controller.FocusedRecord.Values[edtCDValue.Index];
@@ -137,8 +140,8 @@ begin
 
   EmailPersonFrm.lstRecipient.Clear;
   EmailPersonFrm.lstRecipient.Items.Add(FItemValue);
-//  EmailPersonFrm.lstRecipient.Items.Add('cvgiesen@gmail.com');
-//  EmailPersonFrm.lstRecipient.Items.Add('gieseng@xt.co.za');
+  //  EmailPersonFrm.lstRecipient.Items.Add('cvgiesen@gmail.com');
+  //  EmailPersonFrm.lstRecipient.Items.Add('gieseng@xt.co.za');
 
   Self.Hide;
   try
@@ -155,8 +158,7 @@ begin
   Self.Hide;
 end;
 
-procedure TCustomerContactDetailFrm.FormClose(Sender: TObject;
-  var Action: TCloseAction);
+procedure TCustomerContactDetailFrm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   //  Action := caFree;
   //  CustomerContactDetailFrm := nil;
@@ -189,7 +191,7 @@ begin
       TSDM.cdsContactDetailCo.FieldByName('FIRST_NAME').AsString + ' ' +
       TSDM.cdsContactDetailCo.FieldByName('LAST_NAME').AsString;
 
-//    actEmail.Caption := 'Email';
+    //    actEmail.Caption := 'Email';
     mnuEmail.Caption := 'Send email to: ' + edtPrimaryContact.Text;
     Update;
   finally

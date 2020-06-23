@@ -339,10 +339,70 @@ type
     dtsChangeToPeriod: TDataSource;
     cdsChangeToPeriodTHE_PERIOD: TIntegerField;
     cdsChangeToPeriodPERIOD_NAME: TStringField;
+    cdsTSInvoicing: TFDMemTable;
+    cdsTSInvoicingID: TIntegerField;
+    cdsTSInvoicingFIRST_NAME: TStringField;
+    cdsTSInvoicingLAST_NAME: TStringField;
+    cdsTSInvoicingLOGIN_NAME: TStringField;
+    cdsTSInvoicingACTIVITY_DATE: TDateField;
+    cdsTSInvoicingCUSTOMER_TYPE: TStringField;
+    cdsTSInvoicingCUSTOMER_NAME: TStringField;
+    cdsTSInvoicingACTIVITY_TYPE: TStringField;
+    cdsTSInvoicingACTIVITY: TStringField;
+    cdsTSInvoicingPRICE_LIST_ITEM: TStringField;
+    cdsTSInvoicingTIME_SPENT: TFloatField;
+    cdsTSInvoicingTIME_HOURS: TFloatField;
+    cdsTSInvoicingACTUAL_RATE: TFloatField;
+    cdsTSInvoicingSTD_RATE: TFloatField;
+    cdsTSInvoicingABBREVIATION: TStringField;
+    cdsTSInvoicingITEM_VALUE: TFloatField;
+    cdsTSInvoicingTHE_PERIOD: TIntegerField;
+    cdsTSInvoicingPERIOD_NAME: TStringField;
+    cdsTSInvoicingBILLABLE: TIntegerField;
+    cdsTSInvoicingBILLABLE_STR: TStringField;
+    cdsTSInvoicingINVOICE_ID: TIntegerField;
+    cdsTSInvoicingCN_ID: TIntegerField;
+    cdsTSInvoicingLOCKED: TIntegerField;
+    cdsTSInvoicingLOCKED_STR: TStringField;
+    cdsTSInvoicingINVOICE_DATE: TDateField;
+    cdsTSInvoicingCARRY_FORWARD: TIntegerField;
+    cdsTSInvoicingCARRY_FORWARD_STR: TStringField;
+    cdsTSInvoicingIS_ADDITIONAL_WORK: TIntegerField;
+    cdsTSInvoicingIS_ADDITIONAL_WORK_STR: TStringField;
+    cdsTSInvoicingCARRY_FORWARD_VALUE: TFloatField;
+    dtsTSInvoicing: TDataSource;
+    cdsTSInvoicingIntegerField: TIntegerField;
+    cdsTSInvoicingIntegerField2: TIntegerField;
+    cdsTSInvoicingIntegerField3: TIntegerField;
+    cdsTSInvoicingACTIVITY_TYPE_ID: TIntegerField;
+    cdsTSInvoicingPRICE_LIST_ITEM_ID: TIntegerField;
+    cdsTSInvoicingCUSTOMER_TYPE_ID: TIntegerField;
+    cdsTSCustomer: TFDMemTable;
+    dtsTSCustomer: TDataSource;
+    View_timesheet_customerView: TFDQuery;
+    cdsTSCustomerID: TIntegerField;
+    cdsTSCustomerCUSTOMER_TYPE_ID: TIntegerField;
+    cdsTSCustomerSTATUS_ID: TIntegerField;
+    cdsTSCustomerNAME: TStringField;
+    cdsTSCustomerCUSTOMER_TYPE: TStringField;
+    cdsTSCustomerCUSTOMER_STATUS: TStringField;
+    cdsTSCustomerIS_ACTIVE: TIntegerField;
+    cdsTSCustomerCUSTOMER_GROUP_ID: TIntegerField;
+    cdsTSCustomerCUSTOMER_GROUP_LINK_NAME: TStringField;
+    cdsInvoiceList: TFDMemTable;
+    dtsInvoiceList: TDataSource;
+    cdsInvoiceListINVOICE_ID: TIntegerField;
+    cdsInvoiceListCUSTOMER_ID: TIntegerField;
+    cdsInvoiceListCUSTOMER_TYPE_ID: TIntegerField;
+    cdsInvoiceListNAME: TStringField;
+    cdsInvoiceListINVOICE_DATE: TDateTimeField;
+    cdsInvoiceListPRICE_LIST_ITEM: TStringField;
+    cdsInvoiceListACTIVITY: TStringField;
+    cdsInvoiceListITEM_VALUE: TFloatField;
+    cdsInvoiceListACTIVITY_TYPE: TStringField;
     procedure dtsTimesheetStateChange(Sender: TObject);
     procedure cdsCustomerLookupCalcFields(DataSet: TDataSet);
     procedure cdsTimesheetNewRecord(DataSet: TDataSet);
-    procedure cdsCustomerLookupPrefCalcFields(DataSet: TDataSet);
     procedure PostData(DataSet: TFDMemTable);
     procedure cdsTimesheetBeforeEdit(DataSet: TDataSet);
     procedure cdsTimesheetAfterPost(DataSet: TDataSet);
@@ -351,12 +411,18 @@ type
   private
     FCurrentUserID: Integer;
     FDefaultInvoiceDate: TDateTime;
+    FInvoiceNo: Integer;
+    FCustomerID: Integer;
+    FCFwdOrreleased: Boolean;
     { Private declarations }
   public
     { Public declarations }
     TimesheetOption: TTimesheetOptions;
     property CurrentUserID: Integer read FCurrentUserID write FCurrentUserID;
     property DefaultInvoiceDate: TDateTime read FDefaultInvoiceDate write FDefaultInvoiceDate;
+    property InvoiceNo: Integer read FInvoiceNo write FInvoiceNo;
+    property CustomerID: Integer read FCustomerID write FCustomerID;
+    property CFwdOrreleased: Boolean read FCFwdOrreleased write FCFwdOrreleased;
 
     function GetDefaulttInvoiceDate: TDateTime;
 
@@ -375,18 +441,14 @@ uses RUtils;
 
 procedure TTSDM.cdsCustomerLookupCalcFields(DataSet: TDataSet);
 begin
-  case cdsCustomerLookup.FieldByName('IS_ACTIVE').Asinteger of
-    0: cdsCustomerLookup.FieldByName('ACTIVE_STATUS').AsString := 'No';
-    1: cdsCustomerLookup.FieldByName('ACTIVE_STATUS').AsString := 'Yes';
+  case TFDMemTable(DataSet).FieldByName('IS_ACTIVE').Asinteger of
+    0: TFDMemTable(DataSet).FieldByName('ACTIVE_STATUS').AsString := 'No';
+    1: TFDMemTable(DataSet).FieldByName('ACTIVE_STATUS').AsString := 'Yes';
   end;
-end;
-
-procedure TTSDM.cdsCustomerLookupPrefCalcFields(DataSet: TDataSet);
-begin
-  case cdsCustomerLookupPref.FieldByName('IS_ACTIVE').Asinteger of
-    0: cdsCustomerLookupPref.FieldByName('ACTIVE_STATUS').AsString := 'No';
-    1: cdsCustomerLookupPref.FieldByName('ACTIVE_STATUS').AsString := 'Yes';
-  end;
+//  case cdsCustomerLookup.FieldByName('IS_ACTIVE').Asinteger of
+//    0: cdsCustomerLookup.FieldByName('ACTIVE_STATUS').AsString := 'No';
+//    1: cdsCustomerLookup.FieldByName('ACTIVE_STATUS').AsString := 'Yes';
+//  end;
 end;
 
 procedure TTSDM.cdsTimesheetAfterPost(DataSet: TDataSet);

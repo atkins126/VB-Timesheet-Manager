@@ -42,7 +42,6 @@ type
     actPrint: TAction;
     actExcel: TAction;
     actPDF: TAction;
-    lucPeriod: TcxBarEditItem;
     litBillableSummary: TdxLayoutItem;
     litTimesheet: TdxLayoutItem;
     litCarryForward: TdxLayoutItem;
@@ -188,6 +187,9 @@ type
     litReleasedItemDescription: TdxLayoutItem;
     imgCFwdItemColour: TcxImage;
     lblCFwdItemColour: TcxLabel;
+    lucPeriod: TcxLookupComboBox;
+    cntPeriod: TdxBarControlContainerItem;
+    lblPeriod: TdxBarStatic;
     procedure GetBillableSummary;
     procedure GetBillableTimesheet;
     procedure GetPeriods;
@@ -199,7 +201,6 @@ type
     procedure DoPDF(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure lucPeriodPropertiesEditValueChanged(Sender: TObject);
     procedure DoEditItem(Sender: TObject);
     procedure cbxRemoveZeroBillableItemsPropertiesEditValueChanged(Sender: TObject);
     procedure cbxIncludeReleasedItemsPropertiesEditValueChanged(Sender: TObject);
@@ -221,6 +222,7 @@ type
       var ADone: Boolean);
     procedure cbxFetchPreviousPeriodDataPropertiesEditValueChanged(
       Sender: TObject);
+    procedure lucPeriodPropertiesChange(Sender: TObject);
   private
     { Private declarations }
     FShowingForm: Boolean;
@@ -266,6 +268,8 @@ var
   RegKey: TRegistry;
 begin
   Caption := 'Billable Summary Report';
+  layMain.Align :=  alClient;
+  layMain.LookAndFeel :=  lafCustomSkin;
   FShowingForm := True;
   TcxLookupComboBoxProperties(lucPeriod.Properties).ListSource := ReportDM.dtsPeriod;
 
@@ -315,7 +319,7 @@ begin
     OpenTables;
 
   finally
-    lucPeriodPropertiesEditValueChanged(lucPeriod.Properties);
+    lucPeriodPropertiesChange(lucPeriod.Properties);
     RegKey.Free;
   end;
 end;
@@ -839,9 +843,9 @@ begin
   ReportDM.cdsSystemUser2.Data := ReportDM.cdsSystemUser1.Data;
 end;
 
-procedure TBillableSummaryFrm.lucPeriodPropertiesEditValueChanged(Sender: TObject);
+procedure TBillableSummaryFrm.lucPeriodPropertiesChange(Sender: TObject);
 begin
-  FPeriod := ReportDM.qryPeriod.FieldByName('THE_PERIOD').AsInteger;
+  FPeriod := lucPeriod.EditValue;
 end;
 
 procedure TBillableSummaryFrm.GetActivityType;

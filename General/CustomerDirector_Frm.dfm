@@ -9,15 +9,15 @@ inherited CustomerDirectorFrm: TCustomerDirectorFrm
   PixelsPerInch = 96
   TextHeight = 13
   inherited layMain: TdxLayoutControl
-    Width = 720
+    Width = 680
     Height = 285
-    ExplicitWidth = 720
+    ExplicitWidth = 680
     ExplicitHeight = 285
     object grdDirector: TcxGrid [0]
       Left = 11
-      Top = 118
+      Top = 75
       Width = 336
-      Height = 156
+      Height = 199
       TabOrder = 1
       object viewDirector: TcxGridDBBandedTableView
         PopupMenu = popEmail
@@ -122,13 +122,13 @@ inherited CustomerDirectorFrm: TCustomerDirectorFrm
           DataBinding.FieldName = 'FIRST_NAME'
           PropertiesClassName = 'TcxTextEditProperties'
           Properties.ReadOnly = True
-          MinWidth = 150
+          MinWidth = 130
           Options.Editing = False
           Options.Filtering = False
           Options.Grouping = False
           Options.HorzSizing = False
           Options.Moving = False
-          Width = 150
+          Width = 130
           Position.BandIndex = 0
           Position.ColIndex = 4
           Position.RowIndex = 0
@@ -141,7 +141,7 @@ inherited CustomerDirectorFrm: TCustomerDirectorFrm
           Options.Filtering = False
           Options.Grouping = False
           Options.Moving = False
-          Width = 150
+          Width = 130
           Position.BandIndex = 0
           Position.ColIndex = 5
           Position.RowIndex = 0
@@ -213,18 +213,18 @@ inherited CustomerDirectorFrm: TCustomerDirectorFrm
       end
     end
     object docToolbar: TdxBarDockControl [1]
-      Left = 20
-      Top = 42
-      Width = 680
+      Left = 11
+      Top = 11
+      Width = 658
       Height = 58
       Align = dalNone
       BarManager = barManager
     end
     object grdVDirector: TcxDBVerticalGrid [2]
       Left = 353
-      Top = 118
-      Width = 356
-      Height = 156
+      Top = 75
+      Width = 316
+      Height = 199
       OptionsView.CellAutoHeight = True
       OptionsView.ScrollBars = ssVertical
       OptionsView.RowHeaderWidth = 119
@@ -317,6 +317,7 @@ inherited CustomerDirectorFrm: TCustomerDirectorFrm
       Parent = layMainGroup_Root
       CaptionOptions.Text = 'New Group'
       ButtonOptions.Buttons = <>
+      ShowBorder = False
       Index = 0
     end
     object litToolbar: TdxLayoutItem
