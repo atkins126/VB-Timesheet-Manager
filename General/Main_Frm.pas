@@ -8,7 +8,7 @@ uses
   Vcl.Dialogs, System.Actions, Vcl.ActnList, System.Win.Registry, Data.DB,
   System.DateUtils, System.IOUtils, Winapi.ShellApi, System.Types, Vcl.StdCtrls,
 
-  Base_Frm, BaseLayout_Frm, VBProxyClass, VBCommonValues, CommonFunctions,
+  Base_Frm, BaseLayout_Frm, VBProxyClasses, VBCommonValues, CommonFunctions,
   CommonValues,
 
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore,
@@ -23,7 +23,7 @@ uses
   dxBarExtItems, cxBarEditItem, cxMemo, Vcl.Menus, dxScrollbarAnnotations,
   dxRibbonSkins, dxRibbonCustomizationForm, dxRibbon, dxPrnDev, dxPrnDlg,
   cxGridExportLink, cxDataUtils, dxLayoutcxEditAdapters, cxImage, cxLabel,
-  cxButtons, dxRibbonStatusBar, cxFormats;
+  cxButtons, dxRibbonStatusBar, cxFormats, cxSpinEdit, cxProgressBar;
 
 type
   TMainFrm = class(TBaseLayoutFrm)
@@ -267,9 +267,17 @@ type
     actDirectorLink: TAction;
     DirectorLink1: TMenuItem;
     actInvoce: TAction;
-    actInvoiceList: TAction;
+    actInvoiceSchedule: TAction;
     InvoiceList1: TMenuItem;
     btnInvoiceList: TdxBarButton;
+    btnPDF: TcxButton;
+    btnParam: TdxBarLargeButton;
+    edtName: TcxTextEdit;
+    cntTest: TdxBarControlContainerItem;
+    actdirecorOfCompany: TAction;
+    DirectorLink2: TMenuItem;
+    btnDirectorLink: TdxBarButton;
+    btnCustomerDirectorlink: TdxBarButton;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
     procedure DoRefresh(Sender: TObject);
@@ -327,6 +335,11 @@ type
     procedure DoInvoicing(Sender: TObject);
     procedure DoUnInvoice(Sender: TObject);
     procedure DoInvoiceList(Sender: TObject);
+    procedure btnPDFClick(Sender: TObject);
+    procedure btnParamClick(Sender: TObject);
+    procedure viewTimesheetKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure DoDirectorOfCompany(Sender: TObject);
   private
     { Private declarations }
     FTSUserID: Integer;
@@ -379,7 +392,11 @@ uses
   MonthlyBillableReport_Frm,
   CarryForwardManager_Frm,
   CustomerContactDetail_Frm,
-  CustomerDirector_Frm, Invoicing_Frm, InvoiceList_Frm;
+  CustomerDirector_Frm,
+  Invoicing_Frm,
+  InvoiceSchedule_Frm,
+  PDFViewer_Frm,
+  DirectorOfCompany_Frm;
 
 procedure TMainFrm.DrawCellBorder(var Msg: TMessage);
 begin
@@ -492,6 +509,7 @@ begin
 
     RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
     RegKey.RootKey := HKEY_CURRENT_USER;
+
     try
       RegKey.OpenKey(KEY_USER_DATA, True);
       OpenTables;
@@ -573,10 +591,9 @@ begin
           );
         Application.Terminate;
       end;
-      WindowState := wsMaximized;
     end;
-    // else
-    // WindowState := wsMaximized;
+
+    WindowState := wsMaximized;
   finally
     FShowingForm := False;
     Screen.Cursor := crDefault;
@@ -679,6 +696,20 @@ begin
 
     SendMessage(CustomerContactDetailFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar(FCustomerName)), 0);
     CustomerContactDetailFrm.Show;
+  finally
+    Screen.Cursor := crDefault;
+  end;
+end;
+
+procedure TMainFrm.DoDirectorOfCompany(Sender: TObject);
+begin
+  try
+    if DirectorOfCompanyFrm = nil then
+      DirectorOfCompanyFrm := TDirectorOfCompanyFrm.Create(nil);
+
+    DirectorOfCompanyFrm.ShowModal;
+    DirectorOfCompanyFrm.Close;
+    FreeAndNil(DirectorOfCompanyFrm);
   finally
     Screen.Cursor := crDefault;
   end;
@@ -949,6 +980,64 @@ begin
   ////    2: popInvoice.Popup(APopupPoint.X, APopupPoint.Y);
   ////    3: popCarryForward.Popup(APopupPoint.X, APopupPoint.Y);
   ////  end;
+end;
+
+procedure TMainFrm.btnParamClick(Sender: TObject);
+var
+  Request, ParameterList, ParameterValues, OutputValues: string;
+  ResponseList, OutputValueList: TStringList;
+begin
+  ResponseList := CreateStringList(PIPE, DOUBLE_QUOTE);
+  OutputValueList := CreateStringList(PIPE, DOUBLE_QUOTE);
+  OutputValues := '';
+
+  try
+    ParameterList :=
+      'FIRST_NAME' + PIPE +
+      'LAST_NAME' + PIPE +
+      'NEXT_ID' + PIPE +
+      'THE_DATE_TIME';
+
+    ParameterValues :=
+      edtName.Text + PIPE +
+      '' + PIPE +
+      '0' + PIPE +
+      DateTimeToStr(Now);
+
+    VBBaseDM.OutputValues := '';
+    ResponseList.DelimitedText := VBBaseDM.ExecuteStoredProcedure('SP_TEST_RETURN', ParameterList, ParameterValues, OutputValues);
+
+    if SameText(ResponseList.Values['RESPONSE'], 'ERROR') then
+      raise EServerError.Create('One or more errors occurred when executing a remote server command with error message:' + CRLF +
+        ResponseList.Values['ERROR_MESSAGE']);
+
+    OutputValueList.DelimitedText := VBBaseDM.OutputValues;
+
+    ShowMessage(
+      'First Nname = ' + OutputValueList.Values['FIRST_NAME'] + CRLF +
+      'Last Nname = ' + OutputValueList.Values['LAST_NAME'] + CRLF +
+      'Next ID = ' + OutputValueList.Values['NEXT_ID'] + CRLF +
+      'The Date Time = ' + OutputValueList.Values['THE_DATE_TIME']
+      );
+  finally
+    ResponseList.Free;
+    OutputValueList.Free;
+  end;
+end;
+
+procedure TMainFrm.btnPDFClick(Sender: TObject);
+begin
+  Screen.Cursor := crHourglass;
+
+  try
+    if PDFViewerFrm = nil then
+      PDFViewerFrm := TPDFViewerFrm.Create(nil);
+    PDFViewerFrm.ShowModal;
+    PDFViewerFrm.Close;
+    FreeAndNil(PDFViewerFrm);
+  finally
+    Screen.Cursor := crDefault;
+  end;
 end;
 
 procedure TMainFrm.btnSelectAllClick(Sender: TObject);
@@ -1745,11 +1834,11 @@ begin
   Screen.Cursor := crHourglass;
 
   try
-    if InvoiceListFrm = nil then
-      InvoiceListFrm := TInvoiceListFrm.Create(nil);
-    InvoiceListFrm.ShowModal;
-    InvoiceListFrm.Close;
-    FreeAndNil(InvoiceListFrm);
+    if InvoiceScheduleFrm = nil then
+      InvoiceScheduleFrm := TInvoiceScheduleFrm.Create(nil);
+    InvoiceScheduleFrm.ShowModal;
+    InvoiceScheduleFrm.Close;
+    FreeAndNil(InvoiceScheduleFrm);
   finally
     Screen.Cursor := crDefault;
   end;
@@ -1961,6 +2050,15 @@ begin
   end;
 end;
 
+procedure TMainFrm.viewTimesheetKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+  case Key of
+    VK_INSERT: actInsert.Execute;
+    VK_F2: actEdit.Execute;
+    VK_DELETE: actDelete.Execute;
+  end;
+end;
+
 procedure TMainFrm.viewTimesheetSelectionChanged(Sender: TcxCustomGridTableView);
 var
   C: TcxCustomGridTableController;
@@ -2103,9 +2201,9 @@ begin
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_CAPTION, DWORD(PChar('Opening Customer Contact detail Table')), 0);
     SendMessage(ProgressFrm.Handle, WM_DOWNLOAD_PROGRESS, DWORD(PChar(FIteration.ToString)), 0);
 
-    VBBaseDM.GetData(70, TSDM.cdsDirector, TSDM.cdsDirector.Name, ' ORDER BY D.CUSTOMER_ID, D.FIRST_NAME, D.LAST_NAME',
-      'C:\Data\Xml\Director Link.xml', TSDM.cdsDirector.UpdateOptions.Generatorname,
-      TSDM.cdsDirector.UpdateOptions.UpdateTableName);
+    VBBaseDM.GetData(70, TSDM.cdsViewDirector, TSDM.cdsViewDirector.Name, ' ORDER BY D.CUSTOMER_ID, D.FIRST_NAME, D.LAST_NAME',
+      'C:\Data\Xml\Director Link.xml', TSDM.cdsViewDirector.UpdateOptions.Generatorname,
+      TSDM.cdsViewDirector.UpdateOptions.UpdateTableName);
   finally
     // ProgressFrm.Close;
     // FreeAndNil(ProgressFrm);
@@ -2548,4 +2646,6 @@ begin
 end;
 
 end.
+
+
 

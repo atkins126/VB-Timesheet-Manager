@@ -2,20 +2,10 @@ program TimesheetManager;
 
 uses
   Vcl.Forms,
-  Vcl.Dialogs,
-  System.Classes,
-  Winapi.Windows,
-  System.IOUtils,
   System.SysUtils,
-  Vcl.Controls,
-  System.Types,
-  System.DateUtils,
-  System.Win.Registry,
-  Vcl.Graphics,
-  Winapi.ShellApi,
-  System.Variants,
+  Vcl.Dialogs,
+  Winapi.Windows,
   System.UITypes,
-  ShlObj,
   Base_DM in '..\..\..\..\Lib\Base_DM.pas' {BaseDM: TDataModule},
   Base_Frm in '..\..\..\..\Lib\Base_Frm.pas' {BaseFrm},
   BaseLayout_Frm in '..\..\..\..\Lib\BaseLayout_Frm.pas' {BaseLayoutFrm},
@@ -47,8 +37,13 @@ uses
   RecipientInput_Frm in '..\..\..\..\Lib\RecipientInput_Frm.pas' {RecipientInputFrm},
   CustomerDirector_Frm in 'General\CustomerDirector_Frm.pas' {CustomerDirectorFrm},
   Invoicing_Frm in 'General\Invoicing_Frm.pas' {InvoicingFrm},
-  VBProxyClass in '..\Lib\VBProxyClass.pas',
-  InvoiceList_Frm in 'General\InvoiceList_Frm.pas' {InvoiceListFrm};
+  InvoiceSchedule_Frm in 'General\InvoiceSchedule_Frm.pas' {InvoiceScheduleFrm},
+  ExportPDFToTiff_Frm in 'General\ExportPDFToTiff_Frm.pas' {ExportPDFToTiffFrm},
+  ExportPDFToPng_Frm in 'General\ExportPDFToPng_Frm.pas' {ExportPDFToPngFrm},
+  PDFViewer_Frm in '..\..\..\..\Lib\PDFViewer_Frm.pas' {PDFViewerFrm},
+  VBProxyClasses in '..\Lib\VBProxyClasses.pas' {VBProxyClasses},
+  DirectorOfCompany_Frm in 'General\DirectorOfCompany_Frm.pas' {DirectorOfCompanyFrm},
+  Shareholder_Frm in 'General\Shareholder_Frm.pas' {ShareholderFrm};
 
 {$R *.res}
 
@@ -69,7 +64,7 @@ begin
 {$IFDEF RELEASE}
   if not FindCmdLineSwitch('VB_SHELL', SwitchPrefix, True) then
   begin
-    Beep;
+    System.SysUtils.Beep;
     TaskMessageDlg('Task Launch Error',
       Application.Title + ' can only run through VB Shell.' + CRLF +
       'Please launch RC Shell to access this task.',
@@ -80,10 +75,9 @@ begin
     Application.ShowMainForm := False;
   end
   else
-{$ENDIF}
-    if (AnsiCompareText(LaunchDrive, 'C:') <> 0) then
+{$ENDIF}if (AnsiCompareText(LaunchDrive, 'C:') <> 0) then
     begin
-      Beep;
+      System.SysUtils.Beep;
       TaskMessageDlg('Applicaton Launch Error',
         'You cannot run ' + Application.Title + ' from drive ' + LaunchDrive, mtError,
         [mbOK], 0);
@@ -98,11 +92,4 @@ begin
       Application.Run;
     end;
 end.
-
-//begin
-//  Application.Initialize;
-//  Application.MainFormOnTaskbar := True;
-//  Application.Title := 'Timesheet Manager';
-//  Application.Run;
-//end.
 

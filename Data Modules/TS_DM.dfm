@@ -372,30 +372,6 @@ inherited TSDM: TTSDM
     Left = 418
     Top = 175
   end
-  object VbliveConnection: TFDConnection
-    Params.Strings = (
-      'ConnectionDef=VB Live')
-    FormatOptions.AssignedValues = [fvMapRules]
-    FormatOptions.OwnMapRules = True
-    FormatOptions.MapRules = <
-      item
-        SourceDataType = dtWideString
-        TargetDataType = dtAnsiString
-      end
-      item
-        SourceDataType = dtFmtBCD
-        TargetDataType = dtCurrency
-      end
-      item
-        SourceDataType = dtSingle
-        TargetDataType = dtDouble
-      end>
-    ResourceOptions.AssignedValues = [rvAutoReconnect]
-    ResourceOptions.AutoReconnect = True
-    LoginPrompt = False
-    Left = 930
-    Top = 3
-  end
   object cdsCustomerGroup: TFDMemTable
     ActiveStoredUsage = [auDesignTime]
     FilterOptions = [foCaseInsensitive]
@@ -891,31 +867,6 @@ inherited TSDM: TTSDM
     DataSet = cdsTimesheet
     Left = 130
     Top = 65
-  end
-  object VbdevConnection: TFDConnection
-    Params.Strings = (
-      'Database=C:\Data\Firebird\VB\VB.FDB'
-      'ConnectionDef=VB Live')
-    FormatOptions.AssignedValues = [fvMapRules]
-    FormatOptions.OwnMapRules = True
-    FormatOptions.MapRules = <
-      item
-        SourceDataType = dtWideString
-        TargetDataType = dtAnsiString
-      end
-      item
-        SourceDataType = dtFmtBCD
-        TargetDataType = dtCurrency
-      end
-      item
-        SourceDataType = dtSingle
-        TargetDataType = dtDouble
-      end>
-    ResourceOptions.AssignedValues = [rvAutoReconnect]
-    ResourceOptions.AutoReconnect = True
-    LoginPrompt = False
-    Left = 827
-    Top = 7
   end
   object cdsStdActivity: TFDMemTable
     ActiveStoredUsage = [auDesignTime]
@@ -1892,7 +1843,7 @@ inherited TSDM: TTSDM
     Left = 130
     Top = 425
   end
-  object cdsDirector: TFDMemTable
+  object cdsViewDirector: TFDMemTable
     ActiveStoredUsage = [auDesignTime]
     FilterOptions = [foCaseInsensitive]
     FieldDefs = <>
@@ -1925,66 +1876,66 @@ inherited TSDM: TTSDM
     StoreDefs = True
     Left = 226
     Top = 240
-    object cdsDirectorID: TIntegerField
+    object cdsViewDirectorID: TIntegerField
       Alignment = taLeftJustify
       FieldName = 'ID'
       Origin = 'ID'
     end
-    object cdsDirectorCUSTOMER_ID: TIntegerField
+    object cdsViewDirectorCUSTOMER_ID: TIntegerField
       Alignment = taLeftJustify
       DisplayLabel = 'C ID'
       FieldName = 'CUSTOMER_ID'
       Origin = 'CUSTOMER_ID'
     end
-    object cdsDirectorSALUTATION_ID: TIntegerField
+    object cdsViewDirectorSALUTATION_ID: TIntegerField
       Alignment = taLeftJustify
       DisplayLabel = 'Salutation'
       FieldName = 'SALUTATION_ID'
       Origin = 'SALUTATION_ID'
     end
-    object cdsDirectorSALUTATION: TStringField
+    object cdsViewDirectorSALUTATION: TStringField
       DisplayLabel = 'Salutation'
       FieldName = 'SALUTATION'
       Origin = 'SALUTATION'
     end
-    object cdsDirectorFIRST_NAME: TStringField
+    object cdsViewDirectorFIRST_NAME: TStringField
       DisplayLabel = 'First Name'
       FieldName = 'FIRST_NAME'
       Origin = 'FIRST_NAME'
       Size = 30
     end
-    object cdsDirectorLAST_NAME: TStringField
+    object cdsViewDirectorLAST_NAME: TStringField
       DisplayLabel = 'Last Name'
       FieldName = 'LAST_NAME'
       Origin = 'LAST_NAME'
       Size = 30
     end
-    object cdsDirectorMIDDLE_NAME: TStringField
+    object cdsViewDirectorMIDDLE_NAME: TStringField
       DisplayLabel = 'Middle Name'
       FieldName = 'MIDDLE_NAME'
       Origin = 'MIDDLE_NAME'
       Size = 30
     end
-    object cdsDirectorTAX_NO: TStringField
+    object cdsViewDirectorTAX_NO: TStringField
       DisplayLabel = 'Tax No'
       FieldName = 'TAX_NO'
       Origin = 'TAX_NO'
     end
-    object cdsDirectorMOBILE_PHONE: TStringField
+    object cdsViewDirectorMOBILE_PHONE: TStringField
       DisplayLabel = 'Mobile Phone'
       FieldName = 'MOBILE_PHONE'
       Origin = 'MOBILE_PHONE'
       Size = 15
     end
-    object cdsDirectorEMAIL_ADDRESS: TStringField
+    object cdsViewDirectorEMAIL_ADDRESS: TStringField
       DisplayLabel = 'Email Address'
       FieldName = 'EMAIL_ADDRESS'
       Origin = 'EMAIL_ADDRESS'
       Size = 100
     end
   end
-  object dtsDirector: TDataSource
-    DataSet = cdsDirector
+  object dtsViewDirector: TDataSource
+    DataSet = cdsViewDirector
     Left = 226
     Top = 290
   end
@@ -2555,17 +2506,9 @@ inherited TSDM: TTSDM
     Left = 226
     Top = 425
   end
-  object View_timesheet_customerView: TFDQuery
-    Connection = VbdevConnection
-    SQL.Strings = (
-      'SELECT * FROM VIEW_TIMESHEET_CUSTOMER')
-    Left = 831
-    Top = 64
-  end
   object cdsInvoiceList: TFDMemTable
     ActiveStoredUsage = [auDesignTime]
     FilterOptions = [foCaseInsensitive]
-    CachedUpdates = True
     Indexes = <
       item
         Active = True
@@ -2633,6 +2576,235 @@ inherited TSDM: TTSDM
   object dtsInvoiceList: TDataSource
     DataSet = cdsInvoiceList
     Left = 425
+    Top = 425
+  end
+  object cdsDirector: TFDMemTable
+    ActiveStoredUsage = [auDesignTime]
+    FilterOptions = [foCaseInsensitive]
+    Indexes = <
+      item
+        Active = True
+        Name = 'idxID'
+        Fields = 'ID'
+        Options = [soPrimary]
+      end
+      item
+        Active = True
+        Selected = True
+        Name = 'idxName'
+        Fields = 'FIRST_NAME;LAST_NAME'
+        Options = [soNoCase]
+        FilterOptions = [ekNoCase]
+      end>
+    IndexName = 'idxName'
+    ConstraintsEnabled = True
+    FetchOptions.AssignedValues = [evMode, evDetailDelay]
+    FetchOptions.Mode = fmAll
+    FetchOptions.DetailDelay = 300
+    ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
+    ResourceOptions.StorePrettyPrint = True
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 505
+    Top = 370
+    object cdsDirectorID: TIntegerField
+      Alignment = taLeftJustify
+      FieldName = 'ID'
+      Origin = 'ID'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+    object cdsDirectorCUSTOMER_ID: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'C ID'
+      FieldName = 'CUSTOMER_ID'
+      Origin = 'CUSTOMER_ID'
+      Required = True
+    end
+    object cdsDirectorSALUTATION_ID: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'Sal ID'
+      FieldName = 'SALUTATION_ID'
+      Origin = 'SALUTATION_ID'
+    end
+    object cdsDirectorFIRST_NAME: TWideStringField
+      DisplayLabel = 'First Name'
+      FieldName = 'FIRST_NAME'
+      Origin = 'FIRST_NAME'
+      Required = True
+      Size = 30
+    end
+    object cdsDirectorLAST_NAME: TWideStringField
+      DisplayLabel = 'Last Name'
+      FieldName = 'LAST_NAME'
+      Origin = 'LAST_NAME'
+      Required = True
+      Size = 30
+    end
+    object cdsDirectorMIDDLE_NAME: TWideStringField
+      DisplayLabel = 'Middle Name'
+      FieldName = 'MIDDLE_NAME'
+      Origin = 'MIDDLE_NAME'
+      Size = 30
+    end
+    object cdsDirectorTAX_NO: TWideStringField
+      DisplayLabel = 'Tax No'
+      FieldName = 'TAX_NO'
+      Origin = 'TAX_NO'
+    end
+    object cdsDirectorMOBILE_PHONE: TWideStringField
+      DisplayLabel = 'Mobile Phone'
+      FieldName = 'MOBILE_PHONE'
+      Origin = 'MOBILE_PHONE'
+      Size = 15
+    end
+    object cdsDirectorEMAIL_ADDRESS: TWideStringField
+      DisplayLabel = 'Email Address'
+      FieldName = 'EMAIL_ADDRESS'
+      Origin = 'EMAIL_ADDRESS'
+      Size = 100
+    end
+    object cdsDirectorID_NUMBER: TWideStringField
+      DisplayLabel = 'ID Number'
+      FieldName = 'ID_NUMBER'
+      Origin = 'ID_NUMBER'
+    end
+  end
+  object cdsShareholder: TFDMemTable
+    ActiveStoredUsage = [auDesignTime]
+    FilterOptions = [foCaseInsensitive]
+    ConstraintsEnabled = True
+    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
+    ResourceOptions.StorePrettyPrint = True
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 775
+    Top = 370
+    object cdsShareholderID: TIntegerField
+      Alignment = taLeftJustify
+      FieldName = 'ID'
+      Origin = 'ID'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+    object cdsShareholderCUSTOMER_ID: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'C ID'
+      FieldName = 'CUSTOMER_ID'
+      Origin = 'CUSTOMER_ID'
+      Required = True
+    end
+    object cdsShareholderSALUTATION_ID: TIntegerField
+      Alignment = taLeftJustify
+      DisplayLabel = 'Sal ID'
+      FieldName = 'SALUTATION_ID'
+      Origin = 'SALUTATION_ID'
+      Required = True
+    end
+    object cdsShareholderFIRST_NAME: TWideStringField
+      DisplayLabel = 'First Name'
+      FieldName = 'FIRST_NAME'
+      Origin = 'FIRST_NAME'
+      Required = True
+      Size = 30
+    end
+    object cdsShareholderLAST_NAME: TWideStringField
+      DisplayLabel = 'Last Name'
+      FieldName = 'LAST_NAME'
+      Origin = 'LAST_NAME'
+      Required = True
+      Size = 30
+    end
+    object cdsShareholderMOBILE_PHONE: TWideStringField
+      DisplayLabel = 'Mobile Phone'
+      FieldName = 'MOBILE_PHONE'
+      Origin = 'MOBILE_PHONE'
+      Size = 15
+    end
+    object cdsShareholderEMAIL_ADDRESS: TWideStringField
+      DisplayLabel = 'Email Address'
+      FieldName = 'EMAIL_ADDRESS'
+      Origin = 'EMAIL_ADDRESS'
+      Size = 100
+    end
+    object cdsShareholderPERCENT_SHARE: TSingleField
+      DisplayLabel = '% Share'
+      FieldName = 'PERCENT_SHARE'
+      Origin = 'PERCENT_SHARE'
+      Required = True
+    end
+    object cdsShareholderID_NUMBER: TWideStringField
+      DisplayLabel = 'ID Number'
+      FieldName = 'ID_NUMBER'
+      Origin = 'ID_NUMBER'
+    end
+  end
+  object dtsDirector: TDataSource
+    DataSet = cdsDirector
+    Left = 510
+    Top = 425
+  end
+  object dtsShareholder: TDataSource
+    DataSet = cdsShareholder
+    Left = 780
+    Top = 425
+  end
+  object cdsDirectorOfCompany: TFDMemTable
+    ActiveStoredUsage = [auDesignTime]
+    FilterOptions = [foCaseInsensitive]
+    Indexes = <
+      item
+        Active = True
+        Selected = True
+        Name = 'idxDirID'
+        Fields = 'DIRECTOR_ID;COMPANY'
+        Options = [soNoCase]
+        FilterOptions = [ekNoCase]
+      end>
+    IndexName = 'idxDirID'
+    ConstraintsEnabled = True
+    MasterSource = dtsDirector
+    MasterFields = 'ID'
+    DetailFields = 'DIRECTOR_ID'
+    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvSilentMode, rvStorePrettyPrint]
+    ResourceOptions.StorePrettyPrint = True
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 620
+    Top = 370
+    object cdsDirectorOfCompanyID: TIntegerField
+      Alignment = taCenter
+      FieldName = 'ID'
+    end
+    object cdsDirectorOfCompanyDIRECTOR_ID: TIntegerField
+      Alignment = taCenter
+      DisplayLabel = 'Dir ID'
+      FieldName = 'DIRECTOR_ID'
+    end
+    object cdsDirectorOfCompanyCUSTOMER_ID: TIntegerField
+      Alignment = taCenter
+      DisplayLabel = 'Cust ID'
+      FieldName = 'CUSTOMER_ID'
+    end
+    object cdsDirectorOfCompanyCOMPANY: TStringField
+      DisplayLabel = 'Company'
+      FieldName = 'COMPANY'
+      Size = 100
+    end
+  end
+  object dtsDirectorOfCompany: TDataSource
+    DataSet = cdsDirectorOfCompany
+    Left = 625
     Top = 425
   end
 end

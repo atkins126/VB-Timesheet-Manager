@@ -24,7 +24,7 @@ inherited CustomerDirectorFrm: TCustomerDirectorFrm
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
         OnFocusedRecordChanged = viewDirectorFocusedRecordChanged
-        DataController.DataSource = TSDM.dtsDirector
+        DataController.DataSource = TSDM.dtsViewDirector
         DataController.Options = [dcoCaseInsensitive, dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoSortByDisplayText]
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
@@ -232,7 +232,7 @@ inherited CustomerDirectorFrm: TCustomerDirectorFrm
       PopupMenu = popEmail
       ScrollbarAnnotations.CustomAnnotations = <>
       TabOrder = 2
-      DataController.DataSource = TSDM.dtsDirector
+      DataController.DataSource = TSDM.dtsViewDirector
       Version = 1
       object edtVSalutation: TcxDBEditorRow
         Options.CanMovedToCustomizationForm = False

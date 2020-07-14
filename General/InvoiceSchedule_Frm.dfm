@@ -1,5 +1,5 @@
-inherited InvoiceListFrm: TInvoiceListFrm
-  Caption = 'InvoiceListFrm'
+inherited InvoiceScheduleFrm: TInvoiceScheduleFrm
+  Caption = 'InvoiceScheduleFrm'
   ClientHeight = 822
   ClientWidth = 1194
   ExplicitWidth = 1210

@@ -1,4 +1,4 @@
-unit InvoiceList_Frm;
+unit InvoiceSchedule_Frm;
 
 interface
 
@@ -21,7 +21,7 @@ uses
   cxCheckBox, cxContainer, dxBarExtItems, cxMaskEdit, cxDropDownEdit;
 
 type
-  TInvoiceListFrm = class(TBaseLayoutFrm)
+  TInvoiceScheduleFrm = class(TBaseLayoutFrm)
     docToolbar: TdxBarDockControl;
     barManager: TdxBarManager;
     barToolbar: TdxBar;
@@ -79,7 +79,7 @@ type
   end;
 
 var
-  InvoiceListFrm: TInvoiceListFrm;
+  InvoiceScheduleFrm: TInvoiceScheduleFrm;
 
 implementation
 
@@ -89,7 +89,7 @@ uses
   TS_DM,
   RUtils;
 
-procedure TInvoiceListFrm.DoExpandCollapse(Sender: TObject);
+procedure TInvoiceScheduleFrm.DoExpandCollapse(Sender: TObject);
 begin
   case TAction(Sender).Tag of
     0: viewInvoiceList.ViewData.Expand(True);
@@ -97,14 +97,14 @@ begin
   end;
 end;
 
-procedure TInvoiceListFrm.DrawCellBorder(var Msg: TMessage);
+procedure TInvoiceScheduleFrm.DrawCellBorder(var Msg: TMessage);
 begin
   if (TObject(Msg.WParam) is TcxCanvas)
     and (TObject(Msg.LParam) is TcxGridTableDataCellViewInfo) then
     TcxCanvas(Msg.WParam).DrawComplexFrame(TcxGridTableDataCellViewInfo(Msg.LParam).ClientBounds, clRed, clRed, cxBordersAll, 1);
 end;
 
-procedure TInvoiceListFrm.edtInvIDGetDisplayText(Sender: TcxCustomGridTableItem;
+procedure TInvoiceScheduleFrm.edtInvIDGetDisplayText(Sender: TcxCustomGridTableItem;
   ARecord: TcxCustomGridRecord; var AText: string);
 var
   AGroupIndex: Integer;
@@ -126,7 +126,7 @@ begin
   end;
 end;
 
-procedure TInvoiceListFrm.FormCreate(Sender: TObject);
+procedure TInvoiceScheduleFrm.FormCreate(Sender: TObject);
 begin
   Caption := 'Invoice List';
   layMain.Align := alClient;
@@ -143,24 +143,24 @@ begin
   end;
 end;
 
-procedure TInvoiceListFrm.DoCloseForm(Sender: TObject);
+procedure TInvoiceScheduleFrm.DoCloseForm(Sender: TObject);
 begin
   Self.ModalResult := mrOk;
 end;
 
-procedure TInvoiceListFrm.GetInvoiceList;
+procedure TInvoiceScheduleFrm.GetInvoiceList;
 var
   OrderByClause, FileName: string;
 begin
   OrderByClause := ' ORDER BY T.INVOICE_ID, T.INVOICE_DATE';
-  FileName := 'Invoice List';
+  FileName := 'Invoice Shcedule';
 
   VBBaseDM.GetData(87, TSDM.cdsInvoiceList, TSDM.cdsInvoiceList.Name, OrderByClause,
     'C:\Data\Xml\' + FileName + '.xml', TSDM.cdsInvoiceList.UpdateOptions.Generatorname,
     TSDM.cdsInvoiceList.UpdateOptions.UpdateTableName);
 end;
 
-procedure TInvoiceListFrm.lucFindModePropertiesChange(Sender: TObject);
+procedure TInvoiceScheduleFrm.lucFindModePropertiesChange(Sender: TObject);
 begin
   case lucFindMode.ItemIndex of
     0: viewInvoiceList.FindPanel.Behavior := fcbDefault;
@@ -168,7 +168,7 @@ begin
   end;
 end;
 
-procedure TInvoiceListFrm.viewInvoiceListCustomDrawCell(
+procedure TInvoiceScheduleFrm.viewInvoiceListCustomDrawCell(
   Sender: TcxCustomGridTableView; ACanvas: TcxCanvas;
   AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
 begin
@@ -187,14 +187,14 @@ begin
   end;
 end;
 
-procedure TInvoiceListFrm.viewInvoiceListStylesGetFooterSummaryStyle(
+procedure TInvoiceScheduleFrm.viewInvoiceListStylesGetFooterSummaryStyle(
   AView: TcxGridTableView; ARow: TcxCustomGridRow; AColumn: TcxGridColumn;
   AFooterGroupLevel: Integer; ASummaryItem: TcxDataSummaryItem; var AStyle: TcxStyle);
 begin
   AStyle := styCollapsed;
 end;
 
-procedure TInvoiceListFrm.viewInvoiceListStylesGetGroupStyle(
+procedure TInvoiceScheduleFrm.viewInvoiceListStylesGetGroupStyle(
   Sender: TcxGridTableView; ARecord: TcxCustomGridRecord; ALevel: Integer; var AStyle: TcxStyle);
 begin
   if ARecord = nil then

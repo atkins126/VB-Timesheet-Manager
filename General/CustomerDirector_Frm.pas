@@ -99,8 +99,8 @@ begin
   Self.Width := 680;
   Self.Top := 350;
   Self.Left := Screen.Width - Self.Width - 150;
-  viewDirector.DataController.DataSource := TSDM.dtsDirector;
-  grdVDirector.DataController.DataSource := TSDM.dtsDirector;
+  viewDirector.DataController.DataSource := TSDM.dtsViewDirector;
+  grdVDirector.DataController.DataSource := TSDM.dtsViewDirector;
 end;
 
 procedure TCustomerDirectorFrm.FormShow(Sender: TObject);

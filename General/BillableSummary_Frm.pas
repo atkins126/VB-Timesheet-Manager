@@ -561,6 +561,7 @@ end;
 procedure TBillableSummaryFrm.DoGetData(Sender: TObject);
 begin
   GetBillableSummary;
+  Self.Show;
 end;
 
 procedure TBillableSummaryFrm.DoPrint(Sender: TObject);
@@ -647,7 +648,10 @@ begin
 //    while not ReportDM.qryPeriod.EOF do
 //    begin
 //    Period := ReportDM.qryPeriod.FieldByName('THE_PERIOD').AsInteger;
-    Response.DelimitedText := VBBaseDM.ExecuteStoredProcedure('SP_GEN_BILLABLE_SUMMARY_TABLE', VBBaseDM.UserData.UserID.ToString + ',' + FPeriod.ToString);
+
+
+{TODO: Fix this call to: SP_GEN_BILLABLE_SUMMARY_TABLE}
+//    Response.DelimitedText := VBBaseDM.ExecuteStoredProcedure('SP_GEN_BILLABLE_SUMMARY_TABLE', VBBaseDM.UserData.UserID.ToString + ',' + FPeriod.ToString);
 
     if SameText(Response.Values['RESPONSE'], 'ERROR') then
       raise EServerError.Create('One or more errors occurred when generating the billable summary data with error message:' + CRLF + CRLF +
@@ -659,7 +663,8 @@ begin
     // Suppress customers that have no transaactions for billable summary report
     if cbxRemoveZeroBillableItems.EditValue then
     begin
-      Response.DelimitedText := VBBaseDM.ExecuteStoredProcedure('SP_DELETE_ZERO_BILLABLE_VALUES', VBBaseDM.UserData.UserID.ToString);
+{TODO: Fix this call to: SP_DELETE_ZERO_BILLABLE_VALUES}
+//      Response.DelimitedText := VBBaseDM.ExecuteStoredProcedure('SP_DELETE_ZERO_BILLABLE_VALUES', VBBaseDM.UserData.UserID.ToString);
 
       if SameText(Response.Values['RESPONSE'], 'ERROR') then
         raise EServerError.Create('One or more errors occurred when attempting to remove zero billable values with error message:' + CRLF + CRLF +

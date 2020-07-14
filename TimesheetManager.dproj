@@ -92,7 +92,7 @@
         <VerInfo_Build>2</VerInfo_Build>
         <VerInfo_Debug>true</VerInfo_Debug>
         <VerInfo_Keys>CompanyName=van Brakel and Associates;FileDescription=Timesheet Manager;FileVersion=1.1.1.2;InternalName=TimesheetManager.exe;LegalCopyright=Express Talent cc;LegalTrademarks=Delphi 10.3.1 (Rio);OriginalFilename=TimesheetManager.exe;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=Timesheet Manager;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-        <Icon_MainIcon>..\Icons\Timesheet Manager.ico</Icon_MainIcon>
+        <Icon_MainIcon>Timesheet Manager.ico</Icon_MainIcon>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -228,9 +228,31 @@
             <Form>InvoicingFrm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\Lib\VBProxyClass.pas"/>
-        <DCCReference Include="General\InvoiceList_Frm.pas">
-            <Form>InvoiceListFrm</Form>
+        <DCCReference Include="General\InvoiceSchedule_Frm.pas">
+            <Form>InvoiceScheduleFrm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="General\ExportPDFToTiff_Frm.pas">
+            <Form>ExportPDFToTiffFrm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="General\ExportPDFToPng_Frm.pas">
+            <Form>ExportPDFToPngFrm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\..\..\..\Lib\PDFViewer_Frm.pas">
+            <Form>PDFViewerFrm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\Lib\VBProxyClasses.pas">
+            <Form>VBProxyClasses</Form>
+        </DCCReference>
+        <DCCReference Include="General\DirectorOfCompany_Frm.pas">
+            <Form>DirectorOfCompanyFrm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="General\Shareholder_Frm.pas">
+            <Form>ShareholderFrm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">
@@ -254,8 +276,8 @@
                     <Source Name="MainSource">TimesheetManager.dpr</Source>
                 </Source>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k260.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp260.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k270.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp270.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
