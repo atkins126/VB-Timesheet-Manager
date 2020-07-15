@@ -78,7 +78,7 @@ inherited TSDM: TTSDM
     object cdsCustomerLookupCUSTOMER_TYPE: TStringField
       DisplayLabel = 'Type'
       FieldName = 'CUSTOMER_TYPE'
-      Size = 30
+      Size = 50
     end
     object cdsCustomerLookupCUSTOMER_STATUS: TStringField
       DisplayLabel = 'Status'
@@ -491,7 +491,7 @@ inherited TSDM: TTSDM
     object cdsCustomerLookupPrefCUSTOMER_TYPE: TStringField
       DisplayLabel = 'Type'
       FieldName = 'CUSTOMER_TYPE'
-      Size = 30
+      Size = 50
     end
     object cdsCustomerLookupPrefCUSTOMER_STATUS: TStringField
       DisplayLabel = 'Status'
@@ -1179,7 +1179,7 @@ inherited TSDM: TTSDM
       DisplayLabel = 'Customer Type'
       FieldName = 'CUSTOMER_TYPE'
       Origin = 'CUSTOMER_TYPE'
-      Size = 30
+      Size = 50
     end
     object cdsCarryForwardCUSTOMER_NAME: TStringField
       DisplayLabel = 'Customer'
@@ -1658,7 +1658,7 @@ inherited TSDM: TTSDM
       DisplayLabel = 'Customer Type'
       FieldName = 'CUSTOMER_TYPE'
       Origin = 'CUSTOMER_TYPE'
-      Size = 30
+      Size = 50
     end
     object cdsTimesheetViewCUSTOMER_NAME: TStringField
       DisplayLabel = 'Customer Name'
@@ -2004,7 +2004,7 @@ inherited TSDM: TTSDM
       DisplayLabel = 'Customer Type'
       FieldName = 'CUSTOMER_TYPE'
       Origin = 'CUSTOMER_TYPE'
-      Size = 30
+      Size = 50
     end
     object cdsReleaseCUSTOMER_NAME: TStringField
       DisplayLabel = 'Customer'
@@ -2248,7 +2248,7 @@ inherited TSDM: TTSDM
       DisplayLabel = 'Customer Type'
       FieldName = 'CUSTOMER_TYPE'
       Origin = 'CUSTOMER_TYPE'
-      Size = 30
+      Size = 50
     end
     object cdsTSInvoicingCUSTOMER_NAME: TStringField
       DisplayLabel = 'Customer'
@@ -2481,7 +2481,7 @@ inherited TSDM: TTSDM
       DisplayLabel = 'Type'
       FieldName = 'CUSTOMER_TYPE'
       Origin = 'CUSTOMER_TYPE'
-      Size = 30
+      Size = 50
     end
     object cdsTSCustomerCUSTOMER_STATUS: TStringField
       DisplayLabel = 'Status'

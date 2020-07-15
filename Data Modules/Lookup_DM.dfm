@@ -367,7 +367,7 @@ inherited LookupDM: TLookupDM
       DisplayLabel = 'Customer Type'
       FieldName = 'CUSTOMER_TYPE'
       Origin = 'CUSTOMER_TYPE'
-      Size = 30
+      Size = 50
     end
     object cdsCustomerNAME: TStringField
       DisplayLabel = 'Name'
@@ -624,7 +624,7 @@ inherited LookupDM: TLookupDM
     object View_customerViewCUSTOMER_TYPE: TStringField
       FieldName = 'CUSTOMER_TYPE'
       Origin = 'CUSTOMER_TYPE'
-      Size = 30
+      Size = 50
     end
     object View_customerViewNAME: TStringField
       FieldName = 'NAME'
@@ -1046,5 +1046,76 @@ inherited LookupDM: TLookupDM
       Origin = '"COMMENT"'
       Size = 255
     end
+  end
+  object cdsSalutation: TFDMemTable
+    Tag = 23
+    ActiveStoredUsage = [auDesignTime]
+    FilterOptions = [foCaseInsensitive]
+    Constraints = <
+      item
+        CustomConstraint = 'CHAR_LENGTH(TRIM(NAME)) > 0'
+        ErrorMessage = 'Salutation name must have a value'
+        FromDictionary = False
+      end>
+    FieldDefs = <>
+    CachedUpdates = True
+    IndexDefs = <>
+    Indexes = <
+      item
+        Active = True
+        Name = 'idxID'
+        Fields = 'ID'
+        Options = [soPrimary]
+      end
+      item
+        Active = True
+        Selected = True
+        Name = 'idxName'
+        Fields = 'NAME'
+        CaseInsFields = 'NAME'
+        Options = [soUnique]
+        FilterOptions = [ekNoCase]
+      end>
+    IndexName = 'idxName'
+    ConstraintsEnabled = True
+    FetchOptions.AssignedValues = [evMode, evRecordCountMode]
+    FetchOptions.Mode = fmAll
+    FetchOptions.RecordCountMode = cmTotal
+    FormatOptions.AssignedValues = [fvMaxBcdPrecision, fvMaxBcdScale, fvDataSnapCompatibility]
+    FormatOptions.MaxBcdPrecision = 2147483647
+    FormatOptions.MaxBcdScale = 1073741823
+    FormatOptions.DataSnapCompatibility = True
+    ResourceOptions.AssignedValues = [rvPersistent, rvSilentMode, rvStorePrettyPrint]
+    ResourceOptions.Persistent = True
+    ResourceOptions.StorePrettyPrint = True
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvUpdateChngFields, uvUpdateMode, uvLockMode, uvLockPoint, uvLockWait, uvRefreshMode, uvFetchGeneratorsPoint, uvGeneratorName, uvCheckRequired, uvCheckReadOnly, uvCheckUpdatable, uvAutoCommitUpdates]
+    UpdateOptions.LockWait = True
+    UpdateOptions.FetchGeneratorsPoint = gpNone
+    UpdateOptions.GeneratorName = 'SALUTATION_ID_GEN'
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    UpdateOptions.UpdateTableName = 'SALUTATION'
+    StoreDefs = True
+    Left = 235
+    Top = 120
+    object cdsSalutationID: TIntegerField
+      Alignment = taLeftJustify
+      FieldName = 'ID'
+      Origin = 'ID'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+    object cdsSalutationNAME: TStringField
+      DisplayLabel = 'Name'
+      FieldName = 'NAME'
+      Origin = 'NAME'
+      Required = True
+    end
+  end
+  object dtsSalutation: TDataSource
+    DataSet = cdsSalutation
+    Left = 235
+    Top = 170
   end
 end

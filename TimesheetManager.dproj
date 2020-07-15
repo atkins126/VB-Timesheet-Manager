@@ -255,6 +255,14 @@
             <Form>ShareholderFrm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="..\Master Table Manager\General\NewDirectorOfCompany_Frm.pas">
+            <Form>NewDirectorOfCompanyFrm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="General\DirectorDetail_Frm.pas">
+            <Form>DirectorDetailFrm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

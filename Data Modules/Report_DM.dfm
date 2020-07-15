@@ -273,7 +273,7 @@ inherited ReportDM: TReportDM
       DisplayLabel = 'Customer Type'
       FieldName = 'CUSTOMER_TYPE'
       Origin = 'CUSTOMER_TYPE'
-      Size = 30
+      Size = 50
     end
     object cdsTSBillableCUSTOMER_NAME: TStringField
       DisplayLabel = 'Customer'
@@ -2127,7 +2127,7 @@ inherited ReportDM: TReportDM
       DisplayLabel = 'Type'
       FieldName = 'CUSTOMER_TYPE'
       Origin = 'CUSTOMER_TYPE'
-      Size = 30
+      Size = 50
     end
     object cdsTSCustomerCUSTOMER_STATUS: TStringField
       DisplayLabel = 'Status'
@@ -6323,7 +6323,7 @@ inherited ReportDM: TReportDM
       DisplayLabel = 'Customer Type'
       FieldName = 'CUSTOMER_TYPE'
       Origin = 'CUSTOMER_TYPE'
-      Size = 30
+      Size = 50
     end
     object cdsTimesheetCFCUSTOMER_NAME: TStringField
       DisplayLabel = 'Customer'
@@ -7033,7 +7033,7 @@ inherited ReportDM: TReportDM
       DisplayLabel = 'Customer Type'
       FieldName = 'CUSTOMER_TYPE'
       Origin = 'CUSTOMER_TYPE'
-      Size = 30
+      Size = 50
     end
     object cdsBillCFwdACTIVITY: TStringField
       DisplayLabel = 'Activity'
@@ -9062,7 +9062,7 @@ inherited ReportDM: TReportDM
       DisplayLabel = 'Customer Type'
       FieldName = 'CUSTOMER_TYPE'
       Origin = 'CUSTOMER_TYPE'
-      Size = 30
+      Size = 50
     end
     object cdsTSBillableExcelCUSTOMER_NAME: TStringField
       DisplayLabel = 'Customer'
@@ -9268,7 +9268,7 @@ inherited ReportDM: TReportDM
       DisplayLabel = 'Customer Type'
       FieldName = 'CUSTOMER_TYPE'
       Origin = 'CUSTOMER_TYPE'
-      Size = 30
+      Size = 50
     end
     object cdsBillCFwdExcelACTIVITY: TStringField
       DisplayLabel = 'Activity'
@@ -10214,7 +10214,7 @@ inherited ReportDM: TReportDM
       DisplayLabel = 'Customer Type'
       FieldName = 'CUSTOMER_TYPE'
       Origin = 'CUSTOMER_TYPE'
-      Size = 30
+      Size = 50
     end
     object cdsTimesheetDetailCUSTOMER_NAME: TStringField
       DisplayLabel = 'Customer'
@@ -10359,7 +10359,7 @@ inherited ReportDM: TReportDM
       DisplayLabel = 'Customer Type'
       FieldName = 'CUSTOMER_TYPE'
       Origin = 'CUSTOMER_TYPE'
-      Size = 30
+      Size = 50
     end
     object cdsReleaseCUSTOMER_NAME: TStringField
       DisplayLabel = 'Customer'

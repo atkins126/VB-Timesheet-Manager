@@ -174,6 +174,10 @@ type
     cdsContactDetailCoVALUE: TStringField;
     cdsContactDetailCoCOMMENT: TStringField;
     cdsContactDetailCoCONTACT_TYPE: TStringField;
+    cdsSalutation: TFDMemTable;
+    cdsSalutationID: TIntegerField;
+    cdsSalutationNAME: TStringField;
+    dtsSalutation: TDataSource;
   private
     { Private declarations }
   public

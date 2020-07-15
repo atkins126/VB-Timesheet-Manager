@@ -43,7 +43,9 @@ uses
   PDFViewer_Frm in '..\..\..\..\Lib\PDFViewer_Frm.pas' {PDFViewerFrm},
   VBProxyClasses in '..\Lib\VBProxyClasses.pas' {VBProxyClasses},
   DirectorOfCompany_Frm in 'General\DirectorOfCompany_Frm.pas' {DirectorOfCompanyFrm},
-  Shareholder_Frm in 'General\Shareholder_Frm.pas' {ShareholderFrm};
+  Shareholder_Frm in 'General\Shareholder_Frm.pas' {ShareholderFrm},
+  NewDirectorOfCompany_Frm in '..\Master Table Manager\General\NewDirectorOfCompany_Frm.pas' {NewDirectorOfCompanyFrm},
+  DirectorDetail_Frm in 'General\DirectorDetail_Frm.pas' {DirectorDetailFrm};
 
 {$R *.res}
 

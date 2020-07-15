@@ -18,6 +18,23 @@ uses
   FireDAC.Stan.ExprFuncs, FireDAC.Phys.SQLiteDef, FireDAC.Phys.IBBase;
 
 type
+  FieldValues = record
+    TextValue: string;
+    FirstName: string;
+    LastName: string;
+    Initials: string;
+    OtherName: string;
+    SalutationID: Integer;
+    Salutation: string;
+    IDNo: string;
+    EmailAddress: string;
+    TaxNo: string;
+    MobileNo: string;
+    DOB: TDateTime;
+    CustomerID: Integer;
+    DirectorID: Integer;
+  end;
+
   TTimesheetOptions = record
     UseDefaultCustomer: Boolean;
     UseDefaultPriceItem: Boolean;
@@ -440,10 +457,13 @@ type
     FInvoiceNo: Integer;
     FCustomerID: Integer;
     FCFwdOrreleased: Boolean;
+
     { Private declarations }
   public
     { Public declarations }
     TimesheetOption: TTimesheetOptions;
+    FieldValue: FieldValues;
+
     property CurrentUserID: Integer read FCurrentUserID write FCurrentUserID;
     property DefaultInvoiceDate: TDateTime read FDefaultInvoiceDate write FDefaultInvoiceDate;
     property InvoiceNo: Integer read FInvoiceNo write FInvoiceNo;
@@ -451,7 +471,7 @@ type
     property CFwdOrreleased: Boolean read FCFwdOrreleased write FCFwdOrreleased;
 
     function GetDefaulttInvoiceDate: TDateTime;
-
+    procedure ClearFieldValues;
   end;
 
 var
@@ -558,6 +578,24 @@ begin
   end;
 end;
 
+procedure TTSDM.ClearFieldValues;
+begin
+  FieldValue.TextValue := '';
+  FieldValue.FirstName := '';
+  FieldValue.LastName := '';
+  FieldValue.Initials := '';
+  FieldValue.OtherName := '';
+  FieldValue.SalutationID := 0;
+  FieldValue.Salutation := '';
+  FieldValue.IDNo := '';
+  FieldValue.EmailAddress := '';
+  FieldValue.TaxNo := '';
+  FieldValue.MobileNo := '';
+  FieldValue.DOB :=  0.0;
+  FieldValue.CustomerID := 0;
+  FieldValue.DirectorID := 0;
+end;
+
 procedure TTSDM.dtsTimesheetStateChange(Sender: TObject);
 var
   EditMode: string;
@@ -584,4 +622,5 @@ begin
 end;
 
 end.
+
 
