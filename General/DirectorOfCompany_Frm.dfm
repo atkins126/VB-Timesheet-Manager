@@ -1,8 +1,8 @@
 inherited DirectorOfCompanyFrm: TDirectorOfCompanyFrm
   Caption = 'DirectorOfCompanyFrm'
   ClientHeight = 662
-  ClientWidth = 922
-  ExplicitWidth = 938
+  ClientWidth = 984
+  ExplicitWidth = 1000
   ExplicitHeight = 701
   PixelsPerInch = 96
   TextHeight = 13
@@ -135,12 +135,12 @@ inherited DirectorOfCompanyFrm: TDirectorOfCompanyFrm
           DataBinding.FieldName = 'MIDDLE_NAME'
           PropertiesClassName = 'TcxTextEditProperties'
           Properties.ReadOnly = True
-          MinWidth = 135
+          MinWidth = 150
           Options.Editing = False
           Options.Grouping = False
           Options.HorzSizing = False
           Options.Moving = False
-          Width = 135
+          Width = 150
           Position.BandIndex = 0
           Position.ColIndex = 5
           Position.RowIndex = 0
@@ -178,12 +178,12 @@ inherited DirectorOfCompanyFrm: TDirectorOfCompanyFrm
           DataBinding.FieldName = 'ID_NUMBER'
           PropertiesClassName = 'TcxTextEditProperties'
           Properties.ReadOnly = True
-          MinWidth = 125
+          MinWidth = 115
           Options.Editing = False
           Options.Grouping = False
           Options.HorzSizing = False
           Options.Moving = False
-          Width = 125
+          Width = 115
           Position.BandIndex = 0
           Position.ColIndex = 8
           Position.RowIndex = 0
@@ -372,6 +372,7 @@ inherited DirectorOfCompanyFrm: TDirectorOfCompanyFrm
     end
     object litCompanyToolbar: TdxLayoutItem
       Parent = grpCompany
+      Visible = False
       SizeOptions.AssignedValues = [sovSizableHorz]
       SizeOptions.SizableHorz = False
       SizeOptions.Width = 42
@@ -379,7 +380,7 @@ inherited DirectorOfCompanyFrm: TDirectorOfCompanyFrm
       Control = docCompanyToolbar
       ControlOptions.AutoColor = True
       ControlOptions.OriginalHeight = 114
-      ControlOptions.OriginalWidth = 60
+      ControlOptions.OriginalWidth = 42
       ControlOptions.ShowBorder = False
       Index = 0
     end
@@ -2419,12 +2420,14 @@ inherited DirectorOfCompanyFrm: TDirectorOfCompanyFrm
       Action = actAddDirector
       Category = 0
       ScreenTip = tipAddDirector
+      Visible = ivNever
       AutoGrayScale = False
     end
     object btnRemoveDirector: TdxBarLargeButton
       Action = actRemoveDirector
       Category = 0
       ScreenTip = tipRemoveDirector
+      Visible = ivNever
       AutoGrayScale = False
     end
     object btnRefresh: TdxBarLargeButton
@@ -2437,6 +2440,7 @@ inherited DirectorOfCompanyFrm: TDirectorOfCompanyFrm
       Action = actEditDirector
       Category = 0
       ScreenTip = tipEditDirector
+      Visible = ivNever
       AutoGrayScale = False
     end
     object btnEditCompany: TdxBarLargeButton
@@ -2450,6 +2454,7 @@ inherited DirectorOfCompanyFrm: TDirectorOfCompanyFrm
     object btnSynchroniseDirector: TdxBarLargeButton
       Action = actSnchroniseDirector
       Category = 0
+      Visible = ivNever
       AutoGrayScale = False
     end
   end
