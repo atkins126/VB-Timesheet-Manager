@@ -268,8 +268,8 @@ var
   RegKey: TRegistry;
 begin
   Caption := 'Billable Summary Report';
-  layMain.Align :=  alClient;
-  layMain.LookAndFeel :=  lafCustomSkin;
+  layMain.Align := alClient;
+  layMain.LookAndFeel := lafCustomSkin;
   FShowingForm := True;
   TcxLookupComboBoxProperties(lucPeriod.Properties).ListSource := ReportDM.dtsPeriod;
 
@@ -365,7 +365,7 @@ begin
     if TimesheetEditFrm = nil then
       TimesheetEditFrm := TTimesheetEditFrm.Create(nil);
 
-    TimesheetEditFrm.CanEdit := VBBaseDM.MyDataSet.FieldByName('LOCKED').AsInteger = 0;
+    TSDM.CanEdit := VBBaseDM.MyDataSet.FieldByName('LOCKED').AsInteger = 0;
 
     if TimesheetEditFrm.ShowModal = mrCancel then
     begin
@@ -579,9 +579,9 @@ begin
     if not TFile.Exists(RepFileName) then
       raise EFileNotFoundException.Create('Report file: ' + RepFileName + ' not found. Cannot load report.');
 
-    ReportDM.Report.LoadFromFile({TSDM.ShellResource.ReportFolder + }RepFileName);
-
+    ReportDM.Report.LoadFromFile(RepFileName);
     viewBillableSummary.DataController.BeginUpdate;
+
     if ReportDM.Report.PrepareReport then
       if TAction(Sender).Tag = 0 then
         ReportDM.Report.ShowPreparedReport
@@ -617,7 +617,7 @@ procedure TBillableSummaryFrm.GetBillableSummary;
 var
   Response: TStringList;
 //  FromPeriod, Period: Integer;
-  WhereClause, OrderByClause, FileName: string;
+  WhereClause, OrderByClause, FileName, ParameterList, ParameterValues: string;
 //  AComboBox: TcxComboBox;
 //  SamePeriod: Boolean;
 const
@@ -628,6 +628,7 @@ begin
   ReportDM.Report := ReportDM.rptBillableSummaryByCustomer;
   ReportDM.locSQL.Active := True;
   Response := RUtils.CreateStringList(PIPE, DOUBLE_QUOTE);
+
   try
     if not ReportDM.conSQLLite.Connected then
       ReportDM.conSQLLite.Connected := True;
@@ -649,8 +650,16 @@ begin
 //    begin
 //    Period := ReportDM.qryPeriod.FieldByName('THE_PERIOD').AsInteger;
 
+    ParameterList :=
+      'USER_ID' + PIPE +
+      'THE_PERIOD';
 
-{TODO: Fix this call to: SP_GEN_BILLABLE_SUMMARY_TABLE}
+    ParameterValues :=
+      VBBaseDM.UserData.UserID.ToString + PIPE +
+      FPeriod.ToString;
+
+    VBBaseDM.OutputValues := '';
+    Response.DelimitedText := VBBaseDM.ExecuteStoredProcedure('SP_GEN_BILLABLE_SUMMARY_TABLE', ParameterList, ParameterValues, VBBaseDM.OutputValues);
 //    Response.DelimitedText := VBBaseDM.ExecuteStoredProcedure('SP_GEN_BILLABLE_SUMMARY_TABLE', VBBaseDM.UserData.UserID.ToString + ',' + FPeriod.ToString);
 
     if SameText(Response.Values['RESPONSE'], 'ERROR') then
@@ -663,8 +672,10 @@ begin
     // Suppress customers that have no transaactions for billable summary report
     if cbxRemoveZeroBillableItems.EditValue then
     begin
-{TODO: Fix this call to: SP_DELETE_ZERO_BILLABLE_VALUES}
-//      Response.DelimitedText := VBBaseDM.ExecuteStoredProcedure('SP_DELETE_ZERO_BILLABLE_VALUES', VBBaseDM.UserData.UserID.ToString);
+      ParameterList := 'USER_ID';
+      ParameterValues := VBBaseDM.UserData.UserID.ToString;
+      VBBaseDM.OutputValues := '';
+      Response.DelimitedText := VBBaseDM.ExecuteStoredProcedure('SP_DELETE_ZERO_BILLABLE_VALUES', ParameterList, ParameterValues, VBBaseDM.OutputValues);
 
       if SameText(Response.Values['RESPONSE'], 'ERROR') then
         raise EServerError.Create('One or more errors occurred when attempting to remove zero billable values with error message:' + CRLF + CRLF +
@@ -758,11 +769,13 @@ begin
         'WHERE T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) +
         ' AND (T.THE_PERIOD = ' + FPeriod.ToString +
         ' OR T.RELEASE_TO_PERIOD = ' + FPeriod.ToString + ') ' +
+        ' AND T.BILLABLE = 1 ' +
         ' AND T.CARRY_FORWARD = 0 '
     else
       WhereClause :=
         'WHERE T.CUSTOMER_ID = ' + IntToStr(ReportDM.cdsBillableSummary.FieldByName('CUSTOMER_ID').AsInteger) + ' ' +
         ' AND T.THE_PERIOD = ' + FPeriod.ToString +
+        ' AND T.BILLABLE = 1  ' +
         ' AND T.CARRY_FORWARD = 0 ';
 
 //    if cbxIncludeReleasedItems.Checked then
@@ -1258,4 +1271,5 @@ begin
 end;
 
 end.
+
 

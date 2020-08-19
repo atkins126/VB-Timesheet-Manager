@@ -19,24 +19,6 @@ inherited ReportDM: TReportDM
         Fields = 'NAME;THE_PERIOD'
         Options = [ixCaseInsensitive]
       end>
-    Indexes = <
-      item
-        Active = True
-        Name = 'idxBillablePeriod'
-        Fields = 'THE_PERIOD;NAME'
-        CaseInsFields = 'NAME'
-        Options = [soNoCase]
-        FilterOptions = [ekNoCase]
-      end
-      item
-        Active = True
-        Selected = True
-        Name = 'idxBillableCustomer'
-        Fields = 'NAME'
-        CaseInsFields = 'NAME'
-        Options = [soNoCase]
-        FilterOptions = [ekNoCase]
-      end>
     IndexName = 'idxBillableCustomer'
     FetchOptions.AssignedValues = [evMode, evRecordCountMode]
     FetchOptions.Mode = fmAll
@@ -586,7 +568,7 @@ inherited ReportDM: TReportDM
         object Memo27: TfrxMemoView
           Align = baRight
           AllowVectorExport = True
-          Left = 317.480520000000000000
+          Left = 317.480519999999900000
           Width = 362.834880000000000000
           Height = 26.456710000000000000
           Font.Charset = ANSI_CHARSET

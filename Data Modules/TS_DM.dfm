@@ -436,7 +436,7 @@ inherited TSDM: TTSDM
     UpdateOptions.AutoCommitUpdates = True
     UpdateOptions.UpdateTableName = 'CUSTOMER'
     StoreDefs = True
-    Left = 321
+    Left = 336
     Top = 240
     object cdsCustomerLookupPrefID: TIntegerField
       FieldName = 'ID'
@@ -574,7 +574,7 @@ inherited TSDM: TTSDM
   end
   object dtsCustomerLookupPref: TDataSource
     DataSet = cdsCustomerLookupPref
-    Left = 321
+    Left = 336
     Top = 290
   end
   object dtsPriceListPref: TDataSource
@@ -636,6 +636,7 @@ inherited TSDM: TTSDM
     BeforeEdit = cdsTimesheetBeforeEdit
     BeforePost = cdsTimesheetBeforePost
     AfterPost = cdsTimesheetAfterPost
+    BeforeDelete = cdsTimesheetBeforeDelete
     OnCalcFields = cdsTimesheetCalcFields
     OnNewRecord = cdsTimesheetNewRecord
     FilterOptions = [foCaseInsensitive]
@@ -655,7 +656,7 @@ inherited TSDM: TTSDM
         Fields = 'THE_PERIOD;ACTIVITY_DATE;ID'
       end>
     IndexName = 'idxActivityDate'
-    FetchOptions.AssignedValues = [evMode, evRecordCountMode]
+    FetchOptions.AssignedValues = [evMode]
     FetchOptions.Mode = fmAll
     FormatOptions.AssignedValues = [fvDataSnapCompatibility]
     FormatOptions.DataSnapCompatibility = True
@@ -748,11 +749,11 @@ inherited TSDM: TTSDM
       Size = 500
     end
     object cdsTimesheetEditTIME_SPENT: TFloatField
-      DisplayLabel = 'Spent'
+      DisplayLabel = 'Minutes'
       FieldName = 'TIME_SPENT'
     end
     object cdsTimesheetEditTIME_HOURS: TFloatField
-      DisplayLabel = 'Hrs'
+      DisplayLabel = 'Hours'
       FieldKind = fkInternalCalc
       FieldName = 'TIME_HOURS'
       Origin = 'TIME_HOURS'
@@ -1910,10 +1911,10 @@ inherited TSDM: TTSDM
       Origin = 'LAST_NAME'
       Size = 30
     end
-    object cdsViewDirectorMIDDLE_NAME: TStringField
+    object cdsViewDirectorOTHER_NAME: TStringField
       DisplayLabel = 'Middle Name'
-      FieldName = 'MIDDLE_NAME'
-      Origin = 'MIDDLE_NAME'
+      FieldName = 'OTHER_NAME'
+      Origin = 'OTHER_NAME'
       Size = 30
     end
     object cdsViewDirectorTAX_NO: TStringField
@@ -2643,10 +2644,10 @@ inherited TSDM: TTSDM
       Required = True
       Size = 30
     end
-    object cdsDirectorMIDDLE_NAME: TWideStringField
-      DisplayLabel = 'Middle Name'
-      FieldName = 'MIDDLE_NAME'
-      Origin = 'MIDDLE_NAME'
+    object cdsDirectorOTHER_NAME: TWideStringField
+      DisplayLabel = 'Other Name'
+      FieldName = 'OTHER_NAME'
+      Origin = 'OTHER_NAME'
       Size = 30
     end
     object cdsDirectorTAX_NO: TWideStringField
@@ -2806,5 +2807,16 @@ inherited TSDM: TTSDM
     DataSet = cdsDirectorOfCompany
     Left = 625
     Top = 425
+  end
+  object FDMemTable1: TFDMemTable
+    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvSilentMode]
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 35
+    Top = 180
   end
 end

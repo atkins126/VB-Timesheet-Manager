@@ -37,7 +37,7 @@ type
     grpPriceListItem: TdxLayoutGroup;
     grpTime: TdxLayoutGroup;
     grpRate: TdxLayoutGroup;
-    cbxAproved: TcxDBCheckBox;
+    cbxApproved: TcxDBCheckBox;
     cbxCarryForward: TcxDBCheckBox;
     cbxBillable: TcxDBCheckBox;
     cbxAddWork: TcxDBCheckBox;
@@ -79,7 +79,7 @@ type
     litDayName: TdxLayoutItem;
     spc3: TdxLayoutEmptySpaceItem;
     edtDayName: TcxTextEdit;
-    edtHours: TcxCurrencyEdit;
+    edtHours1: TcxCurrencyEdit;
     litLegend: TdxLayoutItem;
     actStdActivity: TAction;
     litAdWork: TdxLayoutItem;
@@ -96,6 +96,8 @@ type
     styEditStatus: TcxEditStyleController;
     spc4: TdxLayoutEmptySpaceItem;
     edtItemValue: TcxDBCurrencyEdit;
+    spc6: TdxLayoutEmptySpaceItem;
+    edtHours: TcxDBCurrencyEdit;
     procedure FormCreate(Sender: TObject);
     procedure lucActivityDatePropertiesEditValueChanged(Sender: TObject);
     procedure btnOKClick(Sender: TObject);
@@ -112,9 +114,9 @@ type
     procedure doStdActivity(Sender: TObject);
     procedure btnStdActivityClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
+    procedure cbxAprovedPropertiesEditValueChanged(Sender: TObject);
   private
     FClosingForm: Boolean;
-    FCanEdit: Boolean;
 //    FMyDataSet: TFDMemTable;
 //    FMyDataSource: TDataSource;
     { Private declarations }
@@ -122,7 +124,6 @@ type
     procedure SetReadOnlystatus(CanEdit: Boolean);
   public
     { Public declarations }
-    property CanEdit: Boolean read FCanEdit write FCanEdit;
 //    property MyDataSet: TFDMemTable read FMyDataSet write FMyDataSet;
 //    property MyDataSource: TDataSource read FMyDataSource write FMyDataSource;
   end;
@@ -143,9 +144,11 @@ uses
 procedure TTimesheetEditFrm.FormCreate(Sender: TObject);
 begin
   // Width = 800;  Height = 405.
-  Self.Width := 830;
-  Self.Height := 670;
+  Self.Width := 700;
+  Self.Height := 590;
   Caption := 'Timesheet Data';
+  layMain.Align := alClient;
+  layMain.LayoutLookAndFeel := lafCustomSkin;
   FClosingForm := False;
 end;
 
@@ -156,7 +159,7 @@ begin
   lucRateUnit.Properties.OnEditValueChanged := nil;
 
   try
-    cbxAproved.DataBinding.DataSource := VBBaseDM.MyDataSource;
+    cbxApproved.DataBinding.DataSource := VBBaseDM.MyDataSource;
     cbxCarryForward.DataBinding.DataSource := VBBaseDM.MyDataSource;
     cbxAddWork.DataBinding.DataSource := VBBaseDM.MyDataSource;
 //  edtDayName.DataBinding.DataSource := VBBaseDM.MyDataSource;
@@ -211,7 +214,7 @@ begin
     else
       lucActivityType.SetFocus;
 
-    SetReadOnlyStatus(FCanEdit);
+    SetReadOnlyStatus(TSDM.CanEdit);
   finally
     edtTimeSpent.Properties.OnEditValueChanged := edtTimeSpentPropertiesEditValueChanged;
     edtRate.Properties.OnEditValueChanged := edtRatePropertiesEditValueChanged;
@@ -223,6 +226,7 @@ end;
 procedure TTimesheetEditFrm.btnCancelClick(Sender: TObject);
 begin
   FClosingForm := True;
+  cbxApproved.Properties.OnEditValueChanged := nil;
   if VBBaseDM.MyDataSet.State in [dsEdit, dsInsert] then
     VBBaseDM.MyDataSet.Cancel;
 
@@ -284,49 +288,65 @@ begin
     raise EValidateException.Create('Rate unit spent must have a value.');
   end;
 
-  if VBBaseDM.DBAction = acInsert then
-  begin
-    NextID := VBBaseDM.GetNextID(VBBaseDM.MyDataSet.UpdateOptions.GeneratorName);
-    VBBaseDM.MyDataSet.FieldByName('ID').AsInteger := NextID;
-  end;
+//  if VBBaseDM.DBAction = acInsert then
+//  begin
+//    NextID := VBBaseDM.GetID(VBBaseDM.MyDataSet.UpdateOptions.GeneratorName, 0);
+//    VBBaseDM.MyDataSet.FieldByName('ID').AsInteger := NextID;
+//  end;
 
-  SQLStatement := 'UPDATE TIMESHEET SET ' +
-    ' USER_ID = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('USER_ID').AsInteger, varString) + ',' +
-    ' CUSTOMER_ID = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('CUSTOMER_ID').AsInteger, varString) + ',' +
-    ' PRICE_LIST_ITEM_ID = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('PRICE_LIST_ITEM_ID').AsInteger, varString) + ',' +
-    ' RATE_UNIT_ID = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('RATE_UNIT_ID').AsInteger, varString) + ',' +
-    ' ACTIVITY_TYPE_ID = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('ACTIVITY_TYPE_ID').AsInteger, varString) + ',' +
-    ' CUSTOMER_GROUP_ID = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('CUSTOMER_GROUP_ID').AsInteger, varString) + ',' +
-    ' ACTIVITY_DATE = ' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', VBBaseDM.MyDataSet.FieldByName('ACTIVITY_DATE').AsDateTime), '''') + ',' +
-    ' ACTIVITY = ' + AnsiQuotedStr(VBBaseDM.MyDataSet.FieldByName('ACTIVITY').AsString, '''') + ',' +
-    ' TIME_SPENT = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('TIME_SPENT').AsFloat, varString) + ',' +
-    ' ACTUAL_RATE = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('ACTUAL_RATE').AsFloat, varString) + ',' +
-    ' STD_RATE = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('STD_RATE').AsFloat, varString) + ',' +
-    ' BILLABLE = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('BILLABLE').AsInteger, varString) + ',' +
-    ' APPROVED = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('APPROVED').AsInteger, varString) + ',' +
-    ' IS_ADDITIONAL_WORK = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('IS_ADDITIONAL_WORK').AsInteger, varString) +
-    ' WHERE ID = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('ID').AsInteger, varString);
-
-  Response := RUtils.CreateStringList(PIPE, DOUBLE_QUOTE);
-
-  try
-    Response.DelimitedText := VBBaseDM.ExecuteSQLCommand(SQLStatement);
-    if SameText(Response.Values['RESPONSE'], 'ERROR') then
-      raise EServerError.Create('One or more errors occurred when executing an SQL command with error message:' + CRLF + CRLF +
-        Response.Values['ERROR_MESSAGE']);
-  finally
-    Response.Free;
-  end;
-
-  if not (VBBaseDM.MyDataSet.State in [dsEdit, dsInsert]) then
-    VBBaseDM.MyDataSet.Edit;
-
-  VBBaseDM.MyDataSet.FieldByName('TIME_HOURS').AsFloat := edtHours.Value;
-  VBBaseDM.MyDataSet.FieldByName('ITEM_VALUE').AsFloat := edtitemValue.Value;
-  VBBaseDM.MyDataSet.FieldByName('DAY_NAME').AsString := edtDayName.Text;
-  VBBaseDM.MyDataSet.FieldByName('DAY_ORDER').Asinteger := DayOfTheWeek(VBBaseDM.MyDataSet.FieldByName('ACTIVITY_DATE').AsDateTime);
   VBBaseDM.MyDataSet.Post;
   VBBaseDM.MyDataSet.CommitUpdates;
+
+//  SQLStatement := 'UPDATE TIMESHEET SET ' +
+//    ' USER_ID = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('USER_ID').AsInteger, varString) + ',' +
+//    ' CUSTOMER_ID = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('CUSTOMER_ID').AsInteger, varString) + ',' +
+//    ' PRICE_LIST_ITEM_ID = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('PRICE_LIST_ITEM_ID').AsInteger, varString) + ',' +
+//    ' RATE_UNIT_ID = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('RATE_UNIT_ID').AsInteger, varString) + ',' +
+//    ' ACTIVITY_TYPE_ID = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('ACTIVITY_TYPE_ID').AsInteger, varString) + ',' +
+//    ' CUSTOMER_GROUP_ID = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('CUSTOMER_GROUP_ID').AsInteger, varString) + ',' +
+//    ' ACTIVITY_DATE = ' + AnsiQuotedStr(FormatDateTime('yyyy-MM-dd', VBBaseDM.MyDataSet.FieldByName('ACTIVITY_DATE').AsDateTime), '''') + ',' +
+//    ' ACTIVITY = ' + AnsiQuotedStr(VBBaseDM.MyDataSet.FieldByName('ACTIVITY').AsString, '''') + ',' +
+//    ' TIME_SPENT = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('TIME_SPENT').AsFloat, varString) + ',' +
+//    ' ACTUAL_RATE = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('ACTUAL_RATE').AsFloat, varString) + ',' +
+//    ' STD_RATE = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('STD_RATE').AsFloat, varString) + ',' +
+//    ' BILLABLE = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('BILLABLE').AsInteger, varString) + ',' +
+//    ' APPROVED = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('APPROVED').AsInteger, varString) + ',' +
+//    ' IS_ADDITIONAL_WORK = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('IS_ADDITIONAL_WORK').AsInteger, varString) +
+//    ' WHERE ID = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('ID').AsInteger, varString);
+//
+//  Response := RUtils.CreateStringList(PIPE, DOUBLE_QUOTE);
+//
+//  try
+//    Response.DelimitedText := VBBaseDM.ExecuteSQLCommand(SQLStatement);
+//    if SameText(Response.Values['RESPONSE'], 'ERROR') then
+//      raise EServerError.Create('One or more errors occurred when executing an SQL command with error message:' + CRLF + CRLF +
+//        Response.Values['ERROR_MESSAGE']);
+//  finally
+//    Response.Free;
+//  end;
+
+  TSDM.cdsTimesheet.AfterPost := nil;
+
+  try
+    if VBBaseDM.DBAction = acInsert then
+    begin
+      NextID := VBBaseDM.GetID(VBBaseDM.MyDataSet.UpdateOptions.GeneratorName, 0);
+      VBBaseDM.MyDataSet.FieldByName('ID').AsInteger := NextID;
+    end;
+
+    if not (VBBaseDM.MyDataSet.State in [dsEdit, dsInsert]) then
+      VBBaseDM.MyDataSet.Edit;
+
+    VBBaseDM.MyDataSet.FieldByName('TIME_HOURS').AsFloat := edtHours.Value;
+    VBBaseDM.MyDataSet.FieldByName('ITEM_VALUE').AsFloat := edtitemValue.Value;
+    VBBaseDM.MyDataSet.FieldByName('DAY_NAME').AsString := edtDayName.Text;
+    VBBaseDM.MyDataSet.FieldByName('DAY_ORDER').Asinteger := DayOfTheWeek(VBBaseDM.MyDataSet.FieldByName('ACTIVITY_DATE').AsDateTime);
+    VBBaseDM.MyDataSet.Post;
+//    VBBaseDM.MyDataSet.CommitUpdates;
+  finally
+    TSDM.cdsTimesheet.AfterPost := TSDM.cdsTimesheetAfterPost;
+  end;
+
   Self.ModalResult := mrOK;
 end;
 
@@ -350,6 +370,15 @@ begin
     FreeAndNil(StdActivityFrm);
   finally
     Screen.Cursor := crDefault;
+  end;
+end;
+
+procedure TTimesheetEditFrm.cbxAprovedPropertiesEditValueChanged(Sender: TObject);
+begin
+  if not FClosingForm then
+  begin
+    TSDM.CanEdit := not cbxApproved.Checked;
+    SetReadOnlystatus(TSDM.CanEdit);
   end;
 end;
 
@@ -449,14 +478,15 @@ end;
 
 procedure TTimesheetEditFrm.SetReadOnlystatus(CanEdit: Boolean);
 begin
-  btnOK.Enabled := CanEdit;
-  litEditStatus.Visible := not CanEdit;
-  btnStdActivity.Enabled := CanEdit;
-
-  if not CanEdit then
+  if not FClosingForm then
   begin
+//  btnOK.Enabled := CanEdit;
+    litEditStatus.Visible := not CanEdit;
+    btnStdActivity.Enabled := CanEdit;
+
+//    if not CanEdit then
+//    begin
     lucActivityDate.Properties.ReadOnly := not CanEdit;
-    cbxAproved.Properties.ReadOnly := not CanEdit;
     cbxBillable.Properties.ReadOnly := not CanEdit;
     cbxAddWork.Properties.ReadOnly := not CanEdit;
     lucCustomer.Properties.ReadOnly := not CanEdit;
@@ -468,19 +498,34 @@ begin
     lucRateUnit.Properties.ReadOnly := not CanEdit;
     cbxCarryForward.Properties.ReadOnly := not CanEdit;
 
-    lucActivityDate.Style.StyleController := styReadOnly;
-
-    cbxAproved.Style.StyleController := styReadOnly;
-    cbxBillable.Style.StyleController := styReadOnly;
-    cbxAddWork.Style.StyleController := styReadOnly;
-    lucCustomer.Style.StyleController := styReadOnly;
-    lucPriceListItem.Style.StyleController := styReadOnly;
-    lucActivityType.Style.StyleController := styReadOnly;
-    memActivity.Style.StyleController := styReadOnly;
-    edtTimeSpent.Style.StyleController := styReadOnly;
-    edtRate.Style.StyleController := styReadOnly;
-    lucRateUnit.Style.StyleController := styReadOnly;
-    cbxCarryForward.Style.StyleController := styReadOnly;
+    if CanEdit then
+    begin
+      lucActivityDate.Style.StyleController := nil;
+      cbxBillable.Style.StyleController := nil;
+      cbxAddWork.Style.StyleController := nil;
+      lucCustomer.Style.StyleController := nil;
+      lucPriceListItem.Style.StyleController := nil;
+      lucActivityType.Style.StyleController := nil;
+      memActivity.Style.StyleController := nil;
+      edtTimeSpent.Style.StyleController := nil;
+      edtRate.Style.StyleController := nil;
+      lucRateUnit.Style.StyleController := nil;
+      cbxCarryForward.Style.StyleController := nil;
+    end
+    else
+    begin
+      lucActivityDate.Style.StyleController := styReadOnly;
+      cbxBillable.Style.StyleController := styReadOnly;
+      cbxAddWork.Style.StyleController := styReadOnly;
+      lucCustomer.Style.StyleController := styReadOnly;
+      lucPriceListItem.Style.StyleController := styReadOnly;
+      lucActivityType.Style.StyleController := styReadOnly;
+      memActivity.Style.StyleController := styReadOnly;
+      edtTimeSpent.Style.StyleController := styReadOnly;
+      edtRate.Style.StyleController := styReadOnly;
+      lucRateUnit.Style.StyleController := styReadOnly;
+      cbxCarryForward.Style.StyleController := styReadOnly;
+    end;
   end;
 end;
 
@@ -630,16 +675,30 @@ procedure TTimesheetEditFrm.edtTimeSpentPropertiesEditValueChanged(Sender: TObje
 begin
   if not FClosingForm then
   begin
+//    if cbxBillable.Checked then
+//    begin
+//      if VBBaseDM.MyDataSet.FieldByName('RATE_UNIT_ID').AsInteger = 1 then
+//        edtitemValue.Value :=
+//          VBBaseDM.MyDataSet.FieldByName('TIME_SPENT').AsFloat * edtRate.Value / 60
+//      else
+//        edtitemValue.Value := VBBaseDM.MyDataSet.FieldByName('ACTUAL_RATE').AsFloat;
+//    end
+//    else
+//      edtitemValue.Value := 0;
+//  end;
+
     if cbxBillable.Checked then
     begin
       if VBBaseDM.MyDataSet.FieldByName('RATE_UNIT_ID').AsInteger = 1 then
-        edtitemValue.Value :=
+        VBBaseDM.MyDataSet.FieldByName('ITEM_VALUE').AsFloat :=
           VBBaseDM.MyDataSet.FieldByName('TIME_SPENT').AsFloat * edtRate.Value / 60
       else
-        edtitemValue.Value := VBBaseDM.MyDataSet.FieldByName('ACTUAL_RATE').AsFloat;
+        VBBaseDM.MyDataSet.FieldByName('ITEM_VALUE').AsFloat := VBBaseDM.MyDataSet.FieldByName('ACTUAL_RATE').AsFloat;
     end
     else
-      edtitemValue.Value := 0;
+      VBBaseDM.MyDataSet.FieldByName('ITEM_VALUE').AsFloat := 0;
+
+    VBBaseDM.MyDataSet.FieldByName('TIME_HOURS').AsFloat := edtTimeSpent.Value / 60;
   end;
 
 //  if not FClosingForm then
@@ -688,4 +747,6 @@ begin
 end;
 
 end.
+
+
 

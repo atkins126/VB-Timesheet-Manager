@@ -147,7 +147,7 @@ inherited CustomerDirectorFrm: TCustomerDirectorFrm
           Position.RowIndex = 0
         end
         object edtMiddleName: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'MIDDLE_NAME'
+          DataBinding.FieldName = 'OTHER_NAME'
           PropertiesClassName = 'TcxTextEditProperties'
           Properties.ReadOnly = True
           Visible = False
@@ -255,7 +255,7 @@ inherited CustomerDirectorFrm: TCustomerDirectorFrm
         Options.Moving = False
         Properties.EditPropertiesClassName = 'TcxTextEditProperties'
         Properties.EditProperties.ReadOnly = True
-        Properties.DataBinding.FieldName = 'MIDDLE_NAME'
+        Properties.DataBinding.FieldName = 'OTHER_NAME'
         Properties.Options.Editing = False
         Properties.Options.Filtering = False
         Properties.Options.IncSearch = False

@@ -16,7 +16,8 @@ uses
   cxCurrencyEdit, cxDBLookupComboBox, cxTextEdit, dxBar, cxGridLevel, cxGrid,
   cxGridInplaceEditForm, cxGridCustomTableView, cxGridTableView, dxCustomHint,
   cxGridBandedTableView, cxGridDBBandedTableView, cxGridCustomView, dxScreenTip,
-  cxHint, cxCheckBox, dxLayoutcxEditAdapters, cxContainer, cxLabel;
+  cxHint, cxCheckBox, dxLayoutcxEditAdapters, cxContainer, cxLabel, cxCalendar,
+  cxVGrid, cxDBVGrid, cxInplaceContainer;
 
 type
   TCustomerContactDetailFrm = class(TBaseLayoutFrm)
@@ -57,6 +58,29 @@ type
     actHide: TAction;
     Hide1: TMenuItem;
     tipHide: TdxScreenTip;
+    grpContactDetails: TdxLayoutGroup;
+    grpDirectOfCompany: TdxLayoutGroup;
+    grdDirector: TcxGrid;
+    viewDirector: TcxGridDBBandedTableView;
+    edtID: TcxGridDBBandedColumn;
+    edtCustomerID: TcxGridDBBandedColumn;
+    edtSalutationID: TcxGridDBBandedColumn;
+    edtSalutation: TcxGridDBBandedColumn;
+    edtCFirstname: TcxGridDBBandedColumn;
+    edtCLastName: TcxGridDBBandedColumn;
+    edtMiddleName: TcxGridDBBandedColumn;
+    edtTaxNo: TcxGridDBBandedColumn;
+    edtMobileNo: TcxGridDBBandedColumn;
+    edtEmailAddress: TcxGridDBBandedColumn;
+    lvlDiretor: TcxGridLevel;
+    grdVDirector: TcxDBVerticalGrid;
+    edtVSalutation: TcxDBEditorRow;
+    edtVMiddleName: TcxDBEditorRow;
+    edtVTaxNo: TcxDBEditorRow;
+    edtVMobileNo: TcxDBEditorRow;
+    edtVEmailAddress: TcxDBEditorRow;
+    litDirectorGrid: TdxLayoutItem;
+    litDirectorGridV: TdxLayoutItem;
     procedure FormCreate(Sender: TObject);
     procedure DoCloseForm(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -103,6 +127,8 @@ begin
   Self.Top := 50;
   Self.Left := Screen.Width - Self.Width - 100;
   viewContactDetailCo.DataController.DataSource := TSDM.dtsContactDetailCo;
+  viewDirector.DataController.DataSource := TSDM.dtsViewDirector;
+  grdVDirector.DataController.DataSource := TSDM.dtsViewDirector;
 
   if viewContactDetailCo.Controller.FocusedRecord <> nil then
     FItemValue := viewContactDetailCo.Controller.FocusedRecord.Values[edtCDValue.Index];

@@ -132,7 +132,7 @@ inherited DirectorOfCompanyFrm: TDirectorOfCompanyFrm
           Position.RowIndex = 0
         end
         object edtMiddleName: TcxGridDBBandedColumn
-          DataBinding.FieldName = 'MIDDLE_NAME'
+          DataBinding.FieldName = 'OTHER_NAME'
           PropertiesClassName = 'TcxTextEditProperties'
           Properties.ReadOnly = True
           MinWidth = 150

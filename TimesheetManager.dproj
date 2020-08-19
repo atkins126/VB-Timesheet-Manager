@@ -156,7 +156,6 @@
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
-        <DCCReference Include="..\..\Lib\VBCommonValues.pas"/>
         <DCCReference Include="General\TimesheetEdit_Frm.pas">
             <Form>TimesheetEditFrm</Form>
             <FormType>dfm</FormType>
@@ -244,9 +243,6 @@
             <Form>PDFViewerFrm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\Lib\VBProxyClasses.pas">
-            <Form>VBProxyClasses</Form>
-        </DCCReference>
         <DCCReference Include="General\DirectorOfCompany_Frm.pas">
             <Form>DirectorOfCompanyFrm</Form>
             <FormType>dfm</FormType>
@@ -263,6 +259,8 @@
             <Form>DirectorDetailFrm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="..\..\Lib\VBCommonValues.pas"/>
+        <DCCReference Include="..\Lib\VBProxyClasses.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

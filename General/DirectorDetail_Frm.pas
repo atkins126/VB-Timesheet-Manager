@@ -115,7 +115,7 @@ begin
     edtFirstName.Text := TSDM.cdsDirector.FieldByName('FIRST_NAME').AsString;
     edtLastName.Text := TSDM.cdsDirector.FieldByName('LAST_NAME').AsString;
     lucSalutation.EditValue := TSDM.cdsDirector.FieldByName('SALUTATION_ID').AsInteger;
-    edtOtherName.Text := TSDM.cdsDirector.FieldByName('MIDDLE_NAME').AsString;
+    edtOtherName.Text := TSDM.cdsDirector.FieldByName('OTHER_NAME').AsString;
     edtTaxNo.Text := TSDM.cdsDirector.FieldByName('TAX_NO').AsString;
     edtMobileNo.Text := TSDM.cdsDirector.FieldByName('MOBILE_PHONE').AsString;
     edtEmailAddress.Text := TSDM.cdsDirector.FieldByName('EMAIL_ADDRESS').AsString;

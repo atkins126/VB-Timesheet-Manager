@@ -299,7 +299,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
         OnCustomDrawCell = viewBillableSummaryCustomDrawCell
-        DataController.DataSource = ReportDM.dtsTimesheetCF
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -910,7 +909,7 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
           Properties.EditFormat = '######0'
           Properties.ReadOnly = True
           Visible = False
-          MinWidth = 74
+          MinWidth = 64
           Options.Editing = False
           Options.Filtering = False
           Options.IncSearch = False
@@ -1820,8 +1819,8 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
     end
   end
   object grdBillCfwdExcel: TcxGrid [1]
-    Left = 1253
-    Top = 160
+    Left = 1143
+    Top = 100
     Width = 913
     Height = 361
     Font.Charset = ANSI_CHARSET
@@ -2527,7 +2526,6 @@ inherited BillableSummaryFrm: TBillableSummaryFrm
         FieldName = 'PERIOD_NAME'
       end>
     Properties.ListOptions.SyncMode = True
-    Properties.ListSource = ReportDM.dtsPeriod
     Properties.OnChange = lucPeriodPropertiesChange
     Style.HotTrack = False
     TabOrder = 2

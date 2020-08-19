@@ -114,7 +114,8 @@ implementation
 {$R *.dfm}
 
 uses
-  TS_DM, DirectorDetail_Frm;
+  TS_DM,
+  DirectorDetail_Frm;
 
 procedure TDirectorOfCompanyFrm.DrawCellBorder(var Msg: TMessage);
 begin
@@ -168,12 +169,12 @@ begin
 
     TSDM.cdsDirector.FieldByName('FIRST_NAME').AsString := TSDM.FieldValue.FirstName;
     TSDM.cdsDirector.FieldByName('LAST_NAME').AsString := TSDM.FieldValue.LastName;
-    TSDM.cdsDirector.FieldByName('MIDDLE_NAME').AsString := TSDM.FieldValue.OtherName;
+    TSDM.cdsDirector.FieldByName('OTHER_NAME').AsString := TSDM.FieldValue.OtherName;
     TSDM.cdsDirector.FieldByName('EMAIL_ADDRESS').AsString := TSDM.FieldValue.EmailAddress;
     TSDM.cdsDirector.FieldByName('SALUTATION_ID').AsInteger := TSDM.FieldValue.SalutationID;
     TSDM.cdsDirector.FieldByName('TAX_NO').AsString := TSDM.FieldValue.TaxNo;
     TSDM.cdsDirector.FieldByName('MOBILE_PHONE').AsString := TSDM.FieldValue.MobileNo;
-              TSDM.cdsDirector.Post;
+    TSDM.cdsDirector.Post;
 
 //        TSDM.ValueArray[0] := 'First Name:' + TAB + TSDM.FFieldValue.FirstName;
 //        TSDM.ValueArray[1] := 'Last Name:' + TAB + TSDM.FFieldValue.LastName;

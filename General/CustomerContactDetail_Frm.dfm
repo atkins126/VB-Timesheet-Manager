@@ -1,35 +1,35 @@
 inherited CustomerContactDetailFrm: TCustomerContactDetailFrm
   BorderStyle = bsDialog
   Caption = 'CustomerContactDetailFrm'
-  ClientHeight = 328
-  ClientWidth = 466
+  ClientHeight = 772
+  ClientWidth = 1470
   Constraints.MinHeight = 250
   Constraints.MinWidth = 400
   FormStyle = fsStayOnTop
   Position = poDefault
   OnClose = FormClose
-  ExplicitWidth = 472
-  ExplicitHeight = 357
+  ExplicitWidth = 1476
+  ExplicitHeight = 801
   PixelsPerInch = 96
   TextHeight = 13
   inherited layMain: TdxLayoutControl
-    Width = 411
-    Height = 246
-    ExplicitWidth = 411
-    ExplicitHeight = 246
+    Width = 701
+    Height = 596
+    ExplicitWidth = 701
+    ExplicitHeight = 596
     object docToolbar: TdxBarDockControl [0]
       Left = 11
       Top = 11
-      Width = 389
+      Width = 679
       Height = 58
       Align = dalNone
       BarManager = barManager
     end
     object grdContactDetailCo: TcxGrid [1]
-      Left = 11
-      Top = 100
-      Width = 389
-      Height = 135
+      Left = 20
+      Top = 131
+      Width = 661
+      Height = 170
       TabOrder = 2
       object viewContactDetailCo: TcxGridDBBandedTableView
         PopupMenu = popEmail
@@ -291,18 +291,306 @@ inherited CustomerContactDetailFrm: TCustomerContactDetailFrm
       end
     end
     object edtPrimaryContact: TcxTextEdit [2]
-      Left = 110
-      Top = 75
+      Left = 119
+      Top = 106
       BeepOnEnter = False
       Properties.ReadOnly = True
       Style.HotTrack = False
       Style.StyleController = styReadOnly
       Style.TransparentBorder = False
       TabOrder = 1
-      Width = 290
+      Width = 562
+    end
+    object grdDirector: TcxGrid [3]
+      Left = 20
+      Top = 350
+      Width = 336
+      Height = 199
+      TabOrder = 3
+      object viewDirector: TcxGridDBBandedTableView
+        PopupMenu = popEmail
+        Navigator.Buttons.CustomButtons = <>
+        ScrollbarAnnotations.CustomAnnotations = <>
+        DataController.DataSource = TSDM.dtsViewDirector
+        DataController.Options = [dcoCaseInsensitive, dcoAssignGroupingValues, dcoAssignMasterDetailKeys, dcoSaveExpanding, dcoSortByDisplayText]
+        DataController.Summary.DefaultGroupSummaryItems = <>
+        DataController.Summary.FooterSummaryItems = <>
+        DataController.Summary.SummaryGroups = <>
+        OptionsBehavior.FocusCellOnTab = True
+        OptionsBehavior.NavigatorHints = True
+        OptionsBehavior.FocusCellOnCycle = True
+        OptionsCustomize.ColumnsQuickCustomization = True
+        OptionsView.ColumnAutoWidth = True
+        OptionsView.GroupByBox = False
+        Bands = <
+          item
+            Caption = 'Director Links'
+          end>
+        object edtID: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'ID'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = '#,##0'
+          Properties.EditFormat = '#,##0'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 45
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 45
+          Position.BandIndex = 0
+          Position.ColIndex = 0
+          Position.RowIndex = 0
+        end
+        object edtCustomerID: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'CUSTOMER_ID'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = '#,##0'
+          Properties.EditFormat = '#,##0'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 45
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 45
+          Position.BandIndex = 0
+          Position.ColIndex = 1
+          Position.RowIndex = 0
+        end
+        object edtSalutationID: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'SALUTATION_ID'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 0
+          Properties.DisplayFormat = '#,##0'
+          Properties.EditFormat = '#,##0'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 45
+          Options.Editing = False
+          Options.Filtering = False
+          Options.IncSearch = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.Sorting = False
+          Width = 45
+          Position.BandIndex = 0
+          Position.ColIndex = 2
+          Position.RowIndex = 0
+        end
+        object edtSalutation: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'SALUTATION'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 80
+          Options.Editing = False
+          Options.Filtering = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 80
+          Position.BandIndex = 0
+          Position.ColIndex = 3
+          Position.RowIndex = 0
+        end
+        object edtCFirstname: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'FIRST_NAME'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          MinWidth = 130
+          Options.Editing = False
+          Options.Filtering = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 130
+          Position.BandIndex = 0
+          Position.ColIndex = 4
+          Position.RowIndex = 0
+        end
+        object edtCLastName: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'LAST_NAME'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          Options.Editing = False
+          Options.Filtering = False
+          Options.Grouping = False
+          Options.Moving = False
+          Width = 130
+          Position.BandIndex = 0
+          Position.ColIndex = 5
+          Position.RowIndex = 0
+        end
+        object edtMiddleName: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'OTHER_NAME'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 150
+          Options.Editing = False
+          Options.Filtering = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 150
+          Position.BandIndex = 0
+          Position.ColIndex = 6
+          Position.RowIndex = 0
+        end
+        object edtTaxNo: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'TAX_NO'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 120
+          Options.Editing = False
+          Options.Filtering = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 120
+          Position.BandIndex = 0
+          Position.ColIndex = 7
+          Position.RowIndex = 0
+        end
+        object edtMobileNo: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'MOBILE_PHONE'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          Visible = False
+          MinWidth = 120
+          Options.Editing = False
+          Options.Filtering = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Width = 120
+          Position.BandIndex = 0
+          Position.ColIndex = 8
+          Position.RowIndex = 0
+        end
+        object edtEmailAddress: TcxGridDBBandedColumn
+          DataBinding.FieldName = 'EMAIL_ADDRESS'
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          Visible = False
+          Options.Editing = False
+          Options.Filtering = False
+          Options.Grouping = False
+          Options.Moving = False
+          Position.BandIndex = 0
+          Position.ColIndex = 9
+          Position.RowIndex = 0
+        end
+      end
+      object lvlDiretor: TcxGridLevel
+        GridView = viewDirector
+      end
+    end
+    object grdVDirector: TcxDBVerticalGrid [4]
+      Left = 362
+      Top = 350
+      Width = 316
+      Height = 199
+      OptionsView.CellAutoHeight = True
+      OptionsView.ScrollBars = ssVertical
+      OptionsView.RowHeaderWidth = 119
+      Navigator.Buttons.CustomButtons = <>
+      PopupMenu = popEmail
+      ScrollbarAnnotations.CustomAnnotations = <>
+      TabOrder = 4
+      DataController.DataSource = TSDM.dtsViewDirector
+      Version = 1
+      object edtVSalutation: TcxDBEditorRow
+        Options.CanMovedToCustomizationForm = False
+        Options.CanResized = False
+        Options.Moving = False
+        Properties.EditPropertiesClassName = 'TcxTextEditProperties'
+        Properties.EditProperties.ReadOnly = True
+        Properties.DataBinding.FieldName = 'SALUTATION'
+        Properties.Options.Editing = False
+        Properties.Options.Filtering = False
+        Properties.Options.IncSearch = False
+        ID = 0
+        ParentID = -1
+        Index = 0
+        Version = 1
+      end
+      object edtVMiddleName: TcxDBEditorRow
+        Options.CanMovedToCustomizationForm = False
+        Options.CanResized = False
+        Options.Moving = False
+        Properties.EditPropertiesClassName = 'TcxTextEditProperties'
+        Properties.EditProperties.ReadOnly = True
+        Properties.DataBinding.FieldName = 'OTHER_NAME'
+        Properties.Options.Editing = False
+        Properties.Options.Filtering = False
+        Properties.Options.IncSearch = False
+        ID = 1
+        ParentID = -1
+        Index = 1
+        Version = 1
+      end
+      object edtVTaxNo: TcxDBEditorRow
+        Options.CanMovedToCustomizationForm = False
+        Options.CanResized = False
+        Options.Moving = False
+        Properties.EditPropertiesClassName = 'TcxTextEditProperties'
+        Properties.EditProperties.ReadOnly = True
+        Properties.DataBinding.FieldName = 'TAX_NO'
+        Properties.Options.Editing = False
+        Properties.Options.Filtering = False
+        Properties.Options.IncSearch = False
+        ID = 2
+        ParentID = -1
+        Index = 2
+        Version = 1
+      end
+      object edtVMobileNo: TcxDBEditorRow
+        Options.CanMovedToCustomizationForm = False
+        Options.CanResized = False
+        Options.Moving = False
+        Properties.EditPropertiesClassName = 'TcxTextEditProperties'
+        Properties.EditProperties.ReadOnly = True
+        Properties.DataBinding.FieldName = 'MOBILE_PHONE'
+        Properties.Options.Editing = False
+        Properties.Options.Filtering = False
+        Properties.Options.IncSearch = False
+        ID = 3
+        ParentID = -1
+        Index = 3
+        Version = 1
+      end
+      object edtVEmailAddress: TcxDBEditorRow
+        Options.CanMovedToCustomizationForm = False
+        Options.CanResized = False
+        Options.Moving = False
+        Properties.EditPropertiesClassName = 'TcxTextEditProperties'
+        Properties.EditProperties.ReadOnly = True
+        Properties.DataBinding.FieldName = 'EMAIL_ADDRESS'
+        Properties.Options.Editing = False
+        Properties.Options.Filtering = False
+        Properties.Options.IncSearch = False
+        ID = 4
+        ParentID = -1
+        Index = 4
+        Version = 1
+      end
     end
     inherited layMainGroup_Root: TdxLayoutGroup
-      ItemIndex = 1
+      ItemIndex = 2
     end
     object litToolbar: TdxLayoutItem
       Parent = layMainGroup_Root
@@ -315,21 +603,52 @@ inherited CustomerContactDetailFrm: TCustomerContactDetailFrm
       Index = 0
     end
     object litGrid: TdxLayoutItem
-      Parent = layMainGroup_Root
-      AlignVert = avClient
+      Parent = grpContactDetails
       CaptionOptions.Visible = False
       Control = grdContactDetailCo
       ControlOptions.OriginalHeight = 170
       ControlOptions.OriginalWidth = 390
       ControlOptions.ShowBorder = False
-      Index = 2
+      Index = 1
     end
     object litPrimaryContact: TdxLayoutItem
-      Parent = layMainGroup_Root
+      Parent = grpContactDetails
       CaptionOptions.Text = 'Primary Contact'
       Control = edtPrimaryContact
       ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 211
+      ControlOptions.ShowBorder = False
+      Index = 0
+    end
+    object grpContactDetails: TdxLayoutGroup
+      Parent = layMainGroup_Root
+      CaptionOptions.Text = 'Customer contact details'
+      ButtonOptions.Buttons = <>
+      ItemIndex = 1
+      Index = 1
+    end
+    object grpDirectOfCompany: TdxLayoutGroup
+      Parent = layMainGroup_Root
+      CaptionOptions.Text = 'Directors for this company'
+      ButtonOptions.Buttons = <>
+      LayoutDirection = ldHorizontal
+      Index = 2
+    end
+    object litDirectorGrid: TdxLayoutItem
+      Parent = grpDirectOfCompany
+      CaptionOptions.Visible = False
+      Control = grdDirector
+      ControlOptions.OriginalHeight = 199
+      ControlOptions.OriginalWidth = 336
+      ControlOptions.ShowBorder = False
+      Index = 0
+    end
+    object litDirectorGridV: TdxLayoutItem
+      Parent = grpDirectOfCompany
+      CaptionOptions.Visible = False
+      Control = grdVDirector
+      ControlOptions.OriginalHeight = 199
+      ControlOptions.OriginalWidth = 316
       ControlOptions.ShowBorder = False
       Index = 1
     end

@@ -18,7 +18,6 @@ uses
   VBBase_DM in '..\..\Lib\VBBase_DM.pas' {VBBaseDM: TDataModule},
   Main_Frm in 'General\Main_Frm.pas' {MainFrm},
   TS_DM in 'Data Modules\TS_DM.pas' {TSDM: TDataModule},
-  VBCommonValues in '..\..\Lib\VBCommonValues.pas',
   TimesheetEdit_Frm in 'General\TimesheetEdit_Frm.pas' {TimesheetEditFrm},
   TimesheetOptions_Frm in 'General\TimesheetOptions_Frm.pas' {TimesheetOptionsFrm},
   TimesheetDetailReport_Frm in 'General\TimesheetDetailReport_Frm.pas' {TimesheetDetailReportFrm},
@@ -41,11 +40,12 @@ uses
   ExportPDFToTiff_Frm in 'General\ExportPDFToTiff_Frm.pas' {ExportPDFToTiffFrm},
   ExportPDFToPng_Frm in 'General\ExportPDFToPng_Frm.pas' {ExportPDFToPngFrm},
   PDFViewer_Frm in '..\..\..\..\Lib\PDFViewer_Frm.pas' {PDFViewerFrm},
-  VBProxyClasses in '..\Lib\VBProxyClasses.pas' {VBProxyClasses},
   DirectorOfCompany_Frm in 'General\DirectorOfCompany_Frm.pas' {DirectorOfCompanyFrm},
   Shareholder_Frm in 'General\Shareholder_Frm.pas' {ShareholderFrm},
   NewDirectorOfCompany_Frm in '..\Master Table Manager\General\NewDirectorOfCompany_Frm.pas' {NewDirectorOfCompanyFrm},
-  DirectorDetail_Frm in 'General\DirectorDetail_Frm.pas' {DirectorDetailFrm};
+  DirectorDetail_Frm in 'General\DirectorDetail_Frm.pas' {DirectorDetailFrm},
+  VBCommonValues in '..\..\Lib\VBCommonValues.pas',
+  VBProxyClasses in '..\Lib\VBProxyClasses.pas';
 
 {$R *.res}
 

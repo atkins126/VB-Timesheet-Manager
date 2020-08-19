@@ -233,12 +233,12 @@ type
     styImageColour: TcxEditStyleController;
     cntSelectAll: TdxBarControlContainerItem;
     btnSelectAll: TcxButton;
-    btnSelectNone: TcxButton;
+    btnClearSelection: TcxButton;
     cntSelectNone: TdxBarControlContainerItem;
     tipSelectAll: TdxScreenTip;
     tipClearSelection: TdxScreenTip;
     actSelectAll: TAction;
-    actClearAllSelectedItems: TAction;
+    actClearSelection: TAction;
     Sep8: TdxBarSeparator;
     btnSelectAllItems: TdxBarButton;
     btnSlectNone: TdxBarButton;
@@ -270,7 +270,6 @@ type
     actInvoiceSchedule: TAction;
     InvoiceList1: TMenuItem;
     btnInvoiceList: TdxBarButton;
-    btnPDF: TcxButton;
     btnParam: TdxBarLargeButton;
     edtName: TcxTextEdit;
     cntTest: TdxBarControlContainerItem;
@@ -278,6 +277,7 @@ type
     DirectorLink2: TMenuItem;
     btnDirectorLink: TdxBarButton;
     btnCustomerDirectorlink: TdxBarButton;
+    edtApproved: TcxGridDBBandedColumn;
     procedure DoExitTimesheetManager(Sender: TObject);
     procedure DoDeleteEntry(Sender: TObject);
     procedure DoRefresh(Sender: TObject);
@@ -315,7 +315,7 @@ type
     procedure cbxIncludeReleasedItemsPropertiesEditValueChanged(Sender: TObject);
     procedure btnSelectAllClick(Sender: TObject);
     procedure DoCustomerContactInfo(Sender: TObject);
-    procedure DiEditInsertEntry(Sender: TObject);
+    procedure DoEditInsertEntry(Sender: TObject);
     procedure DoDirectorlink(Sender: TObject);
     procedure lucFromDatePropertiesEditValueChanged(Sender: TObject);
     procedure lucToDatePropertiesEditValueChanged(Sender: TObject);
@@ -326,20 +326,19 @@ type
     procedure lucCustomerGetDisplayText(Sender: TcxCustomGridTableItem;
       ARecord: TcxCustomGridRecord; var AText: string);
 
-    procedure cbxApprovedCustomDrawCell(Sender: TcxCustomGridTableView;
-      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
-
     procedure viewTimesheetFocusedRecordChanged(Sender: TcxCustomGridTableView;
       APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord;
       ANewItemRecordFocusingChanged: Boolean);
     procedure DoInvoicing(Sender: TObject);
     procedure DoUnInvoice(Sender: TObject);
     procedure DoInvoiceList(Sender: TObject);
-    procedure btnPDFClick(Sender: TObject);
     procedure btnParamClick(Sender: TObject);
     procedure viewTimesheetKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure DoDirectorOfCompany(Sender: TObject);
+    procedure edtApprovedCustomDrawCell(Sender: TcxCustomGridTableView;
+      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
+      var ADone: Boolean);
   private
     { Private declarations }
     FTSUserID: Integer;
@@ -405,6 +404,16 @@ begin
     TcxCanvas(Msg.WParam).DrawComplexFrame(TcxGridTableDataCellViewInfo(Msg.LParam).ClientBounds, clRed, clRed, cxBordersAll, 1);
 end;
 
+procedure TMainFrm.edtApprovedCustomDrawCell(Sender: TcxCustomGridTableView;
+  ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
+begin
+  inherited;
+  if AViewInfo.GridRecord.Values[cbxApproved.Index] = 1 then
+    ACanvas.Brush.Color := clGreen
+  else
+    ACanvas.Brush.Color := clMaroon;
+end;
+
 procedure TMainFrm.FormCreate(Sender: TObject);
 begin
   Caption := Application.Title;
@@ -436,6 +445,7 @@ begin
   FSwitchPrefix := ['/'];
   FCallingFromShell := FindCmdLineSwitch('VB_SHELL', VBShell, True, [clstValueNextParam, clstValueAppended]);
   FShowingForm := True;
+  viewTimesheet.OptionsSelection.CheckBoxVisibility := [cbvDataRow];
 
   if MsgDialogFrm = nil then
     MsgDialogFrm := TMsgDialogFrm.Create(nil);
@@ -647,13 +657,18 @@ begin
   MainFrm.Close;
 end;
 
-procedure TMainFrm.DiEditInsertEntry(Sender: TObject);
+procedure TMainFrm.DoEditInsertEntry(Sender: TObject);
 begin
   Screen.Cursor := crHourglass;
   try
+    TSDM.CanEdit := True;
     case TAction(Sender).Tag of
       0: TSDM.cdsTimesheet.Insert;
-      1: TSDM.cdsTimesheet.Edit;
+      1:
+        begin
+          TSDM.CanEdit := TSDM.cdsTimesheet.FieldByName('LOCKED').AsInteger = 0;
+          TSDM.cdsTimesheet.Edit;
+        end;
     end;
 
     if TimesheetEditFrm = nil then
@@ -661,16 +676,19 @@ begin
 
     VBBaseDM.MyDataSet := TSDM.cdsTimesheet;
     VBBaseDM.MyDataSource := TSDM.dtsTimesheet;
+    TimesheetEditFrm.ShowModal;
 
-    if TimesheetEditFrm.ShowModal = mrCancel then
-      if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
-        TSDM.cdsTimesheet.Cancel
-      else
-        actRefresh.Execute;
-
+//    if TimesheetEditFrm.ShowModal = mrCancel then
+//    begin
+//      if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
+//        TSDM.cdsTimesheet.Cancel;
+//      Exit;
+//    end
+//    else
+//      TSDM.cdsTimesheet.Post;
+  finally
     TimesheetEditFrm.Close;
     FreeAndNil(TimesheetEditFrm);
-  finally
     Screen.Cursor := crDefault;
   end;
 end;
@@ -733,6 +751,8 @@ end;
 procedure TMainFrm.DoDeleteEntry(Sender: TObject);
 var
   C: TcxCustomGridTableController;
+  DC: TcxDBDataController;
+  I, SelectedCount, DeleteCount: Integer;
 begin
   if TSDM.cdsTimesheet.State in [dsEdit, dsInsert] then
     TSDM.cdsTimesheet.Cancel;
@@ -743,6 +763,8 @@ begin
     raise ESelectionException.Create('No items selected to deleted. Please select at leaset one item to delete.');
     Exit;
   end;
+
+  DC := viewTimesheet.DataController;
 
   Beep;
   if
@@ -759,8 +781,33 @@ begin
 
   VBBaseDM.DBAction := acDelete;
   {TODO: Change this. Cannot delete locked items!!}
-  C.DeleteSelection;
-  VBBaseDM.PostData(TSDM.cdsTimesheet);
+//  C.DeleteSelection;
+
+  SelectedCount := C.SelectedRecordCount;
+  DeleteCount := 0;
+
+  for I := 0 to SelectedCount - 1 do
+  begin
+    if DC.Values[C.SelectedRecords[I].RecordIndex, cbxApproved.Index] = 0 then
+    begin
+      DC.DeleteRecord(C.SelectedRecords[I].RecordIndex);
+      Inc(DeleteCount);
+    end;
+    VBBaseDM.PostData(TSDM.cdsTimesheet);
+  end;
+
+  if DeleteCount <> SelectedCount then
+  begin
+    Beep;
+    DisplayMsg(
+      Application.Title,
+      'Delete Warning',
+      'Some thiesheet items have already been approved',
+      mtConfirmation,
+      [mbYes, mbNo]
+      );
+    Exit;
+  end;
 end;
 
 procedure TMainFrm.DoRefresh(Sender: TObject);
@@ -987,57 +1034,42 @@ var
   Request, ParameterList, ParameterValues, OutputValues: string;
   ResponseList, OutputValueList: TStringList;
 begin
-  ResponseList := CreateStringList(PIPE, DOUBLE_QUOTE);
-  OutputValueList := CreateStringList(PIPE, DOUBLE_QUOTE);
-  OutputValues := '';
-
-  try
-    ParameterList :=
-      'FIRST_NAME' + PIPE +
-      'LAST_NAME' + PIPE +
-      'NEXT_ID' + PIPE +
-      'THE_DATE_TIME';
-
-    ParameterValues :=
-      edtName.Text + PIPE +
-      '' + PIPE +
-      '0' + PIPE +
-      DateTimeToStr(Now);
-
-    VBBaseDM.OutputValues := '';
-    ResponseList.DelimitedText := VBBaseDM.ExecuteStoredProcedure('SP_TEST_RETURN', ParameterList, ParameterValues, OutputValues);
-
-    if SameText(ResponseList.Values['RESPONSE'], 'ERROR') then
-      raise EServerError.Create('One or more errors occurred when executing a remote server command with error message:' + CRLF +
-        ResponseList.Values['ERROR_MESSAGE']);
-
-    OutputValueList.DelimitedText := VBBaseDM.OutputValues;
-
-    ShowMessage(
-      'First Nname = ' + OutputValueList.Values['FIRST_NAME'] + CRLF +
-      'Last Nname = ' + OutputValueList.Values['LAST_NAME'] + CRLF +
-      'Next ID = ' + OutputValueList.Values['NEXT_ID'] + CRLF +
-      'The Date Time = ' + OutputValueList.Values['THE_DATE_TIME']
-      );
-  finally
-    ResponseList.Free;
-    OutputValueList.Free;
-  end;
-end;
-
-procedure TMainFrm.btnPDFClick(Sender: TObject);
-begin
-  Screen.Cursor := crHourglass;
-
-  try
-    if PDFViewerFrm = nil then
-      PDFViewerFrm := TPDFViewerFrm.Create(nil);
-    PDFViewerFrm.ShowModal;
-    PDFViewerFrm.Close;
-    FreeAndNil(PDFViewerFrm);
-  finally
-    Screen.Cursor := crDefault;
-  end;
+//  ResponseList := CreateStringList(PIPE, DOUBLE_QUOTE);
+//  OutputValueList := CreateStringList(PIPE, DOUBLE_QUOTE);
+//  OutputValues := '';
+//
+//  try
+//    ParameterList :=
+//      'FIRST_NAME' + PIPE +
+//      'LAST_NAME' + PIPE +
+//      'NEXT_ID' + PIPE +
+//      'THE_DATE_TIME';
+//
+//    ParameterValues :=
+//      edtName.Text + PIPE +
+//      '' + PIPE +
+//      '0' + PIPE +
+//      DateTimeToStr(Now);
+//
+//    VBBaseDM.OutputValues := '';
+//    ResponseList.DelimitedText := VBBaseDM.ExecuteStoredProcedure('SP_TEST_RETURN', ParameterList, ParameterValues, OutputValues);
+//
+//    if SameText(ResponseList.Values['RESPONSE'], 'ERROR') then
+//      raise EServerError.Create('One or more errors occurred when executing a remote server command with error message:' + CRLF +
+//        ResponseList.Values['ERROR_MESSAGE']);
+//
+//    OutputValueList.DelimitedText := VBBaseDM.OutputValues;
+//
+//    ShowMessage(
+//      'First Nname = ' + OutputValueList.Values['FIRST_NAME'] + CRLF +
+//      'Last Nname = ' + OutputValueList.Values['LAST_NAME'] + CRLF +
+//      'Next ID = ' + OutputValueList.Values['NEXT_ID'] + CRLF +
+//      'The Date Time = ' + OutputValueList.Values['THE_DATE_TIME']
+//      );
+//  finally
+//    ResponseList.Free;
+//    OutputValueList.Free;
+//  end;
 end;
 
 procedure TMainFrm.btnSelectAllClick(Sender: TObject);
@@ -1624,19 +1656,6 @@ begin
   end;
 end;
 
-procedure TMainFrm.cbxApprovedCustomDrawCell(Sender: TcxCustomGridTableView;
-  ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
-var
-  DC: TcxDBDataController;
-begin
-  //  DC := viewTimesheet.DataController;
-  //
-  //  if DC.Values[AViewInfo.GridRecord.Index, cbxApproved.Index] then
-  //    ACanvas.Brush.Color := clGreen
-  //  else
-  //    ACanvas.Brush.Color := clMaroon;
-end;
-
 procedure TMainFrm.cbxIncludeReleasedItemsPropertiesEditValueChanged(Sender: TObject);
 var
   RegKey: TRegistry;
@@ -1874,6 +1893,7 @@ var
 begin
   SkinName := VBBaseDM.GetSkinFromRegistry;
   sknController.BeginUpdate;
+
   try
     sknController.NativeStyle := False;
     sknController.UseSkins := True;
@@ -1907,7 +1927,7 @@ begin
     RegKey.OpenKey(KEY_TIMESHEET, True);
 
     if not RegKey.ValueExists('Persistent Selection') then
-      RegKey.WriteBool('Persistent Selection', True);
+      RegKey.WriteBool('Persistent Selection', False);
 
     if not RegKey.ValueExists('Include Released Items') then
       RegKey.WriteBool('Include Released Items', True);
@@ -2026,6 +2046,46 @@ begin
         PostMessage(Handle, CM_DRAWBORDER, Integer(ACanvas), Integer(AViewInfo));
       end;
   end;
+
+//  if AViewInfo.GridRecord = nil then
+//    Exit;
+//
+////  if (VarIsNull(AViewInfo.GridRecord.Values[edtDateReleased.Index]))
+//  if (AViewInfo.GridRecord.Values[edtDateReleased.Index] > 0) then
+//  begin
+//    if AViewInfo.Item <> nil then
+//    begin
+//      if AViewInfo.Item = cbxApproved then
+//      begin
+//        if AViewInfo.GridRecord.Values[cbxApproved.Index] = 1 then
+//        begin
+//          ACanvas.Brush.Color := clGreen;
+////        ACanvas.Font.Color := RootLookAndFeel.SkinPainter.DefaultSelectionColor;
+//        end
+//        else
+//        begin
+//          ACanvas.Brush.Color := clMaroon;
+////        ACanvas.Font.Color := RootLookAndFeel.SkinPainter.DefaultSelectionColor;
+//        end;
+//      end
+//      else
+//      begin
+//        ACanvas.Brush.Color := $00E4FFCA; //$009EFEB1; //$9EFEB1; //$7EE4FE; // Color := $54DCFE; // $C1E0FF; //$D7E3FF; // $FFE1F0;
+//        ACanvas.Font.Color := RootLookAndFeel.SkinPainter.DefaultSelectionColor;
+//      end;
+//    end;
+//  end;
+//
+//  if AViewInfo.GridRecord.Focused then
+//  begin
+//    if AViewInfo.Item <> nil then
+//      if AViewInfo.Item.Focused then
+//      begin
+//        ACanvas.Brush.Color := $B6EDFA;
+//        ACanvas.Font.Color := RootLookAndFeel.SkinPainter.DefaultSelectionColor;
+//        PostMessage(Handle, CM_DRAWBORDER, Integer(ACanvas), Integer(AViewInfo));
+//      end;
+//  end;
 end;
 
 procedure TMainFrm.viewTimesheetDblClick(Sender: TObject);
@@ -2056,12 +2116,13 @@ begin
     VK_INSERT: actInsert.Execute;
     VK_F2: actEdit.Execute;
     VK_DELETE: actDelete.Execute;
+    VK_F5: actRefresh.Execute;
   end;
 end;
 
 procedure TMainFrm.viewTimesheetSelectionChanged(Sender: TcxCustomGridTableView);
-var
-  C: TcxCustomGridTableController;
+//var
+//  C: TcxCustomGridTableController;
 begin
   //  C := viewTimesheet.Controller;
   //  actInsert.Enabled := C.SelectedRecordCount <= 1;

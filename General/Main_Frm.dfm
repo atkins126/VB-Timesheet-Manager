@@ -76,7 +76,7 @@ inherited MainFrm: TMainFrm
         OptionsData.Inserting = False
         OptionsSelection.MultiSelect = True
         OptionsSelection.CheckBoxPosition = cbpIndicator
-        OptionsSelection.CheckBoxVisibility = [cbvDataRow, cbvGroupRow, cbvColumnHeader]
+        OptionsSelection.CheckBoxVisibility = [cbvDataRow]
         OptionsView.NoDataToDisplayInfoText = '<No Timesheet data to display>'
         OptionsView.Footer = True
         OptionsView.ShowColumnFilterButtons = sfbAlways
@@ -137,6 +137,26 @@ inherited MainFrm: TMainFrm
           Position.ColIndex = 1
           Position.RowIndex = 0
         end
+        object edtApproved: TcxGridDBBandedColumn
+          PropertiesClassName = 'TcxTextEditProperties'
+          Properties.ReadOnly = True
+          OnCustomDrawCell = edtApprovedCustomDrawCell
+          Options.Editing = False
+          Options.Filtering = False
+          Options.Focusing = False
+          Options.IncSearch = False
+          Options.ExpressionEditing = False
+          Options.GroupFooters = False
+          Options.Grouping = False
+          Options.HorzSizing = False
+          Options.Moving = False
+          Options.ShowCaption = False
+          Options.Sorting = False
+          Width = 20
+          Position.BandIndex = 0
+          Position.ColIndex = 2
+          Position.RowIndex = 0
+        end
         object cbxApproved: TcxGridDBBandedColumn
           DataBinding.FieldName = 'APPROVED'
           PropertiesClassName = 'TcxCheckBoxProperties'
@@ -146,17 +166,17 @@ inherited MainFrm: TMainFrm
           Properties.ReadOnly = True
           Properties.ValueChecked = 1
           Properties.ValueUnchecked = 0
-          OnCustomDrawCell = cbxApprovedCustomDrawCell
           HeaderAlignmentHorz = taCenter
           HeaderHint = 'Approved status'
           MinWidth = 35
           Options.Editing = False
+          Options.Filtering = False
           Options.IncSearch = False
           Options.HorzSizing = False
           Options.Sorting = False
           Width = 35
           Position.BandIndex = 0
-          Position.ColIndex = 2
+          Position.ColIndex = 3
           Position.RowIndex = 0
         end
         object cbxCarryForward: TcxGridDBBandedColumn
@@ -177,7 +197,7 @@ inherited MainFrm: TMainFrm
           Options.Sorting = False
           Width = 40
           Position.BandIndex = 0
-          Position.ColIndex = 3
+          Position.ColIndex = 4
           Position.RowIndex = 0
         end
         object edtPeriod: TcxGridDBBandedColumn
@@ -195,7 +215,7 @@ inherited MainFrm: TMainFrm
           Options.Moving = False
           Width = 65
           Position.BandIndex = 0
-          Position.ColIndex = 4
+          Position.ColIndex = 5
           Position.RowIndex = 0
         end
         object edtPeriodName: TcxGridDBBandedColumn
@@ -208,7 +228,7 @@ inherited MainFrm: TMainFrm
           Options.HorzSizing = False
           Width = 70
           Position.BandIndex = 0
-          Position.ColIndex = 5
+          Position.ColIndex = 6
           Position.RowIndex = 0
         end
         object edtDayname: TcxGridDBBandedColumn
@@ -224,7 +244,7 @@ inherited MainFrm: TMainFrm
           Options.Sorting = False
           Width = 35
           Position.BandIndex = 0
-          Position.ColIndex = 6
+          Position.ColIndex = 7
           Position.RowIndex = 0
         end
         object edtActivityDate: TcxGridDBBandedColumn
@@ -241,7 +261,7 @@ inherited MainFrm: TMainFrm
           Options.HorzSizing = False
           Width = 90
           Position.BandIndex = 0
-          Position.ColIndex = 7
+          Position.ColIndex = 8
           Position.RowIndex = 0
         end
         object lucCustomer: TcxGridDBBandedColumn
@@ -262,7 +282,7 @@ inherited MainFrm: TMainFrm
           Options.HorzSizing = False
           Width = 300
           Position.BandIndex = 0
-          Position.ColIndex = 8
+          Position.ColIndex = 9
           Position.RowIndex = 0
         end
         object lucPriceItem: TcxGridDBBandedColumn
@@ -284,7 +304,7 @@ inherited MainFrm: TMainFrm
           Options.HorzSizing = False
           Width = 300
           Position.BandIndex = 0
-          Position.ColIndex = 9
+          Position.ColIndex = 10
           Position.RowIndex = 0
         end
         object lucActivityType: TcxGridDBBandedColumn
@@ -304,7 +324,7 @@ inherited MainFrm: TMainFrm
           Options.HorzSizing = False
           Width = 200
           Position.BandIndex = 0
-          Position.ColIndex = 10
+          Position.ColIndex = 11
           Position.RowIndex = 0
         end
         object memActivity: TcxGridDBBandedColumn
@@ -321,7 +341,7 @@ inherited MainFrm: TMainFrm
           Options.Sorting = False
           Width = 300
           Position.BandIndex = 0
-          Position.ColIndex = 11
+          Position.ColIndex = 12
           Position.RowIndex = 0
         end
         object cbxBillable: TcxGridDBBandedColumn
@@ -580,7 +600,7 @@ inherited MainFrm: TMainFrm
           Options.Moving = False
           Width = 60
           Position.BandIndex = 0
-          Position.ColIndex = 13
+          Position.ColIndex = 14
           Position.RowIndex = 0
         end
         object cbxLocked: TcxGridDBBandedColumn
@@ -602,7 +622,7 @@ inherited MainFrm: TMainFrm
           Options.HorzSizing = False
           Width = 40
           Position.BandIndex = 0
-          Position.ColIndex = 12
+          Position.ColIndex = 13
           Position.RowIndex = 0
         end
         object dteModified: TcxGridDBBandedColumn
@@ -624,7 +644,7 @@ inherited MainFrm: TMainFrm
           Options.Moving = False
           VisibleForCustomization = False
           Position.BandIndex = 0
-          Position.ColIndex = 14
+          Position.ColIndex = 15
           Position.RowIndex = 0
         end
         object edtDayOrder: TcxGridDBBandedColumn
@@ -646,7 +666,7 @@ inherited MainFrm: TMainFrm
           VisibleForCustomization = False
           Width = 90
           Position.BandIndex = 0
-          Position.ColIndex = 15
+          Position.ColIndex = 16
           Position.RowIndex = 0
         end
         object edtDateCarriedForward: TcxGridDBBandedColumn
@@ -831,8 +851,8 @@ inherited MainFrm: TMainFrm
     end
   end
   object grdTimesheetBillable: TcxGrid [2]
-    Left = 1397
-    Top = 189
+    Left = 1372
+    Top = 171
     Width = 1181
     Height = 421
     Font.Charset = ANSI_CHARSET
@@ -846,6 +866,7 @@ inherited MainFrm: TMainFrm
     object viewTimesheetBillable: TcxGridDBBandedTableView
       Navigator.Buttons.CustomButtons = <>
       ScrollbarAnnotations.CustomAnnotations = <>
+      DataController.DataSource = ReportDM.dtsTSBillable
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
@@ -1223,7 +1244,7 @@ inherited MainFrm: TMainFrm
         Properties.DisplayFormat = '######'
         Properties.EditFormat = '######'
         Properties.ReadOnly = True
-        MinWidth = 64
+        MinWidth = 74
         Options.Editing = False
         Options.Filtering = False
         Options.IncSearch = False
@@ -1259,7 +1280,7 @@ inherited MainFrm: TMainFrm
         Properties.DisplayFormat = '######'
         Properties.EditFormat = '######'
         Properties.ReadOnly = True
-        MinWidth = 64
+        MinWidth = 74
         Options.Editing = False
         Options.Filtering = False
         Options.IncSearch = False
@@ -1407,13 +1428,13 @@ inherited MainFrm: TMainFrm
     ShowHint = True
     TabOrder = 3
   end
-  object btnSelectNone: TcxButton [4]
+  object btnClearSelection: TcxButton [4]
     Tag = 1
     Left = 376
     Top = 135
     Width = 85
     Height = 25
-    Action = actClearAllSelectedItems
+    Action = actClearSelection
     ParentShowHint = False
     ShowHint = True
     TabOrder = 4
@@ -1438,22 +1459,11 @@ inherited MainFrm: TMainFrm
     Font.Name = 'Tahoma'
     Font.Style = []
   end
-  object btnPDF: TcxButton [6]
-    Left = 1250
-    Top = 135
-    Width = 75
-    Height = 25
-    Caption = 'btnPDF'
-    ParentShowHint = False
-    ShowHint = True
-    TabOrder = 6
-    OnClick = btnPDFClick
-  end
-  object edtName: TcxTextEdit [7]
+  object edtName: TcxTextEdit [6]
     Left = 1300
     Top = 108
     BeepOnEnter = False
-    TabOrder = 7
+    TabOrder = 6
     Text = 'Christian'
     Width = 120
   end
@@ -1492,7 +1502,7 @@ inherited MainFrm: TMainFrm
       Caption = 'Insert Ins'
       Hint = 'Add a new timesheet item'
       ImageIndex = 6
-      OnExecute = DiEditInsertEntry
+      OnExecute = DoEditInsertEntry
     end
     object actEdit: TAction
       Tag = 1
@@ -1500,7 +1510,7 @@ inherited MainFrm: TMainFrm
       Caption = 'Edit F2'
       Hint = 'Edit selected timesheet item'
       ImageIndex = 7
-      OnExecute = DiEditInsertEntry
+      OnExecute = DoEditInsertEntry
     end
     object actApprove: TAction
       Tag = 100
@@ -1679,14 +1689,12 @@ inherited MainFrm: TMainFrm
       Tag = 5
       Category = 'System'
       Caption = 'Select All'
-      Hint = 'Select all timesheet items'
       OnExecute = DoSelectAllTimesheetItems
     end
-    object actClearAllSelectedItems: TAction
+    object actClearSelection: TAction
       Tag = 6
       Category = 'System'
-      Caption = 'Clear All'
-      Hint = 'Clear all selected timesheet items'
+      Caption = 'Clear'
       OnExecute = DoSelectAllTimesheetItems
     end
     object actCustomerContactInfo: TAction
@@ -8703,7 +8711,15 @@ inherited MainFrm: TMainFrm
   object styHintController: TcxHintStyleController
     Global = False
     HintStyleClassName = 'TdxScreenTipStyle'
-    HintStyle.ScreenTipLinks = <>
+    HintStyle.ScreenTipLinks = <
+      item
+        ScreenTip = tipSelectAll
+        Control = btnSelectAll
+      end
+      item
+        ScreenTip = tipClearSelection
+        Control = btnClearSelection
+      end>
     HintStyle.ScreenTipActionLinks = <>
     HintShortPause = 0
     HintPause = 0
@@ -8947,6 +8963,7 @@ inherited MainFrm: TMainFrm
     end
     object btnRefresh: TdxBarLargeButton
       Action = actRefresh
+      Caption = 'Refresh F5'
       Category = 0
       ScreenTip = tipRefresh
       AutoGrayScale = False
@@ -9249,7 +9266,7 @@ inherited MainFrm: TMainFrm
       Hint = 'Clear all selected timesheet items'
       ScreenTip = tipClearSelection
       Visible = ivAlways
-      Control = btnSelectNone
+      Control = btnClearSelection
     end
     object Sep8: TdxBarSeparator
       Caption = 'Copy && Select Options'
@@ -9263,7 +9280,7 @@ inherited MainFrm: TMainFrm
       ShortCut = 16449
     end
     object btnSlectNone: TdxBarButton
-      Action = actClearAllSelectedItems
+      Action = actClearSelection
       Category = 0
       ShortCut = 16462
     end
@@ -11023,7 +11040,7 @@ inherited MainFrm: TMainFrm
         ShortCut = 16449
       end
       object ClearAll1: TMenuItem
-        Action = actClearAllSelectedItems
+        Action = actClearSelection
         ShortCut = 16462
       end
     end
