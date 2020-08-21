@@ -167,7 +167,7 @@ begin
     lucActivityDate.DataBinding.DataSource := VBBaseDM.MyDataSource;
     memActivity.DataBinding.DataSource := VBBaseDM.MyDataSource;
     edtTimeSpent.DataBinding.DataSource := VBBaseDM.MyDataSource;
-//  edtHours.DataBinding.DataSource := VBBaseDM.MyDataSource;
+    edtHours.DataBinding.DataSource := VBBaseDM.MyDataSource;
     edtRate.DataBinding.DataSource := VBBaseDM.MyDataSource;
     edtItemValue.DataBinding.DataSource := VBBaseDM.MyDataSource;
     edtStdrate.DataBinding.DataSource := VBBaseDM.MyDataSource;
@@ -238,6 +238,7 @@ var
   NextID: Integer;
   SQLStatement: string;
   Response: TStringList;
+  Inserting: Boolean;
 begin
   if VarIsNull(lucActivityDate.EditValue) or SameText(Trim(lucActivityDate.Text), '') then
   begin
@@ -294,8 +295,14 @@ begin
 //    VBBaseDM.MyDataSet.FieldByName('ID').AsInteger := NextID;
 //  end;
 
-  VBBaseDM.MyDataSet.Post;
-  VBBaseDM.MyDataSet.CommitUpdates;
+  Inserting := VBBaseDM.DBAction = acInsert;
+
+  try
+    VBBaseDM.MyDataSet.Post;
+    VBBaseDM.MyDataSet.CommitUpdates;
+  except
+    VBBaseDM.DBAction := acBrowsing;
+  end;
 
 //  SQLStatement := 'UPDATE TIMESHEET SET ' +
 //    ' USER_ID = ' + VarAsType(VBBaseDM.MyDataSet.FieldByName('USER_ID').AsInteger, varString) + ',' +
@@ -328,21 +335,17 @@ begin
   TSDM.cdsTimesheet.AfterPost := nil;
 
   try
-    if VBBaseDM.DBAction = acInsert then
-    begin
-      NextID := VBBaseDM.GetID(VBBaseDM.MyDataSet.UpdateOptions.GeneratorName, 0);
-      VBBaseDM.MyDataSet.FieldByName('ID').AsInteger := NextID;
-    end;
-
     if not (VBBaseDM.MyDataSet.State in [dsEdit, dsInsert]) then
       VBBaseDM.MyDataSet.Edit;
+
+    if Inserting then
+      VBBaseDM.MyDataSet.FieldByName('ID').AsInteger := VBBaseDM.RecordID;
 
     VBBaseDM.MyDataSet.FieldByName('TIME_HOURS').AsFloat := edtHours.Value;
     VBBaseDM.MyDataSet.FieldByName('ITEM_VALUE').AsFloat := edtitemValue.Value;
     VBBaseDM.MyDataSet.FieldByName('DAY_NAME').AsString := edtDayName.Text;
     VBBaseDM.MyDataSet.FieldByName('DAY_ORDER').Asinteger := DayOfTheWeek(VBBaseDM.MyDataSet.FieldByName('ACTIVITY_DATE').AsDateTime);
     VBBaseDM.MyDataSet.Post;
-//    VBBaseDM.MyDataSet.CommitUpdates;
   finally
     TSDM.cdsTimesheet.AfterPost := TSDM.cdsTimesheetAfterPost;
   end;
@@ -527,6 +530,9 @@ begin
       cbxCarryForward.Style.StyleController := styReadOnly;
     end;
   end;
+
+  cbxApproved.Properties.ReadOnly := VBBaseDM.DBAction = acInsert;
+
 end;
 
 //procedure TTimesheetEditFrm.RecalcValues;

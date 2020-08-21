@@ -637,6 +637,7 @@ inherited TSDM: TTSDM
     BeforePost = cdsTimesheetBeforePost
     AfterPost = cdsTimesheetAfterPost
     BeforeDelete = cdsTimesheetBeforeDelete
+    AfterDelete = cdsTimesheetAfterPost
     OnCalcFields = cdsTimesheetCalcFields
     OnNewRecord = cdsTimesheetNewRecord
     FilterOptions = [foCaseInsensitive]

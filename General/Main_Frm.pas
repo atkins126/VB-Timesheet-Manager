@@ -319,6 +319,12 @@ type
     procedure DoDirectorlink(Sender: TObject);
     procedure lucFromDatePropertiesEditValueChanged(Sender: TObject);
     procedure lucToDatePropertiesEditValueChanged(Sender: TObject);
+    procedure DoInvoicing(Sender: TObject);
+    procedure DoUnInvoice(Sender: TObject);
+    procedure DoInvoiceList(Sender: TObject);
+    procedure btnParamClick(Sender: TObject);
+    procedure viewTimesheetKeyDown(Sender: TObject; var Key: Word;      Shift: TShiftState);
+    procedure DoDirectorOfCompany(Sender: TObject);
 
     procedure viewTimesheetCustomDrawCell(Sender: TcxCustomGridTableView;
       ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
@@ -329,16 +335,9 @@ type
     procedure viewTimesheetFocusedRecordChanged(Sender: TcxCustomGridTableView;
       APrevFocusedRecord, AFocusedRecord: TcxCustomGridRecord;
       ANewItemRecordFocusingChanged: Boolean);
-    procedure DoInvoicing(Sender: TObject);
-    procedure DoUnInvoice(Sender: TObject);
-    procedure DoInvoiceList(Sender: TObject);
-    procedure btnParamClick(Sender: TObject);
-    procedure viewTimesheetKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
-    procedure DoDirectorOfCompany(Sender: TObject);
+
     procedure edtApprovedCustomDrawCell(Sender: TcxCustomGridTableView;
-      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
-      var ADone: Boolean);
+      ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;      var ADone: Boolean);
   private
     { Private declarations }
     FTSUserID: Integer;
@@ -793,7 +792,8 @@ begin
       DC.DeleteRecord(C.SelectedRecords[I].RecordIndex);
       Inc(DeleteCount);
     end;
-    VBBaseDM.PostData(TSDM.cdsTimesheet);
+    TSDM.cdsTimesheet.Delete;
+//    VBBaseDM.PostData(TSDM.cdsTimesheet);
   end;
 
   if DeleteCount <> SelectedCount then
@@ -1764,6 +1764,7 @@ var
   AToDateEdit: TcxDateEdit;
 begin
   Screen.Cursor := crHourglass;
+
   if lucViewMode.ItemIndex = 0 then
   begin
     if FTimesheetPeriod < 201901 then
@@ -1861,7 +1862,6 @@ begin
   finally
     Screen.Cursor := crDefault;
   end;
-
 end;
 
 procedure TMainFrm.DoInvoicing(Sender: TObject);
@@ -1879,12 +1879,10 @@ begin
   finally
     Screen.Cursor := crDefault;
   end;
-
   //  case TAction(Sender).Tag of
   //    120: InvoiceTimesheetItem;
   //    121: UnInvoiceTimesheetItem;
   //  end;
-
 end;
 
 procedure TMainFrm.UpdateApplicationSkin(SkinResourceFileName {, SkinName}: string);
@@ -1966,6 +1964,9 @@ begin
     if not RegKey.ValueExists('Auto Date on New Timesheet Line') then
       RegKey.WriteBool('Auto Date on New Timesheet Line', True);
 
+    if not RegKey.ValueExists('Use Default Billable Value') then
+      RegKey.WriteBool('Use Default Billable Value', False);
+
     if not RegKey.ValueExists('Save Grid Layout') then
       RegKey.WriteBool('Save Grid Layout', False);
 
@@ -1996,6 +1997,7 @@ begin
     TSDM.TimesheetOption.UseDefaultPriceItem := RegKey.ReadBool('Use Default Price Item');
     TSDM.TimesheetOption.UseDefaultRate := RegKey.ReadBool('Use Default Rate');
     TSDM.TimesheetOption.UseTodaysDate := RegKey.ReadBool('Auto Date on New Timesheet Line');
+    TSDM.TimesheetOption.UseDefaultBillable := RegKey.ReadBool('Use Default Billable Value');
     TSDM.TimesheetOption.SaveGridLayout := RegKey.ReadBool('Save Grid Layout');
     TSDM.TimesheetOption.DefaultCustomerID := RegKey.ReadInteger('Default Customer ID');
     TSDM.TimesheetOption.DefaultPriceItemID := RegKey.ReadInteger('Default Price Item ID');

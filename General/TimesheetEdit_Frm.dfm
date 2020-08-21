@@ -291,6 +291,7 @@ inherited TimesheetEditFrm: TTimesheetEditFrm
       Top = 610
       Width = 75
       Height = 25
+      Cancel = True
       Caption = 'Cancel'
       ParentShowHint = False
       ShowHint = True

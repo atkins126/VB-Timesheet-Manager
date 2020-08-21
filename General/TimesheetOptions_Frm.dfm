@@ -138,7 +138,7 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
     end
     object radPriceItemOption: TcxRadioGroup [6]
       Left = 34
-      Top = 164
+      Top = 189
       Caption = 'When selecting a pricelist item'
       ParentBackground = False
       ParentColor = False
@@ -164,20 +164,20 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
         end>
       Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       Style.Color = 16053234
-      TabOrder = 8
+      TabOrder = 10
       Height = 120
       Width = 729
     end
     object cbxUseTodaysDate: TcxCheckBox [7]
       Tag = 7
       Left = 34
-      Top = 333
-      Caption = 'Use today'#39's date when adding a new timesheet item'
+      Top = 164
+      Caption = 'Use today'#39's date'
       Properties.ImmediatePost = True
       Properties.UseAlignmentWhenInplace = True
       Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       Style.HotTrack = False
-      TabOrder = 9
+      TabOrder = 8
       Transparent = True
       OnMouseEnter = cbxUseDefaultCustomerMouseEnter
       OnMouseLeave = cbxUseDefaultCustomerMouseLeave
@@ -191,7 +191,7 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       Properties.UseAlignmentWhenInplace = True
       Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       Style.HotTrack = False
-      TabOrder = 12
+      TabOrder = 13
       Transparent = True
       OnMouseEnter = cbxUseDefaultCustomerMouseEnter
       OnMouseLeave = cbxUseDefaultCustomerMouseLeave
@@ -205,7 +205,7 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       Default = True
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 14
+      TabOrder = 15
       OnClick = btnOKClick
     end
     object btnCancel: TcxButton [10]
@@ -217,7 +217,7 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       Caption = 'Cancel'
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 15
+      TabOrder = 16
       OnClick = btnCancelClick
     end
     object btnGetDefaultRate: TcxButton [11]
@@ -260,7 +260,7 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       Properties.OnEditValueChanged = cbxIncrementalFilteringPropertiesEditValueChanged
       Style.HotTrack = False
-      TabOrder = 10
+      TabOrder = 11
       Transparent = True
       OnMouseEnter = cbxUseDefaultCustomerMouseEnter
       OnMouseLeave = cbxUseDefaultCustomerMouseLeave
@@ -274,7 +274,7 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       Properties.UseAlignmentWhenInplace = True
       Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
       Style.HotTrack = False
-      TabOrder = 11
+      TabOrder = 12
       Transparent = True
       OnMouseEnter = cbxUseDefaultCustomerMouseEnter
       OnMouseLeave = cbxUseDefaultCustomerMouseLeave
@@ -287,9 +287,22 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       Style.HotTrack = False
       Style.StyleController = styReadOnly
       Style.TransparentBorder = False
-      TabOrder = 13
+      TabOrder = 14
       Height = 73
       Width = 778
+    end
+    object cbxBillable: TcxCheckBox [16]
+      Left = 172
+      Top = 164
+      Caption = 'Set billable to true'
+      Properties.ImmediatePost = True
+      Properties.OnChange = cbxUseDefaultCustomerPropertiesChange
+      Style.HotTrack = False
+      Style.TransparentBorder = False
+      TabOrder = 9
+      Transparent = True
+      OnMouseEnter = cbxUseDefaultCustomerMouseEnter
+      OnMouseLeave = cbxUseDefaultCustomerMouseLeave
     end
     object grpTimesheetOptionsTab: TdxLayoutGroup
       Parent = layMainGroup_Root
@@ -334,7 +347,7 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       Parent = grpSubOptions
       CaptionOptions.Text = 'When adding a new timesheet item'
       ButtonOptions.Buttons = <>
-      ItemIndex = 2
+      ItemIndex = 3
       Index = 0
     end
     object grpPriceOptions: TdxLayoutGroup
@@ -358,7 +371,6 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       Parent = grpTimesheetOptionsTab
       CaptionOptions.Text = 'Timesheet Options'
       ButtonOptions.Buttons = <>
-      ItemIndex = 1
       Index = 0
     end
     object litPriceItemSelectionOption: TdxLayoutItem
@@ -437,22 +449,21 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       CaptionOptions.Text = 'When selecting a pricelist item'
       ButtonOptions.Buttons = <>
       ShowBorder = False
-      Index = 3
+      Index = 4
     end
     object grpOtherOptions: TdxLayoutGroup
       Parent = grpSubOptions
       CaptionOptions.Text = 'Other Optoins'
       ButtonOptions.Buttons = <>
-      ItemIndex = 2
       Index = 1
     end
     object litUseTodaysDate: TdxLayoutItem
-      Parent = grpOtherOptions
+      Parent = grpMiscellaneousOptions
       CaptionOptions.Text = 'New Item'
       CaptionOptions.Visible = False
       Control = cbxUseTodaysDate
       ControlOptions.OriginalHeight = 19
-      ControlOptions.OriginalWidth = 318
+      ControlOptions.OriginalWidth = 132
       ControlOptions.ShowBorder = False
       Index = 0
     end
@@ -464,7 +475,7 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 191
       ControlOptions.ShowBorder = False
-      Index = 3
+      Index = 2
     end
     object litCancel: TdxLayoutItem
       Parent = grpControls
@@ -511,7 +522,7 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       ControlOptions.OriginalHeight = 19
       ControlOptions.OriginalWidth = 242
       ControlOptions.ShowBorder = False
-      Index = 1
+      Index = 0
     end
     object litHighlightSearchMatch: TdxLayoutItem
       Parent = grpHighlightSearchMatch
@@ -536,7 +547,7 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       ButtonOptions.Buttons = <>
       LayoutDirection = ldHorizontal
       ShowBorder = False
-      Index = 2
+      Index = 1
     end
     object litOptioinDescription: TdxLayoutItem
       Parent = layMainGroup_Root
@@ -546,6 +557,25 @@ inherited TimesheetOptionsFrm: TTimesheetOptionsFrm
       Control = memDescription
       ControlOptions.OriginalHeight = 70
       ControlOptions.OriginalWidth = 778
+      ControlOptions.ShowBorder = False
+      Index = 1
+    end
+    object grpMiscellaneousOptions: TdxLayoutGroup
+      Parent = grpTimesheetOptions
+      CaptionOptions.Text = 'New Group'
+      ButtonOptions.Buttons = <>
+      ItemIndex = 1
+      LayoutDirection = ldHorizontal
+      ShowBorder = False
+      Index = 3
+    end
+    object litSetDefaultBillable: TdxLayoutItem
+      Parent = grpMiscellaneousOptions
+      CaptionOptions.Text = 'New Item'
+      CaptionOptions.Visible = False
+      Control = cbxBillable
+      ControlOptions.OriginalHeight = 19
+      ControlOptions.OriginalWidth = 126
       ControlOptions.ShowBorder = False
       Index = 1
     end

@@ -71,6 +71,9 @@ type
     litOptioinDescription: TdxLayoutItem;
     memDescription: TcxMemo;
     styReadOnly: TcxEditStyleController;
+    grpMiscellaneousOptions: TdxLayoutGroup;
+    litSetDefaultBillable: TdxLayoutItem;
+    cbxBillable: TcxCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure lucPriceItemPropertiesEditValueChanged(Sender: TObject);
     procedure cbxUseDefaultRatePropertiesEditValueChanged(Sender: TObject);
@@ -93,7 +96,7 @@ type
     FHintArray: THintArray;
 
     procedure SetControlValues;
-    procedure ReadTimesheetRegValues;
+    procedure GetDefaultTimesheetValues;
 //    procedure ReadTSDetailReportRegValues;
 //    procedure ReadReleaseCFwdRegValues;
     procedure PopulateHintArray;
@@ -157,6 +160,8 @@ begin
   edtDefaultRate.OnMouseLeave := DoOnMouseLeave;
   lucRateUnit.OnMouseEnter := DoOnMouseEnter;
   lucRateUnit.OnMouseLeave := DoOnMouseLeave;
+  cbxBillable.OnMouseEnter := DoOnMouseEnter;
+  cbxBillable.OnMouseLeave := DoOnMouseLeave;
 
   styHighlight.Style.Font.Color := RootLookAndFeel.SkinPainter.DefaultSelectionColor;
   styHighlight.Style.TextColor := RootLookAndFeel.SkinPainter.DefaultSelectionColor;
@@ -167,7 +172,7 @@ end;
 procedure TTimesheetOptionsFrm.FormShow(Sender: TObject);
 begin
   SetControlValues;
-  ReadTimesheetRegValues;
+  GetDefaultTimesheetValues;
 //  cbxUseDefaultCustomerPropertiesEditValueChanged(nil);
 //  cbxUseDefaultPriceItemPropertiesEditValueChanged(nil);
 
@@ -243,6 +248,7 @@ begin
     TSDM.TimesheetOption.UseDefaultPriceItem := cbxUseDefaultPriceItem.Checked;
     TSDM.TimesheetOption.UseDefaultRate := cbxUseDefaultRate.Checked;
     TSDM.TimesheetOption.UseTodaysDate := cbxUseTodaysDate.Checked;
+    TSDM.TimesheetOption.UseDefaultBillable :=   cbxBillable.Checked;
     TSDM.TimesheetOption.SaveGridLayout := cbxSaveGridLayout.Checked;
     TSDM.TimesheetOption.DefaultCustomerID := lucCustomer.EditValue;
     TSDM.TimesheetOption.DefaultPriceItemID := lucPriceItem.EditValue;
@@ -256,6 +262,7 @@ begin
     Regkey.WriteBool('Use Default Price Item', TSDM.TimesheetOption.UseDefaultPriceItem);
     Regkey.WriteBool('Use Default Rate', TSDM.TimesheetOption.UseDefaultRate);
     Regkey.WriteBool('Auto Date on New Timesheet Line', TSDM.TimesheetOption.UseTodaysDate);
+    Regkey.WriteBool('Use Default Billable Value', TSDM.TimesheetOption.UseTodaysDate);
     Regkey.WriteBool('Save Grid Layout', TSDM.TimesheetOption.SaveGridLayout);
     Regkey.WriteInteger('Default Customer ID', TSDM.TimesheetOption.DefaultCustomerID);
     RegKey.WriteInteger('Default Price Item ID', TSDM.TimesheetOption.DefaultPriceItemID);
@@ -401,19 +408,20 @@ begin
 //    ' the data is exported as plain text/numeric raw data.';
 end;
 
-procedure TTimesheetOptionsFrm.ReadTimesheetRegValues;
-var
-  RegKey: TRegistry;
+procedure TTimesheetOptionsFrm.GetDefaultTimesheetValues;
+//var
+//  RegKey: TRegistry;
 begin
-  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
-  RegKey.RootKey := HKEY_CURRENT_USER;
-  RegKey.OpenKey(KEY_TIMESHEET, True);
-
-  try
+//  RegKey := TRegistry.Create(KEY_ALL_ACCESS or KEY_WRITE or KEY_WOW64_64KEY);
+//  RegKey.RootKey := HKEY_CURRENT_USER;
+//  RegKey.OpenKey(KEY_TIMESHEET, True);
+//
+//  try
     cbxUseDefaultCustomer.Checked := TSDM.TimesheetOption.UseDefaultCustomer;
     cbxUseDefaultPriceItem.Checked := TSDM.TimesheetOption.UseDefaultPriceItem;
     cbxUseDefaultRate.Checked := TSDM.TimesheetOption.UseDefaultRate;
     cbxUseTodaysDate.Checked := TSDM.TimesheetOption.UseTodaysDate;
+    cbxBillable.Checked :=  TSDM.TimesheetOption.UseDefaultBillable;
     cbxSaveGridLayout.Checked := TSDM.TimesheetOption.SaveGridLayout;
     lucCustomer.EditValue := TSDM.TimesheetOption.DefaultCustomerID;
     lucPriceItem.EditValue := TSDM.TimesheetOption.DefaultPriceItemID;
@@ -423,10 +431,11 @@ begin
     cbxIncrementalFiltering.Checked := TSDM.TimesheetOption.IncrementalLookupFitlering;
     cbxHighlightSearchMatch.Checked := TSDM.TimesheetOption.HighlightLookupSearchMatch;
     cbxHighlightSearchMatch.Enabled := cbxIncrementalFiltering.Checked;
-    RegKey.CloseKey;
-  finally
-    Regkey.Free;
-  end;
+
+//    RegKey.CloseKey;
+//  finally
+//    Regkey.Free;
+//  end;
 end;
 
 //procedure TTimesheetOptionsFrm.ReadTSDetailReportRegValues;
@@ -456,4 +465,5 @@ end;
 //end;
 
 end.
+
 

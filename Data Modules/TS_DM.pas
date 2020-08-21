@@ -45,6 +45,7 @@ type
     RateUnitID: Integer;
     PriceListItemActionIndex: Integer;
     UseTodaysDate: Boolean;
+    UseDefaultBillable: Boolean;
     IncrementalLookupFitlering: Boolean;
     HighlightLookupSearchMatch: Boolean;
     SaveGridLayout: Boolean;
@@ -509,7 +510,7 @@ begin
   VBBaseDM.ApplyUpdates(TFDMemTable(DataSet), DSArray, TFDMemTable(DataSet).UpdateOptions.Generatorname, TFDMemTable(DataSet).UpdateOptions.UpdateTableName,
     TFDMemTable(DataSet).Tag);
 
-  VBBaseDM.DBAction := acBrowsing;
+//  VBBaseDM.DBAction := acBrowsing;
 end;
 
 procedure TTSDM.cdsTimesheetBeforeDelete(DataSet: TDataSet);
@@ -549,7 +550,41 @@ end;
 
 procedure TTSDM.cdsTimesheetCalcFields(DataSet: TDataSet);
 begin
-  CalculateFieldValues(TFDMemTable(DataSet));
+//  // Time in hours
+//  DataSet.FieldByName('TIME_HOURS').AsFloat :=
+//    DataSet.FieldByName('TIME_SPENT').AsFloat / 60;
+//
+//  // Item value
+//  if DataSet.FieldByName('BILLABLE').AsInteger = 1 then
+//  begin
+//    if DataSet.FieldByName('RATE_UNIT_ID').AsInteger = 1 then
+//      if DataSet.FieldByName('ACTUAL_RATE').AsFloat <> 0 then
+//        DataSet.FieldByName('ITEM_VALUE').AsFloat :=
+//          DataSet.FieldByName('TIME_SPENT').AsFloat / 60 *
+//          DataSet.FieldByName('ACTUAL_RATE').AsFloat
+//      else
+//        DataSet.FieldByName('ITEM_VALUE').AsFloat :=
+//          DataSet.FieldByName('ACTUAL_RATE').AsFloat;
+//  end
+//  else
+//    DataSet.FieldByName('ITEM_VALUE').AsFloat := 0;
+//
+//  // Period
+//  DataSet.FieldByName('THE_PERIOD').AsInteger :=
+//    GetCurrentPeriod(DataSet.FieldByName('ACTIVITY_DATE').AsDateTime);
+//
+//  // Period Name
+//  DataSet.FieldByName('PERIOD_NAME').AsString :=
+//    ShortMonths[MonthInt(DataSet.FieldByName('ACTIVITY_DATE').AsDateTime)] +
+//    ' ' + YearStr(DataSet.FieldByName('ACTIVITY_DATE').AsDateTime);
+//
+//  // Locked status
+//  if (DataSet.FieldByName('APPROVED').AsInteger = 1) or (DataSet.FieldByName('INVOICE_ID').AsInteger > 0) then
+//    DataSet.FieldByName('LOCKED').AsInteger := 1
+//  else
+//    DataSet.FieldByName('LOCKED').AsInteger := 0;
+
+//  CalculateFieldValues(TFDMemTable(DataSet));
 end;
 
 procedure TTSDM.cdsTimesheetNewRecord(DataSet: TDataSet);
@@ -571,9 +606,9 @@ begin
   cdsTimesheet.FieldByName('ID').AsInteger := 0;
   cdsTimesheet.FieldByName('USER_ID').AsInteger := FCurrentUserID;
   cdsTimesheet.FieldByName('TIME_SPENT').AsFloat := 0.0;
-  cdsTimesheet.FieldByName('BILLABLE').AsInteger := 0;
+  cdsTimesheet.FieldByName('BILLABLE').AsInteger := RUtils.BooleanToInteger(TimesheetOption.UseDefaultBillable);
   cdsTimesheet.FieldByName('CARRY_FORWARD').AsInteger := 0;
-  cdsTimesheet.FieldByName('INVOICE_ID').AsInteger := -1;
+  cdsTimesheet.FieldByName('INVOICE_ID').AsInteger := 0;
   cdsTimesheet.FieldByName('APPROVED').AsInteger := 0;
   cdsTimesheet.FieldByName('IS_ADDITIONAL_WORK').AsInteger := 0;
   cdsTimesheet.FieldByName('LOCKED').AsInteger := 0;
